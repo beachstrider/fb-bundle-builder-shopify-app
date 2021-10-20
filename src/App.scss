@@ -1,0 +1,56 @@
+@import './variables';
+
+.defaultWrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  hr {
+    margin: unset !important;
+  }
+}
+
+.flexColumnDirection {
+  flex-direction: column;
+}
+
+.content {
+  // TODO: figure out a better way to set the height inside a Shopify theme
+  min-height: 50vh;
+}
+
+/* 
+** Buttons 
+*/
+.buttons {
+  width: 100%;
+  display: grid;
+  grid-auto-flow: column;
+  gap: 1rem;
+  align-items: center;
+  justify-items: center;
+  text-align: center;
+  color: $white;
+
+  & .button {
+    min-width: 6rem;
+    padding: 1rem 3.5rem;
+    border-radius: 2rem;
+    cursor: pointer;
+  }
+
+  & .primaryButton {
+    background: $primaryColor;
+    &:hover {
+      background: darken($primaryColor, 10%);
+    }
+  }
+
+  & .lightButton {
+    background: $white;
+    border: 1px solid $gray;
+    color: $gray;
+    &:hover {
+      background: darken($white, 10%);
+    }
+  }
+}

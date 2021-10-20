@@ -1,0 +1,48 @@
+@import '../../variables';
+
+.wrapper {
+  width: 100%;
+  -webkit-box-shadow: 0 2px 9px -7px $gray;
+  -moz-box-shadow: 0 2px 9px -7px $gray;
+  box-shadow: 0 2px 9px -7px $gray;
+  margin-bottom: 3rem;
+  padding: 0.5rem 0;
+
+  & .logo {
+    max-height: 2rem;
+  }
+
+  & .stepsWrapper {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+    align-items: center;
+    font-size: 1rem;
+    min-height: 5rem;
+
+    & .column {
+      display: flex;
+      padding: 0 1rem;
+    }
+
+    & .dividerWrapper {
+      padding: 0 1rem;
+
+      & .divider {
+        content: '';
+        display: block;
+        border-top: solid 1px $primaryColor;
+        width: 20px;
+        height: 1px;
+        position: absolute;
+        top: 50%;
+        z-index: 1;
+      }
+    }
+  }
+}
+
+.isSelected {
+  color: $primaryColor;
+}
