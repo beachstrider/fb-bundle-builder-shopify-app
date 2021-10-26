@@ -3,11 +3,13 @@ import './App.scss'
 import { Header } from './components/Header'
 import { Footer } from './components/Footer'
 
-import Frequency from './components/Step1/Frequency'
-import Location from './components/Step2/Location'
-import EntreeType from './components/Step3/EntreeType'
-import Entrees from './components/Step4/Entrees'
-import Review from './components/Step5/Review'
+import {
+  Frequency,
+  Location,
+  EntreeType,
+  Entrees,
+  Review
+} from './components/Steps'
 
 function App() {
   return (

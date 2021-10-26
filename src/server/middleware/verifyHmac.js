@@ -1,6 +1,12 @@
+const path = require('path')
+require('dotenv').config({ path: path.resolve(__dirname, '.env') })
 const crypto = require('crypto')
 
 module.exports = async (req, res, next) => {
+  if (process.env.NODE_ENV === 'development') {
+    return next()
+  }
+
   const validateSignature = (query) => {
     if (!query) {
       console.log('here')

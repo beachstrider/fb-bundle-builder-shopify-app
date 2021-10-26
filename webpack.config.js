@@ -8,7 +8,10 @@ module.exports = {
     rules: [
       {
         test: /\.(js|jsx)$/,
-        exclude: /node_modules/,
+        exclude: [
+          path.join(__dirname, 'tests'),
+          path.join(__dirname, 'node_modules')
+        ],
         use: ['babel-loader']
       },
       {
@@ -29,14 +32,16 @@ module.exports = {
   },
   plugins: [
     new webpack.DefinePlugin({
+      'process.env.LOGO_URL': JSON.stringify(process.env.LOGO_URL),
       'process.env.SHOPIFY_PROXY_APP_BASENAME': JSON.stringify(
         process.env.SHOPIFY_PROXY_APP_BASENAME || '/a/proxy'
       ),
-      'process.env.PROXY_APP_URL': JSON.stringify(process.env.PROXY_APP_URL)
+      'process.env.PROXY_APP_URL': JSON.stringify(process.env.PROXY_APP_URL),
+      'process.env.PAGE_TITLE': JSON.stringify(process.env.PAGE_TITLE)
     })
   ],
   output: {
-    path: path.resolve(__dirname, './public'),
+    path: path.resolve(__dirname, './public/'),
     filename: 'bundle.js'
   },
   devServer: {

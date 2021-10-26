@@ -1,6 +1,6 @@
 import React from 'react'
 import { useDispatch } from 'react-redux'
-import { chooseEntrees } from '../../store/slices/rootSlice'
+import { chooseEntrees } from '../../../store/slices/rootSlice'
 
 const Frequency = () => {
   const dispatch = useDispatch()
@@ -13,7 +13,7 @@ const Frequency = () => {
   return (
     <div className="defaultWrapper">
       <div>
-        <label>Entree</label>
+        <label>Entree here</label>
         <input
           type="number"
           name="entree"

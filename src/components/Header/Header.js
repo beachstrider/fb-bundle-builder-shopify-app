@@ -8,10 +8,7 @@ const Header = () => {
   return (
     <div className={`${styles.wrapper} defaultWrapper flexColumnDirection`}>
       <div>
-        <img
-          className={styles.logo}
-          src={`${process.env.PROXY_APP_URL}/logo.png`}
-        />
+        <img className={styles.logo} src={process.env.LOGO_URL} />
       </div>
       <div className={styles.stepsWrapper}>
         {steps.map((step, index) => (

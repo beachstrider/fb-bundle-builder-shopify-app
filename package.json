@@ -13,11 +13,12 @@
     "react-router-dom": "^5.3.0"
   },
   "scripts": {
-    "dev": "webpack-dev-server --mode development",
-    "start": "yarn dev",
-    "start:server": "./node_modules/nodemon/bin/nodemon.js server.js",
+    "dev": "npx webpack --mode development --watch",
+    "start": "webpack-dev-server --mode development",
+    "server": "./node_modules/nodemon/bin/nodemon.js server.js",
     "build": "npx webpack --mode production",
-    "build:start": "yarn build; yarn start:server"
+    "build:start": "yarn build; yarn start:server",
+    "test": "jest"
   },
   "eslintConfig": {
     "extends": [
@@ -50,6 +51,7 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^5.1.0",
     "eslint-plugin-react": "^7.26.1",
+    "jest": "^27.3.1",
     "prettier": "2.4.1",
     "sass": "^1.43.3",
     "sass-loader": "^12.2.0",
