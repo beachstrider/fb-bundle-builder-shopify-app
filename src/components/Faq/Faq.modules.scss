@@ -1,0 +1,19 @@
+@import '../../variables';
+
+// TODO: all of this is just a placeholder (waiting for the final design)
+.wrapperTitle {
+  background: $faqBackgroundColor 0% 0% no-repeat padding-box;
+  width: 95rem;
+  height: 35rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 5rem;
+  font-size: 4.7rem;
+  font-weight: 700;
+}
+
+.faqType {
+  max-width: 80rem;
+  margin: 10rem;
+}
