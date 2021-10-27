@@ -11,13 +11,24 @@ import {
   Review
 } from './components/Steps'
 
+import {
+  Dashboard
+} from './components/Account'
+
+const basename =
+  process.env.NODE_ENV !== 'development'
+    ? process.env.SHOPIFY_PROXY_APP_BASENAME
+    : ''
+
 function App() {
   return (
-    <Router basename="/a/proxy">
+    <Router basename={basename}>
       <div className="defaultWrapper flexColumnDirection">
         <Header />
         <div className="content">
           <Switch>
+            <Route exact path="/account" component={Dashboard} />
+
             <Route exact path="/step-2" component={Location} />
             <Route exact path="/step-3" component={EntreeType} />
             <Route exact path="/step-4" component={Entrees} />
