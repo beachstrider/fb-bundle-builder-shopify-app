@@ -17,13 +17,11 @@ app.get('/bundle.js', (req, res) => {
   res.sendFile('./public/bundle.js', { root: __dirname })
 })
 
-if (process.env.NODE_ENV !== 'development') {
-  app.get('/public/index.html', (req, res) => {
-    res.status(403).send({
-      message: 'Access Forbidden'
-    })
+app.get('/public/index.html', (req, res) => {
+  res.status(403).send({
+    message: 'Access Forbidden'
   })
-}
+})
 
 app.get('/', verifyHmac, (req, res) => {
   fs.readFile(
