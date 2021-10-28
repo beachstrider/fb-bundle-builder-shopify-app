@@ -16,8 +16,8 @@ const Dashboard = () => {
         <div>
             <div className={styles.menuRow}>
                 <h3>Week of Oct 18th</h3>
-                <a href="#" className="button">Track Package</a>
-                <a href="/order-history" className="button">Order Summary</a>
+                <Link to="#" className="button">Track Package</Link>
+                <Link to="/order-history" className="button">Order Summary</Link>
             </div>
             <div className={styles.accountMenuRow}>
                 <MenuItemCard width="20%" />
@@ -33,7 +33,7 @@ const Dashboard = () => {
         <div>
             <div className={styles.menuRow}>
                 <h3>Week of Oct 25th</h3>
-                <a href="/order-history" className="button">Edit Order</a>
+                <Link to="/order-history" className="button">Edit Order</Link>
             </div>
             <div className={styles.accountMenuRow}>
                 <MenuItemCard width="20%" />

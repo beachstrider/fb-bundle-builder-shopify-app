@@ -29,9 +29,9 @@ const OrderHistory = () => {
                             <MenuItemCard />
                             <MenuItemCard />
                             <div className={styles.viewMoreLink}>
-                                <a className={styles.viewMoreItemsLink} href="#">
+                                <Link className={styles.viewMoreItemsLink} to="#">
                                     See All
-                                </a>
+                                </Link>
                             </div>
                         </div>
                     </div>
