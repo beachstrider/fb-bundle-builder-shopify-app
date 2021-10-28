@@ -1,21 +1,23 @@
-@import '../Account.module.scss';
 @import '../../../variables';
+@import '../Account.module.scss';
 
-.accountMenuRow{
+
+.currentOrderWrapper{
+    padding:16px;
+}
+.currentOrderMenu{
     display: flex;
     flex-direction: row;
 }
-.menuRow{
-    display:flex;
-    flex-direction:row;
-    justify-content: space-between;
-}
-.viewAllLink{
+.viewMoreLink{
     background-color: $primaryColor;
     border-radius: 6px;
     margin: 8px;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 20%;
+}
+.viewMoreItemsLink{
+    text-align: center;
+    color: white;
 }

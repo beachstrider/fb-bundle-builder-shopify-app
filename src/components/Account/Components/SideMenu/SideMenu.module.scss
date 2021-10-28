@@ -1,0 +1,22 @@
+@import '../../../../variables';
+
+.menuWrapper{
+    display: flex;
+    flex-direction: column;
+    padding: 10px 0px 10px 16px;
+}
+.menuLink{
+    display: inherit;
+    font-size: 16px;
+    color: #000000;
+    text-decoration: none;
+    margin:8px 6px;
+}
+.activeLink{
+    display: inherit;
+    font-weight: bold;
+    color:$primaryColor;
+    text-decoration: none;
+    font-size: 16px;
+    margin:8px 6px;
+}
