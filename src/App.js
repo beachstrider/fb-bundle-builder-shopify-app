@@ -12,7 +12,11 @@ import {
 } from './components/Steps'
 
 import {
-  Dashboard
+  Dashboard,
+  OrderHistory,
+  AccountInfo, 
+  PaymentMethod, 
+  PlanSettings 
 } from './components/Account'
 
 const basename =
@@ -28,6 +32,10 @@ function App() {
         <div className="content">
           <Switch>
             <Route exact path="/account" component={Dashboard} />
+            <Route exact path="/order-history" component={OrderHistory} />
+            <Route exact path="/account-info" component={AccountInfo} />
+            <Route exact path="/payment-method" component={PaymentMethod} />
+            <Route exact path="/plan-settings" component={PlanSettings } />
 
             <Route exact path="/step-2" component={Location} />
             <Route exact path="/step-3" component={EntreeType} />
