@@ -2,8 +2,9 @@ import React from 'react'
 import styles from './ItemCard.module.scss'
 
 const MenuItemCard = (props) => {
+    const { width } = props
     return (
-        <div className="bundleBuilderCard" style={{width:props.width}}>
+        <div className="bundleBuilderCard" style={{width: width}}>
             <img className={styles.cardImage} src="//cdn.shopify.com/s/files/1/0552/6549/3185/files/Kimchi_Pork__Keto_C_165x.jpg?v=1634949902" alt="Buffalo Mozzarella Chicken" />
             <div className={styles.cardContent}>
                 <div className={styles.cardTitle}>
