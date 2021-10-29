@@ -1,4 +1,40 @@
+@import '../../variables';
+
 .accountWrapper{
     display: flex;
     flex-direction: column;
+}
+.headerOffset{
+    padding-left:10px
+}
+
+.bundleBuilderCard h3{
+    margin: 4px 0;
+}
+
+.contentCardWrapper{
+    padding: 8px 20px;
+    display: flex;
+    flex-direction: column;
+
+    & h3{
+        margin:8px 0;
+    }
+
+    & p{
+        margin:8px 0;
+    }
+}
+
+.boldTextField{
+    font-weight: 900;
+    color: $black;
+    margin-right: 8px;
+}
+
+.contentCardNavigation{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
 }

@@ -1,19 +1,18 @@
 @import '../../../variables';
+@import '../Account.module.scss';
 
 .currentOrderWrapper{
     padding: 8px 20px;
     display: flex;
     flex-direction: column;
 }
-.currentOrderNavigation{
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-}
 .currentOrderMenu{
     display: flex;
     flex-direction: row;
+
+    & p{
+        margin: 0
+    }
 }
 .seeAllMenu{
     width:10%;
