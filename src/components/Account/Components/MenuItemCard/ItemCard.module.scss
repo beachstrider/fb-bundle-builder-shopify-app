@@ -10,14 +10,21 @@
 .cardContent{
     display: flex;
     flex-direction: column;
-    padding:8px
+    padding:12px;
+
+    & h3{
+        margin: 0
+    }
+
+    & p{
+        margin: 0
+    }
 }
 .accountMenuRow{
     display:flex;
     flex-direction:row;
 }
 .cardInfo{
-    padding: 8px;
     display: flex;
     flex-direction: row;
     justify-content: space-between;

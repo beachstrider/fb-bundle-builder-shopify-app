@@ -1,7 +1,7 @@
 import React from 'react'
 import { useDispatch } from 'react-redux'
 import { chooseEntrees } from '../../../store/slices/rootSlice'
-
+import { Link } from 'react-router-dom'
 const Frequency = () => {
   const dispatch = useDispatch()
 
@@ -19,6 +19,7 @@ const Frequency = () => {
           name="entree"
           onChange={(e) => handleChange(e.target.value)}
         />
+        <Link to="/plan-settings">Plan Settings</Link>
       </div>
     </div>
   )
