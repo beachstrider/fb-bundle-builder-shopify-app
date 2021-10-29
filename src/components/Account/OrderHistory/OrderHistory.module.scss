@@ -1,0 +1,23 @@
+@import '../../../variables';
+@import '../Account.module.scss';
+
+
+.currentOrderWrapper{
+    padding:16px;
+}
+.currentOrderMenu{
+    display: flex;
+    flex-direction: row;
+}
+.viewMoreLink{
+    background-color: $primaryColor;
+    border-radius: 6px;
+    margin: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.viewMoreItemsLink{
+    text-align: center;
+    color: white;
+}

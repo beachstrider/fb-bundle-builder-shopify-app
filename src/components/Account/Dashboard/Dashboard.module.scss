@@ -1,0 +1,21 @@
+@import '../Account.module.scss';
+@import '../../../variables';
+
+.accountMenuRow{
+    display: flex;
+    flex-direction: row;
+}
+.menuRow{
+    display:flex;
+    flex-direction:row;
+    justify-content: space-between;
+}
+.viewAllLink{
+    background-color: $primaryColor;
+    border-radius: 6px;
+    margin: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20%;
+}
