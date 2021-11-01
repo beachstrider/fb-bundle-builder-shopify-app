@@ -1,21 +1,22 @@
 @import '../../../variables';
 @import '../Account.module.scss';
 
-.currentOrderWrapper{
-    padding: 8px 20px;
-    display: flex;
-    flex-direction: column;
-}
 .currentOrderMenu{
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
+    flex-wrap: wrap;
+
+    @media (min-width: $breakpoint-phone) {
+        flex-direction: row;
+    }
 
     & p{
         margin: 0
     }
 }
 .seeAllMenu{
-    width:10%;
+    width: 10%;
+    min-width: 67px;
     background-color: $primaryColor;
     box-shadow: 0px 0px 12px rgb(0 0 0 / 25%);
     display: flex;

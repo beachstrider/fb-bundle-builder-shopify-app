@@ -26,7 +26,7 @@ const AccountInfo = () => {
                         <div className={styles.contentCardWrapper}>
                             <div className={styles.contentCardNavigation}>
                                 <h3>Personal Info</h3>
-                                <Link to="/account" className="button button--secondary">Edit Order</Link>
+                                <a href="/tools/recurring/login/customer/5410281652409?" className="secondaryButton">Edit Info</a>
                             </div>
                             <div>
                                 <p><span className={styles.boldTextField}>Name:</span>Ashton Grover</p>

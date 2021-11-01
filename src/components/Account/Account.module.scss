@@ -8,17 +8,14 @@
     padding-left:10px
 }
 
-.bundleBuilderCard h3{
-    margin: 4px 0;
-}
-
 .contentCardWrapper{
-    padding: 8px 20px;
+    padding: 20px 40px 49px;
     display: flex;
     flex-direction: column;
 
     & h3{
         margin:8px 0;
+        font-size: 24px;
     }
 
     & p{
@@ -37,4 +34,9 @@
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
+}
+
+.menuItemCard{
+    min-width: 175px;
+    width: 27%;
 }

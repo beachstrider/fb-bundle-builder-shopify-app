@@ -27,12 +27,12 @@ const PlanSettings = () => {
                         <div className={styles.contentCardWrapper}>
                             <div className={styles.contentCardNavigation}>
                                 <h3>Current Order</h3>
-                                <Link to="/account" className="button button--secondary">Edit Order</Link>
+                                <Link to="/account" className="secondaryButton">Edit Order</Link>
                             </div>
                             <div className={styles.currentOrderMenu}>
-                                <MenuItemCard width="30%" />
-                                <MenuItemCard width="30%" />
-                                <MenuItemCard width="30%" />
+                                <MenuItemCard width="27%" />
+                                <MenuItemCard width="27%" />
+                                <MenuItemCard width="27%" />
                                 <Link to="/account" className={styles.seeAllMenu}>
                                     See All
                                 </Link>
@@ -40,10 +40,10 @@ const PlanSettings = () => {
                         </div>
                     </div>
                     <div className="bundleBuilderCard">
-                        <div className={styles.currentOrderWrapper}>
+                        <div className={styles.contentCardWrapper}>
                             <div className={styles.contentCardNavigation}>
                                 <h3 className={styles.underlinedHeader}>Current Order Date</h3>
-                                <Link to="/dashboard" className="button button--secondary">Edit Order</Link>
+                                <Link to="/dashboard" className="secondaryButton">Edit Order</Link>
                             </div>
                             <div className={styles.currentOrderMenu}>
                                 <p>Delivery Day: Monday</p>
