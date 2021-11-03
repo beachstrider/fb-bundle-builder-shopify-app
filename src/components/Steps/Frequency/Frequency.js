@@ -19,7 +19,7 @@ const Frequency = () => {
           name="entree"
           onChange={(e) => handleChange(e.target.value)}
         />
-        <Link to="/plan-settings">Plan Settings</Link>
+        <Link to="/account">User Account</Link>
       </div>
     </div>
   )

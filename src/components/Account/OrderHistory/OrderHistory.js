@@ -3,9 +3,12 @@ import { Link } from 'react-router-dom'
 import styles from './OrderHistory.module.scss'
 import {SideMenu} from '../Components/SideMenu'
 import {MenuItemCard} from '../Components/MenuItemCard'
+import {
+    ChevronRightMinor
+  } from '@shopify/polaris-icons';
 
 const OrderHistory = () => {
-
+  console.log(shopUser)
   return (
     <div className="contentWrapper">
         <div className="bundleRow">
@@ -34,7 +37,7 @@ const OrderHistory = () => {
                             <MenuItemCard width="27%" />
                             <MenuItemCard width="27%" />
                             <Link to="/account" className={styles.seeAllMenu}>
-                                See All
+                                See All <ChevronRightMinor />
                             </Link>
                         </div>
                     </div>

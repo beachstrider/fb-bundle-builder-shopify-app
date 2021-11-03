@@ -3,7 +3,10 @@ import styles from './PlanSettings.module.scss'
 import { Link } from 'react-router-dom'
 import { SideMenu } from '../Components/SideMenu'
 import { MenuItemCard } from '../Components/MenuItemCard'
-
+import {
+    ChevronRightMinor
+  } from '@shopify/polaris-icons';
+  
 const PlanSettings = () => {
 
     return (
@@ -34,7 +37,7 @@ const PlanSettings = () => {
                                 <MenuItemCard width="27%" />
                                 <MenuItemCard width="27%" />
                                 <Link to="/account" className={styles.seeAllMenu}>
-                                    See All
+                                    See All <ChevronRightMinor />
                                 </Link>
                             </div>
                         </div>
