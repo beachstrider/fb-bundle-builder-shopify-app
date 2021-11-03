@@ -1,0 +1,45 @@
+@import '../../../../variables';
+
+.unselected {
+  color: $grayMedium;
+  background: $grayLight;
+  & :hover {
+    border-radius: 0.5rem;
+    background: darken($grayLight, 10%);
+  }
+}
+.isSelected {
+  color: $white;
+  background: $primaryColor;
+  & :hover {
+    border-radius: 0.5rem;
+    background: darken($primaryColor, 10%);
+  }
+}
+
+.card {
+  position: relative;
+  border-radius: 0.5rem;
+  cursor: pointer;
+
+  & .children {
+    padding: 1rem;
+  }
+
+  & .checkMark {
+    position: absolute;
+    top: 0;
+    right: 0;
+    font-size: 1rem;
+    background: $white;
+    border-radius: 0 0.5rem 0 0.5rem;
+    color: $primaryColor;
+    padding: 0.1rem 0.4rem;
+    border-top: 1px solid $primaryColor;
+    border-right: 1px solid $primaryColor;
+    & svg {
+      width: 0.9rem;
+      fill: $primaryColor;
+    }
+  }
+}

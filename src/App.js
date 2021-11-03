@@ -1,5 +1,9 @@
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
+import { HashRouter as Router, Route, Switch } from 'react-router-dom'
+import { useSelector } from 'react-redux'
+import enTranslations from '@shopify/polaris/locales/en.json'
+import { AppProvider } from '@shopify/polaris'
 import './App.scss'
+import '@shopify/polaris/build/esm/styles.css'
 import { Header } from './components/Header'
 import { Footer } from './components/Footer'
 
@@ -14,39 +18,40 @@ import {
 import {
   Dashboard,
   OrderHistory,
-  AccountInfo, 
-  PaymentMethod, 
-  PlanSettings 
+  AccountInfo,
+  PaymentMethod,
+  PlanSettings
 } from './components/Account'
-
-const basename =
-  process.env.NODE_ENV !== 'development'
-    ? process.env.SHOPIFY_PROXY_APP_BASENAME
-    : ''
+import Faq from './components/FAQ/Faq'
 
 function App() {
-  return (
-    <Router basename={basename}>
-      <div className="defaultWrapper flexColumnDirection">
-        <Header />
-        <div className="content">
-          <Switch>
-            <Route exact path="/account" component={Dashboard} />
-            <Route exact path="/order-history" component={OrderHistory} />
-            <Route exact path="/account-info" component={AccountInfo} />
-            <Route exact path="/payment-method" component={PaymentMethod} />
-            <Route exact path="/plan-settings" component={PlanSettings } />
+  const state = useSelector((state) => state)
 
-            <Route exact path="/step-2" component={Location} />
-            <Route exact path="/step-3" component={EntreeType} />
-            <Route exact path="/step-4" component={Entrees} />
-            <Route exact path="/step-5" component={Review} />
-            <Route path="*" component={Frequency} />
-          </Switch>
+  return (
+    <AppProvider i18n={enTranslations}>
+      <Router>
+        <div className="defaultWrapper flexColumnDirection">
+          <Header />
+          <div className="content">
+            <Switch>
+              <Route exact path="/account" component={Dashboard} />
+              <Route exact path="/order-history" component={OrderHistory} />
+              <Route exact path="/account-info" component={AccountInfo} />
+              <Route exact path="/payment-method" component={PaymentMethod} />
+              <Route exact path="/plan-settings" component={PlanSettings} />
+
+              <Route path="/steps/2" component={Location} />
+              <Route path="/steps/3" component={EntreeType} />
+              <Route path="/steps/4" component={Entrees} />
+              <Route path="/steps/5" component={Review} />
+              <Route path="*" component={Frequency} />
+            </Switch>
+          </div>
+          <Footer />
+          {state.faqType && <Faq type={state.faqType} />}
         </div>
-        <Footer />
-      </div>
-    </Router>
+      </Router>
+    </AppProvider>
   )
 }
 

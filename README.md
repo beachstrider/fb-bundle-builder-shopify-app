@@ -42,7 +42,5 @@ Example:
 - Subpath prefix: `a`
 - Subpath: `proxy`
 
-  - In this case you will have to set your `SHOPIFY_PROXY_APP_BASENAME` variable to `/a/proxy`
-
 - Proxy URL: `https://some-url.com`
   - Development example: https://your-address.ngrok.io
