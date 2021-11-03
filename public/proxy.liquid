@@ -3,6 +3,20 @@
   {% capture page_title %} PAGE_TITLE {% endcapture %}
   {% capture page_description %} PAGE_DESCRIPTION {% endcapture %}        
 {% endcapture %}
-  
+<script>
+  {% if customer %}
+   const shopUser = {
+     id: `{{ customer.id}}`,
+     firstName: '{{ customer.first_name }}',
+     lastName: '{{ customer.first_name }}'
+   };
+  {% else %}
+    const shopUser = {
+     id: 0,
+     firstName: '',
+     lastName: ''
+   };
+  {% endif %}
+</script>
 <div id="root"></div>
 <script src="APP_BUNDLE_URL"></script>

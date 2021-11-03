@@ -46,6 +46,13 @@
     cursor: pointer;
   }
 
+  & .secondaryButton {
+    background: $white;
+    color: $primaryColor;
+    border: 1px solid $primaryColor;
+    border-radius: 50%;
+  }
+
   & .primaryButton {
     background: $primaryColor;
     &:hover {
@@ -72,13 +79,38 @@
   overflow: hidden;
 }
 
+.secondaryButton {
+  background: #fff;
+  color: #3dae2b;
+  border: 1px solid #3dae2b;
+  border-radius: 2em;
+  padding: 5px 40px;
+  text-decoration: none;
+  line-height: 16px;
+}
+
 .bundleRow{
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
+
+  @media (min-width: $breakpoint-tablet) {
+    flex-direction: row;
+  }
+
+  @media (min-width: $breakpoint-phone) {
+    flex-direction: row;
+  }
 }
 .bundleOneThird{
-  width: 33%;
+  width: 100%;
+
+  @media (min-width: $breakpoint-phone) {
+    width: 33%;
+  }
 }
 .bundleTwoThirds{
-  width: 66%;
+  width: 100%;
+  @media (min-width: $breakpoint-phone) {
+    width: 66%;
+  }
 }
