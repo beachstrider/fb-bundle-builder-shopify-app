@@ -1,0 +1,174 @@
+@import '../../../variables';
+@import '../shared';
+
+.wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+
+  & .mediumFont {
+    font-size: $stepsMediumFont;
+  }
+  & .smallFont {
+    font-size: $stepsSmallFont;
+  }
+  & .xSmallFont {
+    font-size: $stepsXSmallFont;
+  }
+  & .fontBold {
+    font-weight: 600;
+  }
+  & .noneIcon {
+    svg {
+      width: 4.5rem;
+      fill: $grayMedium;
+    }
+  }
+  & .selectedIcon {
+    svg {
+      path {
+        fill: $white;
+      }
+    }
+  }
+
+  & .weeklyPrice {
+    & .dollarSign {
+      position: absolute;
+      font-size: 0.8rem;
+      top: 3px;
+      left: 0;
+    }
+    & .price {
+      padding-left: 0.8rem;
+    }
+  }
+
+  & .section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    line-height: 3rem;
+
+    & div:first-of-type {
+      font-size: $stepsLargeFont;
+      font-weight: 600;
+      color: $grayMediumSecondary;
+    }
+    & div:nth-child(2) {
+      color: $grayMedium;
+    }
+  }
+
+  & .centerRow {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+  }
+
+  & .row {
+    width: 75vw;
+    display: grid;
+    grid-template-columns: 50% 40%;
+    column-gap: 10rem;
+
+    @media only screen and (max-width: $breakpointDesktop) {
+      width: 90vw;
+      grid-template-columns: 50% 50%;
+      column-gap: 5rem;
+    }
+    @media only screen and (max-width: $breakpointTablet) {
+      width: 100%;
+      grid-template-columns: 100%;
+      column-gap: 0;
+    }
+  }
+
+  & .column {
+    display: grid;
+
+    & .mainEntreeWrapper {
+      display: grid;
+      grid-template-columns: 1fr 25% 20%;
+      margin: 0 2rem;
+    }
+    & .entreeWrapper {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+
+    & .isSelected {
+      border-right: 1px solid $white;
+    }
+    & .isUnselected {
+      border-right: 1px solid $gray;
+    }
+
+    & .entree {
+      display: flex;
+      flex-direction: column;
+    }
+    & .title {
+      font-size: $stepsLargeFont;
+      @media only screen and (max-width: $breakpointDesktop) {
+        font-size: $stepsMediumFont;
+      }
+    }
+
+    & .prices {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      column-gap: 5rem;
+      align-items: center;
+      color: $grayMediumSecondary;
+      @media only screen and (max-width: $breakpointTablet) {
+        margin-top: 2rem;
+        width: 90vw;
+        grid-template-columns: 60% 40%;
+      }
+
+      & div {
+        font-size: 2.5rem;
+      }
+    }
+
+    & .priceDivider {
+      max-width: 80%;
+      margin: 0 0 1rem 0;
+      border-bottom: 2px solid $primaryColor;
+      @media only screen and (max-width: $breakpointTablet) {
+        max-width: 100%;
+      }
+    }
+
+    & .subRow {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      margin: 0.5rem;
+      column-gap: 1rem;
+      @media only screen and (max-width: $breakpointTablet) {
+        grid-template-columns: 1fr;
+        row-gap: 1rem;
+      }
+    }
+    & .subRowFullWidth {
+      grid-template-columns: 1fr;
+    }
+    & .subRowFourColumns {
+      grid-template-columns: repeat(4, 1fr);
+      @media only screen and (max-width: $breakpointTablet) {
+        grid-template-columns: 1fr;
+        row-gap: 1rem;
+      }
+    }
+  }
+
+  & .breakfast {
+    .subtitle {
+      font-size: 1.2rem;
+    }
+  }
+}

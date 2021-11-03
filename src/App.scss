@@ -1,6 +1,7 @@
 @import './variables';
 
 .defaultWrapper {
+  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -18,13 +19,50 @@
   min-height: 50vh;
   width: 100%;
 }
-.contentWrapper{
+.contentWrapper {
   width: 100%;
   max-width: 1260px;
-  margin:0 auto;
+  margin: 0 auto;
 }
 
+/*
+** Utility classes
+*/
+$totalLoop: 10;
+$multiplier: 0.5rem;
+@for $i from 1 through $totalLoop {
+  .mt-#{$i} {
+    margin-top: $i * $multiplier;
+  }
+}
+@for $i from 1 through $totalLoop {
+  .mb-#{$i} {
+    margin-bottom: $i * $multiplier;
+  }
+}
 
+.textCenter {
+  text-align: center;
+}
+.textItalic {
+  font-style: italic;
+}
+
+.displayMobile {
+  display: none;
+}
+.displayTablet {
+  display: flex;
+}
+
+@media only screen and (max-width: $breakpointTablet) {
+  .displayMobile {
+    display: flex;
+  }
+  .displayTablet {
+    display: none;
+  }
+}
 
 /* 
 ** Buttons 
@@ -70,7 +108,7 @@
   }
 }
 
-.bundleBuilderCard{
+.bundleBuilderCard {
   box-shadow: 0px 0px 12px rgb(0 0 0 / 25%);
   display: flex;
   flex-direction: column;
@@ -93,24 +131,24 @@
   display: flex;
   flex-direction: column;
 
-  @media (min-width: $breakpoint-tablet) {
+  @media (min-width: $breakpointTablet) {
     flex-direction: row;
   }
 
-  @media (min-width: $breakpoint-phone) {
+  @media (min-width: $breakpointTablet) {
     flex-direction: row;
   }
 }
 .bundleOneThird{
   width: 100%;
 
-  @media (min-width: $breakpoint-phone) {
+  @media (min-width: $breakpointTablet) {
     width: 33%;
   }
 }
 .bundleTwoThirds{
   width: 100%;
-  @media (min-width: $breakpoint-phone) {
+  @media (min-width: $breakpointTablet) {
     width: 66%;
   }
 }

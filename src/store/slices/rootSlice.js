@@ -15,33 +15,40 @@ const rootSlice = createSlice({
         id: 2,
         name: 'Step 2',
         description: 'Location',
-        path: '/step-2',
+        path: '/steps/2',
         isActive: false
       },
       {
         id: 3,
         name: 'Step 3',
         description: 'Entree Type',
-        path: '/step-3',
+        path: '/steps/3',
         isActive: false
       },
       {
         id: 4,
         name: 'Step 4',
         description: 'Entrees',
-        path: '/step-4',
+        path: '/steps/4',
         isActive: false
       },
       {
         id: 5,
         name: 'Step 5',
         description: 'Review',
-        path: '/step-5',
+        path: '/steps/5',
         isActive: false
       }
     ],
-    entrees: 10,
-    breakfast: 3
+    entree: {
+      id: 0,
+      price: 0
+    },
+    breakfast: {
+      id: 0,
+      price: 0
+    },
+    faqType: null
   },
   reducers: {
     setActiveStep: (state, action) => {
@@ -53,16 +60,19 @@ const rootSlice = createSlice({
       )
       state.steps = currentSteps
     },
-    chooseEntrees: (state, action) => {
-      state.entrees = action.payload
+    chooseEntree: (state, action) => {
+      state.entree = action.payload
     },
     chooseBreakfast: (state, action) => {
       state.breakfast = action.payload
+    },
+    selectFaqType: (state, action) => {
+      state.faqType = action.payload
     }
   }
 })
 
 export const reducer = rootSlice.reducer
 
-export const { chooseEntrees, chooseBreakfast, setActiveStep } =
+export const { chooseEntree, chooseBreakfast, selectFaqType, setActiveStep } =
   rootSlice.actions
