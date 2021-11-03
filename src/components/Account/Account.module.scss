@@ -40,7 +40,7 @@
     min-width: 175px;
     width: 100%;
 
-    @media (min-width: $breakpoint-phone) {
+    @media (min-width: $breakpointTablet) {
         width: 27.5%;
     }
 }
@@ -67,7 +67,7 @@
         fill: $white;
     }
 
-    @media (min-width: $breakpoint-phone) {
+    @media (min-width: $breakpointTablet) {
         width: 8%;
     }
 }
