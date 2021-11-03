@@ -5,6 +5,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  background-color: $white;
   hr {
     margin: unset !important;
   }
@@ -23,6 +24,7 @@
   width: 100%;
   max-width: 1260px;
   margin: 0 auto;
+  background-color: $white;
 }
 
 /*

@@ -9,7 +9,7 @@ const TopMenu = () => {
       <div className={styles.header}>
         <div className={styles.nameHeader}>
             <h1 className={styles.userName}>
-                Hi {shopUser.firstName}!
+                Hi {shopCustomer.firstName}!
             </h1>
         </div>
         <div className={styles.weekMenu}>
