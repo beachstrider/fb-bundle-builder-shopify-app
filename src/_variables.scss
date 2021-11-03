@@ -1,7 +1,13 @@
-$primaryColor: #3DAE2B;
-$gray: #DCDEDF;
+$primaryColor: #56a13e;
+$gray: #4c4c4c;
+$grayLight: #e7eaec;
+$grayMedium: #737678;
+$grayMediumSecondary: #242424;
 $white: #ffffff;
 $black: #000000;
 
-$breakpoint-tablet: 960px;
-$breakpoint-phone: 750px;
+$faqBackgroundColor: #e8e8e8;
+
+/* breakpoints */
+$breakpointTablet: 768px;
+$breakpointDesktop: 1024px;
