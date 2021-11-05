@@ -31,7 +31,7 @@ function App() {
     <AppProvider i18n={enTranslations}>
       <Router>
         <div className="defaultWrapper flexColumnDirection">
-          <Header />
+          {state.displayHeader && <Header />}
           <div className="content">
             <Switch>
               <Route exact path="/account" component={Dashboard} />
@@ -47,7 +47,7 @@ function App() {
               <Route path="*" component={Frequency} />
             </Switch>
           </div>
-          <Footer />
+          {state.displayFooter && <Footer />}
           {state.faqType && <Faq type={state.faqType} />}
         </div>
       </Router>

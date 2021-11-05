@@ -1,4 +1,4 @@
-const replaceString = require('../../src/server/utils/replaceString')
+const replaceString = require('../../../src/server/utils/replaceString')
 
 it('replaces multiple strings', () => {
   const mainString = 'This is a test to replace CODE ID'

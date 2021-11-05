@@ -8,13 +8,13 @@
   flex-direction: column;
 
   & .mediumFont {
-    font-size: $stepsMediumFont;
+    font-size: $fontMedium;
   }
   & .smallFont {
-    font-size: $stepsSmallFont;
+    font-size: $fontSmall;
   }
   & .xSmallFont {
-    font-size: $stepsXSmallFont;
+    font-size: $fontXSmall;
   }
   & .fontBold {
     font-weight: 600;
@@ -53,7 +53,7 @@
     line-height: 3rem;
 
     & div:first-of-type {
-      font-size: $stepsLargeFont;
+      font-size: $fontLarge;
       font-weight: 600;
       color: $grayMediumSecondary;
     }
@@ -70,18 +70,18 @@
   }
 
   & .row {
-    width: 75vw;
+    width: $rowWidth;
     display: grid;
     grid-template-columns: 50% 40%;
     column-gap: 10rem;
 
     @media only screen and (max-width: $breakpointDesktop) {
-      width: 90vw;
+      width: $rowWidthTable;
       grid-template-columns: 50% 50%;
       column-gap: 5rem;
     }
     @media only screen and (max-width: $breakpointTablet) {
-      width: 100%;
+      width: $rowWidthMobile;
       grid-template-columns: 100%;
       column-gap: 0;
     }
@@ -112,9 +112,9 @@
       flex-direction: column;
     }
     & .title {
-      font-size: $stepsLargeFont;
+      font-size: $fontLarge;
       @media only screen and (max-width: $breakpointDesktop) {
-        font-size: $stepsMediumFont;
+        font-size: $fontMedium;
       }
     }
 

@@ -3,7 +3,9 @@ import { useDispatch, useSelector } from 'react-redux'
 import {
   chooseEntree,
   chooseBreakfast,
-  selectFaqType
+  selectFaqType,
+  displayHeader,
+  displayFooter
 } from '../../../store/slices/rootSlice'
 import {
   FrequencyBreakfast,
@@ -21,6 +23,8 @@ const Frequency = () => {
 
   useEffect(() => {
     dispatch(selectFaqType(FAQ_TYPE))
+    dispatch(displayHeader(true))
+    dispatch(displayFooter(true))
 
     // TODO: fetch data from API
     if (!state.entree.id) {

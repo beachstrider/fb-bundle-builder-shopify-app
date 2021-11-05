@@ -1,0 +1,64 @@
+@import '../../../../variables';
+@import '../../shared';
+
+.unselected {
+  color: $grayMedium;
+  background: $grayLight;
+  & div {
+    > :first-of-type::after {
+      content: '';
+      position: absolute;
+      border-top: 5px solid $gray;
+      width: 271px;
+      transform: rotate(145deg);
+      transform-origin: 0% 0%;
+      top: 3px;
+      left: 224px;
+    }
+  }
+  & :hover {
+    border-radius: 0.5rem;
+    background: darken($grayLight, 10%);
+  }
+}
+.isSelected {
+  color: $white;
+  background: $primaryColor;
+  & :hover {
+    border-radius: 0.5rem;
+    background: darken($primaryColor, 10%);
+  }
+}
+
+.card {
+  position: relative;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  width: $cardDateWidth;
+  height: $cardDateHeight;
+
+  & .children {
+    padding: 1rem;
+
+    .cardContent {
+      height: $cardDateHeight;
+    }
+  }
+
+  & .checkMark {
+    position: absolute;
+    top: 0;
+    right: 0;
+    font-size: 1rem;
+    background: $white;
+    border-radius: 0 0.5rem 0 0.5rem;
+    color: $primaryColor;
+    padding: 0.1rem 0.4rem;
+    border-top: 1px solid $primaryColor;
+    border-right: 1px solid $primaryColor;
+    & svg {
+      width: 0.9rem;
+      fill: $primaryColor;
+    }
+  }
+}

@@ -1,5 +1,11 @@
-import replaceString from './replaceString'
-import generateAccessToken from './generateAccessToken'
-import request from './request'
+const generateAccessToken = require('./generateAccessToken')
+const replaceString = require('./replaceString')
+const request = require('./request')
+const shopifyMultipass = require('./shopifyMultipass')
 
-export { replaceString, generateAccessToken, request }
+module.exports = {
+  replaceString,
+  generateAccessToken,
+  request,
+  shopifyMultipass
+}
