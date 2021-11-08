@@ -10,9 +10,9 @@ import {
 const OrderHistory = () => {
 
     const dateFormat = (date) => {
-        let dateArr = date.split(' ');
-        let newDate = dateArr[0];
-        let reformatArr = newDate.split('-');
+        const dateArr = date.split(' ');
+        const newDate = dateArr[0];
+        const reformatArr = newDate.split('-');
         return `${reformatArr[1]}/${reformatArr[2]}/${reformatArr[0]}`;
     }
 
@@ -68,9 +68,9 @@ const OrderHistory = () => {
                                 <th>Meals Names</th>
                             </thead>
                             <tbody>
-                                {shopCustomer.orders.map( order => {
+                                {shopCustomer.orders.map( (order, index) => {
                                     return (
-                                        <tr>
+                                        <tr key={index}>
                                             <td>{dateFormat(order.orderDate)}</td>
                                             <td>{order.orderTotal}</td>
                                             <td>Keto</td>
