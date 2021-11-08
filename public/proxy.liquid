@@ -3,6 +3,51 @@
   {% capture page_title %} PAGE_TITLE {% endcapture %}
   {% capture page_description %} PAGE_DESCRIPTION {% endcapture %}        
 {% endcapture %}
-  
+<script>
+  {% if customer %}
+   const shopCustomer = {
+     id: `{{ customer.id}}`,
+     fullName: '{{ customer.first_name }} {{ customer.first_name }}',
+     firstName: '{{ customer.first_name }}',
+     lastName: '{{ customer.first_name }}',
+     email: '{{ customer.email }}',
+     address: {
+      address1:'{{ customer.default_address.address1 }}',
+      address2:'{{ customer.default_address.address2 }}',
+      street: '{{ customer.default_address.street }}',
+      city:'{{ customer.default_address.city }}',
+      company:'{{ customer.default_address.company}}',
+      country:'{{ customer.default_address.country }}',
+      countryCode:'{{ customer.default_address.country_code }}',
+      province:'{{ customer.default_address.province }}',
+      phone:'{{ customer.default_address.phone }}',
+      provinceCode:'{{ customer.default_address.province_code }}',
+      zip:'{{ customer.default_address.zip }}'
+     }
+   };
+  {% else %}
+  const shopCustomer = {
+     id: 0,
+     fullName: '',
+     firstName: '',
+     lastName: '',
+     email: '',
+     address: {
+      address1:'',
+      address2:'',
+      street:'',
+      city:'',
+      company:'',
+      country:'',
+      countryCode:'',
+      province:'',
+      phone:'',
+      provinceCode:'',
+      zip:'',
+     }
+   };
+  {% endif %}
+  console.log('the user object: ', shopUser)
+</script>
 <div id="root"></div>
 <script src="APP_BUNDLE_URL"></script>

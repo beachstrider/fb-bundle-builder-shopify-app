@@ -5,12 +5,11 @@ import styles from './TopMenu.module.scss'
 
 const TopMenu = () => {
   const state = useSelector((state) => state)
-
   return (
       <div className={styles.header}>
         <div className={styles.nameHeader}>
             <h1 className={styles.userName}>
-                Hi Ashton!
+                Hi {shopCustomer.firstName}!
             </h1>
         </div>
         <div className={styles.weekMenu}>

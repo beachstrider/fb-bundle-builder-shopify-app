@@ -5,6 +5,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  background-color: $white;
   hr {
     margin: unset !important;
   }
@@ -23,6 +24,7 @@
   width: 100%;
   max-width: 1260px;
   margin: 0 auto;
+  background-color: $white;
 }
 
 /*
@@ -84,6 +86,13 @@ $multiplier: 0.5rem;
     cursor: pointer;
   }
 
+  & .secondaryButton {
+    background: $white;
+    color: $primaryColor;
+    border: 1px solid $primaryColor;
+    border-radius: 50%;
+  }
+
   & .primaryButton {
     background: $primaryColor;
     &:hover {
@@ -110,13 +119,38 @@ $multiplier: 0.5rem;
   overflow: hidden;
 }
 
-.bundleRow {
+.secondaryButton {
+  background: #fff;
+  color: #3dae2b;
+  border: 1px solid #3dae2b;
+  border-radius: 2em;
+  padding: 5px 40px;
+  text-decoration: none;
+  line-height: 16px;
+}
+
+.bundleRow{
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
+
+  @media (min-width: $breakpointTablet) {
+    flex-direction: row;
+  }
+
+  @media (min-width: $breakpointTablet) {
+    flex-direction: row;
+  }
 }
-.bundleOneThird {
-  width: 33%;
+.bundleOneThird{
+  width: 100%;
+
+  @media (min-width: $breakpointTablet) {
+    width: 33%;
+  }
 }
-.bundleTwoThirds {
-  width: 66%;
+.bundleTwoThirds{
+  width: 100%;
+  @media (min-width: $breakpointTablet) {
+    width: 66%;
+  }
 }
