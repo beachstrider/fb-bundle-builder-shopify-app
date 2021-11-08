@@ -26,12 +26,12 @@ import Faq from './components/FAQ/Faq'
 
 function App() {
   const state = useSelector((state) => state)
-
+  console.log('state: ', state);
   return (
     <AppProvider i18n={enTranslations}>
       <Router>
         <div className="defaultWrapper flexColumnDirection">
-          <Header />
+          {/* <Header /> */}
           <div className="content">
             <Switch>
               <Route exact path="/account" component={Dashboard} />
@@ -47,8 +47,8 @@ function App() {
               <Route path="*" component={Frequency} />
             </Switch>
           </div>
-          <Footer />
-          {state.faqType && <Faq type={state.faqType} />}
+          {/* <Footer /> */}
+          {/* {state.faqType && <Faq type={state.faqType} />} */}
         </div>
       </Router>
     </AppProvider>

@@ -5,18 +5,98 @@
 {% endcapture %}
 <script>
 {% if customer %}
- const shopUser = {
-   id: `{{ customer.id}}`,
-   firstName: '{{ customer.first_name }}',
-   lastName: '{{ customer.first_name }}'
- };
+  const shopCustomer = {
+    id: `{{ customer.id}}`,
+    fullName: '{{ customer.first_name }} {{ customer.first_name }}',
+    firstName: '{{ customer.first_name }}',
+    lastName: '{{ customer.first_name }}',
+    email: '{{ customer.email }}',
+    orders: [
+      {% for order in customer.orders %}
+        {
+          orderDate: '{{ order.created_at }}',
+          orderTotal: '{{ order.total_price | money_with_currency }}',
+          orderItems: [
+            {% for item in order.line_items %}
+              '{{ item.title }}',
+            {% endfor %}
+          ]
+        },
+      {% endfor %}
+    ],
+    paymentInfo: {
+      cardName:'{{ customer.first_name }} {{ customer.first_name }}',
+      orderName: '{{ lastOrder.name }}',
+      transactionName: '{{ lastTransaction.name }}',
+      cardNumber: '{{ lastTransaction.payment_details }}',
+      billingAddres: {
+        address1:'{{ customer.default_address.address1 }}',
+        address2:'{{ customer.default_address.address2 }}',
+        street: '{{ customer.default_address.street }}',
+        city:'{{ customer.default_address.city }}',
+        company:'{{ customer.default_address.company}}',
+        country:'{{ customer.default_address.country }}',
+        countryCode:'{{ customer.default_address.country_code }}',
+        province:'{{ customer.default_address.province }}',
+        phone:'{{ customer.default_address.phone }}',
+        provinceCode:'{{ customer.default_address.province_code }}',
+        zip:'{{ customer.default_address.zip }}'
+      }
+    },
+    address: {
+      address1:'{{ customer.default_address.address1 }}',
+      address2:'{{ customer.default_address.address2 }}',
+      street: '{{ customer.default_address.street }}',
+      city:'{{ customer.default_address.city }}',
+      company:'{{ customer.default_address.company}}',
+      country:'{{ customer.default_address.country }}',
+      countryCode:'{{ customer.default_address.country_code }}',
+      province:'{{ customer.default_address.province }}',
+      phone:'{{ customer.default_address.phone }}',
+      provinceCode:'{{ customer.default_address.province_code }}',
+      zip:'{{ customer.default_address.zip }}'
+    }
+  };
 {% else %}
-  const shopUser = {
-   id: 0,
-   firstName: '',
-   lastName: ''
- };
+  const shopCustomer = {  
+    id: 0,
+    fullName: '',
+    firstName: '',
+    lastName: '',
+    email: '',
+    paymentInfo: {
+      cardName:'',
+      cardNumber: '',
+      billingAddres: {
+        address1:'',
+        address2:'',
+        street:'',
+        city:'',
+        company:'',
+        country:'',
+        countryCode:'',
+        province:'',
+        phone:'',
+        provinceCode:'',
+        zip:'',
+      }
+    },
+    address: {
+      address1:'',
+      address2:'',
+      street:'',
+      city:'',
+      company:'',
+      country:'',
+      countryCode:'',
+      province:'',
+      phone:'',
+      provinceCode:'',
+      zip:'',
+    }
+  };
 {% endif %}
+console.log('The customer: ', shopCustomer)
 </script>
 <div id="root"></div>
 <script src="APP_BUNDLE_URL"></script>

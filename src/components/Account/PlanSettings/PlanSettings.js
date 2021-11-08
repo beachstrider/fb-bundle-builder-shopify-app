@@ -1,6 +1,6 @@
 import React from 'react'
 import styles from './PlanSettings.module.scss'
-import { Link } from 'react-router-dom'
+import { Link, Redirect } from 'react-router-dom'
 import { SideMenu } from '../Components/SideMenu'
 import { MenuItemCard } from '../Components/MenuItemCard'
 import {
@@ -8,6 +8,10 @@ import {
   } from '@shopify/polaris-icons';
   
 const PlanSettings = () => {
+
+    if(shopCustomer.id === 0){
+        return <Redirect push to="/" />
+    }
 
     return (
         <div className="contentWrapper">

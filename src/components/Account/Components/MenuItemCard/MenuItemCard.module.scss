@@ -8,6 +8,24 @@
     border-radius: 6px;
     margin: 8px;
 }
+.cardImageWrapper{
+    position: relative;
+    overflow: hidden;
+    
+    & img{
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: auto;
+    }
+
+    &:after{
+        display: block;
+        content: "";
+        padding-bottom: 56.25%;
+    }
+}
 .cardContent{
     display: flex;
     flex-direction: column;
@@ -21,6 +39,7 @@
         font-size: 1.8rem;
         margin: 0 0 12px;
         line-height: 2.4rem;
+        flex: 1;
     }
 }
 .accountMenuRow{

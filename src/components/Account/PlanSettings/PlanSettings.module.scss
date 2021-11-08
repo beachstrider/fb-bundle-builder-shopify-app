@@ -6,7 +6,7 @@
     flex-direction: column;
     flex-wrap: wrap;
 
-    @media (min-width: $breakpoint-phone) {
+    @media (min-width: $breakpointTablet) {
         flex-direction: row;
     }
 

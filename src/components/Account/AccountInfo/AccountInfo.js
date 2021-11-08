@@ -1,9 +1,13 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { Link, Redirect } from 'react-router-dom'
 import styles from './AccountInfo.module.scss'
 import { SideMenu } from '../Components/SideMenu'
 
 const AccountInfo = () => {
+
+    if(shopCustomer.id === 0){
+        return <Redirect push to="/" />
+    }
 
     return (
         <div className="contentWrapper">

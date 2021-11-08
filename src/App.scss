@@ -5,6 +5,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  background-color: $white;
   hr {
     margin: unset !important;
   }
@@ -23,6 +24,11 @@
   width: 100%;
   max-width: 1260px;
   margin: 0 auto;
+  padding: 0 16px;
+
+  @media only screen and (max-width: $breakpointTablet) {
+    padding: 0 0px;
+  }
 }
 
 /*
@@ -88,13 +94,39 @@ $multiplier: 0.5rem;
     background: $white;
     color: $primaryColor;
     border: 1px solid $primaryColor;
-    border-radius: 50%;
+    border-radius: 2em;
+    padding: 5px 40px;
+    text-decoration: none;
+    line-height: 16px;
+
+    &:hover {
+      background: darken($white, 10%);
+      cursor: pointer;
+    }
+
+    &.largeButton{
+      font-size: 22px;
+      padding: 20px 40px;
+      box-shadow: 0px 0px 16px rgb(0 0 0 / 15%);
+    }
   }
 
   & .primaryButton {
     background: $primaryColor;
+    color: $white;
+    border: 1px solid $primaryColor;
+    border-radius: 2em;
+    padding: 5px 40px;
+    text-decoration: none;
+    line-height: 16px;
     &:hover {
       background: darken($primaryColor, 10%);
+      cursor: pointer;
+    }
+    &.largeButton{
+      font-size: 22px;
+      padding: 20px 40px;
+      box-shadow: 0px 0px 16px rgb(0 0 0 / 15%);
     }
   }
 
@@ -115,10 +147,11 @@ $multiplier: 0.5rem;
   border-radius: 6px;
   margin: 8px;
   overflow: hidden;
+  background-color: $white;
 }
 
 .secondaryButton {
-  background: #fff;
+  background: $white;
   color: #3dae2b;
   border: 1px solid #3dae2b;
   border-radius: 2em;
@@ -131,24 +164,24 @@ $multiplier: 0.5rem;
   display: flex;
   flex-direction: column;
 
-  @media (min-width: $breakpoint-tablet) {
+  @media (min-width: $breakpointTablet) {
     flex-direction: row;
   }
 
-  @media (min-width: $breakpoint-phone) {
+  @media (min-width: $breakpointTablet) {
     flex-direction: row;
   }
 }
 .bundleOneThird{
   width: 100%;
 
-  @media (min-width: $breakpoint-phone) {
+  @media (min-width: $breakpointTablet) {
     width: 33%;
   }
 }
 .bundleTwoThirds{
   width: 100%;
-  @media (min-width: $breakpoint-phone) {
+  @media (min-width: $breakpointTablet) {
     width: 66%;
   }
 }

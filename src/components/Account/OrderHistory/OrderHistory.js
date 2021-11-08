@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { Link, Redirect } from 'react-router-dom'
 import styles from './OrderHistory.module.scss'
 import {SideMenu} from '../Components/SideMenu'
 import {MenuItemCard} from '../Components/MenuItemCard'
@@ -8,7 +8,19 @@ import {
   } from '@shopify/polaris-icons';
 
 const OrderHistory = () => {
-  console.log(shopUser)
+
+    const dateFormat = (date) => {
+        let dateArr = date.split(' ');
+        let newDate = dateArr[0];
+        let reformatArr = newDate.split('-');
+        return `${reformatArr[1]}/${reformatArr[2]}/${reformatArr[0]}`;
+    }
+
+    if(shopCustomer.id === 0){
+        return <Redirect push to="/" />
+    }
+    
+
   return (
     <div className="contentWrapper">
         <div className="bundleRow">
@@ -17,7 +29,7 @@ const OrderHistory = () => {
             </div>
             <div className="bundleTwoThirds">
                 <div className="headerOffset">
-                    <h1>Order History</h1>
+                    <h2>Order History</h2>
                 </div>
             </div>
         </div>
@@ -43,7 +55,7 @@ const OrderHistory = () => {
                     </div>
                 </div>
                 <div className="bundleBuilderCard">
-                    <div className={styles.currentOrderWrapper}>
+                    <div className={styles.contentCardWrapper}>
                         <div className={styles.contentCardNavigation}>
                             <h3>Past Orders</h3>
                             <p></p>
@@ -56,15 +68,19 @@ const OrderHistory = () => {
                                 <th>Meals Names</th>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>11/11/2021</td>
-                                    <td>$154.00</td>
-                                    <td>Keto</td>
-                                    <td className={styles.orderMealNames}>
-                                        <p className={styles.orderMealNamesText}>Pink Peppercorn Sirloin, Barbados Sirlion, Another Meal Name and Another to make it long enough.</p>
-                                        <Link to="#" className={styles.orderMealNamesLink}>See All Meals</Link>
-                                    </td>
-                                </tr>
+                                {shopCustomer.orders.map( order => {
+                                    return (
+                                        <tr>
+                                            <td>{dateFormat(order.orderDate)}</td>
+                                            <td>{order.orderTotal}</td>
+                                            <td>Keto</td>
+                                            <td className={styles.orderMealNames}>
+                                                <p className={styles.orderMealNamesText}>{order.orderItems.map( item => ( item ))}</p>
+                                                <Link to="#" className={styles.orderMealNamesLink}>See All Meals</Link>
+                                            </td>
+                                        </tr>  
+                                    )
+                                })}
                             </tbody>
                         </table>
                         <Link to="#" className={styles.orderHistoryMoreLink}>See More </Link>

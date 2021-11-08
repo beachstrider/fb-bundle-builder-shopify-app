@@ -6,7 +6,9 @@ const MenuItemCard = (props) => {
     
     return (
         <div className={`bundleBuilderCard ${styles.menuItemCard}`}>
-            <img className={styles.cardImage} src="//cdn.shopify.com/s/files/1/0552/6549/3185/files/Kimchi_Pork__Keto_C_165x.jpg?v=1634949902" alt="Buffalo Mozzarella Chicken" />
+            <div className={styles.cardImageWrapper}>
+                <img className={styles.cardImage} src="//cdn.shopify.com/s/files/1/0552/6549/3185/files/Kimchi_Pork__Keto_C_165x.jpg?v=1634949902" alt="Buffalo Mozzarella Chicken" />
+            </div>
             <div className={styles.cardContent}>
                 <div className={styles.cardTitle}>
                     <h3 className={styles.menuItemTitle}>Buffalo Mozzarella Chicken</h3>
