@@ -7,7 +7,16 @@
 }
 .currentOrderMenu{
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
+    flex-wrap: wrap;
+
+    @media (min-width: $breakpointTablet) {
+        flex-direction: row;
+    }
+
+    & p{
+        margin: 0
+    }
 }
 .viewMoreLink{
     background-color: $primaryColor;
@@ -20,4 +29,38 @@
 .viewMoreItemsLink{
     text-align: center;
     color: white;
+}
+.orderHistoryTable{
+    width: 100%;
+}
+.orderHistoryTable,
+.orderHistoryTable td,
+.orderHistoryTable tr,
+.orderHistoryTable th{
+    border:none;
+    padding:0;
+}
+.orderHistoryTableHeaders{
+    text-align: left;
+}
+.orderMealNames{
+    display: inline-flex;
+    align-items: center;
+    width: 100%;
+}
+.orderMealNamesText{
+    width: 250px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.orderMealNamesLink{
+    margin-left:8px;
+    color:$primaryColor
+}
+.orderHistoryMoreLink{
+    color:$primaryColor;
+    font-weight: 900;
+    text-align: center;
+    display: block;
 }
