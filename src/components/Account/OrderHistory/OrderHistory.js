@@ -7,14 +7,46 @@ import {
     ChevronRightMinor
   } from '@shopify/polaris-icons';
 
-const OrderHistory = () => {
 
-    const dateFormat = (date) => {
-        const dateArr = date.split(' ');
-        const newDate = dateArr[0];
-        const reformatArr = newDate.split('-');
-        return `${reformatArr[1]}/${reformatArr[2]}/${reformatArr[0]}`;
+const  orders = [
+    {
+        id: 1,
+        total: '$154.12',
+        type: 'Keto',
+        createdAt: '11/21/2021',
+        orderItems: ['Pink Peppercorn Sirloin', 'Barbados Sirloin', 'Cheese salmon fillet']
+    },
+    {
+        id: 2,
+        total: '$154.12',
+        type: 'Keto',
+        createdAt: '11/21/2021',
+        orderItems: ['Pink Peppercorn Sirloin', 'Barbados Sirloin', 'Cheese salmon fillet']
+    },
+    {
+        id: 3,
+        total: '$154.12',
+        type: 'Keto',
+        createdAt: '11/21/2021',
+        orderItems: ['Pink Peppercorn Sirloin', 'Barbados Sirloin', 'Cheese salmon fillet']
+    },
+    {
+        id: 4,
+        total: '$154.12',
+        type: 'Keto',
+        createdAt: '11/21/2021',
+        orderItems: ['Pink Peppercorn Sirloin', 'Barbados Sirloin', 'Cheese salmon fillet']
+    },
+    {
+        id: 5,
+        total: '$154.12',
+        type: 'Keto',
+        createdAt: '11/21/2021',
+        orderItems: ['Pink Peppercorn Sirloin', 'Barbados Sirloin', 'Cheese salmon fillet']
     }
+]
+
+const OrderHistory = () => {
 
     if(shopCustomer.id === 0){
         return <Redirect push to="/" />
@@ -68,12 +100,12 @@ const OrderHistory = () => {
                                 <th>Meals Names</th>
                             </thead>
                             <tbody>
-                                {shopCustomer.orders.map( (order, index) => {
+                                {orders.map( (order, index) => {
                                     return (
                                         <tr key={index}>
-                                            <td>{dateFormat(order.orderDate)}</td>
-                                            <td>{order.orderTotal}</td>
-                                            <td>Keto</td>
+                                            <td>{order.createdAt}</td>
+                                            <td>{order.total}</td>
+                                            <td>{order.type}</td>
                                             <td className={styles.orderMealNames}>
                                                 <p className={styles.orderMealNamesText}>{order.orderItems.map( item => ( item ))}</p>
                                                 <Link to="#" className={styles.orderMealNamesLink}>See All Meals</Link>

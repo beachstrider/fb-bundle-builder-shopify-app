@@ -4,27 +4,17 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    align-items: center;
-
-    @media (min-width: $breakpointTablet) {
-        flex-direction: row;
-    }
 
     & .nameHeader{
         display: flex;
-        width: 98%;
+        width: 45%;
         text-align: right;
         justify-content: flex-end;
         position: relative;
         margin: 40px 0px;
 
-        @media (min-width: $breakpointTablet) {
-            width: 45%;
-        }
-
         & h1{
             margin: 0 20px 0 0;
-            z-index:10;
         }
 
         &:after{
@@ -32,16 +22,10 @@
             background-color: #F8D739;
             position: absolute;
             width: 100%;
-            height: 8px;
+            height: 21px;
             border-top-right-radius: 11px;
             border-bottom-right-radius: 11px;
-            bottom: 4px;
-            z-index: 0;
-
-            @media (min-width: $breakpointTablet) {
-                height: 21px;
-                bottom: 9px;
-            }
+            bottom: 0;
         }
     }
 }
