@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import {
-  chooseEntree,
-  chooseBreakfast,
+  setEntree,
+  setBreakfast,
   selectFaqType,
   displayHeader,
   displayFooter
@@ -14,8 +14,10 @@ import {
   FrequencySubTotal
 } from '.'
 import styles from './Frequency.module.scss'
+import { withActiveStep } from '../../Hooks'
 
 const FAQ_TYPE = 'frequency'
+const STEP_ID = 1
 
 const Frequency = () => {
   const dispatch = useDispatch()
@@ -28,11 +30,11 @@ const Frequency = () => {
 
     // TODO: fetch data from API
     if (!state.entree.id) {
-      dispatch(chooseEntree(entrees[0]))
+      dispatch(setEntree(entrees[0]))
     }
 
     if (!state.breakfast.id) {
-      dispatch(chooseBreakfast(breakfasts[0]))
+      dispatch(setBreakfast(breakfasts[0]))
     }
   }, [])
 
@@ -98,11 +100,11 @@ const Frequency = () => {
   ]
 
   const handleSelectEntree = (entree) => {
-    dispatch(chooseEntree(entree))
+    dispatch(setEntree(entree))
   }
 
   const handleSelectBreakfast = (breakfast) => {
-    dispatch(chooseBreakfast(breakfast))
+    dispatch(setBreakfast(breakfast))
   }
 
   return (
@@ -176,4 +178,4 @@ const Frequency = () => {
   )
 }
 
-export default Frequency
+export default withActiveStep(Frequency, STEP_ID)

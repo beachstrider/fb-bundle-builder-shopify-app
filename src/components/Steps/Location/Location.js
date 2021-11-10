@@ -12,8 +12,10 @@ import { InputEmail, InputText } from '../Components/Inputs'
 import { isValidEmail, request } from '../../../utils'
 import { LocationDate } from '.'
 import styles from './Location.module.scss'
+import { withActiveStep } from '../../Hooks'
 
 const FAQ_TYPE = 'location'
+const STEP_ID = 2
 
 // TODO: Add and format correct data
 const mockedZones = [
@@ -277,4 +279,4 @@ const Location = () => {
   )
 }
 
-export default Location
+export default withActiveStep(Location, STEP_ID)
