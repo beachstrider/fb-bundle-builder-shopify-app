@@ -7,6 +7,71 @@ import {
     ChevronRightMinor
   } from '@shopify/polaris-icons';
   
+
+  const menuItems = [
+    {
+      title: 'Buffalo Mozzarella Chicken',
+      quantity: 1,
+      type: 'Regular'
+    },
+    {
+      title: 'Buffalo Mozzarella Chicken',
+      quantity: 1,
+      type: 'Regular'
+    },
+    {
+      title: 'Buffalo Mozzarella Chicken',
+      quantity: 1,
+      type: 'Regular'
+    },
+    {
+      title: 'Buffalo Mozzarella Chicken',
+      quantity: 1,
+      type: 'Regular'
+    },
+    {
+      title: 'Buffalo Mozzarella Chicken',
+      quantity: 1,
+      type: 'Regular'
+    },
+    {
+      title: 'Buffalo Mozzarella Chicken',
+      quantity: 1,
+      type: 'Regular'
+    },
+    {
+      title: 'Buffalo Mozzarella Chicken',
+      quantity: 1,
+      type: 'Regular'
+    },
+    {
+      title: 'Buffalo Mozzarella Chicken',
+      quantity: 1,
+      type: 'Regular'
+    },
+    {
+      title: 'Buffalo Mozzarella Chicken',
+      quantity: 1,
+      type: 'Regular'
+    },
+    {
+      title: 'Buffalo Mozzarella Chicken',
+      quantity: 1,
+      type: 'Regular'
+    },
+    {
+      title: 'Buffalo Mozzarella Chicken',
+      quantity: 1,
+      type: 'Regular'
+    },
+    {
+      title: 'Buffalo Mozzarella Chicken',
+      quantity: 1,
+      type: 'Regular'
+    }
+  
+  ]
+
 const PlanSettings = () => {
 
     if(shopCustomer.id === 0){
@@ -37,9 +102,9 @@ const PlanSettings = () => {
                                 <Link to="/account" className="secondaryButton">Edit Order</Link>
                             </div>
                             <div className={styles.currentOrderMenu}>
-                                <MenuItemCard width="27%" />
-                                <MenuItemCard width="27%" />
-                                <MenuItemCard width="27%" />
+                                {menuItems.map((item, index) => (
+                                    index < 3 ? <MenuItemCard item={item} width="27%" /> : ''
+                                ))}
                                 <Link to="/account" className={styles.seeAllMenu}>
                                     See All <ChevronRightMinor />
                                 </Link>

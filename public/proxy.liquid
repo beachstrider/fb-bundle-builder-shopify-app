@@ -20,7 +20,8 @@
             {% for item in order.line_items %}
               '{{ item.title }}',
             {% endfor %}
-          ]
+          ],
+          orderLink: '{{ order.customer_url }}'
         },
       {% endfor %}
     ],
