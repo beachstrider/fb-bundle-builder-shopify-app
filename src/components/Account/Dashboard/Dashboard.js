@@ -7,7 +7,6 @@ import {
   ChevronRightMinor
 } from '@shopify/polaris-icons';
 import * as dayjs from 'dayjs';
-import { format } from 'prettier'
 
 const customerSubscription = 
   {
@@ -518,7 +517,6 @@ const customerSubscription =
 
 const Dashboard = () => {
   const state = useSelector((state) => state)
-  const [weeks, setWeeks] = React.useState([]);
   const [active, setActive] = React.useState([]);
   const [limit, setLimit] = React.useState([]);
   const [subscriptions, setSubscriptions] = React.useState([])
@@ -618,7 +616,7 @@ const Dashboard = () => {
                 <h3>Week of {sub.subscriptionDate}</h3>
                 {sub.status === 'sent' ? <Link to="#" className={styles.primaryLink}>Track Package</Link> : ''}
               </div>
-              {sub.status === 'sent' ? <Link to="/order-history" className="secondaryButton">Order Summary</Link>  : <Link to="/order-history" className="secondaryButton">Edit Order</Link>}
+              {sub.status === 'sent' ? <Link to="/order-history" className="secondaryButton">Order Summary</Link>  : <Link to={`/edit-order/${sub.id}`} className="secondaryButton">Edit Order</Link>}
             </div>
             <div className={styles.accountMenuRow}>
               {sub.CustomerSubscriptionBundleContentSelections.map((item, index) => (

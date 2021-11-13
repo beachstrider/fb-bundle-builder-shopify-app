@@ -159,7 +159,19 @@ $multiplier: 0.5rem;
   text-decoration: none;
   line-height: 16px;
 }
-
+.primaryButton {
+  background: $primaryColor;
+  color: $white;
+  border: 1px solid $primaryColor;
+  border-radius: 2em;
+  padding: 5px 40px;
+  text-decoration: none;
+  line-height: 16px;
+  &:hover {
+    background: darken($primaryColor, 10%);
+    cursor: pointer;
+  }
+}
 .bundleRow{
   display: flex;
   flex-direction: column;
