@@ -26,7 +26,7 @@ const request = async (url, fetchOptions, retries = 3) => {
           request(url, fetchOptions, retries - 1)
         }, process.env.NEXT_PUBLIC_RETRY_INTERVAL)
       } else {
-        throw new Error('Maximum amount of retries exceeded.')
+        throw new Error('Maximum amount of retries exceeded')
       }
     }
   } catch (error) {
