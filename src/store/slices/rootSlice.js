@@ -3,6 +3,8 @@ import { createSlice } from '@reduxjs/toolkit'
 const rootSlice = createSlice({
   name: 'root',
   initialState: {
+    displayHeader: false,
+    displayFooter: false,
     steps: [
       {
         id: 1,
@@ -48,9 +50,20 @@ const rootSlice = createSlice({
       id: 0,
       price: 0
     },
-    faqType: null
+    faqType: null,
+    email: '',
+    location: {
+      zipCode: '',
+      deliveryDate: ''
+    }
   },
   reducers: {
+    displayHeader: (state, action) => {
+      state.displayHeader = action.payload
+    },
+    displayFooter: (state, action) => {
+      state.displayFooter = action.payload
+    },
     setActiveStep: (state, action) => {
       const currentStepId = action.payload
       const currentSteps = state.steps.map((step) =>
@@ -68,11 +81,28 @@ const rootSlice = createSlice({
     },
     selectFaqType: (state, action) => {
       state.faqType = action.payload
+    },
+    setZipCode: (state, action) => {
+      state.zipCode = action.payload
+    },
+    setEmail: (state, action) => {
+      state.email = action.payload
+    },
+    setLocation: (state, action) => {
+      state.location = action.payload
     }
   }
 })
 
 export const reducer = rootSlice.reducer
 
-export const { chooseEntree, chooseBreakfast, selectFaqType, setActiveStep } =
-  rootSlice.actions
+export const {
+  chooseEntree,
+  chooseBreakfast,
+  displayFooter,
+  displayHeader,
+  selectFaqType,
+  setActiveStep,
+  setEmail,
+  setLocation
+} = rootSlice.actions

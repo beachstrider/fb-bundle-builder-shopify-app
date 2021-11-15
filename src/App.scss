@@ -95,8 +95,19 @@ $multiplier: 0.5rem;
 
   & .primaryButton {
     background: $primaryColor;
+    box-shadow: unset !important;
     &:hover {
       background: darken($primaryColor, 10%);
+    }
+  }
+
+  & .secondaryButton {
+    background: $grayMedium;
+    border: 1px solid $grayMedium;
+    color: $white;
+    box-shadow: unset !important;
+    &:hover {
+      background: darken($grayMedium, 10%);
     }
   }
 
@@ -104,6 +115,7 @@ $multiplier: 0.5rem;
     background: $white;
     border: 1px solid $gray;
     color: $gray;
+    box-shadow: unset !important;
     &:hover {
       background: darken($white, 10%);
     }

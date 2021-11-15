@@ -1,2 +1,4 @@
 import Location from './Location'
-export { Location }
+import LocationDate from './LocationDate'
+
+export { Location, LocationDate }

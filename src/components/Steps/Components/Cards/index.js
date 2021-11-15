@@ -1,3 +1,4 @@
 import CardCheckMark from './CardCheckMark'
+import CardCrossedLine from './CardCrosedLine'
 
-export { CardCheckMark }
+export { CardCheckMark, CardCrossedLine }

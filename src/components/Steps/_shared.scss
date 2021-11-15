@@ -1,6 +1,13 @@
 /* Steps */
-$stepsExtraLargeFont: 5.8rem;
-$stepsLargeFont: 4.7rem;
-$stepsMediumFont: 2rem;
-$stepsSmallFont: 1.5rem;
-$stepsXSmallFont: 1.4rem;
+$fontLarge: 4.7rem;
+$fontMedium: 2rem;
+$fontSmall: 1.5rem;
+$fontXSmall: 1.4rem;
+
+$rowWidth: 75vw;
+$rowWidthTable: 90vw;
+$rowWidthMobile: 100%;
+
+/* Cards */
+$cardDateWidth: 223px;
+$cardDateHeight: 160px;
