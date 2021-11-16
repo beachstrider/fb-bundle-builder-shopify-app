@@ -1,5 +1,5 @@
 import React from 'react'
-import { CardCheckMark } from '../Components/Cards'
+import { CardCheckMark } from '../../Cards'
 import styles from './EntreeSubType.module.scss'
 
 const EntreeTypeSubType = ({ isSelected, data, onClick }) => {

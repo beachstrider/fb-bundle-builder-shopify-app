@@ -1,6 +1,6 @@
 import React from 'react'
 import { FrequencyWeeklyPrice } from '.'
-import { CardCheckMark } from '../Components/Cards'
+import { CardCheckMark } from '../../Cards'
 import { Icon } from '@shopify/polaris'
 import { CircleDisabledMajor } from '@shopify/polaris-icons'
 import styles from './Frequency.module.scss'

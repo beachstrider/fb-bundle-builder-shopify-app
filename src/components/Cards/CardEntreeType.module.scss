@@ -1,15 +1,10 @@
-@import '../../../../variables';
-@import '../../shared';
+@import '../../variables';
 
 .card {
   border-radius: 1rem;
   display: grid;
   grid-template-rows: 40rem 1fr;
   cursor: pointer;
-
-  // @media only screen and (max-width: $breakpointDesktop) {
-  //   grid-template-rows: 2fr 1fr;
-  // }
 
   & .image {
     width: 100%;

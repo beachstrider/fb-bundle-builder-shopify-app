@@ -9,7 +9,7 @@ import {
 } from '../../../store/slices/rootSlice'
 import { smoothScrollingToId } from '../../../utils'
 import { withActiveStep } from '../../Hooks'
-import { CardEntreeType } from '../Components/Cards'
+import { CardEntreeType } from '../../Cards'
 import styles from './EntreeType.module.scss'
 import EntreeTypeSubType from './EntreeTypeSubType'
 
