@@ -1,6 +1,6 @@
 import React from 'react'
 import { FrequencyWeeklyPrice } from '.'
-import { CardCheckMark } from '../Components/Cards'
+import { CardCheckMark } from '../../Cards'
 import styles from './Frequency.module.scss'
 
 const FrequencyEntree = ({ data, isSelected, onClick }) => {

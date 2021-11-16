@@ -1,5 +1,5 @@
 import React from 'react'
-import { CardCrossedLine } from '../Components/Cards'
+import { CardCrossedLine } from '../../Cards'
 import styles from './LocationDate.module.scss'
 
 const LocationDate = ({ data, onClick }) => {

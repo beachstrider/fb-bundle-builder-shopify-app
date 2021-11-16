@@ -7,9 +7,25 @@ $white: #ffffff;
 $black: #000000;
 $border: #707070;
 $red: #c8432d;
+$orange: #ec6120;
 
 $faqBackgroundColor: #e8e8e8;
 
 /* breakpoints */
 $breakpointTablet: 768px;
 $breakpointDesktop: 1024px;
+
+/* fonts */
+$fontLarge: 4.7rem;
+$fontMedium: 2rem;
+$fontSmall: 1.5rem;
+$fontXSmall: 1.4rem;
+
+/* rows */
+$rowWidth: 75vw;
+$rowWidthTable: 90vw;
+$rowWidthMobile: 100%;
+
+/* Cards */
+$cardDateWidth: 223px;
+$cardDateHeight: 160px;

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import styles from './Faq.modules.scss'
-import { FaqFrequency, FaqLocation } from './Types'
+import { FaqEntreeType, FaqFrequency, FaqLocation } from './Types'
 
 const faqs = [
   {
@@ -12,6 +12,11 @@ const faqs = [
     type: 'location',
     title: 'FAQ’s For Location',
     component: <FaqLocation />
+  },
+  {
+    type: 'entreeType',
+    title: 'FAQ’s For Entree Type',
+    component: <FaqEntreeType />
   }
 ]
 

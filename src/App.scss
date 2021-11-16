@@ -5,7 +5,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: $white;
+
   hr {
     margin: unset !important;
   }
@@ -40,6 +40,17 @@ $multiplier: 0.5rem;
 @for $i from 1 through $totalLoop {
   .mb-#{$i} {
     margin-bottom: $i * $multiplier;
+  }
+}
+
+@for $i from 1 through $totalLoop {
+  .py-#{$i} {
+    padding: $i * $multiplier 0;
+  }
+}
+@for $i from 1 through $totalLoop {
+  .px-#{$i} {
+    padding: 0 $i * $multiplier;
   }
 }
 
@@ -86,13 +97,6 @@ $multiplier: 0.5rem;
     cursor: pointer;
   }
 
-  & .secondaryButton {
-    background: $white;
-    color: $primaryColor;
-    border: 1px solid $primaryColor;
-    border-radius: 50%;
-  }
-
   & .primaryButton {
     background: $primaryColor;
     box-shadow: unset !important;
@@ -134,14 +138,14 @@ $multiplier: 0.5rem;
 .secondaryButton {
   background: #fff;
   color: #3dae2b;
-  border: 1px solid #3dae2b;
+  border: 1px solid $grayMedium;
   border-radius: 2em;
   padding: 5px 40px;
   text-decoration: none;
   line-height: 16px;
 }
 
-.bundleRow{
+.bundleRow {
   display: flex;
   flex-direction: column;
 
@@ -153,14 +157,14 @@ $multiplier: 0.5rem;
     flex-direction: row;
   }
 }
-.bundleOneThird{
+.bundleOneThird {
   width: 100%;
 
   @media (min-width: $breakpointTablet) {
     width: 33%;
   }
 }
-.bundleTwoThirds{
+.bundleTwoThirds {
   width: 100%;
   @media (min-width: $breakpointTablet) {
     width: 66%;

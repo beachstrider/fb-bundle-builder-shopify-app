@@ -46,6 +46,8 @@ const rootSlice = createSlice({
       id: 0,
       price: 0
     },
+    entreeType: { id: 0 },
+    entreeSubType: { id: 0 },
     breakfast: {
       id: 0,
       price: 0
@@ -73,10 +75,10 @@ const rootSlice = createSlice({
       )
       state.steps = currentSteps
     },
-    chooseEntree: (state, action) => {
+    setEntree: (state, action) => {
       state.entree = action.payload
     },
-    chooseBreakfast: (state, action) => {
+    setBreakfast: (state, action) => {
       state.breakfast = action.payload
     },
     selectFaqType: (state, action) => {
@@ -88,6 +90,12 @@ const rootSlice = createSlice({
     setEmail: (state, action) => {
       state.email = action.payload
     },
+    setEntreeType: (state, action) => {
+      state.entreeType = action.payload
+    },
+    setEntreeSubType: (state, action) => {
+      state.entreeSubType = action.payload
+    },
     setLocation: (state, action) => {
       state.location = action.payload
     }
@@ -97,12 +105,14 @@ const rootSlice = createSlice({
 export const reducer = rootSlice.reducer
 
 export const {
-  chooseEntree,
-  chooseBreakfast,
   displayFooter,
   displayHeader,
   selectFaqType,
   setActiveStep,
+  setBreakfast,
   setEmail,
+  setEntree,
+  setEntreeType,
+  setEntreeSubType,
   setLocation
 } = rootSlice.actions

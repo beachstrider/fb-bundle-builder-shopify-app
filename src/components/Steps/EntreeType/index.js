@@ -1,3 +1,4 @@
 import EntreeType from './EntreeType'
+import EntreeTypeSubType from './EntreeTypeSubType'
 
-export { EntreeType }
+export { EntreeType, EntreeTypeSubType }
