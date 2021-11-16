@@ -24,12 +24,10 @@
 
   & .entrees {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(4, 1fr);
     column-gap: 3rem;
-    padding: 0 10%;
 
     @media only screen and (max-width: $breakpointDesktop) {
-      padding: 0 10%;
       justify-content: center;
       align-items: center;
       grid-template-columns: 1fr;

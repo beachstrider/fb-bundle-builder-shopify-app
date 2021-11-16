@@ -1,0 +1,49 @@
+@import '../../variables';
+
+.card {
+  border-radius: 1rem;
+  display: grid;
+  grid-template-rows: 16rem;
+  cursor: pointer;
+  border: 4px solid $primaryColor;
+
+  & .description {
+    display: grid;
+    text-align: center;
+    grid-template-columns: repeat(4, 1fr);
+    font-size: $fontSmall;
+    column-gap: 1.5rem;
+
+    & .subTitle {
+      font-size: 1.9rem;
+      font-weight: 700;
+    }
+  }
+
+  & .actions {
+    display: flex;
+    & div {
+      margin: 0 0.5rem;
+    }
+  }
+
+  & .image {
+    width: 100%;
+    background-size: cover;
+    border-top-right-radius: 0.5rem;
+    border-top-left-radius: 0.5rem;
+  }
+
+  & .title {
+    font-size: 2.2rem;
+    font-weight: 700;
+  }
+
+  & .descriptionWrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: $white;
+  }
+}
