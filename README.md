@@ -44,3 +44,7 @@ Example:
 
 - Proxy URL: `https://some-url.com`
   - Development example: https://your-address.ngrok.io
+
+## Shopify Configuration for the Multipass
+
+- Enable multipass following the steps on this website: https://shopify.dev/api/multipass

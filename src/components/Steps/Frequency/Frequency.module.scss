@@ -157,7 +157,7 @@
       grid-template-columns: 1fr;
     }
     & .subRowFourColumns {
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(2, 1fr);
       @media only screen and (max-width: $breakpointTablet) {
         grid-template-columns: 1fr;
         row-gap: 1rem;
