@@ -44,14 +44,13 @@ const rootSlice = createSlice({
     ],
     entree: {
       id: 0,
-      price: 0
+      price: 0,
+      breakfast: {
+        id: 0
+      }
     },
     entreeType: { id: 0 },
     entreeSubType: { id: 0 },
-    breakfast: {
-      id: 0,
-      price: 0
-    },
     faqType: null,
     email: '',
     location: {
@@ -77,9 +76,6 @@ const rootSlice = createSlice({
     },
     setEntree: (state, action) => {
       state.entree = action.payload
-    },
-    setBreakfast: (state, action) => {
-      state.breakfast = action.payload
     },
     selectFaqType: (state, action) => {
       state.faqType = action.payload
@@ -109,7 +105,6 @@ export const {
   displayHeader,
   selectFaqType,
   setActiveStep,
-  setBreakfast,
   setEmail,
   setEntree,
   setEntreeType,
