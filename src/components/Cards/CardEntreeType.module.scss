@@ -1,0 +1,36 @@
+@import '../../variables';
+
+.card {
+  border-radius: 1rem;
+  display: grid;
+  grid-template-rows: 40rem 1fr;
+  cursor: pointer;
+
+  & .image {
+    width: 100%;
+    min-height: 5.9rem;
+    background-size: cover;
+    border-top-right-radius: 1rem;
+    border-top-left-radius: 1rem;
+  }
+
+  & .title {
+    font-size: $fontLarge;
+    font-weight: 700;
+  }
+
+  & .descriptionWrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    & .options {
+      & ul {
+        & li {
+          font-size: $fontXSmall;
+        }
+      }
+    }
+  }
+}

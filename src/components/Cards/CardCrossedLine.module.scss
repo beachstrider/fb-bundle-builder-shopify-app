@@ -1,8 +1,20 @@
-@import '../../../../variables';
+@import '../../variables';
 
 .unselected {
   color: $grayMedium;
   background: $grayLight;
+  & div {
+    > :first-of-type::after {
+      content: '';
+      position: absolute;
+      border-top: 5px solid $gray;
+      width: 271px;
+      transform: rotate(145deg);
+      transform-origin: 0% 0%;
+      top: 3px;
+      left: 224px;
+    }
+  }
   & :hover {
     border-radius: 0.5rem;
     background: darken($grayLight, 10%);
@@ -21,9 +33,15 @@
   position: relative;
   border-radius: 0.5rem;
   cursor: pointer;
+  width: $cardDateWidth;
+  height: $cardDateHeight;
 
   & .children {
     padding: 1rem;
+
+    .cardContent {
+      height: $cardDateHeight;
+    }
   }
 
   & .checkMark {

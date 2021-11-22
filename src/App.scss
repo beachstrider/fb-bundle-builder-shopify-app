@@ -5,7 +5,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: $white;
+
   hr {
     margin: unset !important;
   }
@@ -44,6 +44,17 @@ $multiplier: 0.5rem;
 @for $i from 1 through $totalLoop {
   .mb-#{$i} {
     margin-bottom: $i * $multiplier;
+  }
+}
+
+@for $i from 1 through $totalLoop {
+  .py-#{$i} {
+    padding: $i * $multiplier 0;
+  }
+}
+@for $i from 1 through $totalLoop {
+  .px-#{$i} {
+    padding: 0 $i * $multiplier;
   }
 }
 
@@ -90,35 +101,9 @@ $multiplier: 0.5rem;
     cursor: pointer;
   }
 
-  & .secondaryButton {
-    background: $white;
-    color: $primaryColor;
-    border: 1px solid $primaryColor;
-    border-radius: 2em;
-    padding: 5px 40px;
-    text-decoration: none;
-    line-height: 16px;
-
-    &:hover {
-      background: darken($white, 10%);
-      cursor: pointer;
-    }
-
-    &.largeButton{
-      font-size: 22px;
-      padding: 20px 40px;
-      box-shadow: 0px 0px 16px rgb(0 0 0 / 15%);
-    }
-  }
-
   & .primaryButton {
     background: $primaryColor;
-    color: $white;
-    border: 1px solid $primaryColor;
-    border-radius: 2em;
-    padding: 5px 40px;
-    text-decoration: none;
-    line-height: 16px;
+    box-shadow: unset !important;
     &:hover {
       background: darken($primaryColor, 10%);
       cursor: pointer;
@@ -130,10 +115,21 @@ $multiplier: 0.5rem;
     }
   }
 
+  & .secondaryButton {
+    background: $grayMedium;
+    border: 1px solid $grayMedium;
+    color: $white;
+    box-shadow: unset !important;
+    &:hover {
+      background: darken($grayMedium, 10%);
+    }
+  }
+
   & .lightButton {
     background: $white;
     border: 1px solid $gray;
     color: $gray;
+    box-shadow: unset !important;
     &:hover {
       background: darken($white, 10%);
     }
@@ -153,7 +149,7 @@ $multiplier: 0.5rem;
 .secondaryButton {
   background: $white;
   color: #3dae2b;
-  border: 1px solid #3dae2b;
+  border: 1px solid $grayMedium;
   border-radius: 2em;
   padding: 5px 40px;
   text-decoration: none;
@@ -184,14 +180,14 @@ $multiplier: 0.5rem;
     flex-direction: row;
   }
 }
-.bundleOneThird{
+.bundleOneThird {
   width: 100%;
 
   @media (min-width: $breakpointTablet) {
     width: 33%;
   }
 }
-.bundleTwoThirds{
+.bundleTwoThirds {
   width: 100%;
   @media (min-width: $breakpointTablet) {
     width: 66%;

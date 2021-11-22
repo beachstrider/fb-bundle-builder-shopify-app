@@ -9,7 +9,6 @@ module.exports = async (req, res, next) => {
 
   const validateSignature = (query) => {
     if (!query) {
-      console.log('here')
       return false
     }
 

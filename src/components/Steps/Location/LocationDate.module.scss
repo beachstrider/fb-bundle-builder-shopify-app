@@ -1,0 +1,29 @@
+@import '../../../variables';
+
+.wrapper {
+  text-align: center;
+  & .weekDay {
+    font-size: 2.5rem;
+  }
+  & .month {
+    font-size: 2.1rem;
+  }
+  & .dateWrapper {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+
+    & .dateNumber {
+      font-size: 5.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      & .ordinal {
+        font-size: 3rem;
+        padding-top: 1.7rem;
+      }
+      @media only screen and (max-width: $breakpointDesktop) {
+        font-size: $fontMedium;
+      }
+    }
+  }
+}

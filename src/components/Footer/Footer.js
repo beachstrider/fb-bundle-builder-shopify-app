@@ -8,18 +8,18 @@ const Footer = () => {
   const dispatch = useDispatch()
   const history = useHistory()
 
-  const steps = useSelector((state) => state.steps)
-  const [currentStep, setCurrentStep] = useState({})
-  const [nextStep, setNextStep] = useState({})
-  const [previousStep, setPreviousStep] = useState({})
+  const state = useSelector((state) => state)
+  const [currentStep, setCurrentStep] = useState({ id: 0 })
+  const [nextStep, setNextStep] = useState({ path: '', description: '' })
+  const [previousStep, setPreviousStep] = useState({ path: '' })
 
   useEffect(() => {
-    const step = steps.find((step) => step.isActive)
+    const step = state.steps.find((step) => step.isActive)
     setCurrentStep(step)
 
     if (step) {
-      const followingStep = steps.find((item) => item.id === step.id + 1)
-      const priorStep = steps.find((item) => item.id === step.id - 1)
+      const followingStep = state.steps.find((item) => item.id === step.id + 1)
+      const priorStep = state.steps.find((item) => item.id === step.id - 1)
 
       if (followingStep) {
         setNextStep(followingStep)
@@ -28,7 +28,7 @@ const Footer = () => {
         setPreviousStep(priorStep)
       }
     }
-  }, [steps])
+  }, [state.steps])
 
   const handleBackButtonClick = () => {
     dispatch(setActiveStep(currentStep.id - 1))
@@ -45,15 +45,22 @@ const Footer = () => {
   }
 
   return (
-    <div className={`${styles.wrapper} defaultWrapper`}>
+    <div className={`${styles.wrapper} defaultWrapper mt-10`}>
       <div className="buttons">
-        {currentStep.id !== steps[0].id && (
+        {currentStep.id !== state.steps[0].id && (
           <div className="button lightButton" onClick={handleBackButtonClick}>
             Back
           </div>
         )}
-        {currentStep.id !== steps[steps.length - 1].id && (
-          <div className="button primaryButton" onClick={handleNextButtonClick}>
+        {currentStep.id !== state.steps[state.steps.length - 1].id && (
+          <div
+            className={`button ${
+              Object.keys(previousStep).length === 0
+                ? 'primaryButton'
+                : 'secondaryButton'
+            }`}
+            onClick={handleNextButtonClick}
+          >
             {nextStep.description}
           </div>
         )}

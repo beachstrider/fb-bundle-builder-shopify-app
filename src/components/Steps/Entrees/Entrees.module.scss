@@ -1,0 +1,51 @@
+@import '../../../variables';
+
+.wrapper {
+  width: $rowWidth;
+  display: grid;
+  grid-template-columns: 100%;
+  column-gap: 10rem;
+  @media only screen and (max-width: $breakpointDesktop) {
+    width: $rowWidthTable;
+    grid-template-columns: 50% 50%;
+    column-gap: 5rem;
+  }
+  @media only screen and (max-width: $breakpointTablet) {
+    width: $rowWidthMobile;
+    grid-template-columns: 100%;
+    column-gap: 0;
+  }
+
+  & .title {
+    font-size: $fontLarge;
+    font-weight: 700;
+    text-align: center;
+  }
+
+  & .entrees {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    column-gap: 3rem;
+
+    @media only screen and (max-width: $breakpointDesktop) {
+      justify-content: center;
+      align-items: center;
+      grid-template-columns: 1fr;
+      row-gap: 1rem;
+    }
+    @media only screen and (max-width: $breakpointTablet) {
+      padding: 0 3%;
+    }
+  }
+
+  & .subTypesWrapper {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    column-gap: 10rem;
+    @media only screen and (max-width: $breakpointDesktop) {
+      grid-template-columns: 1fr;
+      padding: 2rem;
+      row-gap: 2rem;
+    }
+  }
+}

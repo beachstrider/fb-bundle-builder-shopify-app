@@ -3,6 +3,8 @@ import { createSlice } from '@reduxjs/toolkit'
 const rootSlice = createSlice({
   name: 'root',
   initialState: {
+    displayHeader: false,
+    displayFooter: false,
     steps: [
       {
         id: 1,
@@ -42,15 +44,27 @@ const rootSlice = createSlice({
     ],
     entree: {
       id: 0,
-      price: 0
+      price: 0,
+      breakfast: {
+        id: 0
+      }
     },
-    breakfast: {
-      id: 0,
-      price: 0
-    },
-    faqType: null
+    entreeType: { id: 0 },
+    entreeSubType: { id: 0 },
+    faqType: null,
+    email: '',
+    location: {
+      zipCode: '',
+      deliveryDate: ''
+    }
   },
   reducers: {
+    displayHeader: (state, action) => {
+      state.displayHeader = action.payload
+    },
+    displayFooter: (state, action) => {
+      state.displayFooter = action.payload
+    },
     setActiveStep: (state, action) => {
       const currentStepId = action.payload
       const currentSteps = state.steps.map((step) =>
@@ -60,19 +74,40 @@ const rootSlice = createSlice({
       )
       state.steps = currentSteps
     },
-    chooseEntree: (state, action) => {
+    setEntree: (state, action) => {
       state.entree = action.payload
-    },
-    chooseBreakfast: (state, action) => {
-      state.breakfast = action.payload
     },
     selectFaqType: (state, action) => {
       state.faqType = action.payload
+    },
+    setZipCode: (state, action) => {
+      state.zipCode = action.payload
+    },
+    setEmail: (state, action) => {
+      state.email = action.payload
+    },
+    setEntreeType: (state, action) => {
+      state.entreeType = action.payload
+    },
+    setEntreeSubType: (state, action) => {
+      state.entreeSubType = action.payload
+    },
+    setLocation: (state, action) => {
+      state.location = action.payload
     }
   }
 })
 
 export const reducer = rootSlice.reducer
 
-export const { chooseEntree, chooseBreakfast, selectFaqType, setActiveStep } =
-  rootSlice.actions
+export const {
+  displayFooter,
+  displayHeader,
+  selectFaqType,
+  setActiveStep,
+  setEmail,
+  setEntree,
+  setEntreeType,
+  setEntreeSubType,
+  setLocation
+} = rootSlice.actions

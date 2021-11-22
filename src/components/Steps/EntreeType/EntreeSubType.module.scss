@@ -1,0 +1,29 @@
+@import '../../../variables';
+
+.wrapper {
+  display: grid;
+  grid-template-rows: 2fr 1fr;
+
+  & .title {
+    font-size: $fontLarge;
+    font-weight: 700;
+    text-align: center;
+    @media only screen and (max-width: $breakpointDesktop) {
+      font-size: $fontMedium;
+    }
+  }
+
+  & .description {
+    display: grid;
+    text-align: center;
+    grid-template-columns: repeat(4, 1fr);
+    font-size: $fontSmall;
+  }
+
+  & .selectedLine {
+    border-left: 1px solid $white;
+  }
+  & .unselectedLine {
+    border-left: 1px solid $grayMedium;
+  }
+}

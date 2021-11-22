@@ -8,8 +8,12 @@
   margin-bottom: 3rem;
   padding: 0.5rem 0;
 
-  & .logo {
-    max-height: 2rem;
+  & .logoWrapper {
+    padding: 1.5rem;
+
+    & .logo {
+      max-height: 3.5rem;
+    }
   }
 
   & .stepsWrapper {
@@ -20,6 +24,17 @@
     align-items: center;
     font-size: 1rem;
     min-height: 5rem;
+    margin-bottom: 1.5rem;
+
+    & .description {
+      font-size: 1.8rem;
+      @media only screen and (max-width: $breakpointDesktop) {
+        font-size: 0.8rem;
+      }
+    }
+    & .name {
+      font-size: 1.4rem;
+    }
 
     & .column {
       display: flex;
@@ -27,7 +42,10 @@
     }
 
     & .dividerWrapper {
-      padding: 0 1rem;
+      padding: 0 3rem;
+      @media only screen and (max-width: $breakpointDesktop) {
+        padding: 0 1rem;
+      }
 
       & .divider {
         content: '';

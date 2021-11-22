@@ -34,7 +34,10 @@ module.exports = {
     new webpack.DefinePlugin({
       'process.env.LOGO_URL': JSON.stringify(process.env.LOGO_URL),
       'process.env.PROXY_APP_URL': JSON.stringify(process.env.PROXY_APP_URL),
-      'process.env.PAGE_TITLE': JSON.stringify(process.env.PAGE_TITLE)
+      'process.env.PAGE_TITLE': JSON.stringify(process.env.PAGE_TITLE),
+      'process.env.LOCAL_STORAGE_KEY': JSON.stringify(
+        process.env.LOCAL_STORAGE_KEY
+      )
     })
   ],
   output: {

@@ -1,24 +1,28 @@
-import React from 'react'
-import { useSelector } from 'react-redux'
+import React, { useEffect, useState } from 'react'
 import { FrequencySubTotalItem } from '.'
 import styles from './Frequency.module.scss'
 
-const FrequencySubTotal = () => {
-  const state = useSelector((state) => state)
+const FrequencySubTotal = ({ entreePrice, breakfastPrice }) => {
+  const [total, setTotal] = useState(0)
+
+  useEffect(() => {
+    const calculatedTotal =
+      Number.parseFloat(entreePrice) +
+      (isNaN(breakfastPrice) ? 0 : Number.parseFloat(breakfastPrice))
+
+    setTotal(calculatedTotal)
+  }, [entreePrice, breakfastPrice])
 
   return (
     <div className={styles.column}>
       <div>
-        <FrequencySubTotalItem label="Peer Entree" price={state.entree.price} />
-        <FrequencySubTotalItem
-          label="Breakfasts"
-          price={state.breakfast.price}
-        />
+        <FrequencySubTotalItem label="Per Entree" price={entreePrice} />
+        <FrequencySubTotalItem label="Breakfasts" price={breakfastPrice} />
         <div className={styles.priceDivider}>&nbsp;</div>
         <div className={styles.prices}>
           <div className={styles.smallFont}>Weekly Total</div>
           <div className={`${styles.smallFont} ${styles.fontBold}`}>
-            ${Number.parseFloat(state.entree.price).toFixed(2)}
+            ${Number.parseFloat(total).toFixed(2)}
           </div>
         </div>
       </div>
