@@ -1,12 +1,162 @@
 import React from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import {
+    displayHeader,
+    displayFooter,
+    selectFaqType
+  } from '../../../store/slices/rootSlice'
 import { Link, Redirect } from 'react-router-dom'
 import styles from './Dashboard.module.scss'
-import {MenuItemCard} from '../Components/MenuItemCard'
+import { MenuItemCard } from '../Components/MenuItemCard'
 import {
   ChevronRightMinor
 } from '@shopify/polaris-icons';
 import * as dayjs from 'dayjs';
+import { request } from '../../../utils';
+
+
+const subscriptionFromDB = {
+  "data": [
+      {
+          "id": 2,
+          "customer_id": 1,
+          "bundle_id": 5,
+          "platform_subscription_id": 208624961889,
+          "delivery_day": 5,
+          "is_active": null,
+          "createdAt": "2021-11-25T01:34:47.000Z",
+          "updatedAt": "2021-11-25T01:34:47.000Z",
+          "customer": {
+              "id": 1,
+              "account_id": 1,
+              "email": "justin@sunriseintegration.com",
+              "platform_customer_id": 5410281652409,
+              "createdAt": "2021-11-25T01:34:47.000Z",
+              "updatedAt": "2021-11-25T01:34:47.000Z"
+          },
+          "orders": []
+      },
+      {
+          "id": 1,
+          "customer_id": 1,
+          "bundle_id": 3,
+          "platform_subscription_id": 953490813366,
+          "delivery_day": 6,
+          "is_active": null,
+          "createdAt": "2021-11-25T01:34:47.000Z",
+          "updatedAt": "2021-11-25T01:34:47.000Z",
+          "customer": {
+              "id": 1,
+              "account_id": 1,
+              "email": "justin@sunriseintegration.com",
+              "platform_customer_id": 5410281652409,
+              "createdAt": "2021-11-25T01:34:47.000Z",
+              "updatedAt": "2021-11-25T01:34:47.000Z"
+          },
+          "orders": [
+              {
+                  "id": 2,
+                  "customer_subscription_id": 1,
+                  "bundle_configuration_content_id": 2,
+                  "platform_order_id": 323423,
+                  "createdAt": "2021-11-25T01:34:47.000Z",
+                  "updatedAt": "2021-11-25T01:34:47.000Z"
+              },
+              {
+                  "id": 1,
+                  "customer_subscription_id": 1,
+                  "bundle_configuration_content_id": 1,
+                  "platform_order_id": 323423,
+                  "createdAt": "2021-11-25T01:34:47.000Z",
+                  "updatedAt": "2021-11-25T01:34:47.000Z"
+              }
+          ]
+      }
+  ],
+  "pagination": {
+      "total": 2,
+      "currentPage": 1,
+      "lastPage": 1,
+      "pageSize": 50
+  }
+}
+const orderFromDB = {
+  "data": {
+      "id": 1,
+      "customer_subscription_id": 1,
+      "bundle_configuration_content_id": 1,
+      "platform_order_id": 323423,
+      "createdAt": "2021-11-25T01:34:47.000Z",
+      "updatedAt": "2021-11-25T01:34:47.000Z",
+      "subscription": {
+          "id": 1,
+          "customer_id": 1,
+          "bundle_id": 3,
+          "platform_subscription_id": 953490813366,
+          "delivery_day": 6,
+          "is_active": null,
+          "createdAt": "2021-11-25T01:34:47.000Z",
+          "updatedAt": "2021-11-25T01:34:47.000Z"
+      },
+      "items": [
+          {
+              "id": 25,
+              "customer_subscription_bundle_content_id": 1,
+              "product_variant_id": 2,
+              "platform_product_variant_id": 41375600771257,
+              "quantity": 1,
+              "createdAt": "2021-11-25T01:34:47.000Z",
+              "updatedAt": "2021-11-25T01:34:47.000Z"
+          },
+          {
+              "id": 26,
+              "customer_subscription_bundle_content_id": 1,
+              "product_variant_id": 2,
+              "platform_product_variant_id": 41432952766649,
+              "quantity": 2,
+              "createdAt": "2021-11-25T01:34:47.000Z",
+              "updatedAt": "2021-11-25T01:34:47.000Z"
+          },
+          {
+              "id": 27,
+              "customer_subscription_bundle_content_id": 1,
+              "product_variant_id": 2,
+              "platform_product_variant_id": 41213176643769,
+              "quantity": 1,
+              "createdAt": "2021-11-25T01:34:47.000Z",
+              "updatedAt": "2021-11-25T01:34:47.000Z"
+          },
+          {
+              "id": 28,
+              "customer_subscription_bundle_content_id": 1,
+              "product_variant_id": 2,
+              "platform_product_variant_id": 41213176545465,
+              "quantity": 1,
+              "createdAt": "2021-11-25T01:34:47.000Z",
+              "updatedAt": "2021-11-25T01:34:47.000Z"
+          },
+          {
+              "id": 29,
+              "customer_subscription_bundle_content_id": 1,
+              "product_variant_id": 2,
+              "platform_product_variant_id": 41479168196793,
+              "quantity": 2,
+              "createdAt": "2021-11-25T01:34:47.000Z",
+              "updatedAt": "2021-11-25T01:34:47.000Z"
+          },
+          {
+              "id": 30,
+              "customer_subscription_bundle_content_id": 1,
+              "product_variant_id": 2,
+              "platform_product_variant_id": 40812018729145,
+              "quantity": 1,
+              "createdAt": "2021-11-25T01:34:47.000Z",
+              "updatedAt": "2021-11-25T01:34:47.000Z"
+          }
+      ]
+  }
+}
+
 
 const customerSubscription = 
   {
@@ -517,20 +667,35 @@ const customerSubscription =
 
 const Dashboard = () => {
   const state = useSelector((state) => state)
+  const dispatch = useDispatch()
   const [active, setActive] = React.useState([]);
   const [limit, setLimit] = React.useState([]);
   const [subscriptions, setSubscriptions] = React.useState([])
   
-  React.useEffect(() => {
+  React.useEffect(async () => {
+      dispatch(displayHeader(false))
+      dispatch(displayFooter(false))
+      dispatch(selectFaqType(null))
+
       const newWeeksArr = []
       const activeWeeksArr = []
       const activeWeeksLimit = []
+
+      // const subApi = await request('http://localhost:8080/api/customers/1/subscriptions', {
+      //   method: 'GET',
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //     'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoic3VwZXIiLCJpYXQiOjE2Mzc3OTM4NDAsImV4cCI6MTYzNzg4MDI0MH0.1cdC0kCschJw2QwTxfKxEjh04AV8sb0W5BdvAaM_Z2U',
+      //   },
+      // })
+
+      // console.log('customer subscription: ', subApi);
+      shopCustomer.orders[0]
+
       customerSubscription.customerSubscriptionBundleContents.forEach((sub, index) =>{
-        if(index === 0){
-          sub.status = 'sent';
-        } else {
-          sub.status = 'active';
-        }
+
+        sub.status = 'active';
+        
         const nextSunday = dayjs().day(0).add((7 * index), 'day');
         sub.subscriptionDate = nextSunday.format('MMM DD')
         newWeeksArr.push(sub);

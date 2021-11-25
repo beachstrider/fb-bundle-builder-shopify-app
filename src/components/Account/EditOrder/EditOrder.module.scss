@@ -3,8 +3,12 @@
 @import '../../../App.scss';
 
 .menuRow{
-    display: flex;
-    flex-wrap: wrap;
+    display: grid; 
+    grid-template-columns: 1fr 1fr 1fr 1fr; 
+    gap: 0px 0px; 
+}
+.menuItemWrapper{
+    display: grid; 
 }
 .header{
     text-align: center;
