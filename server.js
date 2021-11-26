@@ -70,6 +70,14 @@ app.get('/', verifyHmac, (req, res) => {
         {
           search: 'PAGE_DESCRIPTION',
           replacement: process.env.PAGE_TITLE
+        },
+        {
+          search: 'SHOPIFY_BUNDLES_COLLECTION',
+          replacement: process.env.SHOPIFY_BUNDLES_COLLECTION
+        },
+        {
+          search: 'SHOPIFY_PRODUCTS_COLLECTION',
+          replacement: process.env.SHOPIFY_PRODUCTS_COLLECTION
         }
       ])
 

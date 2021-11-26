@@ -48,6 +48,81 @@
    };
   {% endif %}
 
+
+// Pull bundles and menu items
+let shopProducts = [];
+let shopBundles = [];
+let temporaryMetafields = []
+
+function mapMetafieldsToVariant(product, metafields) {  
+  if (product.variants) {
+    product.variants.map(variant => {
+      variant.metafields = [];
+      
+      metafields.map(metafield => {
+        if (Number(metafield.variantId) === Number(variant.id)) {
+          delete metafield.variantId;
+          variant.metafields.push(metafield);
+        }
+      })      
+    })
+  }
+
+  temporaryMetafields = []
+  return product
+}
+
+{% if collections["SHOPIFY_PRODUCTS_COLLECTION"] %}
+  {% paginate collections["SHOPIFY_PRODUCTS_COLLECTION"].products by 1000 %}
+    {% for product in collections["SHOPIFY_PRODUCTS_COLLECTION"].products %}
+      {% for variant in product.variants %}
+        {% if variant.metafields.my_fields.net_carbs %}
+          temporaryMetafields.push({ 
+            variantId: '{{ variant.id }}',
+            key: 'net_carbs',
+            name: 'Net Carbs', 
+            value: '{{ variant.metafields.my_fields.net_carbs.value}}'
+          })
+        {% endif %}
+        {% if variant.metafields.my_fields.protein %}
+          temporaryMetafields.push({ 
+            variantId: '{{ variant.id }}',
+            key: 'protein',
+            name: 'Protein', 
+            value: '{{ variant.metafields.my_fields.protein.value}}'
+          })
+        {% endif %}
+        {% if variant.metafields.my_fields.calories %}
+          temporaryMetafields.push({ 
+            variantId: '{{ variant.id }}',
+            key: 'calories',
+            name: 'Calories', 
+            value: '{{ variant.metafields.my_fields.calories.value}}'
+          })
+        {% endif %}
+        {% if variant.metafields.my_fields.total_fat %}
+          temporaryMetafields.push({ 
+            variantId: '{{ variant.id }}',
+            key: 'total_fat',
+            name: 'Total Fat:', 
+            value: '{{ variant.metafields.my_fields.total_fat.value}}'
+          })
+        {% endif %}
+      {% endfor %}
+
+      shopProducts.push(mapMetafieldsToVariant(JSON.parse('{{ product | json }}'), temporaryMetafields))
+    {% endfor %}
+  {% endpaginate %}
+{% endif %}
+
+{% if collections["SHOPIFY_BUNDLES_COLLECTION"] %}
+  {% paginate collections["SHOPIFY_BUNDLES_COLLECTION"].products by 1000 %}
+    shopBundles = {{ collections["SHOPIFY_BUNDLES_COLLECTION"].products | json }}
+  {% endpaginate %}
+{% endif %}
+
 </script>
+
+
 <div id="root"></div>
 <script src="APP_BUNDLE_URL"></script>
