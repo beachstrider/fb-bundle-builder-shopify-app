@@ -14,11 +14,15 @@
     orders: [
       {% for order in customer.orders %}
         {
+          id: '{{ order.id }}',
           orderDate: '{{ order.created_at }}',
           orderTotal: '{{ order.total_price | money_with_currency }}',
-          orderItems: [
+          line_items: [
             {% for item in order.line_items %}
-              '{{ item.title }}',
+            {
+              title: '{{ item.title }}',
+              quantity: '{{ item.quantity }}'
+            },
             {% endfor %}
           ],
           orderLink: '{{ order.customer_url }}'
