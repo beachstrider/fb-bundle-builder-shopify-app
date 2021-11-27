@@ -123,6 +123,7 @@ const Dashboard = () => {
         }
         const nextSunday = dayjs().day(0).add((7 * j), 'day');
         newWeeksArr.push({
+          id: j,
           items: pendingItems,
           status: 'pending',
           subscriptionDate: nextSunday.format('MMM DD')
