@@ -54,11 +54,7 @@ const Footer = () => {
         )}
         {currentStep.id !== state.steps[state.steps.length - 1].id && (
           <div
-            className={`button ${
-              Object.keys(previousStep).length === 0
-                ? 'primaryButton'
-                : 'secondaryButton'
-            }`}
+            className={`button primaryButton`}
             onClick={handleNextButtonClick}
           >
             {nextStep.description}

@@ -37,7 +37,8 @@ module.exports = {
       'process.env.PAGE_TITLE': JSON.stringify(process.env.PAGE_TITLE),
       'process.env.LOCAL_STORAGE_KEY': JSON.stringify(
         process.env.LOCAL_STORAGE_KEY
-      )
+      ),
+      'process.env.BUNDLE_API_URL': JSON.stringify(process.env.BUNDLE_API_URL)
     })
   ],
   output: {

@@ -1,9 +1,10 @@
+const axios = require('axios').default
 /**
  *
  * @param {String} url
  * @param {} fetchOptions
  * @param {Number} retries
- * @example request(url, {method: 'POST', body: JSON.stringify(data)}, 3)
+ * @example request(url, {method: 'post', data}, 3)
  * @returns
  */
 const request = async (url, fetchOptions, retries = 3) => {
@@ -11,9 +12,13 @@ const request = async (url, fetchOptions, retries = 3) => {
   let status = 200
 
   try {
-    const response = await fetch(url, fetchOptions)
-    if (response.ok) {
-      data = await response.json()
+    const response = await axios({
+      ...fetchOptions,
+      url
+    })
+
+    if ([200, 201, 202].includes(response.status)) {
+      data = response.data
     } else {
       if (response.status >= 500) {
         status = response.status

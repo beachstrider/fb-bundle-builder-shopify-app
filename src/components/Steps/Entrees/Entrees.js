@@ -1,11 +1,55 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { setTokens } from '../../../store/slices/rootSlice'
 import CardQuantities from '../../Cards/CardQuantities'
+import useGuestToken from '../../Hooks/useGuestToken'
+import { getMenuItems, getSelectedBundle } from '../../Hooks'
 import styles from './Entrees.module.scss'
+import weekday from 'dayjs/plugin/weekday'
+import dayjs from 'dayjs'
 
 const FAQ_TYPE = 'entreeType'
 const STEP_ID = 4
 
+dayjs.extend(weekday)
+
 const Entrees = () => {
+  const state = useSelector((state) => state)
+  const dispatch = useDispatch()
+  const [entrees, setEntrees] = useState([])
+
+  const getToken = async () => {
+    const tokenResponse = await useGuestToken()
+    if (tokenResponse.token) {
+      dispatch(
+        setTokens({
+          ...state.tokens,
+          guestToken: tokenResponse.token
+        })
+      )
+    }
+  }
+
+  const getCurrentMenuItems = async () => {
+    const currentBundle = getSelectedBundle(state.bundle.breakfast.tag)
+    console.log('current bundle')
+    console.log(currentBundle)
+    // TODO: handle 401 status
+    if (!state.tokens.guestToken) {
+      await getToken()
+    }
+
+    const nextWeekSunday = dayjs()
+      .weekday(7)
+      .format('YYYY-MM-DDT00:00:00.000[Z]')
+    const items = await getMenuItems(state.tokens.guestToken, nextWeekSunday)
+    console.log('items>>>', items)
+  }
+
+  useEffect(() => {
+    getCurrentMenuItems()
+  }, [])
+
   // TODO: get state from the store
   const [item, setItem] = useState({
     id: 1,

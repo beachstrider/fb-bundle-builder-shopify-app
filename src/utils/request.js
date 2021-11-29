@@ -1,9 +1,11 @@
+import axios from 'axios'
+
 /**
  *
  * @param {String} url
  * @param {} fetchOptions
  * @param {Number} retries
- * @example request(url, {method: 'POST', body: JSON.stringify(data)}, 3)
+ * @example request(url, {method: 'get', data}, 3)
  * @returns
  */
 const request = async (url, fetchOptions, retries = 3) => {
@@ -11,10 +13,13 @@ const request = async (url, fetchOptions, retries = 3) => {
   let status = 200
 
   try {
-    const response = await fetch(url, fetchOptions)
+    const response = await axios({
+      ...fetchOptions,
+      url
+    })
 
-    if (response.ok) {
-      data = await response.json()
+    if ([200, 201, 202].includes(response.status)) {
+      data = response.data
     } else {
       if (response.status >= 500) {
         status = response.status
