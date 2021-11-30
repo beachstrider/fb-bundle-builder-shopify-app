@@ -10,61 +10,73 @@ import {
 const menuItems = [
     {
       title: 'Buffalo Mozzarella Chicken',
+      platform_img: 'https://cdn.shopify.com/s/files/1/0596/3694/0985/products/bacon-ranch-chicken-high-protein-727471.jpg?v=1636153469',
       quantity: 1,
       type: 'Regular'
     },
     {
       title: 'Buffalo Mozzarella Chicken',
+      platform_img: 'https://cdn.shopify.com/s/files/1/0596/3694/0985/products/bacon-ranch-chicken-high-protein-727471.jpg?v=1636153469',
       quantity: 1,
       type: 'Regular'
     },
     {
       title: 'Buffalo Mozzarella Chicken',
+      platform_img: 'https://cdn.shopify.com/s/files/1/0596/3694/0985/products/bacon-ranch-chicken-high-protein-727471.jpg?v=1636153469',
       quantity: 1,
       type: 'Regular'
     },
     {
       title: 'Buffalo Mozzarella Chicken',
+      platform_img: 'https://cdn.shopify.com/s/files/1/0596/3694/0985/products/bacon-ranch-chicken-high-protein-727471.jpg?v=1636153469',
       quantity: 1,
       type: 'Regular'
     },
     {
       title: 'Buffalo Mozzarella Chicken',
+      platform_img: 'https://cdn.shopify.com/s/files/1/0596/3694/0985/products/bacon-ranch-chicken-high-protein-727471.jpg?v=1636153469',
       quantity: 1,
       type: 'Regular'
     },
     {
       title: 'Buffalo Mozzarella Chicken',
+      platform_img: 'https://cdn.shopify.com/s/files/1/0596/3694/0985/products/bacon-ranch-chicken-high-protein-727471.jpg?v=1636153469',
       quantity: 1,
       type: 'Regular'
     },
     {
       title: 'Buffalo Mozzarella Chicken',
+      platform_img: 'https://cdn.shopify.com/s/files/1/0596/3694/0985/products/bacon-ranch-chicken-high-protein-727471.jpg?v=1636153469',
       quantity: 1,
       type: 'Regular'
     },
     {
       title: 'Buffalo Mozzarella Chicken',
+      platform_img: 'https://cdn.shopify.com/s/files/1/0596/3694/0985/products/bacon-ranch-chicken-high-protein-727471.jpg?v=1636153469',
       quantity: 1,
       type: 'Regular'
     },
     {
       title: 'Buffalo Mozzarella Chicken',
+      platform_img: 'https://cdn.shopify.com/s/files/1/0596/3694/0985/products/bacon-ranch-chicken-high-protein-727471.jpg?v=1636153469',
       quantity: 1,
       type: 'Regular'
     },
     {
       title: 'Buffalo Mozzarella Chicken',
+      platform_img: 'https://cdn.shopify.com/s/files/1/0596/3694/0985/products/bacon-ranch-chicken-high-protein-727471.jpg?v=1636153469',
       quantity: 1,
       type: 'Regular'
     },
     {
       title: 'Buffalo Mozzarella Chicken',
+      platform_img: 'https://cdn.shopify.com/s/files/1/0596/3694/0985/products/bacon-ranch-chicken-high-protein-727471.jpg?v=1636153469',
       quantity: 1,
       type: 'Regular'
     },
     {
       title: 'Buffalo Mozzarella Chicken',
+      platform_img: 'https://cdn.shopify.com/s/files/1/0596/3694/0985/products/bacon-ranch-chicken-high-protein-727471.jpg?v=1636153469',
       quantity: 1,
       type: 'Regular'
     }
@@ -109,7 +121,7 @@ const OrderHistory = () => {
                         </div>
                         <div className={styles.currentOrderMenu}>
                             {menuItems.map((item, index) => (
-                                index < 3 ? <MenuItemCard item={item} width="27%" /> : ''
+                                index < 3 ? <MenuItemCard key={index} title={item.title} image={item.platform_img} quantity={item.quantity} type='regular' />  : ''
                             ))}
                             <Link to="/account" className={styles.seeAllMenu}>
                                 See All <ChevronRightMinor />
@@ -125,10 +137,12 @@ const OrderHistory = () => {
                         </div>
                         <table className={styles.orderHistoryTable}>
                             <thead className={styles.orderHistoryTableHeaders}>
+                            <tr>
                                 <th>Order Date</th>
                                 <th>Order Total</th>
                                 <th>Meal Type</th>
                                 <th>Meals Names</th>
+                                </tr>
                             </thead>
                             <tbody>
                             {shopCustomer.orders.map( (order, index) => (
@@ -138,7 +152,7 @@ const OrderHistory = () => {
                                             <td>{order.orderTotal}</td>
                                             <td>Keto</td>
                                             <td className={styles.orderMealNames}>
-                                                <p className={styles.orderMealNamesText}>{order.orderItems.map( item => ( item ))}</p>
+                                                <p className={styles.orderMealNamesText}>{order.lineItems.map( item => ( `${item.title},` ))}</p>
                                                 <a to={order.orderLink} className={styles.orderMealNamesLink}>See All Meals</a>
                                             </td>
                                         </tr>  

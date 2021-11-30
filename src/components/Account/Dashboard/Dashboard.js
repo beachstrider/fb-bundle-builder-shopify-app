@@ -12,58 +12,16 @@ import {
   ChevronRightMinor,
   ChevronLeftMinor
 } from '@shopify/polaris-icons';
+import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
 import * as dayjs from 'dayjs';
 import { request } from '../../../utils';
+import { 
+  bundleConfig,
+  subscriptionFromDB,
+  subscriptionOrders
+} from '../../../../dummyObjects';
 
-
-const subscriptionFromDB = {
-  "data": [
-      {
-          "id": 1,
-          "customer_id": 1,
-          "bundle_id": 3,
-          "platform_subscription_id": 953490813366,
-          "delivery_day": 6,
-          "subscription_type": null,
-          "subscription_sub_type": null,
-          "is_active": null,
-          "createdAt": "2021-11-25T01:34:47.000Z",
-          "updatedAt": "2021-11-25T01:34:47.000Z",
-          "customer": {
-              "id": 1,
-              "account_id": 1,
-              "email": "justin@sunriseintegration.com",
-              "platform_customer_id": 5410281652409,
-              "createdAt": "2021-11-25T01:34:47.000Z",
-              "updatedAt": "2021-11-25T01:34:47.000Z"
-          },
-          "orders": [
-              {
-                  "id": 1,
-                  "customer_subscription_id": 1,
-                  "bundle_configuration_content_id": 1,
-                  "platform_order_id": 4118949462201,
-                  "createdAt": "2021-11-25T01:34:47.000Z",
-                  "updatedAt": "2021-11-25T01:34:47.000Z"
-              },
-              {
-                  "id": 2,
-                  "customer_subscription_id": 1,
-                  "bundle_configuration_content_id": 2,
-                  "platform_order_id": 4115445350585,
-                  "createdAt": "2021-11-25T01:34:47.000Z",
-                  "updatedAt": "2021-11-25T01:34:47.000Z"
-              }
-          ]
-      }
-  ],
-  "pagination": {
-      "total": 2,
-      "currentPage": 1,
-      "lastPage": 1,
-      "pageSize": 50
-  }
-}
+dayjs.extend(isSameOrAfter);
 
 const Dashboard = () => {
   const state = useSelector((state) => state)
@@ -71,82 +29,166 @@ const Dashboard = () => {
   const [active, setActive] = React.useState([]);
   const [limit, setLimit] = React.useState([]);
   const [subscriptions, setSubscriptions] = React.useState([])
+  const [weeksMenu, setWeeksMenu] = React.useState([])
   
   React.useEffect(async () => {
       dispatch(displayHeader(false))
       dispatch(displayFooter(false))
       dispatch(selectFaqType(null))
       console.log('customer object: ', shopCustomer);
-      const newWeeksArr = []
+      let newWeeksArr = []
       const activeWeeksArr = []
       const activeWeeksLimit = []
+      const weeksMenu = []
+      // const subApi = await request('https://justins-dev-api.ngrok.io/api/customers/1/subscriptions', {
+      //     method: 'GET', // *GET, POST, PUT, DELETE, etc.
+      //     mode: 'cors', // no-cors, *cors, same-origin
+      //     cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+      //     credentials: 'same-origin', // include, *same-origin, omit
+      //     headers: {
+      //       'Content-Type': 'application/json',
+      //       'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoic3VwZXIiLCJpYXQiOjE2MzgyMDg0NTAsImV4cCI6MTYzODI5NDg1MH0.rQogSi9R1lUp7O8PurC4RwL4uLtu1--cZSDrSnTLm9A',
+      //     },
+      //     redirect: 'follow', // manual, *follow, error
+      //     referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+      // })
 
-      const subApi = await request('http://localhost:8080/api/customers/1/subscriptions', {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoic3VwZXIiLCJpYXQiOjE2Mzc5NTYyODEsImV4cCI6MTYzODA0MjY4MX0.BEsjZjTgx4niP16ljzQUKxmkHS4AM8sbbW_aofDQ1d4',
-        },
-      })
+      // console.log('customer subscription: ', subApi);
 
-      console.log('customer subscription: ', subApi);
-
-      subscriptionFromDB.data.forEach((sub, index) =>{
-          const lastOrder = shopCustomer.orders.filter( order => order.id == sub.orders[0].platform_order_id )[0];
-          const lastOrderItems = []
-          lastOrder.line_items.forEach(item => {
-            lastOrderItems.push({
-              title: item.title,
-              platform_img: 'https://cdn.shopify.com/s/files/1/0596/3694/0985/products/bacon-ranch-chicken-high-protein-727471.jpg?v=1636153469',
-              quantity: item.quantity
+      subscriptionFromDB.data.forEach((sub) =>{
+        const thisLoopSubList = [];
+        sub.orders.forEach((order, index) => {
+          const lastOrder = shopCustomer.orders.filter( ord => ord.id == order.platform_order_id )[0];
+          console.log('shopCustomer: ', shopCustomer)
+          const lastOrderItems = [];
+          const nextSunday = dayjs().day(0).add((7 * index), 'day')
+          console.log('order: ', order)
+          console.log('lastOrder: ', lastOrder)
+          if(lastOrder){
+            lastOrder.lineItems.forEach(item => {
+              lastOrderItems.push({
+                title: item.title,
+                platform_img: 'https://cdn.shopify.com/s/files/1/0596/3694/0985/products/bacon-ranch-chicken-high-protein-727471.jpg?v=1636153469',
+                quantity: item.quantity
+              })
             })
-          })
-        
-        const nextSunday = dayjs().day(0).add((7 * index), 'day');
 
-        newWeeksArr.push({
-          items: lastOrderItems,
-          status: 'sent',
-          subscriptionDate: nextSunday.format('MMM DD')
-        });
-      })
+            thisLoopSubList.push({
+              items: lastOrderItems,
+              sub_id: sub.id,
+              status: 'sent',
+              subscriptionDate: nextSunday.format('MMM DD')
+            });
+          }
+          
+          if(!order.platform_order_id){
+            // call for bundle
+            const itemList = subscriptionOrders.data.filter( s => s.bundle_configuration_content_id === order.bundle_configuration_content_id)[0];
+            console.log('item: ', itemList)
+            if(itemList){
+              if(itemList.items){
+                itemList.items.forEach(item => {
+                  // const itemFromStore = shopifyProducts.filter(sI => item.platform_product_variant_id === sI.variant.id)
+                  lastOrderItems.push({
+                    title: 'default product',
+                    platform_img: 'https://cdn.shopify.com/s/files/1/0596/3694/0985/products/bacon-ranch-chicken-high-protein-727471.jpg?v=1636153469',
+                    quantity: item.quantity
+                  })
+                })
+              } else {
+                // call bundle default
+                console.log('no items need default')
+                bundleConfig.data.products.forEach((item) => {
+                  // const itemFromStore = shopifyProducts.filter(sI => item.platform_product_variant_id === sI.variant.id)
+                  lastOrderItems.push({
+                    title: 'default product',
+                    platform_img: 'https://cdn.shopify.com/s/files/1/0596/3694/0985/products/bacon-ranch-chicken-high-protein-727471.jpg?v=1636153469',
+                    quantity: item.quantity
+                  })
+                })
+              }
+            } else {
+              // call bundle default
+              console.log('no order need default', bundleConfig.products)
+              bundleConfig.data.products.forEach(item => {
+                // const itemFromStore = shopifyProducts.filter(sI => item.platform_product_variant_id === sI.variant.id)
+                lastOrderItems.push({
+                  title: 'default product',
+                  platform_img: 'https://cdn.shopify.com/s/files/1/0596/3694/0985/products/bacon-ranch-chicken-high-protein-727471.jpg?v=1636153469',
+                  quantity: item.quantity
+                })
+              })
+            }
 
+            thisLoopSubList.push({
+              items: lastOrderItems,
+              status: 'pending',
+              subscriptionDate: nextSunday.format('MMM DD')
+            });
+          } else {
+            console.log('order.platform_order_id: ', order.platform_order_id)
+          }
 
-      for(let j = 1; j < 4; j++){
-        const pendingItems = []
-        for(let i = 0; i < 15; i++){
-          pendingItems.push({
-            title: 'Pending Item Name',
-            platform_img: 'https://cdn.shopify.com/s/files/1/0596/3694/0985/products/bacon-ranch-chicken-high-protein-727471.jpg?v=1636153469',
-            quantity: 0
-          })
-        }
-        const nextSunday = dayjs().day(0).add((7 * j), 'day');
-        newWeeksArr.push({
-          id: j,
-          items: pendingItems,
-          status: 'pending',
-          subscriptionDate: nextSunday.format('MMM DD')
+          if(!weeksMenu.includes(nextSunday.format('MMM DD'))){ weeksMenu.push(nextSunday.format('MMM DD')); }
         })
-      }
+
+        if(thisLoopSubList.length < 4){
+          for(let j = thisLoopSubList.length; thisLoopSubList.length < 4; j++){
+            const pendingItems = []
+            for(let i = 0; i < 15; i++){
+              pendingItems.push({
+                title: 'Pending Item Name',
+                platform_img: 'https://cdn.shopify.com/s/files/1/0596/3694/0985/products/bacon-ranch-chicken-high-protein-727471.jpg?v=1636153469',
+                quantity: 0
+              })
+            }
+            const nextSunday = dayjs().day(0).add((7 * j), 'day');
+            thisLoopSubList.push({
+              items: pendingItems,
+              status: 'pending',
+              subscriptionDate: nextSunday.format('MMM DD')
+            })
+
+            if(!weeksMenu.includes(nextSunday.format('MMM DD'))){ weeksMenu.push(nextSunday.format('MMM DD')); }
+          }
+        }
+
+        newWeeksArr = newWeeksArr.concat(thisLoopSubList);
+      })
 
       newWeeksArr.forEach((sub, index) => {
-        if(index < 2){
+        const today = dayjs(new Date()).day(0).add(14, 'day').startOf('day');
+        const thisYear = dayjs().year();
+        const pastDate = dayjs(new Date(`${sub.subscriptionDate} ${thisYear}`)).startOf('day');
+        console.log('pastDate: ', pastDate);
+        console.log('today: ', today);
+        console.log('Date check: ', pastDate.isSameOrAfter(today));
+
+        if(!pastDate.isSameOrAfter(today)){
           activeWeeksArr.push(sub);
           activeWeeksLimit.push(5)
         }
       })
 
       console.log('Set subscriptions: ', newWeeksArr);
+
       setSubscriptions(newWeeksArr);
+      setWeeksMenu(weeksMenu)
       setActive(activeWeeksArr)
       setLimit(activeWeeksLimit)
   }, []);
 
   const handleChange = (week) => {
-    if(!active.includes(week)){
-      setActive([week])
-      setLimit([5])
+    console.log(subscriptions);
+    const newActive = subscriptions.filter( a => a.subscriptionDate === week)
+    console.log(newActive);
+    if(newActive.length > 0){
+      setActive(newActive)
+      const newLimitArr = [];
+      for(let i = 0; i < newActive.length; i ++){
+        newLimitArr.push(5)
+      }
+      setLimit(newLimitArr)
     }
     
   }
@@ -191,8 +233,8 @@ const Dashboard = () => {
         <div className={styles.weekMenu}>
             <p className={styles.weekMenuLabel}>Select Week</p>
             <div className={`buttons ${styles.weekMenuItems}`}>
-              {subscriptions.map( (sub, index) => {
-                return ( <button key={index} onClick={() => handleChange(sub)} className={ active.includes(sub) ? "primaryButton largeButton" : "secondaryButton largeButton"}>{sub.subscriptionDate}</button> )
+              {weeksMenu.map((date, index) => {
+                return ( <button key={index} onClick={() => handleChange(date)} className={ active.filter( a => a.subscriptionDate === date).length > 0 ? "primaryButton largeButton" : "secondaryButton largeButton"}>{date}</button> )
               })}
             </div>
         </div>
