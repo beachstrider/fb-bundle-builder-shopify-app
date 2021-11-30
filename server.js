@@ -2,9 +2,14 @@ const path = require('path')
 require('dotenv').config({ path: path.resolve(__dirname, '.env') })
 const fs = require('fs')
 const express = require('express')
+const helmet = require('helmet')
 const verifyHmac = require('./src/server/middleware/verifyHmac')
-const { replaceString, shopifyMultipass } = require('./src/server/utils')
+const { replaceString } = require('./src/server/utils')
 const cors = require('cors')
+
+const bundleApiRouters = require('./src/server/routers/bundleApiRouters')
+const shopifyRouters = require('./src/server/routers/shopifyRouters')
+
 const app = express()
 const SERVER_PORT = 3000
 
@@ -16,6 +21,7 @@ app.use(cors())
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.disable('x-powered-by')
+app.use(helmet())
 
 app.get('/bundle.js', (req, res) => {
   res.sendFile('./public/bundle.js', { root: __dirname })
@@ -27,27 +33,8 @@ app.get('/public/index.html', (req, res) => {
   })
 })
 
-// Sign-in into Shopify multipass
-app.post('/shopify/multipass-url', (req, res) => {
-  if (!req.query.shop) {
-    return res.status(400).send({
-      message: 'Can not find shop'
-    })
-  }
-
-  const { email, created_at, return_to } = req.body
-
-  const multipass = shopifyMultipass(process.env.SHOPIFY_MULTIPASS_SECRET)
-  const url = multipass.url(req.query.shop, {
-    email,
-    created_at,
-    return_to
-  })
-
-  res.status(200).send({
-    url: url
-  })
-})
+app.use(bundleApiRouters)
+app.use(shopifyRouters)
 
 app.get('/', verifyHmac, (req, res) => {
   fs.readFile(

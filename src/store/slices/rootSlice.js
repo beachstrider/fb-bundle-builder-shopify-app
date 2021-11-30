@@ -42,7 +42,7 @@ const rootSlice = createSlice({
         isActive: false
       }
     ],
-    entree: {
+    bundle: {
       id: 0,
       price: 0,
       breakfast: {
@@ -56,6 +56,9 @@ const rootSlice = createSlice({
     location: {
       zipCode: '',
       deliveryDate: ''
+    },
+    tokens: {
+      guestToken: ''
     }
   },
   reducers: {
@@ -74,8 +77,8 @@ const rootSlice = createSlice({
       )
       state.steps = currentSteps
     },
-    setEntree: (state, action) => {
-      state.entree = action.payload
+    setBundle: (state, action) => {
+      state.bundle = action.payload
     },
     selectFaqType: (state, action) => {
       state.faqType = action.payload
@@ -94,6 +97,9 @@ const rootSlice = createSlice({
     },
     setLocation: (state, action) => {
       state.location = action.payload
+    },
+    setTokens: (state, action) => {
+      state.tokens = action.payload
     }
   }
 })
@@ -106,8 +112,9 @@ export const {
   selectFaqType,
   setActiveStep,
   setEmail,
-  setEntree,
+  setBundle,
   setEntreeType,
   setEntreeSubType,
-  setLocation
+  setLocation,
+  setTokens
 } = rootSlice.actions

@@ -17,8 +17,7 @@ import { withActiveStep } from '../../Hooks'
 const FAQ_TYPE = 'location'
 const STEP_ID = 2
 
-// TODO: Add and format correct data
-const mockedZones = [
+const deliveryZones = [
   {
     id: 1,
     name: 'Zone 1',
@@ -117,7 +116,7 @@ const mockedZones = [
 const Location = () => {
   const dispatch = useDispatch()
   const state = useSelector((state) => state)
-  const [zones, setZones] = useState(mockedZones)
+  const [zones, setZones] = useState(deliveryZones)
   const [currentZone, setCurrentZone] = useState({})
   const [email, setEmail] = useState('')
   const [zipCode, setZipCode] = useState('')
@@ -128,7 +127,7 @@ const Location = () => {
     dispatch(displayHeader(true))
 
     // TODO: pull data from the api
-    setZones(mockedZones)
+    setZones(deliveryZones)
 
     if (state.email && state.location.zipCode) {
       setZipCode(state.location.zipCode)
@@ -187,19 +186,18 @@ const Location = () => {
     const shopifyMultipass = await request(
       `${process.env.PROXY_APP_URL}/shopify/multipass-url?shop=${domain.hostname}`,
       {
-        method: 'POST',
-        mode: 'cors',
+        method: 'post',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({
+        data: {
           email,
           created_at: new Date().toISOString(),
           return_to: window.location.href,
           addresses: {
             zip: zipCode
           }
-        })
+        }
       }
     )
 
@@ -210,6 +208,12 @@ const Location = () => {
 
   const handleDeliveryDate = (date) => {
     dispatch(setLocation({ ...state.location, deliveryDate: date }))
+  }
+
+  const handleZipCodeChange = (value) => {
+    if (Number.isInteger(Number(value))) {
+      setZipCode(value)
+    }
   }
 
   return (
@@ -224,7 +228,7 @@ const Location = () => {
               Your Zip Code <span className={styles.required}>(Required)</span>
             </div>
             <InputText
-              onChange={(value) => setZipCode(value)}
+              onChange={(value) => handleZipCodeChange(value)}
               value={zipCode}
               required={true}
             />

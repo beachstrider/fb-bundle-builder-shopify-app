@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import {
-  setEntree,
+  setBundle,
   selectFaqType,
   displayHeader,
   displayFooter
@@ -18,7 +18,7 @@ import { withActiveStep } from '../../Hooks'
 const FAQ_TYPE = 'frequency'
 const STEP_ID = 1
 
-const entrees = [
+const bundles = [
   {
     id: 1,
     name: 'FreshStart',
@@ -28,11 +28,13 @@ const entrees = [
     breakfasts: [
       {
         name: '7',
-        price: 'Free'
+        price: 'Free',
+        tag: '7 Day with breakfast'
       },
       {
         name: 'none',
-        price: 'None'
+        price: 'None',
+        tag: '7 Day'
       }
     ]
   },
@@ -45,11 +47,13 @@ const entrees = [
     breakfasts: [
       {
         name: '5',
-        price: 25
+        price: 25,
+        tag: '5 Day with breakfast'
       },
       {
         name: 'none',
-        price: 'None'
+        price: 'None',
+        tag: '5 Day'
       }
     ]
   },
@@ -62,11 +66,13 @@ const entrees = [
     breakfasts: [
       {
         name: '3',
-        price: 15
+        price: 15,
+        tag: '3 Day with breakfast'
       },
       {
         name: 'none',
-        price: 'None'
+        price: 'None',
+        tag: '3 Day'
       }
     ]
   }
@@ -75,48 +81,48 @@ const entrees = [
 const Frequency = () => {
   const dispatch = useDispatch()
   const state = useSelector((state) => state)
-  const [selectedEntree, setSelectedEntree] = useState({})
+  const [selectedBundle, setSelectedBundle] = useState({})
 
   useEffect(() => {
     dispatch(selectFaqType(FAQ_TYPE))
     dispatch(displayHeader(true))
     dispatch(displayFooter(true))
 
-    if (!state.entree.id) {
-      const defaultEntree = mapEntreeToStore(
-        entrees[0],
-        entrees[0].breakfasts[0]
+    if (!state.bundle.id) {
+      const defaultEntree = mapBundleToStore(
+        bundles[0],
+        bundles[0].breakfasts[0]
       )
-      dispatch(setEntree(defaultEntree))
+      dispatch(setBundle(defaultEntree))
     }
   }, [])
 
   useEffect(() => {
-    setSelectedEntree(() => entrees.find((e) => e.id === state.entree.id) || [])
-  }, [state.entree.id])
+    setSelectedBundle(() => bundles.find((e) => e.id === state.bundle.id) || [])
+  }, [state.bundle.id])
 
-  const mapEntreeToStore = (entree, breakfast = null) => {
-    const defaultBreakfast = breakfast || entree.breakfasts[0]
+  const mapBundleToStore = (bundle, breakfast = null) => {
+    const defaultBreakfast = breakfast || bundle.breakfasts[0]
 
-    const newEntree = {
-      ...entree,
+    const newBundle = {
+      ...bundle,
       breakfast: defaultBreakfast
     }
 
-    if (newEntree.breakfasts) {
-      delete newEntree.breakfasts
+    if (newBundle.breakfasts) {
+      delete newBundle.breakfasts
     }
-    return newEntree
+    return newBundle
   }
 
-  const handleSelectEntree = (entree) => {
-    const mappedEntree = mapEntreeToStore(entree)
-    dispatch(setEntree(mappedEntree))
+  const handleSelectBundle = (bundle) => {
+    const mappedBundle = mapBundleToStore(bundle)
+    dispatch(setBundle(mappedBundle))
   }
 
   const handleSelectBreakfast = (breakfast) => {
-    const mappedEntree = mapEntreeToStore(state.entree, breakfast)
-    dispatch(setEntree(mappedEntree))
+    const mappedBundle = mapBundleToStore(state.bundle, breakfast)
+    dispatch(setBundle(mappedBundle))
   }
 
   return (
@@ -134,20 +140,20 @@ const Frequency = () => {
           <div className={styles.column}>
             <div className={`${styles.subRow} ${styles.subRowFullWidth}`}>
               <FrequencyMainEntree
-                data={entrees[0]}
-                isSelected={entrees[0].id === state.entree.id}
-                onClick={() => handleSelectEntree(entrees[0])}
+                data={bundles[0]}
+                isSelected={bundles[0].id === state.bundle.id}
+                onClick={() => handleSelectBundle(bundles[0])}
               />
             </div>
             <div className={styles.subRow}>
-              {entrees.map(
-                (entree, index) =>
+              {bundles.map(
+                (bundle, index) =>
                   index !== 0 && (
                     <FrequencyEntree
-                      data={entree}
-                      key={entree.id}
-                      isSelected={entree.id === state.entree.id}
-                      onClick={() => handleSelectEntree(entree)}
+                      data={bundle}
+                      key={bundle.id}
+                      isSelected={bundle.id === state.bundle.id}
+                      onClick={() => handleSelectBundle(bundle)}
                     />
                   )
               )}
@@ -155,8 +161,8 @@ const Frequency = () => {
           </div>
           <div className="displayTablet">
             <FrequencySubTotal
-              entreePrice={state.entree?.weeklyPrice}
-              breakfastPrice={state.entree?.breakfast?.price}
+              entreePrice={state.bundle?.weeklyPrice}
+              breakfastPrice={state.bundle?.breakfast?.price}
             />
           </div>
         </div>
@@ -173,13 +179,13 @@ const Frequency = () => {
         </div>
         <div className={styles.row}>
           <div className={styles.column}>
-            {selectedEntree.id && (
+            {selectedBundle.id && (
               <div className={`${styles.subRow} ${styles.subRowFourColumns}`}>
-                {selectedEntree.breakfasts.map((breakfast, index) => (
+                {selectedBundle.breakfasts.map((breakfast, index) => (
                   <FrequencyBreakfast
                     key={index}
                     data={breakfast}
-                    isSelected={breakfast.name === state.entree.breakfast.name}
+                    isSelected={breakfast.name === state.bundle.breakfast.name}
                     onClick={() => handleSelectBreakfast(breakfast)}
                   />
                 ))}
@@ -189,8 +195,8 @@ const Frequency = () => {
         </div>
         <div className="displayMobile">
           <FrequencySubTotal
-            entreePrice={state.entree?.weeklyPrice}
-            breakfastPrice={state.entree?.breakfast?.price}
+            entreePrice={state.bundle?.weeklyPrice}
+            breakfastPrice={state.bundle?.breakfast?.price}
           />
         </div>
       </div>

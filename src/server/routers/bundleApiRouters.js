@@ -1,0 +1,57 @@
+const app = require('express').Router()
+const path = require('path')
+require('dotenv').config({ path: path.resolve(__dirname, '.env') })
+const { request } = require('../utils')
+
+app.post('/bundle-api/token/guest', async (req, res) => {
+  const response = await request(`${process.env.BUNDLE_API_URL}/api/auth`, {
+    method: 'post',
+    headers: {
+      Accept: 'application/json',
+      authorization: `Bearer ${process.env.BUNDLE_API_SECRET}`
+    },
+    data: {
+      shop: req.body.shop
+    }
+  })
+
+  if (response.data.token) {
+    return res.status(200).send(response.data)
+  }
+
+  res.status(400).send({
+    message: 'Can not retrieve token'
+  })
+})
+
+app.get(
+  '/bundle-api/bundles/:bundleId/configurations/:configurationId/contents',
+  async (req, res) => {
+    const queryString = Object.keys(req.query)
+      .map((key) => key + '=' + req.query[key])
+      .join('&')
+    const response = await request(
+      `${process.env.BUNDLE_API_URL}/api/bundles/76/configurations/811/contents?${queryString}`,
+      {
+        method: 'get',
+        headers: {
+          Accept: 'application/json',
+          authorization: req.headers.authorization
+        },
+        data: {
+          shop: req.body.shop
+        }
+      }
+    )
+
+    if (response.data) {
+      return res.status(200).send(response.data)
+    }
+
+    res.status(400).send({
+      message: 'Can not retrieve menu items'
+    })
+  }
+)
+
+module.exports = app
