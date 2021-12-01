@@ -1,7 +1,16 @@
 import withActiveStep from './withActiveStep'
-import { getMenuItems } from './withBundleApi'
+import { getMenuItems, getBundle } from './withBundleApi'
 import useGuestToken from './useGuestToken'
 import getSelectedBundle from './getSelectedBundle'
 import {  useUserToken, hasUserToken, isUserAuthenticated } from './isUserAuthenticated'
 
-export { getMenuItems, getSelectedBundle, useGuestToken, withActiveStep, useUserToken, hasUserToken, isUserAuthenticated }
+export {
+  useGuestToken,
+  getMenuItems,
+  getSelectedBundle,
+  getBundle,
+  withActiveStep,
+  useUserToken, 
+  hasUserToken, 
+  isUserAuthenticated
+}
