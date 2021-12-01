@@ -62,6 +62,7 @@ const Dashboard = () => {
     const subContents = await request(`${process.env.PROXY_APP_URL}/bundle-api/bundles/1/configurations/1/contents`, { method: 'get', data: '', headers: { authorization: token }}, 3)
     console.log('customer subscription items: ', subContents);
     const pendingItems = []
+    
     subContents.data.data.forEach( configuration => {
       configuration.products.forEach( product => {
         pendingItems.push({
@@ -155,13 +156,13 @@ const Dashboard = () => {
         const nextSunday = dayjs().day(0).add((7 * j), 'day');
         //${nextSunday.format('YYYY-MM-DD')}T00:00:00.000Z
 
-        const pendingItems = await getMissingConfigurations(token);
-        console.log('returned data: ', pendingItems)
-        thisLoopSubList.push({
-          items: pendingItems,
-          status: 'pending',
-          subscriptionDate: nextSunday.format('MMM DD')
-        })
+        await getMissingConfigurations(token).then( data => {
+          thisLoopSubList.push({
+            items: data,
+            status: 'pending',
+            subscriptionDate: nextSunday.format('MMM DD')
+          })
+        });
 
         if(!weeksMenu.includes(nextSunday.format('MMM DD'))){ weeksMenu.push(nextSunday.format('MMM DD')); }
       }
@@ -170,21 +171,23 @@ const Dashboard = () => {
       return thisLoopSubList
     })
 
-    newWeeksArr.forEach((sub, index) => {
-      const today = dayjs(new Date()).day(0).add(14, 'day').startOf('day');
-      const thisYear = dayjs().year();
-      const pastDate = dayjs(new Date(`${sub.subscriptionDate} ${thisYear}`)).startOf('day');
+    setTimeout(() => {
+        newWeeksArr.forEach((sub, index) => {
+          const today = dayjs(new Date()).day(0).add(14, 'day').startOf('day');
+          const thisYear = dayjs().year();
+          const pastDate = dayjs(new Date(`${sub.subscriptionDate} ${thisYear}`)).startOf('day');
+    
+          if(!pastDate.isSameOrAfter(today)){
+            activeWeeksArr.push(sub);
+            activeWeeksLimit.push(5)
+          }
+        })
 
-      if(!pastDate.isSameOrAfter(today)){
-        activeWeeksArr.push(sub);
-        activeWeeksLimit.push(5)
-      }
-    })
-    console.log('asrraoss: ', asrraoss)
-    // setSubscriptions(newWeeksArr);
-      setWeeksMenu(weeksMenu)
-      setActive(activeWeeksArr)
-      setLimit(activeWeeksLimit)
+        setWeeksMenu(weeksMenu)
+        setActive(activeWeeksArr)
+        setLimit(activeWeeksLimit)
+        setSubscriptions(newWeeksArr);
+    }, 6000);
 
   }, [])
   
@@ -197,8 +200,7 @@ const Dashboard = () => {
       // if (!state.tokens.guestToken) {
       //   await getToken()
       // }
-      getOrdersToShow(token);
-
+      await getOrdersToShow(token);
   }, [getOrdersToShow]);
 
   const handleChange = (week) => {

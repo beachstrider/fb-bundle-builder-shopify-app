@@ -41,32 +41,6 @@ app.post('/bundle-api/token/account', async (req, res) => {
 })
 
 app.get(
-  '/bundle-api/bundles/:bundleId/configurations/:configurationId/contents',
-  async (req, res) => {
-    const queryString = Object.keys(req.query)
-      .map((key) => key + '=' + req.query[key])
-      .join('&')
-
-    // TODO: work in progress
-    const response = await request(
-      `${process.env.BUNDLE_API_URL}/api/bundles/76/configurations/811/contents?${queryString}`,
-      {
-        method: 'get',
-        headers: {
-          Accept: 'application/json',
-          authorization: req.headers.authorization
-        },
-        data: {
-          shop: req.body.shop
-        }
-      }
-    )
-
-    return res.status(response.status).send(response.data)
-  }
-)
-
-app.get(
   '/bundle-api/customers/:customerId/subscriptions',
   async (req, res) => {
     const response = await request(
@@ -91,13 +65,13 @@ app.get(
 )
 
 app.get(
-  '/api/bundles/:bundleId/configurations/:configurationId/contents',
+  '/bundle-api/bundles/:bundleId/configurations/:configurationId/contents',
   async (req, res) => {
     const queryString = Object.keys(req.query)
       .map((key) => key + '=' + req.query[key])
       .join('&')
     const response = await request(
-      `${process.env.BUNDLE_API_URL}/api/bundles/1/configurations/1/contents?${queryString}`,
+      `${process.env.BUNDLE_API_URL}/api/bundles/1/configurations/1/contents`,
       {
         method: 'get',
         headers: {
