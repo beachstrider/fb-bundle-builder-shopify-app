@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { setTokens } from '../../../store/slices/rootSlice'
 import CardQuantities from '../../Cards/CardQuantities'
 import {
   getMenuItems,
@@ -12,57 +11,82 @@ import {
 import styles from './Entrees.module.scss'
 import weekday from 'dayjs/plugin/weekday'
 import dayjs from 'dayjs'
+import { Spinner } from '@shopify/polaris'
 
 const FAQ_TYPE = 'entreeType'
 const STEP_ID = 4
+const ENTREE_CONFIGURATION_TITLE = 'Entree'
+const BREAKFAST_CONFIGURATION_TITLE = 'Breakfast'
 
 dayjs.extend(weekday)
 
 const Entrees = () => {
   const state = useSelector((state) => state)
   const dispatch = useDispatch()
+  const [isLoading, setIsloading] = useState(false)
   const [entrees, setEntrees] = useState([])
+  const [entreeQuantity, setEntreeQuantity] = useState(0)
+  const [breakfast, setBreakfast] = useState([])
+  const [breakfastQuantity, setBreakfastQuantity] = useState(0)
 
   useEffect(() => {
-    generateToken()
+    getCurrentMenuItems()
   }, [])
 
-  const generateToken = async () => {
-    const currentToken = await useGuestToken()
-    if (currentToken) {
-      console.log('NEW TOKEN>>>')
-      dispatch(
-        setTokens({
-          ...state.tokens,
-          guestToken: currentToken
-        })
-      )
-    }
-
-    getCurrentMenuItems(currentToken)
-  }
-
-  const getCurrentMenuItems = async (currentToken) => {
+  const getCurrentMenuItems = async () => {
     let currentApiBundle = null
     const shopifyProduct = getSelectedBundle(state.bundle.breakfast.tag)
-    // TODO: remove line
-    console.log('current bundle')
-    console.log(shopifyProduct)
 
-    const { data } = await getBundle(currentToken, shopifyProduct.id)
+    const { data } = await getBundle(state.tokens.guestToken, shopifyProduct.id)
     if (data.data.length > 0) {
       currentApiBundle = data.data[0]
     }
 
+    const findTitle = (title, search) =>
+      title.toLowerCase().includes(search.substr(1, 6))
+    for (const configuration of currentApiBundle.configurations) {
+      // search for part of the word ENTREE or BREAKFAST in the title
+      if (findTitle(configuration.title, ENTREE_CONFIGURATION_TITLE)) {
+        await getProducts(configuration, ENTREE_CONFIGURATION_TITLE, setEntrees)
+      }
+
+      if (findTitle(configuration.title, BREAKFAST_CONFIGURATION_TITLE)) {
+        await getProducts(
+          configuration,
+          BREAKFAST_CONFIGURATION_TITLE,
+          setBreakfast
+        )
+      }
+    }
+  }
+
+  const getProducts = async (configuration, title, setContent) => {
     const nextWeekSunday = dayjs()
       .weekday(7)
       .format('YYYY-MM-DDT00:00:00.000[Z]')
-    const items = await getMenuItems(
-      currentToken,
-      currentApiBundle.id,
-      nextWeekSunday
-    )
-    console.log('items>>>', items)
+
+    if (configuration.title.toLowerCase().includes(title.substr(1, 6))) {
+      const response = await getMenuItems(
+        state.tokens.guestToken,
+        configuration.bundleId,
+        configuration.id,
+        `is_enabled=1&display_after=${nextWeekSunday}`
+      )
+
+      if (response.data?.data && response.data?.data.length > 0) {
+        setContent(response.data.data[0])
+        if (title === BREAKFAST_CONFIGURATION_TITLE) {
+          setBreakfastQuantity(response.data.data[0].configuration.quantity)
+        }
+        if (title === ENTREE_CONFIGURATION_TITLE) {
+          setEntreeQuantity(response.data.data[0].configuration.quantity)
+        }
+      }
+    }
+  }
+
+  const filterShopifyVariants = () => {
+    // TODO: next task
   }
 
   // TODO: get state from the store
@@ -90,6 +114,15 @@ const Entrees = () => {
   const handleRemoveItem = () => {
     const newItem = { ...item, quantity: item.quantity - 1 }
     setItem(newItem)
+  }
+
+  if (isLoading) {
+    // TODO: work in progress
+    return (
+      <div className="customSpinner">
+        <Spinner accessibilityLabel="Loading page..." size="large" />
+      </div>
+    )
   }
 
   return (
