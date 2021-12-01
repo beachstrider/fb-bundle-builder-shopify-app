@@ -2,8 +2,13 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { setTokens } from '../../../store/slices/rootSlice'
 import CardQuantities from '../../Cards/CardQuantities'
-import useGuestToken from '../../Hooks/useGuestToken'
-import { getMenuItems, getSelectedBundle } from '../../Hooks'
+import {
+  getMenuItems,
+  getSelectedBundle,
+  getBundle,
+  withActiveStep,
+  useGuestToken
+} from '../../Hooks'
 import styles from './Entrees.module.scss'
 import weekday from 'dayjs/plugin/weekday'
 import dayjs from 'dayjs'
@@ -18,37 +23,47 @@ const Entrees = () => {
   const dispatch = useDispatch()
   const [entrees, setEntrees] = useState([])
 
-  const getToken = async () => {
-    const tokenResponse = await useGuestToken()
-    if (tokenResponse.token) {
+  useEffect(() => {
+    generateToken()
+  }, [])
+
+  const generateToken = async () => {
+    const currentToken = await useGuestToken()
+    if (currentToken) {
+      console.log('NEW TOKEN>>>')
       dispatch(
         setTokens({
           ...state.tokens,
-          guestToken: tokenResponse.token
+          guestToken: currentToken
         })
       )
     }
+
+    getCurrentMenuItems(currentToken)
   }
 
-  const getCurrentMenuItems = async () => {
-    const currentBundle = getSelectedBundle(state.bundle.breakfast.tag)
+  const getCurrentMenuItems = async (currentToken) => {
+    let currentApiBundle = null
+    const shopifyProduct = getSelectedBundle(state.bundle.breakfast.tag)
+    // TODO: remove line
     console.log('current bundle')
-    console.log(currentBundle)
-    // TODO: handle 401 status
-    if (!state.tokens.guestToken) {
-      await getToken()
+    console.log(shopifyProduct)
+
+    const { data } = await getBundle(currentToken, shopifyProduct.id)
+    if (data.data.length > 0) {
+      currentApiBundle = data.data[0]
     }
 
     const nextWeekSunday = dayjs()
       .weekday(7)
       .format('YYYY-MM-DDT00:00:00.000[Z]')
-    const items = await getMenuItems(state.tokens.guestToken, nextWeekSunday)
+    const items = await getMenuItems(
+      currentToken,
+      currentApiBundle.id,
+      nextWeekSunday
+    )
     console.log('items>>>', items)
   }
-
-  useEffect(() => {
-    getCurrentMenuItems()
-  }, [])
 
   // TODO: get state from the store
   const [item, setItem] = useState({
@@ -99,4 +114,4 @@ const Entrees = () => {
   )
 }
 
-export default Entrees
+export default withActiveStep(Entrees, STEP_ID)
