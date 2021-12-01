@@ -5,10 +5,11 @@ import {
   displayHeader,
   displayFooter,
   setEntreeType,
-  setEntreeSubType
+  setEntreeSubType,
+  setTokens
 } from '../../../store/slices/rootSlice'
 import { smoothScrollingToId } from '../../../utils'
-import { withActiveStep } from '../../Hooks'
+import { useGuestToken, withActiveStep } from '../../Hooks'
 import { CardEntreeType } from '../../Cards'
 import styles from './EntreeType.module.scss'
 import EntreeTypeSubType from './EntreeTypeSubType'
@@ -79,6 +80,7 @@ const EntreeType = () => {
   const state = useSelector((state) => state)
 
   useEffect(() => {
+    generateToken()
     dispatch(displayHeader(true))
 
     if (state.entreeSubType && state.entreeSubType.id !== 0) {
@@ -89,6 +91,18 @@ const EntreeType = () => {
       dispatch(displayFooter(false))
     }
   }, [])
+
+  const generateToken = async () => {
+    const currentToken = await useGuestToken()
+    if (currentToken) {
+      dispatch(
+        setTokens({
+          ...state.tokens,
+          guestToken: currentToken
+        })
+      )
+    }
+  }
 
   const handleEntreeTypeSelection = async (entree) => {
     // Added a promise here in order to scroll the page only when the dispatch is done
