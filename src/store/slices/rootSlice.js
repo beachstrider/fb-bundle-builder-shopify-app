@@ -58,7 +58,8 @@ const rootSlice = createSlice({
       deliveryDate: ''
     },
     tokens: {
-      guestToken: ''
+      guestToken: '',
+      userToken: ''
     }
   },
   reducers: {

@@ -18,7 +18,7 @@ const request = async (url, fetchOptions, retries = 3) => {
       url
     })
 
-    if ([200, 201, 202].includes(response.status)) {
+    if ([200, 201, 202].includes(response.status)) { 
       data = response.data
     } else {
       if (response.status >= 500) {
