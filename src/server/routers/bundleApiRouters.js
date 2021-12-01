@@ -1,7 +1,7 @@
 const app = require('express').Router()
 const path = require('path')
 require('dotenv').config({ path: path.resolve(__dirname, '.env') })
-const { request } = require('../utils')
+const { request, objectToQueryString } = require('../utils')
 
 app.post('/bundle-api/token/guest', async (req, res) => {
   const response = await request(`${process.env.BUNDLE_API_URL}/api/auth`, {
@@ -21,13 +21,10 @@ app.post('/bundle-api/token/guest', async (req, res) => {
 app.get(
   '/bundle-api/bundles/:bundleId/configurations/:configurationId/contents',
   async (req, res) => {
-    const queryString = Object.keys(req.query)
-      .map((key) => key + '=' + req.query[key])
-      .join('&')
+    const queryString = objectToQueryString(req.query)
 
-    // TODO: work in progress
     const response = await request(
-      `${process.env.BUNDLE_API_URL}/api/bundles/76/configurations/811/contents?${queryString}`,
+      `${process.env.BUNDLE_API_URL}/api/bundles/${req.params.bundleId}/configurations/${req.params.configurationId}/contents?${queryString}`,
       {
         method: 'get',
         headers: {
@@ -45,9 +42,7 @@ app.get(
 )
 
 app.get('/bundle-api/bundles', async (req, res) => {
-  const queryString = Object.keys(req.query)
-    .map((key) => key + '=' + req.query[key])
-    .join('&')
+  const queryString = objectToQueryString(req.query)
 
   const response = await request(
     `${process.env.BUNDLE_API_URL}/api/bundles?${queryString}`,

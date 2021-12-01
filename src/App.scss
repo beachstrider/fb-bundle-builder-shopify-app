@@ -27,6 +27,16 @@
   background-color: $white;
 }
 
+@keyframes spinner {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.customSpinner {
+  animation: spinner 0.6s linear infinite;
+  height: 3rem;
+}
+
 /*
 ** Utility classes
 */
