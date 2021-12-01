@@ -76,8 +76,7 @@ const Dashboard = () => {
     return pendingItems
   }
 
-  const getOrdersToShow = React.useCallback(async (token) => {
-
+  const getOrdersToShow = async (token) => {
     // make call for subscription
     // get next three weeks of item and j
     const activeWeeksArr = []
@@ -87,12 +86,12 @@ const Dashboard = () => {
     const subApi = await request(`${process.env.PROXY_APP_URL}/bundle-api/customers/1/subscriptions`, { method: 'get', data: '', headers: { authorization: token }}, 3)
     console.log('customer subscription: ', subApi);
 
-    const asrraoss = await subApi.data.data.forEach(async (sub) =>{
+    for (const sub of subApi.data.data) {
       const thisLoopSubList = [];
       const bundleId = sub.bundle_id;
       const configurationId = sub.orders[0].bundle_configuration_content_id;
-      
-      sub.orders.forEach(async (order, index) => {
+
+      for (const [ index, order ] of sub.orders.entries()) {
         const lastOrder = shopCustomer.orders.filter( ord => ord.id == order.platform_order_id )[0];
 
         let lastOrderItems = [];
@@ -150,58 +149,76 @@ const Dashboard = () => {
         }
 
         if(!weeksMenu.includes(nextSunday.format('MMM DD'))){ weeksMenu.push(nextSunday.format('MMM DD')); }
-      })
-        
-      for(let j = thisLoopSubList.length; thisLoopSubList.length < 4; j++){
-        const nextSunday = dayjs().day(0).add((7 * j), 'day');
-        //${nextSunday.format('YYYY-MM-DD')}T00:00:00.000Z
-
-        await getMissingConfigurations(token).then( data => {
-          thisLoopSubList.push({
-            items: data,
-            status: 'pending',
-            subscriptionDate: nextSunday.format('MMM DD')
-          })
-        });
-
-        if(!weeksMenu.includes(nextSunday.format('MMM DD'))){ weeksMenu.push(nextSunday.format('MMM DD')); }
       }
-      newWeeksArr = newWeeksArr.concat(thisLoopSubList)
 
-      return thisLoopSubList
+      if(thisLoopSubList.length < 4){
+        for(let j = thisLoopSubList.length; thisLoopSubList.length < 4; j++){
+          const nextSunday = dayjs().day(0).add((7 * j), 'day');
+          // ${nextSunday.format('YYYY-MM-DD')}T00:00:00.000Z
+
+          await getMissingConfigurations(token).then( data => {
+            thisLoopSubList.push({
+              items: data,
+              status: 'pending',
+              subscriptionDate: nextSunday.format('MMM DD')
+            })
+          });
+
+          if(!weeksMenu.includes(nextSunday.format('MMM DD'))){ weeksMenu.push(nextSunday.format('MMM DD')); }
+        }
+      }
+
+      newWeeksArr = newWeeksArr.concat(thisLoopSubList)
+    }
+
+    newWeeksArr.forEach((sub) => {
+      const today = dayjs(new Date()).day(0).add(14, 'day').startOf('day');
+      const thisYear = dayjs().year();
+      const pastDate = dayjs(new Date(`${sub.subscriptionDate} ${thisYear}`)).startOf('day');
+
+      if(!pastDate.isSameOrAfter(today)){
+        activeWeeksArr.push(sub);
+        activeWeeksLimit.push(5)
+      }
     })
 
-    setTimeout(() => {
-        newWeeksArr.forEach((sub, index) => {
-          const today = dayjs(new Date()).day(0).add(14, 'day').startOf('day');
-          const thisYear = dayjs().year();
-          const pastDate = dayjs(new Date(`${sub.subscriptionDate} ${thisYear}`)).startOf('day');
+    console.log('the final list: ', newWeeksArr)
+    setSubscriptions(newWeeksArr);
+    setWeeksMenu(weeksMenu)
+    setActive(activeWeeksArr)
+    setLimit(activeWeeksLimit)
+
+    // setTimeout(() => {
+    //     newWeeksArr.forEach((sub, index) => {
+    //       const today = dayjs(new Date()).day(0).add(14, 'day').startOf('day');
+    //       const thisYear = dayjs().year();
+    //       const pastDate = dayjs(new Date(`${sub.subscriptionDate} ${thisYear}`)).startOf('day');
     
-          if(!pastDate.isSameOrAfter(today)){
-            activeWeeksArr.push(sub);
-            activeWeeksLimit.push(5)
-          }
-        })
+    //       if(!pastDate.isSameOrAfter(today)){
+    //         activeWeeksArr.push(sub);
+    //         activeWeeksLimit.push(5)
+    //       }
+    //     })
 
-        setWeeksMenu(weeksMenu)
-        setActive(activeWeeksArr)
-        setLimit(activeWeeksLimit)
-        setSubscriptions(newWeeksArr);
-    }, 6000);
+    //     setWeeksMenu(weeksMenu)
+    //     setActive(activeWeeksArr)
+    //     setLimit(activeWeeksLimit)
+    //     // setSubscriptions(newWeeksArr);
+    // }, 6000);
 
-  }, [])
+  }
   
-  React.useEffect(async () => {
+  React.useEffect( () => {
 
       dispatch(displayHeader(false))
       dispatch(displayFooter(false))
       dispatch(selectFaqType(null))
-      const token = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoic3VwZXIiLCJpYXQiOjE2MzgzMDU4MjMsImV4cCI6MTYzODM5MjIyM30.ZVctOY9lyC_Lcj3a1Um7-WPZ2FPVsr38Wy5VdKueZBI'
-      // if (!state.tokens.guestToken) {
+      const token = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoic3VwZXIiLCJpYXQiOjE2MzgzODczNDEsImV4cCI6MTYzODQ3Mzc0MX0.clDBhB_mS3DX_55TPFIFPY4mFqLqq1lG-ZWkqaWU6UA'
+      // if (!state.tokens.userToken) {
       //   await getToken()
       // }
-      await getOrdersToShow(token);
-  }, [getOrdersToShow]);
+      getOrdersToShow(token);
+  }, []);
 
   const handleChange = (week) => {
     console.log(subscriptions);
@@ -275,7 +292,7 @@ const Dashboard = () => {
                 <h3>Week of {sub.subscriptionDate}</h3>
                 {sub.status === 'sent' ? <Link to="#" className={styles.primaryLink}>Track Package</Link> : ''}
               </div>
-              {sub.status === 'sent' ? <Link to="/order-history" className="secondaryButton">Order Summary</Link>  : <Link to={`/edit-order/${idx}`} className="secondaryButton">Edit Order</Link>}
+              {sub.status === 'sent' ? <Link to="/order-history" className="secondaryButton">Order Summary</Link>  : <Link to="/edit-order/" className="secondaryButton">Edit Order</Link>}
             </div>
             <div className={styles.accountMenuRow}>
               {sub.items.map((item, index) => (
