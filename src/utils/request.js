@@ -36,9 +36,9 @@ const request = async (url, fetchOptions, retries = 3) => {
     }
   } catch (error) {
     data = {
-      message: 'Unexpected error.',
-      error
+      message: error.response ? error.response?.data : 'Unexpected error.'
     }
+    status = error.response ? error.response.status : 400
   }
 
   return { data, status }
