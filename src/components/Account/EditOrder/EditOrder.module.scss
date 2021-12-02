@@ -1,0 +1,41 @@
+@import '../Account.module.scss';
+@import '../../../variables';
+@import '../../../App.scss';
+
+.menuRow{
+    display: grid; 
+    grid-template-columns: 1fr 1fr 1fr 1fr; 
+    gap: 0px 0px; 
+}
+.menuItemWrapper{
+    display: grid; 
+}
+.header{
+    text-align: center;
+    margin: 20px 8px 8px;
+}
+.subHeaderRow{
+    display: flex;
+    justify-content: center;
+}
+.subHeaders{
+    font-size: 21px;
+    margin: 8px;
+}
+.greenNumbers{
+    color:$primaryColor
+}
+.noMargin{
+    margin: 8px;
+}
+.headerRow{
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    margin-top:60px;
+}
+.buttonsRow{
+    margin: 20px 0px;
+    display: flex;
+    justify-content: space-between;
+}

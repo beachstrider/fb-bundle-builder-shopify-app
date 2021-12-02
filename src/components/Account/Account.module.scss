@@ -34,15 +34,22 @@
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
+
+    & h3{
+        margin:8px 0;
+        font-size: 24px;
+    }
+
 }
 
 .menuItemCard{
     min-width: 175px;
-    width: 100%;
+    flex: 1;
+    // width: 100%;
 
-    @media (min-width: $breakpointTablet) {
-        width: 27.5%;
-    }
+    // @media (min-width: $breakpointTablet) {
+    //     width: 27.5%;
+    // }
 }
 
 .seeAllMenu{

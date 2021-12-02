@@ -5,7 +5,7 @@
   display: grid;
   grid-template-rows: 16rem;
   cursor: pointer;
-  border: 4px solid $primaryColor;
+  overflow: hidden;
 
   & .description {
     display: grid;

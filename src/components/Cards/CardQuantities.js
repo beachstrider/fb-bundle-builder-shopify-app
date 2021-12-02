@@ -13,7 +13,7 @@ const CardQuantities = ({
   onRemove
 }) => {
   return (
-    <div className={styles.card}>
+    <div className={styles.card} style={{ border: isChecked ? '4px solid #3DAE2B' : '1px solid #e5e5e5' }}>
       <div
         className={styles.image}
         style={{ backgroundImage: `url('${image}')` }}

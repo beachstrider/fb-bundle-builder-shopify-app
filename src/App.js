@@ -20,13 +20,14 @@ import {
   OrderHistory,
   AccountInfo,
   PaymentMethod,
-  PlanSettings
+  PlanSettings,
+  EditOrder
 } from './components/Account'
 import Faq from './components/FAQ/Faq'
 
-function App() {
+function App () {
   const state = useSelector((state) => state)
-
+  console.log('state: ', state);
   return (
     <AppProvider i18n={enTranslations}>
       <Router>
@@ -39,6 +40,7 @@ function App() {
               <Route exact path="/account-info" component={AccountInfo} />
               <Route exact path="/payment-method" component={PaymentMethod} />
               <Route exact path="/plan-settings" component={PlanSettings} />
+              <Route exact path="/edit-order/:orderId" component={EditOrder} />
 
               <Route path="/steps/2" component={Location} />
               <Route path="/steps/3" component={EntreeType} />

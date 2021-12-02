@@ -1,0 +1,21 @@
+@import '../../../variables';
+@import '../Account.module.scss';
+
+.currentOrderMenu{
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+
+    @media (min-width: $breakpointTablet) {
+        flex-direction: row;
+    }
+
+    & p{
+        margin: 0
+    }
+}
+
+.underlinedHeader{
+    padding-bottom: 8px;
+    border-bottom: 1px solid $gray;
+}

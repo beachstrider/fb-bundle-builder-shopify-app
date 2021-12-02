@@ -7,44 +7,81 @@ import {
     ChevronRightMinor
   } from '@shopify/polaris-icons';
 
-
-const  orders = [
+const menuItems = [
     {
-        id: 1,
-        total: '$154.12',
-        type: 'Keto',
-        createdAt: '11/21/2021',
-        orderItems: ['Pink Peppercorn Sirloin', 'Barbados Sirloin', 'Cheese salmon fillet']
+      title: 'Buffalo Mozzarella Chicken',
+      platform_img: 'https://cdn.shopify.com/s/files/1/0596/3694/0985/products/bacon-ranch-chicken-high-protein-727471.jpg?v=1636153469',
+      quantity: 1,
+      type: 'Regular'
     },
     {
-        id: 2,
-        total: '$154.12',
-        type: 'Keto',
-        createdAt: '11/21/2021',
-        orderItems: ['Pink Peppercorn Sirloin', 'Barbados Sirloin', 'Cheese salmon fillet']
+      title: 'Buffalo Mozzarella Chicken',
+      platform_img: 'https://cdn.shopify.com/s/files/1/0596/3694/0985/products/bacon-ranch-chicken-high-protein-727471.jpg?v=1636153469',
+      quantity: 1,
+      type: 'Regular'
     },
     {
-        id: 3,
-        total: '$154.12',
-        type: 'Keto',
-        createdAt: '11/21/2021',
-        orderItems: ['Pink Peppercorn Sirloin', 'Barbados Sirloin', 'Cheese salmon fillet']
+      title: 'Buffalo Mozzarella Chicken',
+      platform_img: 'https://cdn.shopify.com/s/files/1/0596/3694/0985/products/bacon-ranch-chicken-high-protein-727471.jpg?v=1636153469',
+      quantity: 1,
+      type: 'Regular'
     },
     {
-        id: 4,
-        total: '$154.12',
-        type: 'Keto',
-        createdAt: '11/21/2021',
-        orderItems: ['Pink Peppercorn Sirloin', 'Barbados Sirloin', 'Cheese salmon fillet']
+      title: 'Buffalo Mozzarella Chicken',
+      platform_img: 'https://cdn.shopify.com/s/files/1/0596/3694/0985/products/bacon-ranch-chicken-high-protein-727471.jpg?v=1636153469',
+      quantity: 1,
+      type: 'Regular'
     },
     {
-        id: 5,
-        total: '$154.12',
-        type: 'Keto',
-        createdAt: '11/21/2021',
-        orderItems: ['Pink Peppercorn Sirloin', 'Barbados Sirloin', 'Cheese salmon fillet']
+      title: 'Buffalo Mozzarella Chicken',
+      platform_img: 'https://cdn.shopify.com/s/files/1/0596/3694/0985/products/bacon-ranch-chicken-high-protein-727471.jpg?v=1636153469',
+      quantity: 1,
+      type: 'Regular'
+    },
+    {
+      title: 'Buffalo Mozzarella Chicken',
+      platform_img: 'https://cdn.shopify.com/s/files/1/0596/3694/0985/products/bacon-ranch-chicken-high-protein-727471.jpg?v=1636153469',
+      quantity: 1,
+      type: 'Regular'
+    },
+    {
+      title: 'Buffalo Mozzarella Chicken',
+      platform_img: 'https://cdn.shopify.com/s/files/1/0596/3694/0985/products/bacon-ranch-chicken-high-protein-727471.jpg?v=1636153469',
+      quantity: 1,
+      type: 'Regular'
+    },
+    {
+      title: 'Buffalo Mozzarella Chicken',
+      platform_img: 'https://cdn.shopify.com/s/files/1/0596/3694/0985/products/bacon-ranch-chicken-high-protein-727471.jpg?v=1636153469',
+      quantity: 1,
+      type: 'Regular'
+    },
+    {
+      title: 'Buffalo Mozzarella Chicken',
+      platform_img: 'https://cdn.shopify.com/s/files/1/0596/3694/0985/products/bacon-ranch-chicken-high-protein-727471.jpg?v=1636153469',
+      quantity: 1,
+      type: 'Regular'
+    },
+    {
+      title: 'Buffalo Mozzarella Chicken',
+      platform_img: 'https://cdn.shopify.com/s/files/1/0596/3694/0985/products/bacon-ranch-chicken-high-protein-727471.jpg?v=1636153469',
+      quantity: 1,
+      type: 'Regular'
+    },
+    {
+      title: 'Buffalo Mozzarella Chicken',
+      platform_img: 'https://cdn.shopify.com/s/files/1/0596/3694/0985/products/bacon-ranch-chicken-high-protein-727471.jpg?v=1636153469',
+      quantity: 1,
+      type: 'Regular'
+    },
+    {
+      title: 'Buffalo Mozzarella Chicken',
+      platform_img: 'https://cdn.shopify.com/s/files/1/0596/3694/0985/products/bacon-ranch-chicken-high-protein-727471.jpg?v=1636153469',
+      quantity: 1,
+      type: 'Regular'
     }
-]
+  
+  ]
 
 const OrderHistory = () => {
 
@@ -52,6 +89,12 @@ const OrderHistory = () => {
         return <Redirect push to="/" />
     }
     
+    const dateFormat = (date) => {
+        const dateArr = date.split(' ');
+        const newDate = dateArr[0];
+        const reformatArr = newDate.split('-');
+        return `${reformatArr[1]}/${reformatArr[2]}/${reformatArr[0]}`;
+    }
 
   return (
     <div className="contentWrapper">
@@ -77,9 +120,9 @@ const OrderHistory = () => {
                             <Link to="/account" className="secondaryButton">Edit Order</Link>
                         </div>
                         <div className={styles.currentOrderMenu}>
-                            <MenuItemCard width="27%" />
-                            <MenuItemCard width="27%" />
-                            <MenuItemCard width="27%" />
+                            {menuItems.map((item, index) => (
+                                index < 3 ? <MenuItemCard key={index} title={item.title} image={item.platform_img} quantity={item.quantity} type='regular' />  : ''
+                            ))}
                             <Link to="/account" className={styles.seeAllMenu}>
                                 See All <ChevronRightMinor />
                             </Link>
@@ -94,25 +137,27 @@ const OrderHistory = () => {
                         </div>
                         <table className={styles.orderHistoryTable}>
                             <thead className={styles.orderHistoryTableHeaders}>
+                            <tr>
                                 <th>Order Date</th>
                                 <th>Order Total</th>
                                 <th>Meal Type</th>
                                 <th>Meals Names</th>
+                                </tr>
                             </thead>
                             <tbody>
-                                {orders.map( (order, index) => {
-                                    return (
+                            {shopCustomer.orders.map( (order, index) => (
+                                    index < 5 ? (
                                         <tr key={index}>
-                                            <td>{order.createdAt}</td>
-                                            <td>{order.total}</td>
-                                            <td>{order.type}</td>
+                                            <td>{dateFormat(order.orderDate)}</td>
+                                            <td>{order.orderTotal}</td>
+                                            <td>Keto</td>
                                             <td className={styles.orderMealNames}>
-                                                <p className={styles.orderMealNamesText}>{order.orderItems.map( item => ( item ))}</p>
-                                                <Link to="#" className={styles.orderMealNamesLink}>See All Meals</Link>
+                                                <p className={styles.orderMealNamesText}>{order.lineItems.map( item => ( `${item.title},` ))}</p>
+                                                <a to={order.orderLink} className={styles.orderMealNamesLink}>See All Meals</a>
                                             </td>
                                         </tr>  
-                                    )
-                                })}
+                                    ) : ''
+                                ))}
                             </tbody>
                         </table>
                         <Link to="#" className={styles.orderHistoryMoreLink}>See More </Link>

@@ -1,6 +1,8 @@
+@import '../../../../variables';
+
 .header{
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     justify-content: space-between;
 
     & .nameHeader{
@@ -26,4 +28,8 @@
             bottom: 0;
         }
     }
+}
+
+.weekMenu{
+    margin-right: 5%;
 }
