@@ -25,7 +25,16 @@
             },
             {% endfor %}
           ],
-          orderLink: '{{ order.customer_url }}'
+          orderLink: '{{ order.customer_url }}',
+          fulfillments: [
+          {% for fulfillment in order.fulfillments %}
+              {
+                trackingCompany: '{{ fulfillment.tracking_company }}',
+                trackinNumber: '{{ fulfillment.tracking_number }}',
+                trackingUrl: '{{ fulfillment.tracking_url }}',
+              },
+            {% endfor %}
+          ]
         },
       {% endfor %}
     ],
@@ -98,7 +107,8 @@
       phone:'',
       provinceCode:'',
       zip:'',
-     }
+     },
+     fulfillments: []
    };
   {% endif %}
 
@@ -164,7 +174,7 @@ function mapMetafieldsToVariant(product, metafields) {
         {% endif %}
       {% endfor %}
 
-      shopProducts.push(mapMetafieldsToVariant(JSON.parse('{{ product | json }}'), temporaryMetafields))
+      shopProducts.push(mapMetafieldsToVariant('{{ product | json }}', temporaryMetafields))
     {% endfor %}
   {% endpaginate %}
 {% endif %}
