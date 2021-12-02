@@ -5,7 +5,7 @@ import {
     displayFooter,
     selectFaqType
   } from '../../../store/slices/rootSlice'
-import { Link, Redirect, useParams } from 'react-router-dom'
+import { Link, Redirect, useParams, useLocation } from 'react-router-dom'
 import styles from './EditOrder.module.scss'
 import CardQuantities from '../../Cards/CardQuantities'
 
@@ -333,8 +333,14 @@ const bundleObj = {
     ]
   }
 
+function useQuery () {
+  const { search } = useLocation();
+
+  return React.useMemo(() => new URLSearchParams(search), [search]);
+}
 const EditOrder = () => {
-    let { orderId } = useParams();
+    const { orderId } = useParams();
+    const query = useQuery();
     const dispatch = useDispatch()
     const [bundle, setBundle] = useState(bundleObj)
     const [bundleQty, setBundleQty] = useState({})
@@ -344,6 +350,8 @@ const EditOrder = () => {
         dispatch(displayHeader(false))
         dispatch(displayFooter(false))
         dispatch(selectFaqType(null))
+        console.log('orderId: ',orderId)
+        console.log('query: ',query.get("date"))
         const qtyObj = {};
         const newObj = bundleObj
         bundleObj.configurations.forEach((c, i) => {

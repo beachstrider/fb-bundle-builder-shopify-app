@@ -25,7 +25,7 @@ import {
 } from './components/Account'
 import Faq from './components/FAQ/Faq'
 
-function App() {
+function App () {
   const state = useSelector((state) => state)
   console.log('state: ', state);
   return (

@@ -4,7 +4,6 @@ import {
     displayHeader,
     displayFooter,
     selectFaqType,
-    getTokens
   } from '../../../store/slices/rootSlice'
 import { Link, Redirect } from 'react-router-dom'
 import styles from './Dashboard.module.scss'
@@ -17,11 +16,6 @@ import {
 import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
 import * as dayjs from 'dayjs';
 import { request } from '../../../utils';
-import { 
-  bundleConfig,
-  subscriptionFromDB,
-  subscriptionOrders
-} from '../../../../dummyObjects';
 
 dayjs.extend(isSameOrAfter);
 
@@ -32,9 +26,20 @@ const Dashboard = () => {
   const [limit, setLimit] = React.useState([]);
   const [subscriptions, setSubscriptions] = React.useState([])
   const [weeksMenu, setWeeksMenu] = React.useState([])
+  const token = 'Bearer token placed here temporary';
+  React.useEffect( () => {
+
+    dispatch(displayHeader(false))
+    dispatch(displayFooter(false))
+    dispatch(selectFaqType(null))
+    // if (!state.tokens.userToken) {
+    //  getToken()
+    // }
+    getOrdersToShow(token);
+}, []);
 
   const getToken = async () => {
-    const tokenResponse = await useUserToken()
+    const tokenResponse = await useUserToken();
     if (tokenResponse.token) {
       dispatch(
         setTokens({
@@ -45,28 +50,16 @@ const Dashboard = () => {
     }
   }
 
-  const retrieveDeafultBundle = () => {
-    const lastOrderItems = [];
-    bundleConfig.data.products.forEach(item => {
-      // const itemFromStore = shopifyProducts.filter(sI => item.platform_product_variant_id === sI.variant.id)
-      lastOrderItems.push({
-        title: 'default product',
-        platform_img: 'https://cdn.shopify.com/s/files/1/0596/3694/0985/products/bacon-ranch-chicken-high-protein-727471.jpg?v=1636153469',
-        quantity: item.quantity
-      })
-    })
-    return lastOrderItems
-  }
-
-  const getMissingConfigurations = async (token) => {
-    const subContents = await request(`${process.env.PROXY_APP_URL}/bundle-api/bundles/1/configurations/1/contents`, { method: 'get', data: '', headers: { authorization: token }}, 3)
+  const getMissingConfigurations = async (date, token, bundle, config) => {
+    const subContents = await request(`${process.env.PROXY_APP_URL}/bundle-api/bundles/${bundle}/configurations/${config}/contents?display_after=${date}T00:00:00.000Z`, { method: 'get', data: '', headers: { authorization: token }}, 3)
     console.log('customer subscription items: ', subContents);
     const pendingItems = []
     
     subContents.data.data.forEach( configuration => {
-      configuration.products.forEach( product => {
+      configuration.defaults.forEach( product => {
+        const prod = configuration.products.filter(p => p.product_id === product.product_id)[0]
         pendingItems.push({
-          title: 'Pending Item Name',
+          title: prod.platform_product_id,
           platform_img: 'https://cdn.shopify.com/s/files/1/0596/3694/0985/products/bacon-ranch-chicken-high-protein-727471.jpg?v=1636153469',
           quantity: product.quantity
         })
@@ -77,24 +70,28 @@ const Dashboard = () => {
   }
 
   const getOrdersToShow = async (token) => {
-    // make call for subscription
+    console.log('shopifyProducts: ', shopProducts[0]);
+    // setting customer id temporarily
+    // TODO make login call to get customer id from database
+    const customerId = 1;
     // get next three weeks of item and j
     const activeWeeksArr = []
     const activeWeeksLimit = []
     const weeksMenu = []
     let newWeeksArr = []
-    const subApi = await request(`${process.env.PROXY_APP_URL}/bundle-api/customers/1/subscriptions`, { method: 'get', data: '', headers: { authorization: token }}, 3)
+    const subApi = await request(`${process.env.PROXY_APP_URL}/bundle-api/customers/${customerId}/subscriptions`, { method: 'get', data: '', headers: { authorization: token }}, 3)
     console.log('customer subscription: ', subApi);
 
     for (const sub of subApi.data.data) {
       const thisLoopSubList = [];
+      const subscriptionId = sub.id;
       const bundleId = sub.bundle_id;
       const configurationId = sub.orders[0].bundle_configuration_content_id;
 
       for (const [ index, order ] of sub.orders.entries()) {
         const lastOrder = shopCustomer.orders.filter( ord => ord.id == order.platform_order_id )[0];
 
-        let lastOrderItems = [];
+        const lastOrderItems = [];
         const nextSunday = dayjs().day(0).add((7 * index), 'day')
         if(lastOrder){
           lastOrder.lineItems.forEach(item => {
@@ -107,45 +104,31 @@ const Dashboard = () => {
 
           thisLoopSubList.push({
             items: lastOrderItems,
-            sub_id: sub.id,
+            subId: sub.id,
+            subscriptionType: sub.subscription_type,
+            subscriptionSubType: sub.subscription_sub_type,
+            date: nextSunday.format('YYYY-MM-DD'),
             status: 'sent',
             subscriptionDate: nextSunday.format('MMM DD')
           });
         }
         
         if(!order.platform_order_id){
-          // call for bundle
-          // const itemList = subscriptionOrders.data.filter( s => s.bundle_configuration_content_id === order.bundle_configuration_content_id)[0];
-          const itemList = await request(`${process.env.PROXY_APP_URL}/bundle-api/customers/1/subscriptions/1/orders`, { method: 'get', data: '', headers: { authorization: token }}, 3)
+          // call for bundle and look for selected menu's
+          const itemList = await request(`${process.env.PROXY_APP_URL}/bundle-api/customers/${customerId}/subscriptions/${subscriptionId}/orders`, { method: 'get', data: '', headers: { authorization: token }}, 3)
           console.log('requesting the selected items: ', itemList)
           if(itemList){
             if(itemList.items){
               itemList.items.forEach(item => {
                 // const itemFromStore = shopifyProducts.filter(sI => item.platform_product_variant_id === sI.variant.id)
-
                 lastOrderItems.push({
                   title: 'default product',
                   platform_img: 'https://cdn.shopify.com/s/files/1/0596/3694/0985/products/bacon-ranch-chicken-high-protein-727471.jpg?v=1636153469',
                   quantity: item.quantity
                 })
               })
-            } else {
-              // call bundle default
-              lastOrderItems = lastOrderItems.concat(retrieveDeafultBundle());
             }
-          } else {
-            // call bundle default
-            lastOrderItems = lastOrderItems.concat(retrieveDeafultBundle());
-          }
-
-          thisLoopSubList.push({
-            items: lastOrderItems,
-            status: 'pending',
-            subscriptionDate: nextSunday.format('MMM DD')
-          });
-        } else {
-          console.log('order.platform_order_id: ', order.platform_order_id)
-
+          } 
         }
 
         if(!weeksMenu.includes(nextSunday.format('MMM DD'))){ weeksMenu.push(nextSunday.format('MMM DD')); }
@@ -154,11 +137,14 @@ const Dashboard = () => {
       if(thisLoopSubList.length < 4){
         for(let j = thisLoopSubList.length; thisLoopSubList.length < 4; j++){
           const nextSunday = dayjs().day(0).add((7 * j), 'day');
-          // ${nextSunday.format('YYYY-MM-DD')}T00:00:00.000Z
 
-          await getMissingConfigurations(token).then( data => {
+          await getMissingConfigurations(nextSunday.format('YYYY-MM-DD'), token, bundleId, configurationId).then( data => {
             thisLoopSubList.push({
               items: data,
+              subId: sub.id,
+              subscriptionType: sub.subscription_type,
+              subscriptionSubType: sub.subscription_sub_type,
+              date: nextSunday.format('YYYY-MM-DD'),
               status: 'pending',
               subscriptionDate: nextSunday.format('MMM DD')
             })
@@ -182,43 +168,12 @@ const Dashboard = () => {
       }
     })
 
-    console.log('the final list: ', newWeeksArr)
     setSubscriptions(newWeeksArr);
     setWeeksMenu(weeksMenu)
     setActive(activeWeeksArr)
     setLimit(activeWeeksLimit)
 
-    // setTimeout(() => {
-    //     newWeeksArr.forEach((sub, index) => {
-    //       const today = dayjs(new Date()).day(0).add(14, 'day').startOf('day');
-    //       const thisYear = dayjs().year();
-    //       const pastDate = dayjs(new Date(`${sub.subscriptionDate} ${thisYear}`)).startOf('day');
-    
-    //       if(!pastDate.isSameOrAfter(today)){
-    //         activeWeeksArr.push(sub);
-    //         activeWeeksLimit.push(5)
-    //       }
-    //     })
-
-    //     setWeeksMenu(weeksMenu)
-    //     setActive(activeWeeksArr)
-    //     setLimit(activeWeeksLimit)
-    //     // setSubscriptions(newWeeksArr);
-    // }, 6000);
-
   }
-  
-  React.useEffect( () => {
-
-      dispatch(displayHeader(false))
-      dispatch(displayFooter(false))
-      dispatch(selectFaqType(null))
-      const token = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoic3VwZXIiLCJpYXQiOjE2MzgzODczNDEsImV4cCI6MTYzODQ3Mzc0MX0.clDBhB_mS3DX_55TPFIFPY4mFqLqq1lG-ZWkqaWU6UA'
-      // if (!state.tokens.userToken) {
-      //   await getToken()
-      // }
-      getOrdersToShow(token);
-  }, []);
 
   const handleChange = (week) => {
     console.log(subscriptions);
@@ -259,9 +214,9 @@ const Dashboard = () => {
     setLimit(newLimit);
   }
 
-  if(shopCustomer.id === 0){
-    return <Redirect push to="/" />
-  }
+  // if(!shopCustomer || shopCustomer.id === 0){
+  //   return <Redirect push to="/" />
+  // }
 
 
   return (
@@ -292,14 +247,16 @@ const Dashboard = () => {
                 <h3>Week of {sub.subscriptionDate}</h3>
                 {sub.status === 'sent' ? <Link to="#" className={styles.primaryLink}>Track Package</Link> : ''}
               </div>
-              {sub.status === 'sent' ? <Link to="/order-history" className="secondaryButton">Order Summary</Link>  : <Link to="/edit-order/" className="secondaryButton">Edit Order</Link>}
+              {sub.status === 'sent' ? <Link to="/order-history" className="secondaryButton">Order Summary</Link>  : <Link to={`/edit-order/${sub.subId}?date=${sub.date}`} className="secondaryButton">Edit Order</Link>}
             </div>
+            {sub.items.length > 0 ? (
             <div className={styles.accountMenuRow}>
               {sub.items.map((item, index) => (
-                index < limit[idx] ? <MenuItemCard key={index} title={item.title} image={item.platform_img} quantity={item.quantity} type='regular' /> : ''
+                index < limit[idx] ? <MenuItemCard key={index} title={item.title} image={item.platform_img} quantity={item.quantity} type={sub.subscriptionSubType} /> : ''
               ))}
+
               {limit[idx] === 5 ? (
-                <Link onClick={() => resetLimit(idx)} className={styles.viewAllLink}>
+                <Link to="#" onClick={() => resetLimit(idx)} className={styles.viewAllLink}>
                   See All <ChevronRightMinor />
                 </Link>
               ) : (
@@ -308,6 +265,12 @@ const Dashboard = () => {
                 </Link>
               )}
             </div>
+            ) : (
+              <div className={styles.emptyStateMessage}>
+                <h2>No items to choose</h2>
+                <p>Please come back soon to choose your menu items.</p>
+              </div>
+            )}
         </div>
         ))}
         

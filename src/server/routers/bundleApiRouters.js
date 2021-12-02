@@ -71,7 +71,7 @@ app.get(
       .map((key) => key + '=' + req.query[key])
       .join('&')
     const response = await request(
-      `${process.env.BUNDLE_API_URL}/api/bundles/1/configurations/1/contents`,
+      `${process.env.BUNDLE_API_URL}/api/bundles/1/configurations/1/contents?${queryString}`,
       {
         method: 'get',
         headers: {

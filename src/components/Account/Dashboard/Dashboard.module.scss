@@ -132,3 +132,15 @@
         margin-bottom: 0px;
     }
 }
+
+.emptyStateMessage {
+    background: #fff;
+    text-align: center;
+    padding: 5px;
+    border-radius: 20px;
+    box-shadow: 6px 6px 12px rgb(0 0 0 / 30%);
+
+    & h2{
+        margin-bottom: 6px;
+    }
+}
