@@ -164,7 +164,7 @@ function mapMetafieldsToVariant(product, metafields) {
         {% endif %}
       {% endfor %}
 
-      shopProducts.push(mapMetafieldsToVariant(JSON.parse('{{ product | json }}'), temporaryMetafields))
+      shopProducts.push(mapMetafieldsToVariant({{ product | json }}, temporaryMetafields))
     {% endfor %}
   {% endpaginate %}
 {% endif %}
