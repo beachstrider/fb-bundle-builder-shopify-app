@@ -126,7 +126,6 @@ const Location = () => {
   useEffect(() => {
     dispatch(displayHeader(true))
 
-    // TODO: pull data from the api
     setZones(deliveryZones)
 
     if (state.email && state.location.zipCode) {
@@ -214,6 +213,10 @@ const Location = () => {
     if (Number.isInteger(Number(value))) {
       setZipCode(value)
     }
+  }
+
+  if (state.bundle.id === 0) {
+    return <Redirect push to="/" />
   }
 
   return (
