@@ -16,6 +16,7 @@ import {
 import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
 import * as dayjs from 'dayjs';
 import { request } from '../../../utils';
+import { Spinner } from '../../Global';
 
 dayjs.extend(isSameOrAfter);
 
@@ -26,9 +27,13 @@ const Dashboard = () => {
   const [limit, setLimit] = React.useState([]);
   const [subscriptions, setSubscriptions] = React.useState([])
   const [weeksMenu, setWeeksMenu] = React.useState([])
-  const token = 'Bearer token placed here temporary';
-  React.useEffect( () => {
+  const [loading, setLoading] = React.useState(true);
 
+  // TODO make state call for user token for api
+  const token = '<TOKEN HERE>';
+
+  React.useEffect( () => {
+    console.log('The shopify customer: ', shopCustomer)
     dispatch(displayHeader(false))
     dispatch(displayFooter(false))
     dispatch(selectFaqType(null))
@@ -58,9 +63,14 @@ const Dashboard = () => {
     subContents.data.data.forEach( configuration => {
       configuration.defaults.forEach( product => {
         const prod = configuration.products.filter(p => p.product_id === product.product_id)[0]
+        const shopProd = shopProducts.filter( p => p.id == prod.platform_product_id)[0]
+        if(!shopProd){
+          console.log('no match: ', prod.platform_product_id)
+        }
+        
         pendingItems.push({
-          title: prod.platform_product_id,
-          platform_img: 'https://cdn.shopify.com/s/files/1/0596/3694/0985/products/bacon-ranch-chicken-high-protein-727471.jpg?v=1636153469',
+          title: shopProd ? shopProd.title : 'Missing Title',
+          platform_img: shopProd && shopProd.images.length > 0 ? shopProd.images[0]: '//cdn.shopify.com/shopifycloud/shopify/assets/no-image-2048-5e88c1b20e087fb7bbe9a3771824e743c244f437e4f8ba93bbf7b11b53f7824c_750x.gif',
           quantity: product.quantity
         })
       })  
@@ -95,9 +105,10 @@ const Dashboard = () => {
         const nextSunday = dayjs().day(0).add((7 * index), 'day')
         if(lastOrder){
           lastOrder.lineItems.forEach(item => {
+            const shopProd = shopProducts.filter( p => p.id == item.productId)[0]
             lastOrderItems.push({
               title: item.title,
-              platform_img: 'https://cdn.shopify.com/s/files/1/0596/3694/0985/products/bacon-ranch-chicken-high-protein-727471.jpg?v=1636153469',
+              platform_img: shopProd && shopProd.images.length > 0 ? shopProd.images[0]: '//cdn.shopify.com/shopifycloud/shopify/assets/no-image-2048-5e88c1b20e087fb7bbe9a3771824e743c244f437e4f8ba93bbf7b11b53f7824c_750x.gif',
               quantity: item.quantity
             })
           })
@@ -109,6 +120,7 @@ const Dashboard = () => {
             subscriptionSubType: sub.subscription_sub_type,
             date: nextSunday.format('YYYY-MM-DD'),
             status: 'sent',
+            trackingUrl: lastOrder.fulfillments.length > 0 ? lastOrder.fulfillments[0].trackingUrl : lastOrder.orderLink,
             subscriptionDate: nextSunday.format('MMM DD')
           });
         }
@@ -172,7 +184,7 @@ const Dashboard = () => {
     setWeeksMenu(weeksMenu)
     setActive(activeWeeksArr)
     setLimit(activeWeeksLimit)
-
+    setLoading(false)
   }
 
   const handleChange = (week) => {
@@ -214,9 +226,16 @@ const Dashboard = () => {
     setLimit(newLimit);
   }
 
-  // if(!shopCustomer || shopCustomer.id === 0){
-  //   return <Redirect push to="/" />
-  // }
+  if(!shopCustomer || shopCustomer.id === 0){
+    return <Redirect push to="/" />
+  }
+
+  if (loading) {
+    // TODO: work in progress
+    return (
+      <Spinner label="Loading..." />
+    )
+  }
 
 
   return (
@@ -245,7 +264,7 @@ const Dashboard = () => {
             <div className={styles.menuRow}>
               <div className={styles.headerWthLink}>
                 <h3>Week of {sub.subscriptionDate}</h3>
-                {sub.status === 'sent' ? <Link to="#" className={styles.primaryLink}>Track Package</Link> : ''}
+                {sub.status === 'sent' ? <Link to={sub.trackingUrl} className={styles.primaryLink}>Track Package</Link> : ''}
               </div>
               {sub.status === 'sent' ? <Link to="/order-history" className="secondaryButton">Order Summary</Link>  : <Link to={`/edit-order/${sub.subId}?date=${sub.date}`} className="secondaryButton">Edit Order</Link>}
             </div>
@@ -273,8 +292,6 @@ const Dashboard = () => {
             )}
         </div>
         ))}
-        
-
       </div>
     </div>
   )

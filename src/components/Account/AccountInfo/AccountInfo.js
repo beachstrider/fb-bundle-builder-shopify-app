@@ -33,10 +33,10 @@ const AccountInfo = () => {
                                 <a href="#" className="secondaryButton">Edit Info</a>
                             </div>
                             <div>
-                                <p><span className={styles.boldTextField}>Name:</span>Ashton Grover</p>
-                                <p><span className={styles.boldTextField}>Email:</span>ashton@quickfreshmeals.com</p>
-                                <p><span className={styles.boldTextField}>Phone:</span>555-123-4567</p>
-                                <div className={styles.accountAddress}><p><span className={styles.boldTextField}>Address:</span></p><p>1234 Street Dr<br />Anytown, CA 90001</p></div>
+                                <p><span className={styles.boldTextField}>Name:</span>{shopCustomer.fullName}</p>
+                                <p><span className={styles.boldTextField}>Email:</span>{shopCustomer.email}</p>
+                                <p><span className={styles.boldTextField}>Phone:</span>{shopCustomer.address.phone}</p>
+                                <div className={styles.accountAddress}><p><span className={styles.boldTextField}>Address:</span></p><p>{shopCustomer.address.street}<br />{shopCustomer.address.city}, {shopCustomer.address.provinceCode} {shopCustomer.address.zip}</p></div>
                             </div>
                         </div>
                     </div>
