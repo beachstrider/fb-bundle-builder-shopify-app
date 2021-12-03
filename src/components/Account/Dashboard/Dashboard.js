@@ -28,7 +28,7 @@ const Dashboard = () => {
   const [subscriptions, setSubscriptions] = React.useState([])
   const [weeksMenu, setWeeksMenu] = React.useState([])
   const [loading, setLoading] = React.useState(true);
-  const token = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoic3VwZXIiLCJpYXQiOjE2Mzg0NzM2MDAsImV4cCI6MTYzODU2MDAwMH0.No1GjSUwec7BuXeD-kKTCnCpfoWMdm4-GwP-M569dec';
+  const token = 'Bearer <TOKEN HERE>';
 
   React.useEffect( () => {
     console.log('The shopify customer: ', shopCustomer)
