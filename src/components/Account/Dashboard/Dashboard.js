@@ -61,9 +61,14 @@ const Dashboard = () => {
     subContents.data.data.forEach( configuration => {
       configuration.defaults.forEach( product => {
         const prod = configuration.products.filter(p => p.product_id === product.product_id)[0]
+        const shopProd = shopProducts.filter( p => p.id == prod.platform_product_id)[0]
+        if(!shopProd){
+          console.log('no match: ', prod.platform_product_id)
+        }
+        
         pendingItems.push({
-          title: prod.platform_product_id,
-          platform_img: 'https://cdn.shopify.com/s/files/1/0596/3694/0985/products/bacon-ranch-chicken-high-protein-727471.jpg?v=1636153469',
+          title: shopProd ? shopProd.title : 'Missing Title',
+          platform_img: shopProd ? shopProd.images[0]: '//cdn.shopify.com/shopifycloud/shopify/assets/no-image-2048-5e88c1b20e087fb7bbe9a3771824e743c244f437e4f8ba93bbf7b11b53f7824c_750x.gif',
           quantity: product.quantity
         })
       })  
@@ -176,7 +181,7 @@ const Dashboard = () => {
     setWeeksMenu(weeksMenu)
     setActive(activeWeeksArr)
     setLimit(activeWeeksLimit)
-
+    setLoading(false)
   }
 
   const handleChange = (week) => {
