@@ -20,6 +20,7 @@
           lineItems: [
             {% for item in order.line_items %}
             {
+              productId: '{{ item..product_id }}',
               title: '{{ item.title }}',
               quantity: '{{ item.quantity }}'
             },
