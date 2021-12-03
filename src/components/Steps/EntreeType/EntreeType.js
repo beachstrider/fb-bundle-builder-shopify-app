@@ -13,6 +13,7 @@ import { useGuestToken, withActiveStep } from '../../Hooks'
 import { CardEntreeType } from '../../Cards'
 import styles from './EntreeType.module.scss'
 import EntreeTypeSubType from './EntreeTypeSubType'
+import { Redirect } from 'react-router'
 
 const FAQ_TYPE = 'entreeType'
 const STEP_ID = 3
@@ -116,6 +117,10 @@ const EntreeType = () => {
 
     await saveEntreeType()
     smoothScrollingToId('entreeType')
+  }
+
+  if (!state.location.zipCode) {
+    return <Redirect push to="/steps/2" />
   }
 
   return (

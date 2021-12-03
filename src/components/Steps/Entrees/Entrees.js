@@ -5,13 +5,13 @@ import {
   getMenuItems,
   getSelectedBundle,
   getBundle,
-  withActiveStep,
-  useGuestToken
+  withActiveStep
 } from '../../Hooks'
 import styles from './Entrees.module.scss'
 import weekday from 'dayjs/plugin/weekday'
 import dayjs from 'dayjs'
 import { Spinner } from '@shopify/polaris'
+import { Redirect } from 'react-router'
 
 const FAQ_TYPE = 'entreeType'
 const STEP_ID = 4
@@ -74,7 +74,14 @@ const Entrees = () => {
       )
 
       if (response.data?.data && response.data?.data.length > 0) {
-        setContent(response.data.data[0])
+        const filteredProducts = await filterShopifyProducts(
+          response.data.data[0].products,
+          shopProducts
+        )
+
+        // TODO: filter variants and selections (next task)
+        setContent(filteredProducts)
+
         if (title === BREAKFAST_CONFIGURATION_TITLE) {
           setBreakfastQuantity(response.data.data[0].configuration.quantity)
         }
@@ -84,6 +91,17 @@ const Entrees = () => {
       }
     }
   }
+
+  const filterShopifyProducts = async (items, shopifyProducts) =>
+    new Promise((resolve) => {
+      const apiProductIds = items.map((i) => Number(i.platform_product_id))
+
+      const filteredProducts = shopifyProducts.filter((p) =>
+        apiProductIds.includes(p.id)
+      )
+
+      resolve(filteredProducts)
+    })
 
   const filterShopifyVariants = () => {
     // TODO: next task
@@ -123,6 +141,10 @@ const Entrees = () => {
         <Spinner accessibilityLabel="Loading page..." size="large" />
       </div>
     )
+  }
+
+  if (state.entreeType.id === 0) {
+    return <Redirect push to="/steps/3" />
   }
 
   return (
