@@ -9,6 +9,7 @@ const cors = require('cors')
 
 const bundleApiRouters = require('./src/server/routers/bundleApiRouters')
 const shopifyRouters = require('./src/server/routers/shopifyRouters')
+const rechargeRouters = require('./src/server/routers/rechargeRouters')
 
 const app = express()
 const SERVER_PORT = 3000
@@ -35,6 +36,7 @@ app.get('/public/index.html', (req, res) => {
 
 app.use(bundleApiRouters)
 app.use(shopifyRouters)
+app.use(rechargeRouters)
 
 app.get('/', verifyHmac, (req, res) => {
   fs.readFile(

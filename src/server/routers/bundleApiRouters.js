@@ -20,7 +20,7 @@ app.post('/bundle-api/token/guest', async (req, res) => {
 
 app.post('/bundle-api/token/account', async (req, res) => {
   const response = await request(
-    `${process.env.BUNDLE_API_URL}/api/auth/user`,
+    `${process.env.BUNDLE_API_URL}/api/auth/admin`,
     {
       method: 'post',
       headers: {
@@ -29,7 +29,7 @@ app.post('/bundle-api/token/account', async (req, res) => {
       },
       data: {
         shop: req.body.shop,
-        email: req.body.shop
+        email: req.body.email
       }
     }
   )
@@ -45,7 +45,7 @@ app.post('/bundle-api/token/account', async (req, res) => {
 
 app.get('/bundle-api/customers/:customerId/subscriptions', async (req, res) => {
   const response = await request(
-    `${process.env.BUNDLE_API_URL}/api/customers/1/subscriptions`,
+    `${process.env.BUNDLE_API_URL}/api/customers/${req.params.customerId}/subscriptions`,
     {
       method: 'get',
       headers: {
@@ -54,7 +54,7 @@ app.get('/bundle-api/customers/:customerId/subscriptions', async (req, res) => {
       }
     }
   )
-
+  console.log('response: ', response)
   if (response.data) {
     return res.status(200).send(response.data)
   }
@@ -89,7 +89,7 @@ app.get(
     const queryString = objectToQueryString(req.query)
 
     const response = await request(
-      `${process.env.BUNDLE_API_URL}/api/customers/1/subscriptions/1/orders?${queryString}`,
+      `${process.env.BUNDLE_API_URL}/api/customers/${req.params.customerId}/subscriptions/${req.params.subscriptionId}/orders?${queryString}`,
       {
         method: 'get',
         headers: {

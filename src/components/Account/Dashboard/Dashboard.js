@@ -4,6 +4,7 @@ import {
     displayHeader,
     displayFooter,
     selectFaqType,
+    setTokens
   } from '../../../store/slices/rootSlice'
 import { Link, Redirect } from 'react-router-dom'
 import styles from './Dashboard.module.scss'
@@ -28,30 +29,38 @@ const Dashboard = () => {
   const [subscriptions, setSubscriptions] = React.useState([])
   const [weeksMenu, setWeeksMenu] = React.useState([])
   const [loading, setLoading] = React.useState(true);
-
+  const [token, setToken] = React.useState('');
   // TODO make state call for user token for api
-  const token = '<TOKEN HERE>';
+  // const token = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoic3VwZXIiLCJpYXQiOjE2Mzg0NzM2MDAsImV4cCI6MTYzODU2MDAwMH0.No1GjSUwec7BuXeD-kKTCnCpfoWMdm4-GwP-M569dec';
 
   React.useEffect( () => {
     console.log('The shopify customer: ', shopCustomer)
+
     dispatch(displayHeader(false))
     dispatch(displayFooter(false))
     dispatch(selectFaqType(null))
-    // if (!state.tokens.userToken) {
-    //  getToken()
-    // }
-    getOrdersToShow(token);
+
+    if (!state.tokens.userToken) {
+      const thisToken = getToken();
+      getOrdersToShow(thisToken);
+    } else {
+      getOrdersToShow(state.tokens.userToken);
+    }
+    
 }, []);
 
   const getToken = async () => {
     const tokenResponse = await useUserToken();
+    console.log('tokenResponse: ', tokenResponse)
     if (tokenResponse.token) {
+      setToken(`Bearer ${tokenResponse.token}`)
       dispatch(
         setTokens({
           ...state.tokens,
-          userToken: tokenResponse.token
+          userToken: `Bearer ${tokenResponse.token}`
         })
       )
+      return `Bearer ${tokenResponse.token}`
     }
   }
 
@@ -91,7 +100,9 @@ const Dashboard = () => {
     let newWeeksArr = []
     const subApi = await request(`${process.env.PROXY_APP_URL}/bundle-api/customers/${customerId}/subscriptions`, { method: 'get', data: '', headers: { authorization: token }}, 3)
     console.log('customer subscription: ', subApi);
-
+    if(subApi.data.message === "jwt expired"){
+      getToken().then(token => getOrdersToShow(token))
+    }
     for (const sub of subApi.data.data) {
       const thisLoopSubList = [];
       const subscriptionId = sub.id;
@@ -150,7 +161,7 @@ const Dashboard = () => {
         for(let j = thisLoopSubList.length; thisLoopSubList.length < 4; j++){
           const nextSunday = dayjs().day(0).add((7 * j), 'day');
 
-          await getMissingConfigurations(nextSunday.format('YYYY-MM-DD'), token, bundleId, configurationId).then( data => {
+          await getMissingConfigurations(nextSunday.format('YYYY-MM-DD'), token, 1, 1).then( data => {
             thisLoopSubList.push({
               items: data,
               subId: sub.id,
