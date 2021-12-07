@@ -58,7 +58,7 @@ const entreeSubTypes = [
   },
   {
     id: 2,
-    title: 'High Protein',
+    title: 'Lite',
     netCarbs: '8-9g',
     protein: '20-30g',
     fat: '30-40g',
@@ -67,7 +67,7 @@ const entreeSubTypes = [
   },
   {
     id: 3,
-    title: 'High Protein',
+    title: 'Savory',
     netCarbs: '8-9g',
     protein: '20-30g',
     fat: '30-40g',

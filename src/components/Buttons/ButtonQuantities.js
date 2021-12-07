@@ -3,7 +3,12 @@ import { MinusMinor, MobilePlusMajor } from '@shopify/polaris-icons'
 import React from 'react'
 import styles from './ButtonQuantities.module.scss'
 
-const ButtonQuantities = ({ onAdd, onRemove, quantity = 0 }) => {
+const ButtonQuantities = ({
+  onAdd,
+  onRemove,
+  quantity = 0,
+  disableAdd = false
+}) => {
   return (
     <div className={styles.wrapper}>
       <div
@@ -13,7 +18,12 @@ const ButtonQuantities = ({ onAdd, onRemove, quantity = 0 }) => {
         <Icon source={MinusMinor} />
       </div>
       <div className={styles.quantity}>{quantity}</div>
-      <div className={`${styles.button} ${styles.rightButton}`} onClick={onAdd}>
+      <div
+        className={`${styles.button} ${styles.rightButton} ${
+          disableAdd && styles.disabled
+        }`}
+        onClick={onAdd}
+      >
         <Icon source={MobilePlusMajor} />
       </div>
     </div>
