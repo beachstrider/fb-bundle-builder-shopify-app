@@ -5,6 +5,10 @@
   align-items: center;
   color: $primaryColor;
 
+  & .disabled {
+    background: $grayMedium !important;
+  }
+
   & .button {
     padding: 0.2rem 1rem;
     cursor: pointer;

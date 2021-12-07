@@ -1,5 +1,7 @@
 @import '../../../variables';
 
+$subTitleFontSize: 2.7rem;
+
 .wrapper {
   width: $rowWidth;
   display: grid;
@@ -16,13 +18,29 @@
     column-gap: 0;
   }
 
+  & .quantities {
+    & div {
+      margin: 0.5rem;
+    }
+    & .number {
+      color: $primaryColor;
+      font-weight: 700;
+    }
+    font-size: $subTitleFontSize;
+  }
+
   & .title {
     font-size: $fontLarge;
     font-weight: 700;
     text-align: center;
   }
 
-  & .entrees {
+  & .listHeader {
+    display: flex;
+    align-items: center;
+  }
+
+  & .cards {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     column-gap: 3rem;
