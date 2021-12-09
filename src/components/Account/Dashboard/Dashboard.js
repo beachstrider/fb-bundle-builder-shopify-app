@@ -29,7 +29,6 @@ const Dashboard = () => {
   const [subscriptions, setSubscriptions] = React.useState([])
   const [weeksMenu, setWeeksMenu] = React.useState([])
   const [loading, setLoading] = React.useState(true);
-  const [token, setToken] = React.useState('');
   // TODO make state call for user token for api
 
 
@@ -53,7 +52,6 @@ const Dashboard = () => {
     const tokenResponse = await useUserToken();
     console.log('tokenResponse: ', tokenResponse)
     if (tokenResponse.token) {
-      setToken(`Bearer ${tokenResponse.token}`)
       dispatch(
         setTokens({
           ...state.tokens,

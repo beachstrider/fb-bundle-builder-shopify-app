@@ -59,30 +59,6 @@ const OrderHistory = () => {
       const reformatArr = newDate.split('-');
       return `${reformatArr[1]}/${reformatArr[2]}/${reformatArr[0]}`;
   }
-
-  const getMissingConfigurations = async (date, token, bundle, config) => {
-    const subContents = await request(`${process.env.PROXY_APP_URL}/bundle-api/bundles/${bundle}/configurations/${config}/contents?display_after=${date}T00:00:00.000Z`, { method: 'get', data: '', headers: { authorization: token }}, 3)
-    console.log('customer subscription items: ', subContents);
-    const pendingItems = []
-    
-    subContents.data.data.forEach( configuration => {
-      configuration.products.forEach( product => {
-        const shopProd = shopProducts.filter( p => p.id === prod.platform_product_id)[0]
-        if(!shopProd){
-          console.log('no match: ', prod.platform_product_id)
-        }
-        if(product.is_default === 1){
-          pendingItems.push({
-            title: shopProd ? shopProd.title : 'Missing Title',
-            platform_img: shopProd && shopProd.images.length > 0 ? shopProd.images[0]: '//cdn.shopify.com/shopifycloud/shopify/assets/no-image-2048-5e88c1b20e087fb7bbe9a3771824e743c244f437e4f8ba93bbf7b11b53f7824c_750x.gif',
-            quantity: product.default_quantity
-          })
-        }
-      })  
-    })
-
-    return pendingItems
-  }
   
   const getOrdersToShow = async (token) => {
     // setting customer id temporarily

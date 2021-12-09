@@ -137,51 +137,62 @@ const PlanSettings = () => {
       return `${reformatArr[1]}/${reformatArr[2]}/${reformatArr[0]}`;
   }
 
-  const getMissingConfigurations = async (date, token, bundle, config) => {
-    const subContents = await request(`${process.env.PROXY_APP_URL}/bundle-api/bundles/${bundle}/configurations/${config}/contents?display_after=${date}T00:00:00.000Z`, { method: 'get', data: '', headers: { authorization: token }}, 3)
-    console.log('customer subscription items: ', subContents);
-    const pendingItems = []
-    
-    subContents.data.data.forEach( configuration => {
-      configuration.products.forEach( product => {
-        const shopProd = shopProducts.filter( p => p.id === prod.platform_product_id)[0]
-        if(!shopProd){
-          console.log('no match: ', prod.platform_product_id)
-        }
-        if(product.is_default === 1){
-          pendingItems.push({
-            title: shopProd ? shopProd.title : 'Missing Title',
-            platform_img: shopProd && shopProd.images.length > 0 ? shopProd.images[0]: '//cdn.shopify.com/shopifycloud/shopify/assets/no-image-2048-5e88c1b20e087fb7bbe9a3771824e743c244f437e4f8ba93bbf7b11b53f7824c_750x.gif',
-            quantity: product.default_quantity
-          })
-        }
-      })  
-    })
-
-    return pendingItems
-  }
-  
   const getOrdersToShow = async (token) => {
     // setting customer id temporarily
     // TODO make login call to get customer id from database
     const customerId = 1;
 
     const newWeeksArr = []
-    const subApi = await request(`${process.env.PROXY_APP_URL}/bundle-api/customers/${customerId}/subscriptions`, { method: 'get', data: '', headers: { authorization: token }}, 3)
+    const subApi = await request(`${process.env.PROXY_APP_URL}/bundle-api/subscriptions`, { method: 'get', data: '', headers: { authorization: token }}, 3)
     console.log('customer subscription: ', subApi);
     const thisWeek = dayjs().day(0).add((7), 'day');
     console.log('this weeks: ', thisWeek.format('YYYY-MM-DD'));
+
+
+    
 
     for (const sub of subApi.data.data) {
       const thisLoopSubList = [];
       const subscriptionId = sub.id;
       const bundleId = sub.bundle_id;
-      const configurationId = sub.orders[0].bundle_configuration_content_id;
+      let configurationId = sub.orders[0].bundle_configuration_content_id;
 
+      sub.orders.forEach( order => {
+        if(!order.platform_order_id && order.bundle_configuration_content_id <= configurationId){
+          configurationId = order.bundle_configuration_content_id;
+          if(order.items.length > 0){
+            order.items.forEach( product => {
+              // TODO need to filter for variant to get info
+              const shopProd = shopProducts.filter( p => p.id === product.platform_product_variant_id)[0]
+              thisLoopSubList.push({
+                title:  shopProd ? shopProd.title : 'Missing Title',
+                platform_img: shopProd && shopProd.images.length > 0 ? shopProd.images[0]: '//cdn.shopify.com/shopifycloud/shopify/assets/no-image-2048-5e88c1b20e087fb7bbe9a3771824e743c244f437e4f8ba93bbf7b11b53f7824c_750x.gif',
+                quantity: item.quantity,
+                type: order.subscription.subscription_sub_type
+              })
+            })
+          }
+        }
+      })
 
-      //If no order make call to get defaults
+      if(thisLoopSubList.length === 0){
+        const subscriptionConfigContents = await request(`${process.env.PROXY_APP_URL}/bundle-api/bundles/${bundleId}/configurations/${configurationId}/contents?display_after=${thisWeek.format('YYYY-MM-DD')}T00:00:00.000Z`, { method: 'get', data: '', headers: { authorization: token }}, 3)
+        if(subscriptionConfigContents.data.data[0].products.length){
+          subscriptionConfigContents.data.data[0].products.forEach( product => {
+            if(product.is_default === 1){
+              // TODO Need to filter down to variant based on subscription sub type
+              const shopProd = shopProducts.filter( p => p.id === product.platform_product_id)[0]
+              thisLoopSubList.push({
+                title:  shopProd ? shopProd.title : 'Missing Title',
+                platform_img: shopProd && shopProd.images.length > 0 ? shopProd.images[0]: '//cdn.shopify.com/shopifycloud/shopify/assets/no-image-2048-5e88c1b20e087fb7bbe9a3771824e743c244f437e4f8ba93bbf7b11b53f7824c_750x.gif',
+                quantity: product.default_quantity,
+                type: sub.subscription_sub_type
+              })
+            }
+          })
+        }
+      }
       
-
       const subItem = {
         subId: sub.id,
         subscriptionType: sub.subscription_type,
@@ -189,32 +200,7 @@ const PlanSettings = () => {
         deliveryDay: sub.delivery_day,
         customerId: sub.customer_id,
         date: thisWeek.format('YYYY-MM-DD'),
-        items: [
-          {
-            title: 'Buffalo Mozzarella Chicken',
-            platform_img: 'https://cdn.shopify.com/s/files/1/0596/3694/0985/products/bacon-ranch-chicken-high-protein-727471.jpg?v=1636153469',
-            quantity: 1,
-            type: 'Regular'
-          },
-          {
-            title: 'Buffalo Mozzarella Chicken',
-            platform_img: 'https://cdn.shopify.com/s/files/1/0596/3694/0985/products/bacon-ranch-chicken-high-protein-727471.jpg?v=1636153469',
-            quantity: 1,
-            type: 'Regular'
-          },
-          {
-            title: 'Buffalo Mozzarella Chicken',
-            platform_img: 'https://cdn.shopify.com/s/files/1/0596/3694/0985/products/bacon-ranch-chicken-high-protein-727471.jpg?v=1636153469',
-            quantity: 1,
-            type: 'Regular'
-          },
-          {
-            title: 'Buffalo Mozzarella Chicken',
-            platform_img: 'https://cdn.shopify.com/s/files/1/0596/3694/0985/products/bacon-ranch-chicken-high-protein-727471.jpg?v=1636153469',
-            quantity: 1,
-            type: 'Regular'
-          }
-        ]
+        items: thisLoopSubList
       }
       console.log('subscription orders: ', subItem);
       newWeeksArr.push(subItem)
