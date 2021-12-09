@@ -11,11 +11,11 @@
     display: grid;
     text-align: center;
     grid-template-columns: repeat(4, 1fr);
-    font-size: $fontSmall;
-    column-gap: 1.5rem;
+    font-size: $fontXSmall;
+    column-gap: 1.4rem;
 
     & .subTitle {
-      font-size: 1.9rem;
+      font-size: 1.8rem;
       font-weight: 700;
     }
   }

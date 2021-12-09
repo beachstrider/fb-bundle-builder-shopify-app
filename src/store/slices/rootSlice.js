@@ -52,6 +52,7 @@ const rootSlice = createSlice({
     entreeType: { id: 0 },
     entreeSubType: { id: 0 },
     faqType: null,
+    cart: [],
     email: '',
     location: {
       zipCode: '',
@@ -101,6 +102,9 @@ const rootSlice = createSlice({
     },
     setTokens: (state, action) => {
       state.tokens = action.payload
+    },
+    cartUpdate: (state, action) => {
+      state.cart = action.payload
     }
   }
 })
@@ -110,6 +114,8 @@ export const reducer = rootSlice.reducer
 export const {
   displayFooter,
   displayHeader,
+  cartAddItem,
+  cartUpdate,
   selectFaqType,
   setActiveStep,
   setEmail,

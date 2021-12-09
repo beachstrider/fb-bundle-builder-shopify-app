@@ -5,15 +5,19 @@ import styles from './CardQuantities.module.scss'
 const CardQuantities = ({
   title,
   image,
-  info,
+  metafields,
   quantity,
   isChecked,
   onClick,
   onAdd,
-  onRemove
+  onRemove,
+  disableAdd = false
 }) => {
   return (
-    <div className={styles.card} style={{ border: isChecked ? '4px solid #3DAE2B' : '1px solid #e5e5e5' }}>
+    <div
+      className={styles.card}
+      style={{ border: isChecked ? '4px solid #3DAE2B' : '1px solid #e5e5e5' }}
+    >
       <div
         className={styles.image}
         style={{ backgroundImage: `url('${image}')` }}
@@ -23,28 +27,12 @@ const CardQuantities = ({
       <div className={`${styles.descriptionWrapper} py-5`}>
         <div className={`${styles.title} mb-3`}>{title}</div>
         <div className={styles.description}>
-          <div>
-            <div className={styles.subTitle}>{info.fat}</div>
-            <div>Fat</div>
-          </div>
-          <div
-            className={isChecked ? styles.selectedLine : styles.unselectedLine}
-          >
-            <div className={styles.subTitle}>{info.carbs}</div>
-            <div>Carbs</div>
-          </div>
-          <div
-            className={isChecked ? styles.selectedLine : styles.unselectedLine}
-          >
-            <div className={styles.subTitle}>{info.protein}</div>
-            <div>Protein</div>
-          </div>
-          <div
-            className={isChecked ? styles.selectedLine : styles.unselectedLine}
-          >
-            <div className={styles.subTitle}>{info.calories}</div>
-            <div>Calories</div>
-          </div>
+          {metafields.map((metafield) => (
+            <div key={metafield.key}>
+              <div className={styles.subTitle}>{metafield.value}</div>
+              <div>{metafield.name}</div>
+            </div>
+          ))}
         </div>
         <div className={`${styles.actions} mt-5`}>
           <div>
@@ -56,6 +44,7 @@ const CardQuantities = ({
                 quantity={quantity}
                 onAdd={onAdd}
                 onRemove={onRemove}
+                disableAdd={disableAdd}
               />
             </div>
           )}
