@@ -54,7 +54,7 @@ const AccountInfo = () => {
                         <div className={styles.contentCardWrapper}>
                             <div className={styles.contentCardNavigation}>
                                 <h3>Personal Info</h3>
-                                <a href="#" className="secondaryButton">Edit Info</a>
+                                <button onClick={handleEdit} className="secondaryButton">Edit Info</button>
                             </div>
                             <div>
                                 <p><span className={styles.boldTextField}>Name:</span>{shopCustomer.fullName}</p>

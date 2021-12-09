@@ -31,7 +31,7 @@ const Dashboard = () => {
   const [loading, setLoading] = React.useState(true);
   const [token, setToken] = React.useState('');
   // TODO make state call for user token for api
-  // const token = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoic3VwZXIiLCJpYXQiOjE2Mzg0NzM2MDAsImV4cCI6MTYzODU2MDAwMH0.No1GjSUwec7BuXeD-kKTCnCpfoWMdm4-GwP-M569dec';
+
 
   React.useEffect( () => {
     console.log('The shopify customer: ', shopCustomer)
@@ -70,18 +70,18 @@ const Dashboard = () => {
     const pendingItems = []
     
     subContents.data.data.forEach( configuration => {
-      configuration.defaults.forEach( product => {
-        const prod = configuration.products.filter(p => p.product_id === product.product_id)[0]
-        const shopProd = shopProducts.filter( p => p.id == prod.platform_product_id)[0]
+      configuration.products.forEach( product => {
+        const shopProd = shopProducts.filter( p => p.id === product.platform_product_id)[0]
         if(!shopProd){
           console.log('no match: ', prod.platform_product_id)
         }
-        
-        pendingItems.push({
-          title: shopProd ? shopProd.title : 'Missing Title',
-          platform_img: shopProd && shopProd.images.length > 0 ? shopProd.images[0]: '//cdn.shopify.com/shopifycloud/shopify/assets/no-image-2048-5e88c1b20e087fb7bbe9a3771824e743c244f437e4f8ba93bbf7b11b53f7824c_750x.gif',
-          quantity: product.quantity
-        })
+        if(product.is_default === 1){
+          pendingItems.push({
+            title: shopProd ? shopProd.title : 'Missing Title',
+            platform_img: shopProd && shopProd.images.length > 0 ? shopProd.images[0]: '//cdn.shopify.com/shopifycloud/shopify/assets/no-image-2048-5e88c1b20e087fb7bbe9a3771824e743c244f437e4f8ba93bbf7b11b53f7824c_750x.gif',
+            quantity: product.default_quantity
+          })
+        }
       })  
     })
 
@@ -98,86 +98,88 @@ const Dashboard = () => {
     const activeWeeksLimit = []
     const weeksMenu = []
     let newWeeksArr = []
-    const subApi = await request(`${process.env.PROXY_APP_URL}/bundle-api/customers/${customerId}/subscriptions`, { method: 'get', data: '', headers: { authorization: token }}, 3)
+    const subApi = await request(`${process.env.PROXY_APP_URL}/bundle-api/subscriptions`, { method: 'get', data: '', headers: { authorization: token }}, 3)
     console.log('customer subscription: ', subApi);
-    if(subApi.data.message === "jwt expired"){
+    if(subApi.data.message && subApi.data.message !== 'Unexpected error.'){
       getToken().then(token => getOrdersToShow(token))
     }
-    for (const sub of subApi.data.data) {
-      const thisLoopSubList = [];
-      const subscriptionId = sub.id;
-      const bundleId = sub.bundle_id;
-      const configurationId = sub.orders[0].bundle_configuration_content_id;
+    if(subApi.data.data){
+      for (const sub of subApi.data.data) {
+        const thisLoopSubList = [];
+        const subscriptionId = sub.id;
+        const bundleId = sub.bundle_id;
+        const configurationId = sub.orders[0].bundle_configuration_content_id;
 
-      for (const [ index, order ] of sub.orders.entries()) {
-        const lastOrder = shopCustomer.orders.filter( ord => ord.id == order.platform_order_id )[0];
+        for (const [ index, order ] of sub.orders.entries()) {
+          const lastOrder = shopCustomer.orders.filter( ord => ord.id == order.platform_order_id )[0];
 
-        const lastOrderItems = [];
-        const nextSunday = dayjs().day(0).add((7 * index), 'day')
-        if(lastOrder){
-          lastOrder.lineItems.forEach(item => {
-            const shopProd = shopProducts.filter( p => p.id == item.productId)[0]
-            lastOrderItems.push({
-              title: item.title,
-              platform_img: shopProd && shopProd.images.length > 0 ? shopProd.images[0]: '//cdn.shopify.com/shopifycloud/shopify/assets/no-image-2048-5e88c1b20e087fb7bbe9a3771824e743c244f437e4f8ba93bbf7b11b53f7824c_750x.gif',
-              quantity: item.quantity
-            })
-          })
-
-          thisLoopSubList.push({
-            items: lastOrderItems,
-            subId: sub.id,
-            subscriptionType: sub.subscription_type,
-            subscriptionSubType: sub.subscription_sub_type,
-            date: nextSunday.format('YYYY-MM-DD'),
-            status: 'sent',
-            trackingUrl: lastOrder.fulfillments.length > 0 ? lastOrder.fulfillments[0].trackingUrl : lastOrder.orderLink,
-            subscriptionDate: nextSunday.format('MMM DD')
-          });
-        }
-        
-        if(!order.platform_order_id){
-          // call for bundle and look for selected menu's
-          const itemList = await request(`${process.env.PROXY_APP_URL}/bundle-api/customers/${customerId}/subscriptions/${subscriptionId}/orders`, { method: 'get', data: '', headers: { authorization: token }}, 3)
-          console.log('requesting the selected items: ', itemList)
-          if(itemList){
-            if(itemList.items){
-              itemList.items.forEach(item => {
-                // const itemFromStore = shopifyProducts.filter(sI => item.platform_product_variant_id === sI.variant.id)
-                lastOrderItems.push({
-                  title: 'default product',
-                  platform_img: 'https://cdn.shopify.com/s/files/1/0596/3694/0985/products/bacon-ranch-chicken-high-protein-727471.jpg?v=1636153469',
-                  quantity: item.quantity
-                })
+          const lastOrderItems = [];
+          const nextSunday = dayjs().day(0).add((7 * index), 'day')
+          if(lastOrder){
+            lastOrder.lineItems.forEach(item => {
+              const shopProd = shopProducts.filter( p => p.id == item.productId)[0]
+              lastOrderItems.push({
+                title: item.title,
+                platform_img: shopProd && shopProd.images.length > 0 ? shopProd.images[0]: '//cdn.shopify.com/shopifycloud/shopify/assets/no-image-2048-5e88c1b20e087fb7bbe9a3771824e743c244f437e4f8ba93bbf7b11b53f7824c_750x.gif',
+                quantity: item.quantity
               })
-            }
-          } 
-        }
+            })
 
-        if(!weeksMenu.includes(nextSunday.format('MMM DD'))){ weeksMenu.push(nextSunday.format('MMM DD')); }
-      }
-
-      if(thisLoopSubList.length < 4){
-        for(let j = thisLoopSubList.length; thisLoopSubList.length < 4; j++){
-          const nextSunday = dayjs().day(0).add((7 * j), 'day');
-
-          await getMissingConfigurations(nextSunday.format('YYYY-MM-DD'), token, 1, 1).then( data => {
             thisLoopSubList.push({
-              items: data,
+              items: lastOrderItems,
               subId: sub.id,
               subscriptionType: sub.subscription_type,
               subscriptionSubType: sub.subscription_sub_type,
               date: nextSunday.format('YYYY-MM-DD'),
-              status: 'pending',
+              status: 'sent',
+              trackingUrl: lastOrder.fulfillments.length > 0 ? lastOrder.fulfillments[0].trackingUrl : lastOrder.orderLink,
               subscriptionDate: nextSunday.format('MMM DD')
-            })
-          });
+            });
+          }
+          
+          if(!order.platform_order_id){
+            // call for bundle and look for selected menu's
+            const itemList = await request(`${process.env.PROXY_APP_URL}/bundle-api/customers/${customerId}/subscriptions/${subscriptionId}/orders`, { method: 'get', data: '', headers: { authorization: token, cookie: token.replace('Bearer ', 'jwt=') }}, 3)
+            console.log('requesting the selected items: ', itemList)
+            if(itemList){
+              if(itemList.items){
+                itemList.items.forEach(item => {
+                  // const itemFromStore = shopifyProducts.filter(sI => item.platform_product_variant_id === sI.variant.id)
+                  lastOrderItems.push({
+                    title: 'default product',
+                    platform_img: 'https://cdn.shopify.com/s/files/1/0596/3694/0985/products/bacon-ranch-chicken-high-protein-727471.jpg?v=1636153469',
+                    quantity: item.quantity
+                  })
+                })
+              }
+            } 
+          }
 
           if(!weeksMenu.includes(nextSunday.format('MMM DD'))){ weeksMenu.push(nextSunday.format('MMM DD')); }
         }
-      }
 
-      newWeeksArr = newWeeksArr.concat(thisLoopSubList)
+        if(thisLoopSubList.length < 4){
+          for(let j = thisLoopSubList.length; thisLoopSubList.length < 4; j++){
+            const nextSunday = dayjs().day(0).add((7 * j), 'day');
+
+            await getMissingConfigurations(nextSunday.format('YYYY-MM-DD'), token, 1, 1).then( data => {
+              thisLoopSubList.push({
+                items: data,
+                subId: sub.id,
+                subscriptionType: sub.subscription_type,
+                subscriptionSubType: sub.subscription_sub_type,
+                date: nextSunday.format('YYYY-MM-DD'),
+                status: 'pending',
+                subscriptionDate: nextSunday.format('MMM DD')
+              })
+            });
+
+            if(!weeksMenu.includes(nextSunday.format('MMM DD'))){ weeksMenu.push(nextSunday.format('MMM DD')); }
+          }
+        }
+
+        newWeeksArr = newWeeksArr.concat(thisLoopSubList)
+      }
     }
 
     newWeeksArr.forEach((sub) => {

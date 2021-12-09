@@ -20,7 +20,7 @@ app.post('/bundle-api/token/guest', async (req, res) => {
 
 app.post('/bundle-api/token/account', async (req, res) => {
   const response = await request(
-    `${process.env.BUNDLE_API_URL}/api/auth/admin`,
+    `${process.env.BUNDLE_API_URL}/api/auth/user`,
     {
       method: 'post',
       headers: {
@@ -43,14 +43,14 @@ app.post('/bundle-api/token/account', async (req, res) => {
   })
 })
 
-app.get('/bundle-api/customers/:customerId/subscriptions', async (req, res) => {
+app.get('/bundle-api/subscriptions', async (req, res) => {
   const response = await request(
-    `${process.env.BUNDLE_API_URL}/api/customers/${req.params.customerId}/subscriptions`,
+    `${process.env.BUNDLE_API_URL}/api/subscriptions`,
     {
       method: 'get',
       headers: {
         Accept: 'application/json',
-        authorization: req.headers.authorization
+        authorization: req.headers.authorization,
       }
     }
   )
@@ -84,12 +84,12 @@ app.get(
 )
 
 app.get(
-  '/bundle-api/customers/:customerId/subscriptions/:subscriptionId/orders',
+  '/bundle-api/subscription/:subscriptionId/orders',
   async (req, res) => {
     const queryString = objectToQueryString(req.query)
 
     const response = await request(
-      `${process.env.BUNDLE_API_URL}/api/customers/${req.params.customerId}/subscriptions/${req.params.subscriptionId}/orders?${queryString}`,
+      `${process.env.BUNDLE_API_URL}/api/subscriptions/${req.params.subscriptionId}/orders?${queryString}`,
       {
         method: 'get',
         headers: {
