@@ -37,6 +37,13 @@ const Entrees = () => {
     getCurrentMenuItems()
   }, [])
 
+  useEffect(() => {
+    if (entreeQuantity === 0 && breakfastQuantity === 0) {
+      // TODO: enable continue button
+      dispatch(cartUpdate(temporaryCart))
+    }
+  }, [entreeQuantity, breakfastQuantity])
+
   const getCurrentMenuItems = async () => {
     setIsLoading(true)
 
