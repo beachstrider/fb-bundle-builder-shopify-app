@@ -11,7 +11,7 @@ const DeliveryDayModal = (props) => {
       { value: 5, label:'Friday' },
       { value: 6, label:'Saturday' }
   ]
-
+  // TODO Need to complete delivery day change modal
   return (
     <div>
         <button className="secondaryButton" onClick={() => setShow(true)}>{props.label}</button>
