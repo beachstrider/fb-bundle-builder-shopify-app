@@ -19,6 +19,11 @@ import { request } from '../../../utils';
 import { Spinner } from '../../Global';
 
 const OrderHistory = () => {
+
+  if(shopCustomer.id === 0){
+    return <Redirect push to="/" />
+  }
+
   const state = useSelector((state) => state)
   const dispatch = useDispatch()
   const [subscriptions, setSubscriptions] = React.useState([])
@@ -61,22 +66,12 @@ const OrderHistory = () => {
   }
   
   const getOrdersToShow = async (token) => {
-    // setting customer id temporarily
-    // TODO make login call to get customer id from database
-    const customerId = 1;
-
     const newWeeksArr = []
     const subApi = await request(`${process.env.PROXY_APP_URL}/bundle-api/subscriptions`, { method: 'get', data: '', headers: { authorization: token }}, 3)
-    console.log('customer subscription: ', subApi);
     const thisWeek = dayjs().day(0).add((7), 'day');
-    console.log('this weeks: ', thisWeek.format('YYYY-MM-DD'));
-
-
-    
 
     for (const sub of subApi.data.data) {
       const thisLoopSubList = [];
-      const subscriptionId = sub.id;
       const bundleId = sub.bundle_id;
       let configurationId = sub.orders[0].bundle_configuration_content_id;
 
@@ -133,10 +128,6 @@ const OrderHistory = () => {
     console.log('newWeeksArr: ', newWeeksArr);
     setLoading(false)
   }
-
-  if(shopCustomer.id === 0){
-    return <Redirect push to="/" />
-  }
   
   if (loading) {
 
@@ -178,7 +169,7 @@ const OrderHistory = () => {
                             {subscription.items.map((item, idx) => (
                                 idx < 3 ? <MenuItemCard key={idx} title={item.title} image={item.platform_img} quantity={item.quantity} type={item.type} />  : ''
                             ))}
-                            <Link to={`/edit-order/${subscription.subId}?date=${subscription.date}`} className={styles.seeAllMenu}>
+                            <Link to="/account" className={styles.seeAllMenu}>
                                 See All <ChevronRightMinor />
                             </Link>
                         </div>

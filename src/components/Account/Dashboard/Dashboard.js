@@ -22,6 +22,13 @@ import { Spinner } from '../../Global';
 dayjs.extend(isSameOrAfter);
 
 const Dashboard = () => {
+
+  if(!shopCustomer || shopCustomer.id === 0){
+    return <Redirect push to="/" />
+  }
+
+
+
   const state = useSelector((state) => state)
   const dispatch = useDispatch()
   const [active, setActive] = React.useState([]);
@@ -64,15 +71,12 @@ const Dashboard = () => {
 
   const getMissingConfigurations = async (date, token, bundle, config) => {
     const subContents = await request(`${process.env.PROXY_APP_URL}/bundle-api/bundles/${bundle}/configurations/${config}/contents?display_after=${date}T00:00:00.000Z`, { method: 'get', data: '', headers: { authorization: token }}, 3)
-    console.log('customer subscription items: ', subContents);
     const pendingItems = []
     
     subContents.data.data.forEach( configuration => {
       configuration.products.forEach( product => {
         const shopProd = shopProducts.filter( p => p.id === product.platform_product_id)[0]
-        if(!shopProd){
-          console.log('no match: ', prod.platform_product_id)
-        }
+
         if(product.is_default === 1){
           pendingItems.push({
             title: shopProd ? shopProd.title : 'Missing Title',
@@ -88,16 +92,13 @@ const Dashboard = () => {
 
   const getOrdersToShow = async (token) => {
     console.log('shopifyProducts: ', shopProducts[0]);
-    // setting customer id temporarily
-    // TODO make login call to get customer id from database
-    const customerId = 1;
-    // get next three weeks of item and j
+
     const activeWeeksArr = []
     const activeWeeksLimit = []
     const weeksMenu = []
     let newWeeksArr = []
     const subApi = await request(`${process.env.PROXY_APP_URL}/bundle-api/subscriptions`, { method: 'get', data: '', headers: { authorization: token }}, 3)
-    console.log('customer subscription: ', subApi);
+
     if(subApi.data.message && subApi.data.message !== 'Unexpected error.'){
       getToken().then(token => getOrdersToShow(token))
     }
@@ -105,8 +106,6 @@ const Dashboard = () => {
       for (const sub of subApi.data.data) {
         const thisLoopSubList = [];
         const subscriptionId = sub.id;
-        const bundleId = sub.bundle_id;
-        const configurationId = sub.orders[0].bundle_configuration_content_id;
 
         for (const [ index, order ] of sub.orders.entries()) {
           const lastOrder = shopCustomer.orders.filter( ord => ord.id == order.platform_order_id )[0];
@@ -137,7 +136,7 @@ const Dashboard = () => {
           
           if(!order.platform_order_id){
             // call for bundle and look for selected menu's
-            const itemList = await request(`${process.env.PROXY_APP_URL}/bundle-api/customers/${customerId}/subscriptions/${subscriptionId}/orders`, { method: 'get', data: '', headers: { authorization: token, cookie: token.replace('Bearer ', 'jwt=') }}, 3)
+            const itemList = await request(`${process.env.PROXY_APP_URL}/bundle-api/subscriptions/${subscriptionId}/orders`, { method: 'get', data: '', headers: { authorization: token }}, 3)
             console.log('requesting the selected items: ', itemList)
             if(itemList){
               if(itemList.items){
@@ -235,10 +234,6 @@ const Dashboard = () => {
       }
     });
     setLimit(newLimit);
-  }
-
-  if(!shopCustomer || shopCustomer.id === 0){
-    return <Redirect push to="/" />
   }
 
   if (loading) {

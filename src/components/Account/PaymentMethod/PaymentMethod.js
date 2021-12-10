@@ -12,6 +12,12 @@ import { request } from '../../../utils';
   
 
 const PaymentMethod = () => {
+
+    if(shopCustomer.id === 0){
+        return <Redirect push to="/" />
+    }
+
+    
     const dispatch = useDispatch()
 
     React.useEffect( () => {
@@ -27,10 +33,6 @@ const PaymentMethod = () => {
         console.log('customer subscription hash: ', subApi.data.customers[0].hash);
 
         window.location.href = `https://quickfresh-sandbox.myshopify.com/tools/recurring/portal/${subApi.data.customers[0].hash}/payment_sources?token=${window.customerToken}`;
-    }
-
-    if(shopCustomer.id === 0){
-        return <Redirect push to="/" />
     }
 
   return (

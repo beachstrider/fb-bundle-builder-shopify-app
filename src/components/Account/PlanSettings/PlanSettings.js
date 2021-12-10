@@ -17,85 +17,13 @@ import {
 import * as dayjs from 'dayjs';
 import { request } from '../../../utils';
 import { Spinner } from '../../Global';
-  
-  const menuItems = [
-    {
-      title: 'Buffalo Mozzarella Chicken',
-      platform_img: 'https://cdn.shopify.com/s/files/1/0596/3694/0985/products/bacon-ranch-chicken-high-protein-727471.jpg?v=1636153469',
-      quantity: 1,
-      type: 'Regular'
-    },
-    {
-      title: 'Buffalo Mozzarella Chicken',
-      platform_img: 'https://cdn.shopify.com/s/files/1/0596/3694/0985/products/bacon-ranch-chicken-high-protein-727471.jpg?v=1636153469',
-      quantity: 1,
-      type: 'Regular'
-    },
-    {
-      title: 'Buffalo Mozzarella Chicken',
-      platform_img: 'https://cdn.shopify.com/s/files/1/0596/3694/0985/products/bacon-ranch-chicken-high-protein-727471.jpg?v=1636153469',
-      quantity: 1,
-      type: 'Regular'
-    },
-    {
-      title: 'Buffalo Mozzarella Chicken',
-      platform_img: 'https://cdn.shopify.com/s/files/1/0596/3694/0985/products/bacon-ranch-chicken-high-protein-727471.jpg?v=1636153469',
-      quantity: 1,
-      type: 'Regular'
-    },
-    {
-      title: 'Buffalo Mozzarella Chicken',
-      platform_img: 'https://cdn.shopify.com/s/files/1/0596/3694/0985/products/bacon-ranch-chicken-high-protein-727471.jpg?v=1636153469',
-      quantity: 1,
-      type: 'Regular'
-    },
-    {
-      title: 'Buffalo Mozzarella Chicken',
-      platform_img: 'https://cdn.shopify.com/s/files/1/0596/3694/0985/products/bacon-ranch-chicken-high-protein-727471.jpg?v=1636153469',
-      quantity: 1,
-      type: 'Regular'
-    },
-    {
-      title: 'Buffalo Mozzarella Chicken',
-      platform_img: 'https://cdn.shopify.com/s/files/1/0596/3694/0985/products/bacon-ranch-chicken-high-protein-727471.jpg?v=1636153469',
-      quantity: 1,
-      type: 'Regular'
-    },
-    {
-      title: 'Buffalo Mozzarella Chicken',
-      platform_img: 'https://cdn.shopify.com/s/files/1/0596/3694/0985/products/bacon-ranch-chicken-high-protein-727471.jpg?v=1636153469',
-      quantity: 1,
-      type: 'Regular'
-    },
-    {
-      title: 'Buffalo Mozzarella Chicken',
-      platform_img: 'https://cdn.shopify.com/s/files/1/0596/3694/0985/products/bacon-ranch-chicken-high-protein-727471.jpg?v=1636153469',
-      quantity: 1,
-      type: 'Regular'
-    },
-    {
-      title: 'Buffalo Mozzarella Chicken',
-      platform_img: 'https://cdn.shopify.com/s/files/1/0596/3694/0985/products/bacon-ranch-chicken-high-protein-727471.jpg?v=1636153469',
-      quantity: 1,
-      type: 'Regular'
-    },
-    {
-      title: 'Buffalo Mozzarella Chicken',
-      platform_img: 'https://cdn.shopify.com/s/files/1/0596/3694/0985/products/bacon-ranch-chicken-high-protein-727471.jpg?v=1636153469',
-      quantity: 1,
-      type: 'Regular'
-    },
-    {
-      title: 'Buffalo Mozzarella Chicken',
-      platform_img: 'https://cdn.shopify.com/s/files/1/0596/3694/0985/products/bacon-ranch-chicken-high-protein-727471.jpg?v=1636153469',
-      quantity: 1,
-      type: 'Regular'
-    }
-  
-  ]
-
 
 const PlanSettings = () => {
+
+  if(shopCustomer.id === 0){
+    return <Redirect push to="/" />
+  }
+  
   const state = useSelector((state) => state)
   const dispatch = useDispatch()
   const [subscriptions, setSubscriptions] = React.useState([])
@@ -130,18 +58,7 @@ const PlanSettings = () => {
     }
   }
 
-  const dateFormat = (date) => {
-      const dateArr = date.split(' ');
-      const newDate = dateArr[0];
-      const reformatArr = newDate.split('-');
-      return `${reformatArr[1]}/${reformatArr[2]}/${reformatArr[0]}`;
-  }
-
   const getOrdersToShow = async (token) => {
-    // setting customer id temporarily
-    // TODO make login call to get customer id from database
-    const customerId = 1;
-
     const newWeeksArr = []
     const subApi = await request(`${process.env.PROXY_APP_URL}/bundle-api/subscriptions`, { method: 'get', data: '', headers: { authorization: token }}, 3)
     console.log('customer subscription: ', subApi);
@@ -153,7 +70,6 @@ const PlanSettings = () => {
 
     for (const sub of subApi.data.data) {
       const thisLoopSubList = [];
-      const subscriptionId = sub.id;
       const bundleId = sub.bundle_id;
       let configurationId = sub.orders[0].bundle_configuration_content_id;
 
@@ -210,10 +126,6 @@ const PlanSettings = () => {
     console.log('newWeeksArr: ', newWeeksArr);
     setLoading(false)
   }
-
-  if(shopCustomer.id === 0){
-    return <Redirect push to="/" />
-  }
   
   if (loading) {
 
@@ -253,7 +165,7 @@ const PlanSettings = () => {
                                 {subscription.items.map((item, index) => (
                                     index < 3 ? <MenuItemCard key={index} title={item.title} image={item.platform_img} quantity={item.quantity} type={item.type}  width="27%" /> : ''
                                 ))}
-                                <Link to={`/edit-order/${subscription.subId}?date=${subscription.date}`} className={styles.seeAllMenu}>
+                                <Link to="/account" className={styles.seeAllMenu}>
                                     See All <ChevronRightMinor />
                                 </Link>
                             </div>
