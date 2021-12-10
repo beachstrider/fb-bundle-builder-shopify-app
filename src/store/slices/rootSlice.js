@@ -114,7 +114,6 @@ export const reducer = rootSlice.reducer
 export const {
   displayFooter,
   displayHeader,
-  cartAddItem,
   cartUpdate,
   selectFaqType,
   setActiveStep,
