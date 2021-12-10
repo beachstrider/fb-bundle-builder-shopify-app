@@ -1,0 +1,87 @@
+@import '../../../variables';
+
+$subTitleFontSize: 2.7rem;
+
+.wrapper {
+  width: $rowWidth;
+  display: grid;
+  grid-template-columns: 100%;
+  column-gap: 10rem;
+  @media only screen and (max-width: $breakpointDesktop) {
+    width: $rowWidthTable;
+    grid-template-columns: 50% 50%;
+    column-gap: 5rem;
+  }
+  @media only screen and (max-width: $breakpointTablet) {
+    width: $rowWidthMobile;
+    grid-template-columns: 100%;
+    column-gap: 0;
+  }
+
+  & .title {
+    font-size: $fontLarge;
+    font-weight: 700;
+    text-align: center;
+  }
+
+  & .menuItemsWrapper {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 224px);
+
+    & p {
+      align-items: center;
+    }
+    & p:nth-child(even) {
+      & strong {
+        font-size: calc($fontMedium + 0.8rem);
+      }
+    }
+  }
+
+  & .topBarWrapper {
+    display: grid;
+    grid-template-columns: 3fr 1fr;
+    justify-content: center;
+
+    & .columns {
+      display: flex;
+    }
+
+    & .card {
+      box-shadow: 0px 0px 30px #00000012;
+      border-radius: 1rem;
+      padding: 2.5rem;
+      overflow: hidden;
+      align-items: center;
+      justify-content: center;
+
+      & .startingDate {
+        margin-left: 9rem;
+        font-size: $fontMedium;
+        & .ordinal {
+          font-size: $fontXSmall;
+        }
+      }
+
+      & .edit {
+        margin-left: 1rem;
+        color: $primaryColor;
+        font-size: $fontXSmall;
+        text-decoration: underline;
+      }
+
+      & .title {
+        font-size: $fontMediumLarge;
+        font-weight: 400;
+
+        & .day {
+          color: $primaryColor;
+        }
+        & .price {
+          font-size: calc($fontMediumLarge + 0.5rem);
+          font-weight: 700;
+        }
+      }
+    }
+  }
+}

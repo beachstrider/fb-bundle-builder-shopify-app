@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import { useHistory } from 'react-router'
 import { useDispatch, useSelector } from 'react-redux'
-import { setActiveStep } from '../../store/slices/rootSlice'
+import { setActiveStep, triggerLastStep } from '../../store/slices/rootSlice'
+import SpinnerIcon from '../Global/SpinnerIcon'
 import styles from './Footer.module.scss'
 
 const Footer = () => {
@@ -12,6 +13,13 @@ const Footer = () => {
   const [currentStep, setCurrentStep] = useState({ id: 0 })
   const [nextStep, setNextStep] = useState({ path: '', description: '' })
   const [previousStep, setPreviousStep] = useState({ path: '' })
+  const [isLoading, setIsLoading] = useState(false)
+
+  useEffect(() => {
+    if (currentStep.id !== state.steps[state.steps.length - 1].id) {
+      dispatch(triggerLastStep(false))
+    }
+  }, [])
 
   useEffect(() => {
     const step = state.steps.find((step) => step.isActive)
@@ -30,7 +38,11 @@ const Footer = () => {
     }
   }, [state.steps])
 
-  const handleBackButtonClick = () => {
+  const handleBackButtonClick = (useBrowserHistory = false) => {
+    if (useBrowserHistory) {
+      return history.goBack()
+    }
+
     dispatch(setActiveStep(currentStep.id - 1))
     if (nextStep) {
       history.push(previousStep.path)
@@ -44,22 +56,36 @@ const Footer = () => {
     }
   }
 
+  const handleLastStep = () => {
+    dispatch(triggerLastStep(true))
+    setIsLoading(true)
+  }
+
   return (
-    <div className={`${styles.wrapper} defaultWrapper mt-10`}>
+    <div className={`${styles.wrapper} defaultWrapper mt-10 mb-10`}>
       <div className="buttons">
-        {currentStep.id !== state.steps[0].id && (
-          <div className="button lightButton" onClick={handleBackButtonClick}>
-            Back
-          </div>
-        )}
-        {currentStep.id !== state.steps[state.steps.length - 1].id && (
-          <div
-            className={`button primaryButton`}
-            onClick={handleNextButtonClick}
-          >
-            {nextStep.description}
-          </div>
-        )}
+        <div
+          className="button lightButton"
+          onClick={() =>
+            handleBackButtonClick(currentStep.id === state.steps[0].id)
+          }
+        >
+          Back
+        </div>
+
+        <div
+          className={`button ${
+            state.isNextButtonActive ? 'primaryButton' : 'disabledButton'
+          }`}
+          onClick={() => {
+            if (currentStep.id === state.steps[state.steps.length - 1].id) {
+              return handleLastStep()
+            }
+            return state.isNextButtonActive && handleNextButtonClick()
+          }}
+        >
+          {isLoading ? <SpinnerIcon /> : nextStep.description}
+        </div>
       </div>
     </div>
   )

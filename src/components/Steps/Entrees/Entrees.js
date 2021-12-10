@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { useHistory, Redirect } from 'react-router'
 import CardQuantities from '../../Cards/CardQuantities'
 import {
   getMenuItems,
@@ -7,17 +8,18 @@ import {
   getBundle,
   withActiveStep
 } from '../../Hooks'
-import { cartUpdate } from '../../../store/slices/rootSlice'
+import {
+  cartRemoveItem,
+  cartAddItem,
+  setIsNextButtonActive
+} from '../../../store/slices/rootSlice'
 import styles from './Entrees.module.scss'
 import weekday from 'dayjs/plugin/weekday'
 import dayjs from 'dayjs'
-import { Redirect } from 'react-router'
 import Loading from '../Components/Loading'
 
-const FAQ_TYPE = 'entreeType'
+const FAQ_TYPE = 'entrees'
 const STEP_ID = 4
-const ENTREE_CONFIGURATION_TITLE = 'Entree'
-const BREAKFAST_CONFIGURATION_TITLE = 'Breakfast'
 const EMPTY_STATE_IMAGE =
   'https://sunriseintegration.slack.com//cdn.shopify.com/shopifycloud/shopify/assets/no-image-2048-5e88c1b20e087fb7bbe9a3771824e743c244f437e4f8ba93bbf7b11b53f7824c_750x.gif'
 
@@ -26,86 +28,160 @@ dayjs.extend(weekday)
 const Entrees = () => {
   const state = useSelector((state) => state)
   const dispatch = useDispatch()
+  const history = useHistory()
+
   const [isLoading, setIsLoading] = useState(false)
-  const [entrees, setEntrees] = useState([])
-  const [entreeQuantity, setEntreeQuantity] = useState(0)
-  const [breakfasts, setBreakfasts] = useState([])
-  const [breakfastQuantity, setBreakfastQuantity] = useState(0)
-  const [temporaryCart, setTemporaryCart] = useState([])
+  const [menuItems, setMenuItems] = useState([])
+
+  // total and remaining items to add
+  const [quantities, setQuantities] = useState([])
+  const [quantitiesCountdown, setQuantitiesCountdown] = useState([])
+
+  const getQuantity = (id) => {
+    return quantities.find((q) => q.id === id) || { id: 0, quantity: 0 }
+  }
+
+  const getQuantityCountdown = (id) => {
+    return (
+      quantitiesCountdown.find((q) => q.id === id) || { id: 0, quantity: 0 }
+    )
+  }
+
+  const getQuantityCountdownIndex = (id) => {
+    return quantitiesCountdown.findIndex((q) => q.id === id)
+  }
 
   useEffect(() => {
+    // TODO: wait to see if we will use the FAQ
+    // dispatch(selectFaqType(FAQ_TYPE))
+    dispatch(setIsNextButtonActive(false))
+
     getCurrentMenuItems()
   }, [])
 
   useEffect(() => {
-    if (entreeQuantity === 0 && breakfastQuantity === 0) {
-      // TODO: enable continue button
-      dispatch(cartUpdate(temporaryCart))
+    if (
+      state.cart.length > 0 &&
+      quantitiesCountdown.length > 0 &&
+      quantities.length > 0
+    ) {
+      let canActivateButton = false
+      quantities.forEach((quantity) => {
+        const cartTotal = sumQuantity(quantity.id)
+        if (
+          cartTotal === getQuantity(quantity.id)?.quantity &&
+          getQuantityCountdown(quantity.id)?.quantity === 0
+        ) {
+          canActivateButton = true
+        } else {
+          canActivateButton = false
+        }
+      })
+
+      if (canActivateButton) {
+        dispatch(setIsNextButtonActive(true))
+      } else {
+        if (state.isNextButtonActive) {
+          dispatch(setIsNextButtonActive(false))
+        }
+      }
     }
-  }, [entreeQuantity, breakfastQuantity])
+  }, [quantities, quantitiesCountdown])
+
+  const sumQuantity = (id) => {
+    let total = 0
+    const filteredValues = state.cart.filter((e) => e.bundleContentId === id)
+    total = filteredValues
+      .map((value) => value.quantity)
+      .reduce((sum, number) => sum + number, 0)
+    return total
+  }
 
   const getCurrentMenuItems = async () => {
     setIsLoading(true)
 
-    let currentApiBundle = null
-    const shopifyProduct = getSelectedBundle(state.bundle.breakfast.tag)
+    try {
+      const newItems = []
+      const newQuantities = []
+      const newQuantitiesCountdown = []
 
-    const { data } = await getBundle(state.tokens.guestToken, shopifyProduct.id)
-    if (data.data.length > 0) {
-      currentApiBundle = data.data[0]
-    }
+      const shopifyProduct = getSelectedBundle(state.bundle.breakfast.tag)
 
-    const findTitle = (title, search) =>
-      title.toLowerCase().includes(search.substr(1, 6))
-    for (const configuration of currentApiBundle.configurations) {
-      // search for part of the word ENTREE or BREAKFAST in the title
-      if (findTitle(configuration.title, ENTREE_CONFIGURATION_TITLE)) {
-        await getProducts(configuration, ENTREE_CONFIGURATION_TITLE, setEntrees)
+      const { data } = await getBundle(
+        state.tokens.guestToken,
+        shopifyProduct.id
+      )
+
+      if (data.data.length === 0) {
+        throw new Error('Bundle could not be found')
       }
 
-      if (findTitle(configuration.title, BREAKFAST_CONFIGURATION_TITLE)) {
-        await getProducts(
-          configuration,
-          BREAKFAST_CONFIGURATION_TITLE,
-          setBreakfasts
-        )
-      }
-    }
+      const currentApiBundle = data.data[0]
 
-    setIsLoading(false)
+      for (const configuration of currentApiBundle.configurations) {
+        const addItem = (items) => menuItems.concat(items)
+
+        const response = await getProducts(configuration, addItem)
+
+        newItems.push({
+          id: configuration.id,
+          title: configuration.title,
+          products: [...response.products]
+        })
+
+        newQuantities.push({
+          id: configuration.id,
+          quantity: response.quantity
+        })
+        newQuantitiesCountdown.push({
+          id: configuration.id,
+          quantity: response.quantityCountdown
+        })
+      }
+
+      setQuantitiesCountdown(newQuantitiesCountdown)
+      setQuantities(newQuantities)
+      setMenuItems(newItems)
+      setIsLoading(false)
+    } catch (error) {
+      return history.push('/')
+    }
   }
 
-  const getProducts = async (configuration, title, setContent) => {
+  const getProducts = async (configuration, setContent) => {
     const nextWeekSunday = dayjs()
       .weekday(7)
       .format('YYYY-MM-DDT00:00:00.000[Z]')
 
-    if (configuration.title.toLowerCase().includes(title.substr(1, 6))) {
-      const response = await getMenuItems(
-        state.tokens.guestToken,
-        configuration.bundleId,
-        configuration.id,
-        `is_enabled=1&display_after=${nextWeekSunday}`
+    const response = await getMenuItems(
+      state.tokens.guestToken,
+      configuration.bundleId,
+      configuration.id,
+      `is_enabled=1&display_after=${nextWeekSunday}`
+    )
+
+    if (response.data?.data && response.data?.data.length > 0) {
+      const filteredProducts = await filterShopifyProducts(
+        response.data.data[0].products,
+        shopProducts
       )
 
-      if (response.data?.data && response.data?.data.length > 0) {
-        const filteredProducts = await filterShopifyProducts(
-          response.data.data[0].products,
-          shopProducts
-        )
+      const filteredVariants = await filterShopifyVariants(
+        filteredProducts,
+        configuration
+      )
 
-        const filteredVariants = await filterShopifyVariants(
-          filteredProducts,
-          configuration
-        )
-        setContent(filteredVariants)
+      let subTotal = 0
+      if (state.cart.length > 0) {
+        subTotal = sumQuantity(configuration.id)
+      }
 
-        if (title === BREAKFAST_CONFIGURATION_TITLE) {
-          setBreakfastQuantity(response.data.data[0].configuration.quantity)
-        }
-        if (title === ENTREE_CONFIGURATION_TITLE) {
-          setEntreeQuantity(response.data.data[0].configuration.quantity)
-        }
+      const quantity = response.data.data[0].configuration.quantity
+
+      return {
+        products: filteredVariants,
+        quantity: quantity,
+        quantityCountdown: quantity - subTotal
       }
     }
   }
@@ -118,12 +194,20 @@ const Entrees = () => {
         apiProductIds.includes(p.id)
       )
 
-      resolve(filteredProducts)
+      const mappedProducts = filteredProducts.map((product) => ({
+        ...product,
+        bundle_configuration_content_id: items.find(
+          (i) => Number(i.platform_product_id) === Number(product.id)
+        ).bundle_configuration_contents_id
+      }))
+
+      resolve(mappedProducts)
     })
 
   const filterShopifyVariants = async (shopifyProducts, configuration) =>
     new Promise((resolve) => {
       const filteredVariants = []
+
       for (const product of shopifyProducts) {
         const filtered = product.variants.filter(
           (variant) =>
@@ -134,8 +218,10 @@ const Entrees = () => {
         filtered.map((f) => {
           f.images = product.images
           f.configurationBundleId = configuration.bundleId
-          f.configurationContentId = configuration.id
+          f.configurationContentId = product.bundle_configuration_content_id
+          f.bundleContentId = configuration.id
           f.quantity = 0
+          f.type = configuration.title
 
           if (f.name.includes('-')) {
             f.name = f.name.split('-')[0]
@@ -152,72 +238,61 @@ const Entrees = () => {
       resolve(filteredVariants)
     })
 
-  const handleAddItem = (item, type) => {
-    if (type === 'breakfast' && breakfastQuantity === 0) {
-      return
-    }
-    if (type === 'entree' && entreeQuantity === 0) {
+  const handleAddItem = (item, bundleContentId) => {
+    const countdown = getQuantityCountdown(bundleContentId)
+    if (countdown?.quantity === 0) {
       return
     }
 
-    const currentCartState = [...temporaryCart]
-    const existingItem = currentCartState.find(
-      (i) => Number(i.id) === Number(item.id)
-    )
+    const countdownIndex = getQuantityCountdownIndex(bundleContentId)
+    if (countdownIndex === -1) {
+      return
+    }
 
-    if (!existingItem) {
-      currentCartState.push({
-        ...item,
-        quantity: 1
+    const newItemsCountdown = [...quantitiesCountdown]
+    newItemsCountdown[countdownIndex] = {
+      ...newItemsCountdown[countdownIndex],
+      quantity: countdown.quantity - 1
+    }
+    setQuantitiesCountdown([...newItemsCountdown])
+
+    dispatch(
+      cartAddItem({
+        ...item
       })
-    } else {
-      existingItem.quantity += 1
-    }
-
-    if (type === 'breakfast') {
-      setBreakfastQuantity(breakfastQuantity - 1)
-    }
-    if (type === 'entree') {
-      setEntreeQuantity(entreeQuantity - 1)
-    }
-    setTemporaryCart([...currentCartState])
+    )
   }
 
-  const handleRemoveItem = (item, type) => {
-    let currentCartState = [...temporaryCart]
-    const existingItem = currentCartState.find(
-      (i) => Number(i.id) === Number(item.id)
+  const handleRemoveItem = (item, bundleContentId) => {
+    const countdown = getQuantityCountdown(bundleContentId)
+
+    const countdownIndex = getQuantityCountdownIndex(bundleContentId)
+    if (countdownIndex === -1) {
+      return
+    }
+
+    const newItemsCountdown = [...quantitiesCountdown]
+    newItemsCountdown[countdownIndex] = {
+      ...newItemsCountdown[countdownIndex],
+      quantity: countdown.quantity + 1
+    }
+    setQuantitiesCountdown([...newItemsCountdown])
+
+    dispatch(
+      cartRemoveItem({
+        ...item
+      })
     )
-
-    if (existingItem) {
-      existingItem.quantity -= 1
-    }
-
-    if (existingItem.quantity === 0) {
-      currentCartState = currentCartState.filter(
-        (i) => i.id !== existingItem.id
-      )
-    }
-
-    if (type === 'breakfast') {
-      setBreakfastQuantity(breakfastQuantity + 1)
-    }
-    if (type === 'entree') {
-      setEntreeQuantity(entreeQuantity + 1)
-    }
-    setTemporaryCart([...currentCartState])
   }
 
   const getItemQuantity = (item) => {
-    const currentItem = temporaryCart.find(
-      (i) => Number(i.id) === Number(item.id)
-    )
+    const currentItem = state.cart.find((i) => Number(i.id) === Number(item.id))
 
     return currentItem?.quantity || 0
   }
 
   const isItemSelected = (item) => {
-    return !!temporaryCart.find((c) => c.id === item.id)
+    return !!state.cart.find((c) => c.id === item.id)
   }
 
   if (state.entreeType.id === 0) {
@@ -232,77 +307,54 @@ const Entrees = () => {
     <div className="defaultWrapper">
       <div className={styles.wrapper}>
         <div className={`${styles.title} mb-7`}>Choose Entrees</div>
-        <div className={`defaultWrapper ${styles.quantities}`}>
-          <div>
-            <span className={styles.number}>{breakfastQuantity}</span>{' '}
-            Breakfasts Left
+        <div className={`${styles.quantitiesWrapper} mb-8`}>
+          <div className={styles.topBarQuantities}>
+            {menuItems.map((product) => (
+              <div key={product.id} className="px-3">
+                <span className={styles.number}>
+                  {getQuantityCountdown(product.id).quantity}
+                </span>{' '}
+                {product.title} Left
+              </div>
+            ))}
           </div>
-          <div className="px-3">
-            <span className={styles.number}>{entreeQuantity}</span> Entrees Left
-          </div>
-        </div>
-        <div className={styles.listHeader}>
-          <div className={styles.title}>Breakfasts</div>
-          <div className={`px-10 ${styles.quantities}`}>
-            <span className={styles.number}>{breakfastQuantity}</span>{' '}
-            Breakfasts Left
-          </div>
-        </div>
-        <div className={`${styles.cards} mb-10`}>
-          {breakfasts.map((breakfast) => {
-            return (
-              <CardQuantities
-                key={breakfast.id}
-                title={breakfast.name}
-                image={
-                  breakfast.feature_image
-                    ? breakfast.feature_image.src
-                    : breakfast.images.length > 0
-                    ? breakfast.images[0]
-                    : EMPTY_STATE_IMAGE
-                }
-                metafields={breakfast.metafields}
-                isChecked={isItemSelected(breakfast)}
-                quantity={getItemQuantity(breakfast)}
-                onClick={() => handleAddItem(breakfast, 'breakfast')}
-                onAdd={() => handleAddItem(breakfast, 'breakfast')}
-                onRemove={() => handleRemoveItem(breakfast, 'breakfast')}
-                disableAdd={breakfastQuantity === 0}
-              />
-            )
-          })}
         </div>
 
-        <div className={styles.listHeader}>
-          <div className={styles.title}>Entrees</div>
-          <div className={`px-10 ${styles.quantities}`}>
-            <span className={styles.number}>{entreeQuantity}</span> Entrees Left
+        {menuItems.map((content) => (
+          <div key={content.id}>
+            <div className={styles.listHeader}>
+              <div className={styles.title}>{content.title}</div>
+              <div className={`px-10 ${styles.quantities}`}>
+                <span className={styles.number}>
+                  {getQuantityCountdown(content.id).quantity}
+                </span>{' '}
+                {content.title} Left
+              </div>
+            </div>
+            <div className={`${styles.cards} mb-10`}>
+              {content.products.map((item) => (
+                <CardQuantities
+                  key={item.id}
+                  title={item.name}
+                  image={
+                    item.feature_image
+                      ? item.feature_image.src
+                      : item.images.length > 0
+                      ? item.images[0]
+                      : EMPTY_STATE_IMAGE
+                  }
+                  metafields={item.metafields}
+                  isChecked={isItemSelected(item)}
+                  quantity={getItemQuantity(item)}
+                  onClick={() => handleAddItem(item, content.id)}
+                  onAdd={() => handleAddItem(item, content.id)}
+                  onRemove={() => handleRemoveItem(item, content.id)}
+                  disableAdd={getQuantityCountdown(content.id).quantity === 0}
+                />
+              ))}
+            </div>
           </div>
-        </div>
-        <div className={`${styles.cards} mb-10`}>
-          {entrees.map((entree) => {
-            return (
-              <CardQuantities
-                key={entree.id}
-                title={entree.name}
-                image={
-                  entree.feature_image
-                    ? entree.feature_image.src
-                    : entree.images.length > 0
-                    ? entree.images[0]
-                    : EMPTY_STATE_IMAGE
-                }
-                metafields={entree.metafields}
-                isChecked={isItemSelected(entree)}
-                quantity={getItemQuantity(entree)}
-                onClick={() => handleAddItem(entree, 'entree')}
-                onAdd={() => handleAddItem(entree, 'entree')}
-                onRemove={() => handleRemoveItem(entree, 'entree')}
-                disableAdd={entreeQuantity === 0}
-              />
-            )
-          })}
-        </div>
+        ))}
       </div>
     </div>
   )

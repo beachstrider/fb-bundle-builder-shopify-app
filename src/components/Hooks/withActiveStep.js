@@ -2,7 +2,7 @@ import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { setActiveStep } from '../../store/slices/rootSlice'
 
-const withActiveStep = (WrappedComponent, stepId) => {
+const withActiveStep = (WrappedComponent, stepId, dispath) => {
   const VerifyCurrentStep = (props) => {
     const dispatch = useDispatch()
     const state = useSelector((state) => state)

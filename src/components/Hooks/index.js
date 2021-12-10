@@ -1,5 +1,5 @@
 import withActiveStep from './withActiveStep'
-import { getMenuItems, getBundle } from './withBundleApi'
+import { getMenuItems, getBundle, saveCart } from './withBundleApi'
 import useGuestToken from './useGuestToken'
 import getSelectedBundle from './getSelectedBundle'
 import {
@@ -18,5 +18,6 @@ export {
   useUserToken,
   hasUserToken,
   isUserAuthenticated,
-  useShopifyCart
+  useShopifyCart,
+  saveCart
 }

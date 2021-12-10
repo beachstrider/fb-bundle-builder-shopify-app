@@ -46,19 +46,38 @@
   align-items: center;
   margin-top: 100px;
 
-  & .customSpinnerIcon{
+  & .customSpinnerIcon {
     animation: spinner 0.6s linear infinite;
     height: 40px;
     width: 40px;
   }
 
-  & svg{
-    fill:  $primaryColor
+  & svg {
+    fill: $primaryColor;
   }
 
-  & .customSpinnerLabel{
+  & .customSpinnerLabel {
     font-size: 12px;
     margin-top: 10px;
+  }
+}
+
+.customSpinnerSecondary {
+  margin: auto;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  & .customSpinnerIcon {
+    animation: spinner 0.6s linear infinite;
+    height: 2rem;
+    width: 2rem;
+  }
+
+  & svg {
+    fill: $white;
   }
 }
 
@@ -139,11 +158,11 @@ $multiplier: 0.5rem;
       background: darken($primaryColor, 10%);
       cursor: pointer;
     }
-    &:disabled{
+    &:disabled {
       background: $grayMedium;
       border: 1px solid $grayMedium;
     }
-    &.largeButton{
+    &.largeButton {
       font-size: 22px;
       padding: 20px 40px;
       box-shadow: 0px 0px 16px rgb(0 0 0 / 15%);
@@ -163,16 +182,28 @@ $multiplier: 0.5rem;
       background: darken($white, 10%);
       cursor: pointer;
     }
-    &:disabled{
+    &:disabled {
       border: 1px solid $grayMedium;
       color: $grayMedium;
     }
 
-    &.largeButton{
+    &.largeButton {
       font-size: 22px;
       padding: 20px 40px;
       box-shadow: 0px 0px 16px rgb(0 0 0 / 15%);
     }
+  }
+
+  & .disabledButton {
+    background: $grayMedium;
+    color: $white;
+    border: 1px solid $grayMedium;
+    border-radius: 2em;
+    padding: 5px 40px;
+    text-decoration: none;
+    line-height: 16px;
+    box-shadow: unset !important;
+    cursor: not-allowed;
   }
 
   & .lightButton {
@@ -209,7 +240,7 @@ $multiplier: 0.5rem;
     background: darken($white, 10%);
     cursor: pointer;
   }
-  &:disabled{
+  &:disabled {
     border: 1px solid $grayMedium;
     color: $grayMedium;
   }
@@ -226,12 +257,12 @@ $multiplier: 0.5rem;
     background: darken($primaryColor, 10%);
     cursor: pointer;
   }
-  &:disabled{
+  &:disabled {
     background: $grayMedium;
     border: 1px solid $grayMedium;
   }
 }
-.bundleRow{
+.bundleRow {
   display: flex;
   flex-direction: column;
 
