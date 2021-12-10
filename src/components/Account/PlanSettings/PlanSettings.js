@@ -17,13 +17,14 @@ import {
 import * as dayjs from 'dayjs';
 import { request } from '../../../utils';
 import { Spinner } from '../../Global';
+import { DeliveryDayModal } from '../Components/DeliveryDayModal';
 
 const PlanSettings = () => {
 
   if(shopCustomer.id === 0){
     return <Redirect push to="/" />
   }
-  
+
   const state = useSelector((state) => state)
   const dispatch = useDispatch()
   const [subscriptions, setSubscriptions] = React.useState([])
@@ -56,6 +57,10 @@ const PlanSettings = () => {
       )
       return `Bearer ${tokenResponse.token}`
     }
+  }
+
+  const updateDelivery = (day) => {
+    console.log('the day: ', dayjs().day(day).format('dddd'))
   }
 
   const getOrdersToShow = async (token) => {
@@ -173,7 +178,7 @@ const PlanSettings = () => {
                         <div className={styles.contentCardWrapper}>
                             <div className={styles.contentCardNavigation}>
                                 <h3 className={styles.underlinedHeader}>Current Order Date</h3>
-                                <Link to="/dashboard" className="secondaryButton">Edit Order</Link>
+                                <DeliveryDayModal label="Edit" deliveryDay={subscription.deliveryDay} onChange={updateDelivery} />
                             </div>
                             <div className={styles.currentOrderMenu}>
                                 <p>Delivery Day: {dayjs().day(subscription.deliveryDay).format('dddd')}</p>
