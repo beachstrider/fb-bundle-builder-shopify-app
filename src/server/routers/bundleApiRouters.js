@@ -126,4 +126,25 @@ app.get('/bundle-api/bundles', async (req, res) => {
   return res.status(response.status).send(response.data)
 })
 
+app.get('/bundle-api/subscriptions/:subscriptionId/orders', async (req, res) => {
+  const response = await request(
+    `${process.env.BUNDLE_API_URL}/api/subscriptions/${req.params.subscriptionId}/orders`,
+    {
+      method: 'get',
+      headers: {
+        Accept: 'application/json',
+        authorization: req.headers.authorization,
+      }
+    }
+  )
+  console.log('response: ', response)
+  if (response.data) {
+    return res.status(200).send(response.data)
+  }
+
+  res.status(400).send({
+    message: 'Can not retrieve menu items'
+  })
+})
+
 module.exports = app
