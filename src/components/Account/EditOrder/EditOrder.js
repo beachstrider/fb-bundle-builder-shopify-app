@@ -27,6 +27,7 @@ const EditOrder = () => {
     const [bundleQty, setBundleQty] = useState({})
     const [disabled, setDisabled] = useState(true)
     const [editable, setEditable] = useState(false)
+    const [loading, setLoading] = React.useState(true);
 
     React.useEffect(() => {
         dispatch(displayHeader(false))
@@ -59,20 +60,33 @@ const EditOrder = () => {
           return `Bearer ${tokenResponse.token}`
         }
       }
-    
-
-    if(shopCustomer.id === 0){
-        return <Redirect push to="/" />
-    }
 
     const getCustomerBundleItems = async (token) => {
       const thisWeek = dayjs(query.get("date"));
       const subApi = await request(`${process.env.PROXY_APP_URL}/bundle-api/subscriptions/${orderId}/orders`, { method: 'get', data: '', headers: { authorization: token }}, 3)
       console.log('this is the subscription orders', subApi)
+      const editItemsArr = []
       if(subApi.data.data){
         subApi.data.data.forEach( order => {
+
           if(order.bundle_configuration_content.display_after){
             console.log('there is a config')
+            order.items.forEach( product => {
+              const shopItem = shopProducts.map(p => p.variants.filter(e => e.id === product.platform_variant_id));
+              console.log('found product: ', shopItem);
+              if(shopItem){
+                const shopItemVariant = shopItem.variants.filter(e => e.id === product.platform_variant_id)[0];
+                console.log('found variant: ', shopItemVariant);
+                if(shopItemVariant){
+                  editItemsArr.push({
+                    title: shopItem ? shopItem.title : 'default product',
+                    image: shopItem && shopItem.images.length > 0 ? shopItem.images[0]: '//cdn.shopify.com/shopifycloud/shopify/assets/no-image-2048-5e88c1b20e087fb7bbe9a3771824e743c244f437e4f8ba93bbf7b11b53f7824c_750x.gif',
+                    metafields: shopItemVariant.metafields,
+                    quantity: product.quantity
+                  })
+                }
+              }
+            })
           }
         })
       }
@@ -117,7 +131,17 @@ const EditOrder = () => {
         console.log('My order: ', myOrder);
     }
     
+    if(shopCustomer.id === 0){
+      return <Redirect push to="/" />
+    }
 
+    if (loading) {
+      // TODO: work in progress
+      return (
+        <Spinner label="Loading..." />
+      )
+    }
+    
     return (
         <div className="contentWrapper">
             <div>

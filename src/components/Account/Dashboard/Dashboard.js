@@ -40,22 +40,20 @@ const Dashboard = () => {
 
 
   React.useEffect( () => {
-    console.log('The shopify customer: ', shopCustomer)
+    // console.log('The shopify customer: ', shopCustomer)
 
     dispatch(displayHeader(false))
     dispatch(displayFooter(false))
     dispatch(selectFaqType(null))
 
     if (!state.tokens.userToken) {
-      console.log('call for token')
       const thisToken = getToken();
       getOrdersToShow(thisToken);
     } else {
-      console.log('token already there')
       getOrdersToShow(state.tokens.userToken);
     }
     
-  }, []);
+}, []);
 
   const getToken = async () => {
     const tokenResponse = await useUserToken();
@@ -104,102 +102,102 @@ const Dashboard = () => {
     if(subApi.data.message && subApi.data.message !== 'Unexpected error.'){
       getToken().then(token => getOrdersToShow(token))
     }
-    // if(subApi.data.data){
-    //   for (const sub of subApi.data.data) {
-    //     const thisLoopSubList = [];
-    //     const subscriptionId = sub.id;
+    if(subApi.data.data){
+      for (const sub of subApi.data.data) {
+        const thisLoopSubList = [];
+        const subscriptionId = sub.id;
 
-    //     for (const [ index, order ] of sub.orders.entries()) {
-    //       const lastOrder = shopCustomer.orders.filter( ord => ord.id == order.platform_order_id )[0];
+        for (const [ index, order ] of sub.orders.entries()) {
+          const lastOrder = shopCustomer.orders.filter( ord => ord.id == order.platform_order_id )[0];
 
-    //       const lastOrderItems = [];
-    //       const nextSunday = dayjs().day(0).add((7 * index), 'day')
-    //       if(lastOrder){
-    //         lastOrder.lineItems.forEach(item => {
-    //           const shopProd = shopProducts.filter( p => p.id == item.productId)[0]
-    //           lastOrderItems.push({
-    //             title: item.title,
-    //             platform_img: shopProd && shopProd.images.length > 0 ? shopProd.images[0]: '//cdn.shopify.com/shopifycloud/shopify/assets/no-image-2048-5e88c1b20e087fb7bbe9a3771824e743c244f437e4f8ba93bbf7b11b53f7824c_750x.gif',
-    //             quantity: item.quantity
-    //           })
-    //         })
+          const lastOrderItems = [];
+          const nextSunday = dayjs().day(0).add((7 * index), 'day')
+          if(lastOrder){
+            lastOrder.lineItems.forEach(item => {
+              const shopProd = shopProducts.filter( p => p.id == item.productId)[0]
+              lastOrderItems.push({
+                title: item.title,
+                platform_img: shopProd && shopProd.images.length > 0 ? shopProd.images[0]: '//cdn.shopify.com/shopifycloud/shopify/assets/no-image-2048-5e88c1b20e087fb7bbe9a3771824e743c244f437e4f8ba93bbf7b11b53f7824c_750x.gif',
+                quantity: item.quantity
+              })
+            })
 
-    //         thisLoopSubList.push({
-    //           items: lastOrderItems,
-    //           subId: sub.id,
-    //           subscriptionType: sub.subscription_type,
-    //           subscriptionSubType: sub.subscription_sub_type,
-    //           date: nextSunday.format('YYYY-MM-DD'),
-    //           status: 'sent',
-    //           trackingUrl: lastOrder.fulfillments.length > 0 ? lastOrder.fulfillments[0].trackingUrl : lastOrder.orderLink,
-    //           subscriptionDate: nextSunday.format('MMM DD')
-    //         });
-    //       }
+            thisLoopSubList.push({
+              items: lastOrderItems,
+              subId: sub.id,
+              subscriptionType: sub.subscription_type,
+              subscriptionSubType: sub.subscription_sub_type,
+              date: nextSunday.format('YYYY-MM-DD'),
+              status: 'sent',
+              trackingUrl: lastOrder.fulfillments.length > 0 ? lastOrder.fulfillments[0].trackingUrl : lastOrder.orderLink,
+              subscriptionDate: nextSunday.format('MMM DD')
+            });
+          }
           
-    //       if(!order.platform_order_id){
-    //         // call for bundle and look for selected menu's
-    //         const itemList = await request(`${process.env.PROXY_APP_URL}/bundle-api/subscriptions/${subscriptionId}/orders`, { method: 'get', data: '', headers: { authorization: token }}, 3)
-    //         console.log('requesting the selected items: ', itemList)
-    //         if(itemList){
-    //           if(itemList.items){
-    //             itemList.items.forEach(item => {
-    //               // TODO drill down to the variant
-    //               // const itemFromStore = shopifyProducts.filter(sI => item.platform_product_variant_id === sI.variant.id)
-    //               const shopItem = shopifyProducts.map(p => p.variants.filter(e => e.id === item.platform_variant_id))[0];
-    //               lastOrderItems.push({
-    //                 title: shopItem ? shopItem.title : 'default product',
-    //                 platform_img: shopItem && shopItem.images.length > 0 ? shopItem.images[0]: '//cdn.shopify.com/shopifycloud/shopify/assets/no-image-2048-5e88c1b20e087fb7bbe9a3771824e743c244f437e4f8ba93bbf7b11b53f7824c_750x.gif',
-    //                 quantity: item.quantity,
-    //                 type: sub.subscription_sub_type
-    //               })
-    //             })
-    //           }
-    //         } 
-    //       }
+          if(!order.platform_order_id){
+            // call for bundle and look for selected menu's
+            const itemList = await request(`${process.env.PROXY_APP_URL}/bundle-api/subscriptions/${subscriptionId}/orders`, { method: 'get', data: '', headers: { authorization: token }}, 3)
+            console.log('requesting the selected items: ', itemList)
+            if(itemList){
+              if(itemList.items){
+                itemList.items.forEach(item => {
+                  // TODO drill down to the variant
+                  // const itemFromStore = shopifyProducts.filter(sI => item.platform_product_variant_id === sI.variant.id)
+                  const shopItem = shopifyProducts.map(p => p.variants.filter(e => e.id === item.platform_variant_id))[0];
+                  lastOrderItems.push({
+                    title: shopItem ? shopItem.title : 'default product',
+                    platform_img: shopItem && shopItem.images.length > 0 ? shopItem.images[0]: '//cdn.shopify.com/shopifycloud/shopify/assets/no-image-2048-5e88c1b20e087fb7bbe9a3771824e743c244f437e4f8ba93bbf7b11b53f7824c_750x.gif',
+                    quantity: item.quantity,
+                    type: sub.subscription_sub_type
+                  })
+                })
+              }
+            } 
+          }
 
-    //       if(!weeksMenu.includes(nextSunday.format('MMM DD'))){ weeksMenu.push(nextSunday.format('MMM DD')); }
-    //     }
+          if(!weeksMenu.includes(nextSunday.format('MMM DD'))){ weeksMenu.push(nextSunday.format('MMM DD')); }
+        }
 
-    //     if(thisLoopSubList.length < 4){
-    //       for(let j = thisLoopSubList.length; thisLoopSubList.length < 4; j++){
-    //         const nextSunday = dayjs().day(0).add((7 * j), 'day');
+        if(thisLoopSubList.length < 4){
+          for(let j = thisLoopSubList.length; thisLoopSubList.length < 4; j++){
+            const nextSunday = dayjs().day(0).add((7 * j), 'day');
 
-    //         await getMissingConfigurations(nextSunday.format('YYYY-MM-DD'), token, 1, 1).then( data => {
-    //           thisLoopSubList.push({
-    //             items: data,
-    //             subId: sub.id,
-    //             subscriptionType: sub.subscription_type,
-    //             subscriptionSubType: sub.subscription_sub_type,
-    //             date: nextSunday.format('YYYY-MM-DD'),
-    //             status: 'pending',
-    //             subscriptionDate: nextSunday.format('MMM DD')
-    //           })
-    //         });
+            await getMissingConfigurations(nextSunday.format('YYYY-MM-DD'), token, 1, 1).then( data => {
+              thisLoopSubList.push({
+                items: data,
+                subId: sub.id,
+                subscriptionType: sub.subscription_type,
+                subscriptionSubType: sub.subscription_sub_type,
+                date: nextSunday.format('YYYY-MM-DD'),
+                status: 'pending',
+                subscriptionDate: nextSunday.format('MMM DD')
+              })
+            });
 
-    //         if(!weeksMenu.includes(nextSunday.format('MMM DD'))){ weeksMenu.push(nextSunday.format('MMM DD')); }
-    //       }
-    //     }
+            if(!weeksMenu.includes(nextSunday.format('MMM DD'))){ weeksMenu.push(nextSunday.format('MMM DD')); }
+          }
+        }
 
-    //     newWeeksArr = newWeeksArr.concat(thisLoopSubList)
-    //   }
-    // }
+        newWeeksArr = newWeeksArr.concat(thisLoopSubList)
+      }
+    }
 
-    // newWeeksArr.forEach((sub) => {
-    //   const today = dayjs(new Date()).day(0).add(14, 'day').startOf('day');
-    //   const thisYear = dayjs().year();
-    //   const pastDate = dayjs(new Date(`${sub.subscriptionDate} ${thisYear}`)).startOf('day');
+    newWeeksArr.forEach((sub) => {
+      const today = dayjs(new Date()).day(0).add(14, 'day').startOf('day');
+      const thisYear = dayjs().year();
+      const pastDate = dayjs(new Date(`${sub.subscriptionDate} ${thisYear}`)).startOf('day');
 
-    //   if(!pastDate.isSameOrAfter(today)){
-    //     activeWeeksArr.push(sub);
-    //     activeWeeksLimit.push(5)
-    //   }
-    // })
+      if(!pastDate.isSameOrAfter(today)){
+        activeWeeksArr.push(sub);
+        activeWeeksLimit.push(5)
+      }
+    })
 
-    // setSubscriptions(newWeeksArr);
-    // setWeeksMenu(weeksMenu)
-    // setActive(activeWeeksArr)
-    // setLimit(activeWeeksLimit)
-    // setLoading(false)
+    setSubscriptions(newWeeksArr);
+    setWeeksMenu(weeksMenu)
+    setActive(activeWeeksArr)
+    setLimit(activeWeeksLimit)
+    setLoading(false)
   }
 
   const handleChange = (week) => {
