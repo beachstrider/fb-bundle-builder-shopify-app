@@ -3,6 +3,12 @@ const path = require('path')
 require('dotenv').config({ path: path.resolve(__dirname, '.env') })
 const { request, objectToQueryString } = require('../utils')
 
+app.get('/health', async (req, res) => {
+  res.status(200).send({
+    message: 'Ok'
+  })
+})
+
 app.post('/bundle-api/token/guest', async (req, res) => {
   const response = await request(`${process.env.BUNDLE_API_URL}/api/auth`, {
     method: 'post',

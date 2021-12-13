@@ -184,9 +184,8 @@ const Dashboard = () => {
 
     newWeeksArr.forEach((sub) => {
       const today = dayjs(new Date()).day(0).add(14, 'day').startOf('day');
-      const thisYear = dayjs().year();
-      const pastDate = dayjs(new Date(`${sub.subscriptionDate} ${thisYear}`)).startOf('day');
-
+      const pastDate = dayjs(new Date(`${sub.date}`)).startOf('day');
+      console.log(`Date is ${pastDate.format('MM-DD-YYYY')} same or after ${today.format('MM-DD-YYYY')}`)
       if(!pastDate.isSameOrAfter(today)){
         activeWeeksArr.push(sub);
         activeWeeksLimit.push(5)

@@ -72,7 +72,12 @@ const EditOrder = () => {
           if(order.bundle_configuration_content.display_after){
             console.log('there is a config')
             order.items.forEach( product => {
-              const shopItem = shopProducts.map(p => p.variants.filter(e => e.id === product.platform_variant_id));
+              const shopItem = shopProducts.map(p => {
+                if(p.variants.filter(e => e.id === product.platform_variant_id)){
+                  return p
+                }
+                return false
+              });
               console.log('found product: ', shopItem);
               if(shopItem){
                 const shopItemVariant = shopItem.variants.filter(e => e.id === product.platform_variant_id)[0];
