@@ -1,7 +1,7 @@
 import { Icon } from '@shopify/polaris'
 import { MobileAcceptMajor } from '@shopify/polaris-icons'
 import React from 'react'
-import styles from './CardCheckMark.module.scss'
+import styles from './CardCheckmark.module.scss'
 
 const CardCheckMark = ({ children, isSelected, onClick }) => {
   return (

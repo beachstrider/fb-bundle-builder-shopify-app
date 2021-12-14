@@ -22,7 +22,8 @@
   "scripts": {
     "dev": "npx webpack --mode development --watch",
     "start": "webpack-dev-server --mode development",
-    "server": "./node_modules/nodemon/bin/nodemon.js server.js",
+    "local": "./node_modules/nodemon/bin/nodemon.js server.js",
+    "server": "NODE_ENV=production node server.js",
     "build": "npx webpack --mode production",
     "build:start": "yarn build; yarn server",
     "test": "jest"
