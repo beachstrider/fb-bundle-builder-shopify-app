@@ -23,7 +23,7 @@ import {
   PlanSettings,
   EditOrder
 } from './components/Account'
-import Faq from './components/FAQ/Faq'
+import Faq from './components/Faq/Faq'
 
 function App () {
   const state = useSelector((state) => state)
