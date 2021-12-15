@@ -1,9 +1,10 @@
 # Filename: Dockerfile
-FROM node:16-alpine
+FROM aws/docker/library/node:lts-alpine
 WORKDIR /usr/src/app
 COPY package*.json ./
-RUN yarn install
+RUN node -v
+RUN npm install
 COPY . .
 RUN yarn build
 EXPOSE 3000
-CMD ["yarn", "server"]
+CMD ["npm", "run", "server"]
