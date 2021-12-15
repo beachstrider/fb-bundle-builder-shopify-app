@@ -48,8 +48,10 @@ const Dashboard = () => {
 
     if (!state.tokens.userToken) {
       const thisToken = getToken();
+      console.log('need new token')
       getOrdersToShow(thisToken);
     } else {
+      console.log('token exists')
       getOrdersToShow(state.tokens.userToken);
     }
     
@@ -102,7 +104,10 @@ const Dashboard = () => {
     const subApi = await request(`${process.env.PROXY_APP_URL}/bundle-api/subscriptions`, { method: 'get', data: '', headers: { authorization: token }}, 3)
     console.log('subApi response: ', subApi);
     if(subApi.data.message && subApi.data.message !== 'Unexpected error.'){
-      getToken().then(token => getOrdersToShow(token))
+      console.log('token is bad')
+      const newToken = await getToken()
+      console.log('got new token: ', newToken)
+      getOrdersToShow(newToken)
     }
     if(subApi.data.data){
       for (const sub of subApi.data.data) {
@@ -186,8 +191,8 @@ const Dashboard = () => {
 
     newWeeksArr.forEach((sub) => {
       const today = dayjs(new Date()).day(0).add(14, 'day').startOf('day');
-      const pastDate = dayjs(new Date(`${sub.date}`)).startOf('day');
-      console.log(`Date is ${pastDate.format('MM-DD-YYYY')} same or after ${today.format('MM-DD-YYYY')}`)
+      const pastDate = dayjs(sub.date).startOf('day');
+      console.log(`Date is ${sub.date} same or after ${today.format('MM-DD-YYYY')}`)
       if(!pastDate.isSameOrAfter(today)){
         activeWeeksArr.push(sub);
         activeWeeksLimit.push(5)

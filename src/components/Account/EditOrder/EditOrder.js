@@ -92,50 +92,8 @@ const EditOrder = () => {
       
       const editItemsArr = []
       if(subApi.data.data){
-        subApi.data.data.forEach( async order => {
-          if(order.bundle_configuration_content.display_after){
-            console.log('there is a config')
-            order.items.forEach( product => {
-              let thisProd = false;
-              let thisVariants = false;
-              shopProducts.forEach(p => {
-                if(p.variants.filter(e => e.id === product.platform_variant_id).length > 0){
-                  thisProd = p
-                  thisVariants = p.variants.filter(e => e.id === product.platform_variant_id)[0]
-                }
-              });
-              console.log('found product: ', thisProd);
-              if(thisProd){
-                console.log('found variant: ', thisVariants);
-                if(thisVariants){
-                  editItemsArr.push({
-                    title: thisProd ? thisProd.title : 'default product',
-                    image: thisProd && thisProd.images.length > 0 ? thisProd.images[0]: '//cdn.shopify.com/shopifycloud/shopify/assets/no-image-2048-5e88c1b20e087fb7bbe9a3771824e743c244f437e4f8ba93bbf7b11b53f7824c_750x.gif',
-                    metafields: thisVariants.metafields,
-                    quantity: product.quantity
-                  })
-                }
-              }
-            })
-          }
-
-          const bundleProducts = await getBundleItems(order.subscription.bundle_id, order.bundle_configuration_content_id, token)
-          console.log('these are the defaults', bundleProducts )
-          bundleProducts.forEach( product => {
-            const thisProduct = shopProducts.filter( p => p.id === product.platform_product_id )[0]
-              editItemsArr.push({
-                title: thisProduct ? thisProduct.title : 'default product',
-                image: thisProduct && thisProduct.images.length > 0 ? thisProduct.images[0]: '//cdn.shopify.com/shopifycloud/shopify/assets/no-image-2048-5e88c1b20e087fb7bbe9a3771824e743c244f437e4f8ba93bbf7b11b53f7824c_750x.gif',
-                metafields: [{
-                  variantId: '123',
-                  key: 'total_fat',
-                  name: 'Total Fat:', 
-                  value: '123'
-                }],
-                quantity: 0
-              })
-          })
-        })
+        const bundle = await request(`${process.env.PROXY_APP_URL}/bundle-api/subscriptions/${orderId}/orders`, { method: 'get', data: '', headers: { authorization: token }}, 3)
+        console.log('this is the subscription orders', bundle)
       }
     }
 
