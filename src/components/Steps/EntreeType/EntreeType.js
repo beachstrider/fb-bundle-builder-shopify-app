@@ -6,7 +6,8 @@ import {
   displayFooter,
   setEntreeType,
   setEntreeSubType,
-  setTokens
+  setTokens,
+  setIsNextButtonActive
 } from '../../../store/slices/rootSlice'
 import { smoothScrollingToId } from '../../../utils'
 import { useGuestToken, withActiveStep } from '../../Hooks'
@@ -89,9 +90,16 @@ const EntreeType = () => {
       dispatch(displayFooter(true))
     } else {
       dispatch(selectFaqType(null))
-      dispatch(displayFooter(false))
     }
   }, [])
+
+  useEffect(() => {
+    if (state.entreeType.id !== 0 && state.entreeSubType.id !== 0) {
+      dispatch(setIsNextButtonActive(true))
+    } else {
+      dispatch(setIsNextButtonActive(false))
+    }
+  }, [state.entreeType, state.entreeSubType])
 
   const generateToken = async () => {
     const currentToken = await useGuestToken()

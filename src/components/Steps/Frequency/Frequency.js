@@ -4,7 +4,8 @@ import {
   setBundle,
   selectFaqType,
   displayHeader,
-  displayFooter
+  displayFooter,
+  setIsNextButtonActive
 } from '../../../store/slices/rootSlice'
 import {
   FrequencyBreakfast,
@@ -87,6 +88,7 @@ const Frequency = () => {
     dispatch(selectFaqType(FAQ_TYPE))
     dispatch(displayHeader(true))
     dispatch(displayFooter(true))
+    dispatch(setIsNextButtonActive(true))
 
     if (!state.bundle.id) {
       const defaultEntree = mapBundleToStore(
