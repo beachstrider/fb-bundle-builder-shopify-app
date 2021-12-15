@@ -13,6 +13,18 @@ import * as dayjs from 'dayjs';
 import { request } from '../../../utils';
 import { Spinner } from '../../Global';
 
+// editItemsArr[config.id].push({
+//   title: thisProduct ? thisProduct.title : 'default product',
+//   image: thisProduct && thisProduct.images.length > 0 ? thisProduct.images[0]: '//cdn.shopify.com/shopifycloud/shopify/assets/no-image-2048-5e88c1b20e087fb7bbe9a3771824e743c244f437e4f8ba93bbf7b11b53f7824c_750x.gif',
+//   metafields: [{
+//     variantId: '123',
+//     key: 'total_fat',
+//     name: 'Total Fat:', 
+//     value: '123'
+//   }],
+//   quantity: 0
+// })
+
 function useQuery () {
   const { search } = useLocation();
 
@@ -35,7 +47,7 @@ const EditOrder = () => {
         dispatch(selectFaqType(null))
         console.log('orderId: ',orderId)
         console.log('query: ',query.get("date"))
-
+        console.log('shop product example: ', shopProducts[0])
         // setBundleQty(qtyObj)
         // setBundle(newObj)
         if (!state.tokens.userToken) {
@@ -61,38 +73,68 @@ const EditOrder = () => {
         }
       }
 
+    const getBundleItems = async ( bundleId, configId, token) => {
+      const thisWeek = dayjs(query.get("date"));
+      console.log(`${process.env.PROXY_APP_URL}/bundle-api/bundles/${bundleId}/configurations/${configId}/contents?display_after=${thisWeek.format('YYYY-MM-DD')}T00:00:00.000Z`)
+      const subApi = await request(`${process.env.PROXY_APP_URL}/bundle-api/bundles/${bundleId}/configurations/${configId}/contents?display_after=${thisWeek.format('YYYY-MM-DD')}T00:00:00.000Z`, { method: 'get', data: '', headers: { authorization: token }}, 3)
+      console.log('this is the bundle products', subApi)
+      return subApi.data.data[0].products
+    };
+
     const getCustomerBundleItems = async (token) => {
       const thisWeek = dayjs(query.get("date"));
       const subApi = await request(`${process.env.PROXY_APP_URL}/bundle-api/subscriptions/${orderId}/orders`, { method: 'get', data: '', headers: { authorization: token }}, 3)
       console.log('this is the subscription orders', subApi)
+
+      // TODO call bundle to get configurations
+      // TODO Check display date for config and call products available
+      // TODO Check customer order and add in QTY's if previously added
+      
       const editItemsArr = []
       if(subApi.data.data){
-        subApi.data.data.forEach( order => {
-
+        subApi.data.data.forEach( async order => {
           if(order.bundle_configuration_content.display_after){
             console.log('there is a config')
             order.items.forEach( product => {
-              const shopItem = shopProducts.map(p => {
-                if(p.variants.filter(e => e.id === product.platform_variant_id)){
-                  return p
+              let thisProd = false;
+              let thisVariants = false;
+              shopProducts.forEach(p => {
+                if(p.variants.filter(e => e.id === product.platform_variant_id).length > 0){
+                  thisProd = p
+                  thisVariants = p.variants.filter(e => e.id === product.platform_variant_id)[0]
                 }
-                return false
               });
-              console.log('found product: ', shopItem);
-              if(shopItem){
-                const shopItemVariant = shopItem.variants.filter(e => e.id === product.platform_variant_id)[0];
-                console.log('found variant: ', shopItemVariant);
-                if(shopItemVariant){
+              console.log('found product: ', thisProd);
+              if(thisProd){
+                console.log('found variant: ', thisVariants);
+                if(thisVariants){
                   editItemsArr.push({
-                    title: shopItem ? shopItem.title : 'default product',
-                    image: shopItem && shopItem.images.length > 0 ? shopItem.images[0]: '//cdn.shopify.com/shopifycloud/shopify/assets/no-image-2048-5e88c1b20e087fb7bbe9a3771824e743c244f437e4f8ba93bbf7b11b53f7824c_750x.gif',
-                    metafields: shopItemVariant.metafields,
+                    title: thisProd ? thisProd.title : 'default product',
+                    image: thisProd && thisProd.images.length > 0 ? thisProd.images[0]: '//cdn.shopify.com/shopifycloud/shopify/assets/no-image-2048-5e88c1b20e087fb7bbe9a3771824e743c244f437e4f8ba93bbf7b11b53f7824c_750x.gif',
+                    metafields: thisVariants.metafields,
                     quantity: product.quantity
                   })
                 }
               }
             })
           }
+
+          const bundleProducts = await getBundleItems(order.subscription.bundle_id, order.bundle_configuration_content_id, token)
+          console.log('these are the defaults', bundleProducts )
+          bundleProducts.forEach( product => {
+            const thisProduct = shopProducts.filter( p => p.id === product.platform_product_id )[0]
+              editItemsArr.push({
+                title: thisProduct ? thisProduct.title : 'default product',
+                image: thisProduct && thisProduct.images.length > 0 ? thisProduct.images[0]: '//cdn.shopify.com/shopifycloud/shopify/assets/no-image-2048-5e88c1b20e087fb7bbe9a3771824e743c244f437e4f8ba93bbf7b11b53f7824c_750x.gif',
+                metafields: [{
+                  variantId: '123',
+                  key: 'total_fat',
+                  name: 'Total Fat:', 
+                  value: '123'
+                }],
+                quantity: 0
+              })
+          })
         })
       }
     }
@@ -164,7 +206,7 @@ const EditOrder = () => {
                         <p className={styles.subHeaders}><span className={styles.greenNumbers}>{bundleQty[config.id]}</span> {config.title} Left</p>      
                     </div>
                     <div className={styles.menuRow}>
-                        {config.contents.map((item, idx) => (
+                        {products.map((item, idx) => (
                             <div key={idx} className={`${styles.menuItemWrapper} mb-10 px-1`}>
                                 <CardQuantities
                                     title={item.ProductVariants.title}
