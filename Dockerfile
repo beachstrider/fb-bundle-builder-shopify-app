@@ -1,5 +1,5 @@
 # Filename: Dockerfile
-FROM aws/docker/library/node:lts-alpine
+FROM public.ecr.aws/docker/library/node:lts-alpine
 WORKDIR /usr/src/app
 COPY package*.json ./
 RUN node -v
