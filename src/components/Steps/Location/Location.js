@@ -6,13 +6,15 @@ import {
   displayHeader,
   displayFooter,
   setLocation,
-  setEmail as setStoreEmail
+  setEmail as setStoreEmail,
+  setIsNextButtonActive
 } from '../../../store/slices/rootSlice'
 import { InputEmail, InputText } from '../Components/Inputs'
 import { isValidEmail, request } from '../../../utils'
 import { LocationDate } from '.'
 import styles from './Location.module.scss'
 import { withActiveStep } from '../../Hooks'
+import SpinnerIcon from '../../Global/SpinnerIcon'
 
 const FAQ_TYPE = 'location'
 const STEP_ID = 2
@@ -25,26 +27,20 @@ const deliveryZones = [
     deliveryDates: [
       {
         id: 0,
-        weekDay: 'Tuesday',
-        month: 'October',
-        day: '18',
-        ordinal: 'th',
+        day: 1,
+        disabled: true,
         isSelected: false
       },
       {
         id: 1,
-        weekDay: 'Wednesday',
-        month: 'October',
-        day: '19',
-        ordinal: 'th',
+        day: 3,
+        disabled: false,
         isSelected: false
       },
       {
         id: 2,
-        weekDay: 'Thursday',
-        month: 'October',
-        day: '20',
-        ordinal: 'th',
+        day: 5,
+        disabled: false,
         isSelected: true
       }
     ]
@@ -56,26 +52,20 @@ const deliveryZones = [
     deliveryDates: [
       {
         id: 0,
-        weekDay: 'Tuesday',
-        month: 'October',
-        day: '18',
-        ordinal: 'th',
+        day: 0,
+        disabled: false,
         isSelected: false
       },
       {
         id: 1,
-        weekDay: 'Wednesday',
-        month: 'October',
-        day: '19',
-        ordinal: 'th',
+        day: 1,
+        disabled: false,
         isSelected: false
       },
       {
         id: 2,
-        weekDay: 'Thursday',
-        month: 'October',
-        day: '20',
-        ordinal: 'th',
+        day: 2,
+        disabled: false,
         isSelected: true
       }
     ]
@@ -87,26 +77,20 @@ const deliveryZones = [
     deliveryDates: [
       {
         id: 0,
-        weekDay: 'Tuesday',
-        month: 'October',
-        day: '18',
-        ordinal: 'th',
+        day: 0,
+        disabled: false,
         isSelected: false
       },
       {
         id: 1,
-        weekDay: 'Wednesday',
-        month: 'October',
-        day: '19',
-        ordinal: 'th',
+        day: 1,
+        disabled: false,
         isSelected: false
       },
       {
         id: 2,
-        weekDay: 'Thursday',
-        month: 'October',
-        day: '20',
-        ordinal: 'th',
+        day: 2,
+        disabled: false,
         isSelected: true
       }
     ]
@@ -122,9 +106,11 @@ const Location = () => {
   const [zipCode, setZipCode] = useState('')
   const [zipCodeError, setZipCodeError] = useState('')
   const [emailError, setEmailError] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
     dispatch(displayHeader(true))
+    dispatch(setIsNextButtonActive(true))
 
     setZones(deliveryZones)
 
@@ -164,6 +150,7 @@ const Location = () => {
     deliveryDates.find((date) => date.isSelected)
 
   const handleSubmit = async () => {
+    setIsLoading(true)
     if (!email || !isValidEmail(email)) {
       return setEmailError('Please type a valid email')
     }
@@ -259,7 +246,7 @@ const Location = () => {
               className={`button primaryButton ${styles.buttonWrapper}`}
               onClick={handleSubmit}
             >
-              Submit
+              {isLoading ? <SpinnerIcon /> : 'Submit'}
             </div>
           </div>
         </div>

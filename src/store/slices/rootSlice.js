@@ -5,6 +5,7 @@ const rootSlice = createSlice({
   initialState: {
     displayHeader: false,
     displayFooter: false,
+    isNextButtonActive: true,
     steps: [
       {
         id: 1,
@@ -37,7 +38,7 @@ const rootSlice = createSlice({
       {
         id: 5,
         name: 'Step 5',
-        description: 'Review',
+        description: 'Next',
         path: '/steps/5',
         isActive: false
       }
@@ -45,8 +46,10 @@ const rootSlice = createSlice({
     bundle: {
       id: 0,
       price: 0,
+      weeklyPrice: '',
       breakfast: {
-        id: 0
+        id: 0,
+        tag: ''
       }
     },
     entreeType: { id: 0 },
@@ -61,7 +64,8 @@ const rootSlice = createSlice({
     tokens: {
       guestToken: '',
       userToken: ''
-    }
+    },
+    triggerLastStep: false
   },
   reducers: {
     displayHeader: (state, action) => {
@@ -103,8 +107,45 @@ const rootSlice = createSlice({
     setTokens: (state, action) => {
       state.tokens = action.payload
     },
-    cartUpdate: (state, action) => {
-      state.cart = action.payload
+    setIsNextButtonActive: (state, action) => {
+      state.isNextButtonActive = action.payload
+    },
+    cartClear: (state) => {
+      state.cart = []
+    },
+    cartAddItem: (state, action) => {
+      const existingItem = state.cart.find(
+        (i) => Number(i.id) === Number(action.payload.id)
+      )
+
+      if (!existingItem) {
+        state.cart = [
+          ...state.cart,
+          {
+            ...action.payload,
+            quantity: 1
+          }
+        ]
+      } else {
+        existingItem.quantity += 1
+      }
+    },
+    cartRemoveItem: (state, action) => {
+      const existingItem = state.cart.find(
+        (i) => Number(i.id) === Number(action.payload.id)
+      )
+
+      if (existingItem) {
+        existingItem.quantity -= 1
+      }
+
+      if (existingItem.quantity === 0) {
+        const newCart = state.cart.filter((i) => i.id !== existingItem.id)
+        state.cart = newCart
+      }
+    },
+    triggerLastStep: (state, action) => {
+      state.triggerLastStep = action.payload
     }
   }
 })
@@ -114,7 +155,9 @@ export const reducer = rootSlice.reducer
 export const {
   displayFooter,
   displayHeader,
-  cartUpdate,
+  cartAddItem,
+  cartRemoveItem,
+  cartClear,
   selectFaqType,
   setActiveStep,
   setEmail,
@@ -122,5 +165,7 @@ export const {
   setEntreeType,
   setEntreeSubType,
   setLocation,
-  setTokens
+  setTokens,
+  setIsNextButtonActive,
+  triggerLastStep
 } = rootSlice.actions

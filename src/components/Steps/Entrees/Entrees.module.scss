@@ -18,6 +18,21 @@ $subTitleFontSize: 2.7rem;
     column-gap: 0;
   }
 
+  & .quantitiesWrapper {
+    & .topBarQuantities {
+      display: flex;
+      justify-content: center;
+    }
+    & div {
+      margin: 0.5rem;
+    }
+    & .number {
+      color: $primaryColor;
+      font-weight: 700;
+    }
+    font-size: $subTitleFontSize;
+  }
+
   & .quantities {
     & div {
       margin: 0.5rem;

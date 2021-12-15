@@ -2,12 +2,12 @@ import React from 'react'
 import styles from './MenuItemCard.module.scss'
 
 const MenuItemCard = (props) => {
-    const { image, title, quantity, type } = props;
+    const { image, title, quantity, type, quantityLabel = 'Qty:' } = props;
     
     return (
         <div className={`bundleBuilderCard ${styles.menuItemCard}`}>
             <div className={styles.cardImageWrapper}>
-                <img className={styles.cardImage} src={image} alt="Buffalo Mozzarella Chicken" />
+                <img className={styles.cardImage} src={image} alt={title} />
             </div>
             <div className={styles.cardContent}>
                 <div className={styles.cardTitle}>
@@ -18,7 +18,7 @@ const MenuItemCard = (props) => {
                         <strong>{type}</strong>
                     </p>
                     <p className={styles.cardText}>
-                        Qty: <strong>{quantity}</strong>
+                        {quantityLabel} <strong>{quantity}</strong>
                     </p>
                 </div>
             </div>

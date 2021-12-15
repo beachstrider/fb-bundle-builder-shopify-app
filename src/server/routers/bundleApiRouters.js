@@ -153,4 +153,17 @@ app.get('/bundle-api/subscriptions/:subscriptionId/orders', async (req, res) => 
   })
 })
 
+app.post('/bundle-api/carts', async (req, res) => {
+  const response = await request(`${process.env.BUNDLE_API_URL}/api/carts`, {
+    method: 'post',
+    headers: {
+      Accept: 'application/json',
+      authorization: req.headers.authorization
+    },
+    data: req.body
+  })
+
+  return res.status(response.status).send(response.data)
+})
+
 module.exports = app
