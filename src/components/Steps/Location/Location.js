@@ -10,97 +10,18 @@ import {
   setIsNextButtonActive
 } from '../../../store/slices/rootSlice'
 import { InputEmail, InputText } from '../Components/Inputs'
-import { isValidEmail, request } from '../../../utils'
-import { LocationDate } from '.'
+import { findZipCode, isValidEmail, request } from '../../../utils'
 import styles from './Location.module.scss'
 import { withActiveStep } from '../../Hooks'
 import SpinnerIcon from '../../Global/SpinnerIcon'
+import DeliveryDates from '../Components/DeliveryDates'
 
 const FAQ_TYPE = 'location'
 const STEP_ID = 2
 
-const deliveryZones = [
-  {
-    id: 1,
-    name: 'Zone 1',
-    zipCodes: [90028, 90029, 90030],
-    deliveryDates: [
-      {
-        id: 0,
-        day: 1,
-        disabled: true,
-        isSelected: false
-      },
-      {
-        id: 1,
-        day: 3,
-        disabled: false,
-        isSelected: false
-      },
-      {
-        id: 2,
-        day: 5,
-        disabled: false,
-        isSelected: true
-      }
-    ]
-  },
-  {
-    id: 2,
-    name: 'Zone 2',
-    zipCodes: [50028, 50029, 50030],
-    deliveryDates: [
-      {
-        id: 0,
-        day: 0,
-        disabled: false,
-        isSelected: false
-      },
-      {
-        id: 1,
-        day: 1,
-        disabled: false,
-        isSelected: false
-      },
-      {
-        id: 2,
-        day: 2,
-        disabled: false,
-        isSelected: true
-      }
-    ]
-  },
-  {
-    id: 3,
-    name: 'Zone 3',
-    zipCodes: [60028, 60029, 60030],
-    deliveryDates: [
-      {
-        id: 0,
-        day: 0,
-        disabled: false,
-        isSelected: false
-      },
-      {
-        id: 1,
-        day: 1,
-        disabled: false,
-        isSelected: false
-      },
-      {
-        id: 2,
-        day: 2,
-        disabled: false,
-        isSelected: true
-      }
-    ]
-  }
-]
-
 const Location = () => {
   const dispatch = useDispatch()
   const state = useSelector((state) => state)
-  const [zones, setZones] = useState(deliveryZones)
   const [currentZone, setCurrentZone] = useState({})
   const [email, setEmail] = useState('')
   const [zipCode, setZipCode] = useState('')
@@ -112,20 +33,22 @@ const Location = () => {
     dispatch(displayHeader(true))
     dispatch(setIsNextButtonActive(true))
 
-    setZones(deliveryZones)
-
     if (state.email && state.location.zipCode) {
       setZipCode(state.location.zipCode)
       setEmail(state.email)
 
-      const zone = findZipCode(state.location.zipCode)
+      const zone = findZipCode(state.deliveryZones, state.location.zipCode)
       if (!zone) {
         dispatch(displayFooter(false))
         return setZipCodeError('Zip code not within the delivery locations')
       }
 
       setCurrentZone(zone)
-      handleDeliveryDate(findSelectedDate(zone.deliveryDates))
+      if (state.location.deliveryDate.id === 0) {
+        handleDeliveryDate(findDefaultSelectedDate(zone.deliveryDates))
+      } else {
+        checkCurrentSelectedDate(zone)
+      }
       dispatch(selectFaqType(FAQ_TYPE))
       dispatch(displayFooter(true))
     } else {
@@ -134,19 +57,34 @@ const Location = () => {
     }
   }, [])
 
-  const findZipCode = (zipCode) => {
-    let result = null
-    zones.forEach((zone) => {
-      const found = zone.zipCodes.find((e) => Number(e) === Number(zipCode))
-      if (found) {
-        result = zone
+  useEffect(() => {
+    if (Object.keys(currentZone).length > 0) {
+      checkCurrentSelectedDate(currentZone)
+    }
+  }, [state.location.deliveryDate])
+
+  const checkCurrentSelectedDate = (zone) => {
+    let deliveryDates = JSON.parse(JSON.stringify([...zone.deliveryDates]))
+    const selectedDateIndex = deliveryDates.find((date) => date.isSelected)
+
+    deliveryDates = deliveryDates.map((date) => {
+      if (date.id === selectedDateIndex.id) {
+        date.isSelected = false
       }
+
+      if (date.id === state.location.deliveryDate.id) {
+        date.isSelected = true
+      }
+      return date
     })
 
-    return result
+    setCurrentZone({
+      ...zone,
+      deliveryDates: [...deliveryDates]
+    })
   }
 
-  const findSelectedDate = (deliveryDates) =>
+  const findDefaultSelectedDate = (deliveryDates) =>
     deliveryDates.find((date) => date.isSelected)
 
   const handleSubmit = async () => {
@@ -193,7 +131,12 @@ const Location = () => {
   }
 
   const handleDeliveryDate = (date) => {
-    dispatch(setLocation({ ...state.location, deliveryDate: date }))
+    dispatch(
+      setLocation({
+        ...state.location,
+        deliveryDate: date
+      })
+    )
   }
 
   const handleZipCodeChange = (value) => {
@@ -250,23 +193,12 @@ const Location = () => {
             </div>
           </div>
         </div>
-        {Object.keys(currentZone).length > 0 && (
-          <>
-            <div className={`${styles.title} mt-10 mb-5`}>
-              Choose Delivery Date
-            </div>
-            <div className={styles.rows}>
-              {currentZone.deliveryDates &&
-                currentZone.deliveryDates.map((date) => (
-                  <div key={date.id}>
-                    <LocationDate
-                      data={date}
-                      onClick={() => handleDeliveryDate(date)}
-                    />
-                  </div>
-                ))}
-            </div>
-          </>
+        {Object.keys(currentZone).length > 0 && currentZone.deliveryDates && (
+          <DeliveryDates
+            onClick={handleDeliveryDate}
+            title="Choose Delivery Date"
+            dates={currentZone.deliveryDates}
+          />
         )}
       </div>
     </div>

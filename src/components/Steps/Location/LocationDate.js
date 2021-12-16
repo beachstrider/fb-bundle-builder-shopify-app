@@ -12,7 +12,11 @@ const LocationDate = ({ data, onClick }) => {
   const getDay = (weekDay) => dayjs().weekday(weekDay)
 
   return (
-    <CardCrossedLine isSelected={data.isSelected} onClick={onClick}>
+    <CardCrossedLine
+      isSelected={data.isSelected}
+      onClick={onClick}
+      isDisabled={data.disabled}
+    >
       <div className={styles.wrapper}>
         <div className={styles.weekDay}>{getDay(data.day).format('dddd')}</div>
         <div className={styles.month}>{getDay(data.day).format('MMMM')}</div>

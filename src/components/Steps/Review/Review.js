@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
+import { Redirect } from 'react-router-dom'
 import {
   getSelectedBundle,
   useShopifyCart,
   saveCart,
-  getBundle
+  getBundle,
+  withActiveStep
 } from '../../Hooks'
 import dayjs from 'dayjs'
 import weekday from 'dayjs/plugin/weekday'
@@ -12,16 +14,18 @@ import advancedFormat from 'dayjs/plugin/advancedFormat'
 import styles from './Review.module.scss'
 import Loading from '../Components/Loading'
 import MenuItemCard from '../../Account/Components/MenuItemCard/MenuItemCard'
+import DeliveryDateModal from '../Components/DeliveryDatesModal/DeliveryDateModal'
 
 dayjs.extend(advancedFormat)
 dayjs.extend(weekday)
 
 const DEFAULT_ERROR_MESSAGE = 'There was an error. Please try again later'
+const STEP_ID = 5
 
 const Review = () => {
   const [isLoading, setIsLoading] = useState(false)
   const state = useSelector((state) => state)
-
+  const [openEditDateModal, setOpenEditDateModal] = useState(false)
   const [platformCartToken, setPlatformCartToken] = useState('')
   const shopifyCart = useShopifyCart()
   const [errorMessage, setErrorMessage] = useState('')
@@ -63,7 +67,6 @@ const Review = () => {
         }
       ])
     } else {
-      // TODO: display error in the UI (task QFBBA-95)
       return setErrorMessage(DEFAULT_ERROR_MESSAGE)
     }
   }
@@ -96,8 +99,7 @@ const Review = () => {
         state.location.deliveryDate.day,
         mappedItems
       )
-      // TODO: redirect to Shopify Cart (QFBBA-103)
-      console.log('Done.')
+      window.location.href = '/cart'
     } catch (error) {
       return setErrorMessage(DEFAULT_ERROR_MESSAGE)
     }
@@ -116,52 +118,63 @@ const Review = () => {
   }
 
   return (
-    <div className="defaultWrapper">
-      <div className={styles.wrapper}>
-        <div className={`${styles.title} mb-7`}>Review Order</div>
-        <div className={`${styles.topBarWrapper} mb-7`}>
-          <div className={`${styles.card} ${styles.columns}`}>
-            <div className={styles.title}>
-              Delivery Day:{' '}
-              <span className={styles.day}>
-                {getDay(state.location.deliveryDate.day).format('dddd')}{' '}
-              </span>
-              <span className={styles.edit}>Edit</span>
+    <>
+      <div className="defaultWrapper">
+        <div className={styles.wrapper}>
+          <div className={`${styles.title} mb-7`}>Review Order</div>
+          <div className={`${styles.topBarWrapper} mb-7`}>
+            <div className={`${styles.card} ${styles.columns}`}>
+              <div className={styles.title}>
+                Delivery Day:{' '}
+                <span className={styles.day}>
+                  {getDay(state.location.deliveryDate.day).format('dddd')}{' '}
+                </span>
+                <span
+                  className={styles.edit}
+                  onClick={() => setOpenEditDateModal(true)}
+                >
+                  Edit
+                </span>
+              </div>
+              <div className={styles.startingDate}>
+                Starting {getDay(state.location.deliveryDate.day).format('MMM')}{' '}
+                {getDay(state.location.deliveryDate.day).format('DD')}
+                <span className={styles.ordinal}>
+                  {getDay(state.location.deliveryDate.day)
+                    .format('Do')
+                    .match(/[a-zA-Z]+/g)}
+                </span>
+              </div>
             </div>
-            <div className={styles.startingDate}>
-              Starting {getDay(state.location.deliveryDate.day).format('MMM')}{' '}
-              {getDay(state.location.deliveryDate.day).format('DD')}
-              <span className={styles.ordinal}>
-                {getDay(state.location.deliveryDate.day)
-                  .format('Do')
-                  .match(/[a-zA-Z]+/g)}
-              </span>
+            <div className={styles.card}>
+              <div className={styles.title}>
+                Total:
+                <span className={styles.price}>
+                  ${Number.parseFloat(state.bundle.weeklyPrice).toFixed(2)}
+                </span>
+              </div>
             </div>
           </div>
-          <div className={styles.card}>
-            <div className={styles.title}>
-              Total:
-              <span className={styles.price}>
-                ${Number.parseFloat(state.bundle.weeklyPrice).toFixed(2)}
-              </span>
-            </div>
+          <div className={styles.menuItemsWrapper}>
+            {state.cart.map((item) => (
+              <MenuItemCard
+                key={item.id}
+                image={item.images.length > 0 && item.images[0]}
+                title={item.name}
+                quantity={item.quantity}
+                type={item.title}
+                quantityLabel=""
+              />
+            ))}
           </div>
-        </div>
-        <div className={styles.menuItemsWrapper}>
-          {state.cart.map((item) => (
-            <MenuItemCard
-              key={item.id}
-              image={item.images.length > 0 && item.images[0]}
-              title={item.name}
-              quantity={item.quantity}
-              type={item.title}
-              quantityLabel=""
-            />
-          ))}
         </div>
       </div>
-    </div>
+      <DeliveryDateModal
+        open={openEditDateModal}
+        close={() => setOpenEditDateModal(false)}
+      />
+    </>
   )
 }
 
-export default Review
+export default withActiveStep(Review, STEP_ID)
