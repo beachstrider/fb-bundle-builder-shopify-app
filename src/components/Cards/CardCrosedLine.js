@@ -1,12 +1,21 @@
 import React from 'react'
 import styles from './CardCrossedLine.module.scss'
 
-const CardCrossedLine = ({ children, isSelected, onClick }) => {
+const CardCrossedLine = ({
+  children,
+  isSelected,
+  onClick,
+  isDisabled = false
+}) => {
   return (
     <div
-      onClick={onClick}
+      onClick={() => (!isDisabled ? onClick() : {})}
       className={`${styles.card} ${
-        isSelected ? styles.isSelected : styles.unselected
+        isSelected
+          ? styles.isSelected
+          : isDisabled
+          ? styles.disabled
+          : styles.unselected
       }`}
     >
       <div className={styles.children}>{children}</div>
