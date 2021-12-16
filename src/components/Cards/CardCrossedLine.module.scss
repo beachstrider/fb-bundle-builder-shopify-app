@@ -1,6 +1,6 @@
 @import '../../variables';
 
-.unselected {
+.disabled {
   color: $grayMedium;
   background: $grayLight;
   & div {
@@ -11,7 +11,7 @@
       width: 271px;
       transform: rotate(145deg);
       transform-origin: 0% 0%;
-      top: 3px;
+      top: 5px;
       left: 224px;
     }
   }
@@ -20,6 +20,16 @@
     background: darken($grayLight, 10%);
   }
 }
+
+.unselected {
+  color: $grayMedium;
+  background: $grayLight;
+  & :hover {
+    border-radius: 0.5rem;
+    background: darken($grayLight, 10%);
+  }
+}
+
 .isSelected {
   color: $white;
   background: $primaryColor;
@@ -41,23 +51,6 @@
 
     .cardContent {
       height: $cardDateHeight;
-    }
-  }
-
-  & .checkMark {
-    position: absolute;
-    top: 0;
-    right: 0;
-    font-size: 1rem;
-    background: $white;
-    border-radius: 0 0.5rem 0 0.5rem;
-    color: $primaryColor;
-    padding: 0.1rem 0.4rem;
-    border-top: 1px solid $primaryColor;
-    border-right: 1px solid $primaryColor;
-    & svg {
-      width: 0.9rem;
-      fill: $primaryColor;
     }
   }
 }

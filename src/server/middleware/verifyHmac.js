@@ -1,5 +1,4 @@
-
-require('dotenv')
+require('dotenv').config()
 const crypto = require('crypto')
 
 module.exports = async (req, res, next) => {
