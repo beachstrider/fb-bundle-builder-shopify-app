@@ -60,7 +60,6 @@ app.get('/bundle-api/subscriptions', async (req, res) => {
       }
     }
   )
-  console.log('response: ', response)
   if (response.data) {
     return res.status(200).send(response.data)
   }
@@ -84,7 +83,6 @@ app.get(
         }
       }
     )
-
     return res.status(response.status).send(response.data)
   }
 )
@@ -114,6 +112,22 @@ app.get(
     })
   }
 )
+app.get('/bundle-api/bundles/:bundleId', async (req, res) => {
+  const queryString = objectToQueryString(req.query)
+
+  const response = await request(
+    `${process.env.BUNDLE_API_URL}/api/bundles${req.params.bundleId}?${queryString}`,
+    {
+      method: 'get',
+      headers: {
+        Accept: 'application/json',
+        authorization: req.headers.authorization
+      }
+    }
+  )
+
+  return res.status(response.status).send(response.data)
+})
 
 app.get('/bundle-api/bundles', async (req, res) => {
   const queryString = objectToQueryString(req.query)
@@ -143,7 +157,7 @@ app.get('/bundle-api/subscriptions/:subscriptionId/orders', async (req, res) => 
       }
     }
   )
-  console.log('response: ', response)
+
   if (response.data) {
     return res.status(200).send(response.data)
   }

@@ -1,11 +1,17 @@
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import {
-    displayHeader,
-    displayFooter,
-    selectFaqType,
-    setTokens
-  } from '../../../store/slices/rootSlice'
+  displayHeader,
+  displayFooter,
+  selectFaqType,
+  setTokens
+} from '../../../store/slices/rootSlice'
+import {
+  getMenuItems,
+  getSelectedBundle,
+  getBundle,
+  withActiveStep
+} from '../../Hooks'
 import { Link, Redirect, useParams, useLocation } from 'react-router-dom'
 import styles from './EditOrder.module.scss'
 import CardQuantities from '../../Cards/CardQuantities'
@@ -74,28 +80,161 @@ const EditOrder = () => {
       }
 
     const getBundleItems = async ( bundleId, configId, token) => {
+      console.log('call avail items - get it')
       const thisWeek = dayjs(query.get("date"));
-      console.log(`${process.env.PROXY_APP_URL}/bundle-api/bundles/${bundleId}/configurations/${configId}/contents?display_after=${thisWeek.format('YYYY-MM-DD')}T00:00:00.000Z`)
-      const subApi = await request(`${process.env.PROXY_APP_URL}/bundle-api/bundles/${bundleId}/configurations/${configId}/contents?display_after=${thisWeek.format('YYYY-MM-DD')}T00:00:00.000Z`, { method: 'get', data: '', headers: { authorization: token }}, 3)
-      console.log('this is the bundle products', subApi)
-      return subApi.data.data[0].products
+      const response = await getMenuItems(
+        token,
+        bundleId,
+        configId,
+        `is_enabled=1&display_after=${thisWeek.format('YYYY-MM-DDT00:00:00.000Z')}`
+      )
+      console.log('response from get items call', response)
+      if (response.data?.data && response.data?.data.length > 0) {
+        const filteredProducts = await filterShopifyProducts(
+          response.data.data[0].products,
+          shopProducts
+        )
+  
+        const filteredVariants = await filterShopifyVariants(
+          filteredProducts,
+          configuration
+        )
+
+        const configTitle = response.data.data[0].configuration.title
+        const configId = response.data.data[0].configuration.id
+        const quantity = response.data.data[0].configuration.quantity
+  
+        return {
+          id: configId,
+          products: filteredVariants,
+          quantity: quantity,
+          title: configTitle,
+          quantityCountdown: quantity
+
+        }
+      }
     };
 
     const getCustomerBundleItems = async (token) => {
       const thisWeek = dayjs(query.get("date"));
       const subApi = await request(`${process.env.PROXY_APP_URL}/bundle-api/subscriptions/${orderId}/orders`, { method: 'get', data: '', headers: { authorization: token }}, 3)
       console.log('this is the subscription orders', subApi)
-
+      const bunQty = {}
       // TODO call bundle to get configurations
       // TODO Check display date for config and call products available
       // TODO Check customer order and add in QTY's if previously added
       
       const editItemsArr = []
       if(subApi.data.data){
-        const bundle = await request(`${process.env.PROXY_APP_URL}/bundle-api/subscriptions/${orderId}/orders`, { method: 'get', data: '', headers: { authorization: token }}, 3)
-        console.log('this is the subscription orders', bundle)
+
+        for(const order of subApi.data?.data){
+          const editItemsConfigArr = []
+          console.log('the order in loop: ', order)
+          if(order.bundle_configuration_content?.display_after){
+            console.log('make the call for the products');
+            const bundleProducts = false // await getBundleItems(order.subscription.bundle_id, order.bundle_configuration_content_id, token)
+
+            for(const product of order?.items){
+              // TODO filter products looking for variant
+              // TODO need to combine order products into the product array and update quantities
+
+              const thisProd = await findProductFromVariant(product.platform_product_variant_id);
+                          
+              if(thisProd.any('product')){
+                  editItemsConfigArr.push({
+                    title: thisProd?.product?.title ? thisProd.product.title : 'default product',
+                    image: thisProd?.product?.images && thisProd.product?.images.length > 0 ? thisProd.product.images[0]: '//cdn.shopify.com/shopifycloud/shopify/assets/no-image-2048-5e88c1b20e087fb7bbe9a3771824e743c244f437e4f8ba93bbf7b11b53f7824c_750x.gif',
+                    metafields: thisProd?.metafields?.length > 0 ? thisProd.metafields : [],
+                    quantity: product.quantity
+                  })
+              }
+            }
+            
+            console.log('products array: ', editItemsConfigArr);
+            // bunQty[order.bundle_configuration_content_id] = 12; // bundleProducts?.quantityCountdown
+            editItemsArr.push({
+              id: bundleProducts ? bundleProducts.id : order.id,
+              title: bundleProducts ? bundleProducts.title : `Config Title - ${order.id}`,
+              products: editItemsConfigArr
+            })
+          }
+        }
+        console.log('the qty object: ', bunQty)
+        // setBundleQty(bunQty)
+        setBundle(editItemsArr)
+        console.log('looped subs: ', editItemsArr)
+        setLoading(false)
       }
     }
+
+    const filterShopifyProducts = async (items, shopifyProducts) =>
+    new Promise((resolve) => {
+      const apiProductIds = items.map((i) => Number(i.platform_product_id))
+
+      const filteredProducts = shopifyProducts.filter((p) =>
+        apiProductIds.includes(p.id)
+      )
+
+      const mappedProducts = filteredProducts.map((product) => ({
+        ...product,
+        bundle_configuration_content_id: items.find(
+          (i) => Number(i.platform_product_id) === Number(product.id)
+        ).bundle_configuration_contents_id
+      }))
+
+      resolve(mappedProducts)
+    })
+
+  const findProductFromVariant = async (variantId) => 
+  new Promise((resolve) => {
+    let foundProduct = {};
+    console.log('find this variant: ', variantId);
+    for (const product of shopProducts) {
+      const variant = product.variants.filter( v => v.id === variantId)
+      if(product.variants.filter( v => v.id === variantId).length > 0){
+        foundProduct = {
+          product,
+          metafields: variant[0].metafields
+        }
+      }
+    }
+    console.log('found it? : ', foundProduct);
+    resolve(foundProduct)
+  })
+
+  const filterShopifyVariants = async (shopifyProducts, configuration) =>
+    new Promise((resolve) => {
+      const filteredVariants = []
+
+      for (const product of shopifyProducts) {
+        const filtered = product.variants.filter(
+          (variant) =>
+            variant.options.includes(state.entreeType.title) &&
+            variant.options.includes(state.entreeSubType.title)
+        )
+
+        filtered.map((f) => {
+          f.images = product.images
+          f.configurationBundleId = configuration.bundleId
+          f.configurationContentId = product.bundle_configuration_content_id
+          f.bundleContentId = configuration.id
+          f.quantity = 0
+          f.type = configuration.title
+
+          if (f.name.includes('-')) {
+            f.name = f.name.split('-')[0]
+          }
+
+          return f
+        })
+
+        if (filtered.length > 0) {
+          filteredVariants.push(...filtered)
+        }
+      }
+
+      resolve(filteredVariants)
+    })
 
     // TODO: WIP
     const handleAddItem = (listId, list, item) => {
@@ -164,12 +303,12 @@ const EditOrder = () => {
                         <p className={styles.subHeaders}><span className={styles.greenNumbers}>{bundleQty[config.id]}</span> {config.title} Left</p>      
                     </div>
                     <div className={styles.menuRow}>
-                        {products.map((item, idx) => (
+                        {config.products.map((item, idx) => (
                             <div key={idx} className={`${styles.menuItemWrapper} mb-10 px-1`}>
                                 <CardQuantities
-                                    title={item.ProductVariants.title}
-                                    image={item.ProductVariants.platform_img}
-                                    metafields={item.ProductVariants.metafields}
+                                    title={item.title}
+                                    image={item.platform_img}
+                                    metafields={item.metafields}
                                     isChecked={item.quantity > 0}
                                     quantity={item.quantity}
                                     onClick={() => handleAddItem(config.id, index, idx)}
