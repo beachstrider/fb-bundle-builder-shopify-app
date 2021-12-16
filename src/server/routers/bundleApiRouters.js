@@ -35,7 +35,7 @@ app.post('/bundle-api/token/account', async (req, res) => {
       },
       data: {
         shop: req.body.shop,
-        email: req.body.shop
+        email: req.body.email
       }
     }
   )
@@ -49,18 +49,18 @@ app.post('/bundle-api/token/account', async (req, res) => {
   })
 })
 
-app.get('/bundle-api/customers/:customerId/subscriptions', async (req, res) => {
+app.get('/bundle-api/subscriptions', async (req, res) => {
   const response = await request(
-    `${process.env.BUNDLE_API_URL}/api/customers/1/subscriptions`,
+    `${process.env.BUNDLE_API_URL}/api/subscriptions`,
     {
       method: 'get',
       headers: {
         Accept: 'application/json',
-        authorization: req.headers.authorization
+        authorization: req.headers.authorization,
       }
     }
   )
-
+  console.log('response: ', response)
   if (response.data) {
     return res.status(200).send(response.data)
   }
@@ -90,12 +90,12 @@ app.get(
 )
 
 app.get(
-  '/bundle-api/customers/:customerId/subscriptions/:subscriptionId/orders',
+  '/bundle-api/subscription/:subscriptionId/orders',
   async (req, res) => {
     const queryString = objectToQueryString(req.query)
 
     const response = await request(
-      `${process.env.BUNDLE_API_URL}/api/customers/1/subscriptions/1/orders?${queryString}`,
+      `${process.env.BUNDLE_API_URL}/api/subscriptions/${req.params.subscriptionId}/orders?${queryString}`,
       {
         method: 'get',
         headers: {

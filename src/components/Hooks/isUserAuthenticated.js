@@ -2,12 +2,9 @@ import { request } from '../../utils'
 
 const useUserToken = async () => {
   try {
-
+    const domain = new URL(window.location.href)
     if(shopCustomer.email !== ''){
-        console.log({ 
-            shop: domain.hostname,
-            email: shopCustomer.email
-        })
+            
         const response = await request(
             `${process.env.PROXY_APP_URL}/bundle-api/token/account`,
             {
@@ -16,7 +13,7 @@ const useUserToken = async () => {
                 'Content-Type': 'application/json'
               },
               data: { 
-                  shop: domain.hostname,
+                  shop: `https://${domain.hostname}`,
                   email: shopCustomer.email
               }
             }

@@ -1,5 +1,4 @@
-const path = require('path')
-require('dotenv').config({ path: path.resolve(__dirname, '.env') })
+require('dotenv').config()
 const crypto = require('crypto')
 
 module.exports = async (req, res, next) => {

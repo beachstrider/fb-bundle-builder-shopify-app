@@ -31,7 +31,7 @@ const rootSlice = createSlice({
       {
         id: 4,
         name: 'Step 4',
-        description: 'Entrees',
+        description: 'Review',
         path: '/steps/4',
         isActive: false
       },
@@ -41,6 +41,83 @@ const rootSlice = createSlice({
         description: 'Next',
         path: '/steps/5',
         isActive: false
+      }
+    ],
+    deliveryZones: [
+      {
+        id: 1,
+        name: 'Zone 1',
+        zipCodes: [90028, 90029, 90030],
+        deliveryDates: [
+          {
+            id: 0,
+            day: 1,
+            disabled: true,
+            isSelected: false
+          },
+          {
+            id: 1,
+            day: 3,
+            disabled: false,
+            isSelected: false
+          },
+          {
+            id: 2,
+            day: 5,
+            disabled: false,
+            isSelected: true
+          }
+        ]
+      },
+      {
+        id: 2,
+        name: 'Zone 2',
+        zipCodes: [50028, 50029, 50030],
+        deliveryDates: [
+          {
+            id: 0,
+            day: 0,
+            disabled: false,
+            isSelected: false
+          },
+          {
+            id: 1,
+            day: 1,
+            disabled: false,
+            isSelected: false
+          },
+          {
+            id: 2,
+            day: 2,
+            disabled: false,
+            isSelected: true
+          }
+        ]
+      },
+      {
+        id: 3,
+        name: 'Zone 3',
+        zipCodes: [60028, 60029, 60030],
+        deliveryDates: [
+          {
+            id: 0,
+            day: 0,
+            disabled: false,
+            isSelected: false
+          },
+          {
+            id: 1,
+            day: 1,
+            disabled: false,
+            isSelected: false
+          },
+          {
+            id: 2,
+            day: 2,
+            disabled: false,
+            isSelected: true
+          }
+        ]
       }
     ],
     bundle: {
@@ -59,7 +136,9 @@ const rootSlice = createSlice({
     email: '',
     location: {
       zipCode: '',
-      deliveryDate: ''
+      deliveryDate: {
+        id: 0
+      }
     },
     tokens: {
       guestToken: '',
