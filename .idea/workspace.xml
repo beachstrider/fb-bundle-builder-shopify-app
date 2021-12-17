@@ -2,7 +2,16 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="29d2f9b7-828f-4eaf-843c-d9eb0a2d7891" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/bundle-builder-proxy-app.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/deployment.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/Dockerfile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/buildspec-dev.yml" beforeDir="false" afterPath="$PROJECT_DIR$/buildspec-dev.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -96,7 +105,9 @@
       <workItem from="1639433348375" duration="4098000" />
       <workItem from="1639442483827" duration="1230000" />
       <workItem from="1639450332604" duration="2028000" />
-      <workItem from="1639702727559" duration="260000" />
+      <workItem from="1639702727559" duration="2246000" />
+      <workItem from="1639778910329" duration="340000" />
+      <workItem from="1639784928386" duration="388000" />
     </task>
     <servers />
   </component>
