@@ -170,10 +170,16 @@ const Review = () => {
                 </span>
               </div>
               <div className={styles.startingDate}>
-                Starting {getDay(state.location.deliveryDate.day).format('MMM')}{' '}
-                {getDay(state.location.deliveryDate.day).format('DD')}
+                Starting{' '}
+                {getDay(state.location.deliveryDate.day)
+                  .add(1, 'week')
+                  .format('MMM')}{' '}
+                {getDay(state.location.deliveryDate.day)
+                  .add(1, 'week')
+                  .format('DD')}
                 <span className={styles.ordinal}>
                   {getDay(state.location.deliveryDate.day)
+                    .add(1, 'week')
                     .format('Do')
                     .match(/[a-zA-Z]+/g)}
                 </span>
