@@ -3,7 +3,7 @@ require('dotenv').config({ path: path.resolve(__dirname, '.env') })
 const webpack = require('webpack')
 
 module.exports = {
-  entry: path.resolve(__dirname, './src/index.js'),
+  entry: ["regenerator-runtime/runtime.js", path.resolve(__dirname, './src/index.js')],
   module: {
     rules: [
       {
