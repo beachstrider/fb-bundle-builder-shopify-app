@@ -21,6 +21,32 @@ import { Spinner } from '../../Global';
 
 dayjs.extend(isSameOrAfter);
 
+
+// const lastOrderItems = [];
+// const nextSunday = dayjs().day(0).add((7 * index), 'day')
+
+// if(lastOrder){
+//   lastOrder.lineItems.forEach(item => {
+//     const shopProd = shopProducts.filter( p => p.id == item.productId)[0]
+//     lastOrderItems.push({
+//       title: item.title,
+//       platform_img: shopProd && shopProd.images.length > 0 ? shopProd.images[0]: '//cdn.shopify.com/shopifycloud/shopify/assets/no-image-2048-5e88c1b20e087fb7bbe9a3771824e743c244f437e4f8ba93bbf7b11b53f7824c_750x.gif',
+//       quantity: item.quantity
+//     })
+//   })
+
+//   thisLoopSubList.push({
+//     items: lastOrderItems,
+//     subId: sub.id,
+//     subscriptionType: sub.subscription_type,
+//     subscriptionSubType: sub.subscription_sub_type,
+//     date: nextSunday.format('YYYY-MM-DD'),
+//     status: 'sent',
+//     trackingUrl: lastOrder.fulfillments.length > 0 ? lastOrder.fulfillments[0].trackingUrl : lastOrder.orderLink,
+//     subscriptionDate: nextSunday.format('MMM DD')
+//   });
+// }
+
 const Dashboard = () => {
 
   if(!shopCustomer || shopCustomer.id === 0){
@@ -49,6 +75,7 @@ const Dashboard = () => {
     if (!state.tokens.userToken) {
       const thisToken = getToken();
       console.log('need new token')
+      // TODO the token call isnt triggering the next call
       getOrdersToShow(thisToken);
     } else {
       console.log('token exists')
@@ -71,133 +98,64 @@ const Dashboard = () => {
     }
   }
 
-  const getMissingConfigurations = async (date, token, bundle, config) => {
-    const subContents = await request(`${process.env.PROXY_APP_URL}/bundle-api/bundles/${bundle}/configurations/${config}/contents?display_after=${date}T00:00:00.000Z`, { method: 'get', data: '', headers: { authorization: token }}, 3)
-    const pendingItems = []
-    console.log('subContents: ', subContents);
-    if(subContents.data){
-      subContents.data.data.forEach( configuration => {
-        configuration.products.forEach( product => {
-          const shopProd = shopProducts.filter( p => p.id === product.platform_product_id)[0]
-
-          if(product.is_default === 1){
-            pendingItems.push({
-              title: shopProd ? shopProd.title : 'Missing Title',
-              platform_img: shopProd && shopProd.images.length > 0 ? shopProd.images[0]: '//cdn.shopify.com/shopifycloud/shopify/assets/no-image-2048-5e88c1b20e087fb7bbe9a3771824e743c244f437e4f8ba93bbf7b11b53f7824c_750x.gif',
-              quantity: product.default_quantity
-            })
-          }
-        })  
-      })
-    }
-
-    return pendingItems
-  }
-
   const getOrdersToShow = async (token) => {
     console.log('shopifyProducts: ', shopProducts[0]);
-
+    const today = dayjs();
     const activeWeeksArr = []
     const activeWeeksLimit = []
     const weeksMenu = []
     let newWeeksArr = []
+
     const subApi = await request(`${process.env.PROXY_APP_URL}/bundle-api/subscriptions`, { method: 'get', data: '', headers: { authorization: token }}, 3)
     console.log('subApi response: ', subApi);
+
     if(subApi.data.message && subApi.data.message !== 'Unexpected error.'){
       console.log('token is bad')
       const newToken = await getToken()
       console.log('got new token: ', newToken)
       getOrdersToShow(newToken)
     }
+
     if(subApi.data.data){
       for (const sub of subApi.data.data) {
+        const subscriptionOrders = await request(`${process.env.PROXY_APP_URL}/bundle-api/subscriptions/${sub.bundle_id}/orders`, { method: 'get', data: '', headers: { authorization: token }}, 3)
+        console.log('subscriptionOrders call: ', subscriptionOrders);
+        const configData = await request(`${process.env.PROXY_APP_URL}/bundle-api/bundles/${sub.bundle_id}/configurations`, { method: 'get', data: '', headers: { authorization: token }}, 3)
+        console.log('configuration call: ', configData);
         const thisLoopSubList = [];
-        const subscriptionId = sub.id;
+        if(configData.data.data.length > 0){
+          const subscriptionArray = {};
+          for( const config of configData.data.data){
+          for (const content of config.contents) {
+            if(!weeksMenu.includes(content.display_after.replace('T00:00:00.000Z', 'T12:00:00.000Z')).format('MMM DD')){
+              weeksMenu.push(dayjs(content.display_after.replace('T00:00:00.000Z', 'T12:00:00.000Z')).format('MMM DD'))
+              subscriptionArray[content.display_after.remove('T00:00:00.000Z')] = []
+            }
+            // TODO check orders for items
+            // TODO loop those and push
+            // TODO call this for default products if missing /bundle-api/bundles/1/configurations/1/contents/1/products?is_default=1
 
-        for (const [ index, order ] of sub.orders.entries()) {
-          const lastOrder = shopCustomer.orders.filter( ord => ord.id == order.platform_order_id )[0];
+            const configContentsData = await request(`${process.env.PROXY_APP_URL}/api/bundles/${sub.bundle_id}/configurations/1/contents/${order.bundle_configuration_content_id}`, { method: 'get', data: '', headers: { authorization: token }}, 3)
+            console.log('configuration contents call: ', configContentsData);
 
-          const lastOrderItems = [];
-          const nextSunday = dayjs().day(0).add((7 * index), 'day')
-          if(lastOrder){
-            lastOrder.lineItems.forEach(item => {
-              const shopProd = shopProducts.filter( p => p.id == item.productId)[0]
-              lastOrderItems.push({
-                title: item.title,
-                platform_img: shopProd && shopProd.images.length > 0 ? shopProd.images[0]: '//cdn.shopify.com/shopifycloud/shopify/assets/no-image-2048-5e88c1b20e087fb7bbe9a3771824e743c244f437e4f8ba93bbf7b11b53f7824c_750x.gif',
-                quantity: item.quantity
-              })
-            })
-
-            thisLoopSubList.push({
-              items: lastOrderItems,
-              subId: sub.id,
-              subscriptionType: sub.subscription_type,
-              subscriptionSubType: sub.subscription_sub_type,
-              date: nextSunday.format('YYYY-MM-DD'),
-              status: 'sent',
-              trackingUrl: lastOrder.fulfillments.length > 0 ? lastOrder.fulfillments[0].trackingUrl : lastOrder.orderLink,
-              subscriptionDate: nextSunday.format('MMM DD')
-            });
-          }
-          
-          if(!order.platform_order_id){
-            // call for bundle and look for selected menu's
-            const itemList = await request(`${process.env.PROXY_APP_URL}/bundle-api/subscriptions/${subscriptionId}/orders`, { method: 'get', data: '', headers: { authorization: token }}, 3)
-            console.log('requesting the selected items: ', itemList)
-            if(itemList){
-              if(itemList.items){
-                itemList.items.forEach(item => {
-                  // TODO drill down to the variant
-                  // const itemFromStore = shopifyProducts.filter(sI => item.platform_product_variant_id === sI.variant.id)
-                  const shopItem = shopifyProducts.map(p => p.variants.filter(e => e.id === item.platform_variant_id))[0];
-                  lastOrderItems.push({
-                    title: shopItem ? shopItem.title : 'default product',
-                    platform_img: shopItem && shopItem.images.length > 0 ? shopItem.images[0]: '//cdn.shopify.com/shopifycloud/shopify/assets/no-image-2048-5e88c1b20e087fb7bbe9a3771824e743c244f437e4f8ba93bbf7b11b53f7824c_750x.gif',
-                    quantity: item.quantity,
-                    type: sub.subscription_sub_type
-                  })
-                })
-              }
-            } 
-          }
-
-          if(!weeksMenu.includes(nextSunday.format('MMM DD'))){ weeksMenu.push(nextSunday.format('MMM DD')); }
-        }
-
-        if(thisLoopSubList.length < 4){
-          for(let j = thisLoopSubList.length; thisLoopSubList.length < 4; j++){
-            const nextSunday = dayjs().day(0).add((7 * j), 'day');
-
-            await getMissingConfigurations(nextSunday.format('YYYY-MM-DD'), token, 1, 1).then( data => {
-              thisLoopSubList.push({
-                items: data,
-                subId: sub.id,
-                subscriptionType: sub.subscription_type,
-                subscriptionSubType: sub.subscription_sub_type,
-                date: nextSunday.format('YYYY-MM-DD'),
-                status: 'pending',
-                subscriptionDate: nextSunday.format('MMM DD')
-              })
-            });
-
-            if(!weeksMenu.includes(nextSunday.format('MMM DD'))){ weeksMenu.push(nextSunday.format('MMM DD')); }
           }
         }
+        }
+        
 
         newWeeksArr = newWeeksArr.concat(thisLoopSubList)
       }
     }
 
-    newWeeksArr.forEach((sub) => {
-      const today = dayjs(new Date()).day(0).add(14, 'day').startOf('day');
-      const pastDate = dayjs(sub.date).startOf('day');
-      console.log(`Date is ${sub.date} same or after ${today.format('MM-DD-YYYY')}`)
-      if(!pastDate.isSameOrAfter(today)){
-        activeWeeksArr.push(sub);
-        activeWeeksLimit.push(5)
-      }
-    })
+    // newWeeksArr.forEach((sub) => {
+    //   const today = dayjs(new Date()).day(0).add(14, 'day').startOf('day');
+    //   const pastDate = dayjs(sub.date).startOf('day');
+    //   console.log(`Date is ${sub.date} same or after ${today.format('MM-DD-YYYY')}`)
+    //   if(!pastDate.isSameOrAfter(today)){
+    //     activeWeeksArr.push(sub);
+    //     activeWeeksLimit.push(5)
+    //   }
+    // })
 
     setSubscriptions(newWeeksArr);
     setWeeksMenu(weeksMenu)
@@ -244,6 +202,23 @@ const Dashboard = () => {
     });
     setLimit(newLimit);
   }
+
+  const findProductFromVariant = async (variantId) => 
+  new Promise((resolve) => {
+    let foundProduct = {};
+    console.log('find this variant: ', variantId);
+    for (const product of shopProducts) {
+      const variant = product.variants.filter( v => v.id === variantId)
+      if(product.variants.filter( v => v.id === variantId).length > 0){
+        foundProduct = {
+          product,
+          metafields: variant[0].metafields
+        }
+      }
+    }
+    console.log('found it? : ', foundProduct);
+    resolve(foundProduct)
+  })
 
   if (loading) {
     // TODO: work in progress

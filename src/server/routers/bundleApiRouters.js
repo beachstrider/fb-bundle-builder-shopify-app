@@ -70,11 +70,47 @@ app.get('/bundle-api/subscriptions', async (req, res) => {
 })
 
 app.get(
+  '/bundle-api/bundles/:bundleId/configurations',
+  async (req, res) => {
+    const queryString = objectToQueryString(req.query)
+    const response = await request(
+      `${process.env.BUNDLE_API_URL}/api/bundles/${req.params.bundleId}/configurations`,
+      {
+        method: 'get',
+        headers: {
+          Accept: 'application/json',
+          authorization: req.headers.authorization
+        }
+      }
+    )
+    return res.status(response.status).send(response.data)
+  }
+)
+
+app.get(
   '/bundle-api/bundles/:bundleId/configurations/:configurationId/contents',
   async (req, res) => {
     const queryString = objectToQueryString(req.query)
     const response = await request(
       `${process.env.BUNDLE_API_URL}/api/bundles/${req.params.bundleId}/configurations/${req.params.configurationId}/contents?${queryString}`,
+      {
+        method: 'get',
+        headers: {
+          Accept: 'application/json',
+          authorization: req.headers.authorization
+        }
+      }
+    )
+    return res.status(response.status).send(response.data)
+  }
+)
+
+app.get(
+  '/bundle-api/bundles/:bundleId/configurations/:configurationId/contents/:contentsId/products',
+  async (req, res) => {
+    const queryString = objectToQueryString(req.query)
+    const response = await request(
+      `${process.env.BUNDLE_API_URL}/api/bundles/${req.params.bundleId}/configurations/${req.params.configurationId}/contents${req.params.contentsId}/products?${queryString}`,
       {
         method: 'get',
         headers: {
