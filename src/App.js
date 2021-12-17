@@ -6,7 +6,7 @@ import './App.scss'
 import '@shopify/polaris/build/esm/styles.css'
 import { Header } from './components/Header'
 import { Footer } from './components/Footer'
-
+import 'regenerator-runtime/runtime'
 import {
   Frequency,
   Location,
