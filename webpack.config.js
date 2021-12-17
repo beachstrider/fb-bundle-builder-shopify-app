@@ -1,7 +1,13 @@
 const path = require('path')
 require('dotenv').config({ path: path.resolve(__dirname, '.env') })
 const webpack = require('webpack')
-
+console.log({
+  'process.env.LOGO_URL': JSON.stringify(process.env.LOGO_URL),
+  'process.env.PROXY_APP_URL': JSON.stringify(process.env.PROXY_APP_URL),
+  'process.env.PAGE_TITLE': JSON.stringify(process.env.PAGE_TITLE),
+  'process.env.LOCAL_STORAGE_KEY': JSON.stringify(process.env.LOCAL_STORAGE_KEY),
+  'process.env.BUNDLE_API_URL': JSON.stringify(process.env.BUNDLE_API_URL)
+})
 module.exports = {
   entry: ["regenerator-runtime/runtime.js", path.resolve(__dirname, './src/index.js')],
   module: {
