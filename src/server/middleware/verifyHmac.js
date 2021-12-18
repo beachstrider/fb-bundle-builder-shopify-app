@@ -5,7 +5,7 @@ module.exports = async (req, res, next) => {
   if (process.env.NODE_ENV === 'development') {
     return next()
   }
-  console.log('hmac call: ', process.env.SHOPIFY_API_SECRET)
+
   const validateSignature = (query) => {
     if (!query) {
       return false

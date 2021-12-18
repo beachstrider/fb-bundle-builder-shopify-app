@@ -11,7 +11,7 @@ const useGuestToken = async (token = null) => {
           headers: {
             'Content-Type': 'application/json'
           },
-          data: { shop: domain.hostname }
+          data: { shop: `https://${domain.hostname}` }
         }
       )
     } catch (error) {
