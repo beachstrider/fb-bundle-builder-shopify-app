@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { setActiveStep } from '../../store/slices/rootSlice'
 
@@ -7,10 +7,14 @@ const withActiveStep = (WrappedComponent, stepId, dispath) => {
     const dispatch = useDispatch()
     const state = useSelector((state) => state)
 
-    const currentStep = state.steps.find((step) => step.id === stepId)
-    if (!currentStep.isActive) {
-      dispatch(setActiveStep(stepId))
-    }
+    useEffect(() => {
+      if (stepId) {
+        const currentStep = state.steps.find((step) => step.id === stepId)
+        if (!currentStep.isActive) {
+          dispatch(setActiveStep(stepId))
+        }
+      }
+    }, [stepId])
 
     return <WrappedComponent {...props} />
   }

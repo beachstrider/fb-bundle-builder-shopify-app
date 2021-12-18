@@ -50,7 +50,7 @@ function App() {
             </Switch>
           </div>
           {state.displayFooter && <Footer />}
-          {state.faqType && <Faq type={state.faqType} />}
+          {/* {state.faqType && <Faq type={state.faqType} />} */}
         </div>
       </Router>
     </AppProvider>
