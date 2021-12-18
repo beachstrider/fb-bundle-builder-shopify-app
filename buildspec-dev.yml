@@ -1,5 +1,11 @@
 version: 0.2
-
+env:
+  variables:
+    LOGO_URL: $LOGO_URL
+    PROXY_APP_URL: $PROXY_APP_URL
+    PAGE_TITLE: $PAGE_TITLE
+    LOCAL_STORAGE_KEY: $LOCAL_STORAGE_KEY
+    BUNDLE_API_URL: $BUNDLE_API_URL
 phases:
   install:
     runtime-versions:
@@ -19,7 +25,7 @@ phases:
     commands:
       - echo Build started on `date`
       - echo Building the Docker image...
-      - docker build -t $REPOSITORY_URI:latest .
+      - docker build -t $REPOSITORY_URI:latest --build-arg appurl=$PROXY_APP_URL --build-arg storagekey=$LOCAL_STORAGE_KEY --build-arg apiurl=$BUNDLE_API_URL --build-arg logo=$LOGO_URL .
       - docker tag $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG
   post_build:
     commands:
