@@ -33,7 +33,7 @@ function App() {
       <Router>
         <div className="defaultWrapper flexColumnDirection">
           {state.displayHeader && <Header />}
-          <div className="content">
+          <div className="content mb-9">
             <Switch>
               <Route exact path="/account" component={Dashboard} />
               <Route exact path="/order-history" component={OrderHistory} />

@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
+import { zone1, zone2 } from '../data/zipcodes'
 
 const rootSlice = createSlice({
   name: 'root',
@@ -47,11 +48,13 @@ const rootSlice = createSlice({
       {
         id: 1,
         name: 'Zone 1',
-        zipCodes: [90028, 90029, 90030],
+        earliestAvailableDay: 2,
+        leadTime: 5,
+        zipCodes: zone1,
         deliveryDates: [
           {
             id: 0,
-            day: 1,
+            day: 2,
             disabled: true,
             isSelected: false
           },
@@ -63,6 +66,12 @@ const rootSlice = createSlice({
           },
           {
             id: 2,
+            day: 4,
+            disabled: false,
+            isSelected: false
+          },
+          {
+            id: 3,
             day: 5,
             disabled: false,
             isSelected: true
@@ -72,48 +81,31 @@ const rootSlice = createSlice({
       {
         id: 2,
         name: 'Zone 2',
-        zipCodes: [50028, 50029, 50030],
+        earliestAvailableDay: 3,
+        leadTime: 6,
+        zipCodes: zone2,
         deliveryDates: [
           {
             id: 0,
-            day: 0,
-            disabled: false,
+            day: 2,
+            disabled: true,
             isSelected: false
           },
           {
             id: 1,
-            day: 1,
+            day: 3,
             disabled: false,
             isSelected: false
           },
           {
             id: 2,
-            day: 2,
-            disabled: false,
-            isSelected: true
-          }
-        ]
-      },
-      {
-        id: 3,
-        name: 'Zone 3',
-        zipCodes: [60028, 60029, 60030],
-        deliveryDates: [
-          {
-            id: 0,
-            day: 0,
+            day: 4,
             disabled: false,
             isSelected: false
           },
           {
-            id: 1,
-            day: 1,
-            disabled: false,
-            isSelected: false
-          },
-          {
-            id: 2,
-            day: 2,
+            id: 3,
+            day: 5,
             disabled: false,
             isSelected: true
           }

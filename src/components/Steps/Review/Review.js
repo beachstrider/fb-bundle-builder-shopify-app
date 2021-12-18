@@ -16,6 +16,7 @@ import Loading from '../Components/Loading'
 import MenuItemCard from '../../Account/Components/MenuItemCard/MenuItemCard'
 import DeliveryDateModal from '../Components/DeliveryDatesModal/DeliveryDateModal'
 import { getBundleByPlatformId } from '../../Hooks/withBundleApi'
+import { clearLocalStorage } from '../../../store/store'
 
 dayjs.extend(advancedFormat)
 dayjs.extend(weekday)
@@ -41,7 +42,7 @@ const Review = () => {
     }
   }, [state.triggerLastStep])
 
-  const getDay = (weekDay) => dayjs().weekday(weekDay)
+  const getDay = (weekDay) => dayjs().add(1, 'week').weekday(weekDay)
 
   const getShopifyCartToken = async () => {
     const token = await shopifyCart.getToken()
@@ -100,7 +101,10 @@ const Review = () => {
         state.location.deliveryDate.day,
         mappedItems
       )
-      window.location.href = '/cart'
+
+      clearLocalStorage()
+
+      window.location.href = '/checkout'
     } catch (error) {
       return setErrorMessage(DEFAULT_ERROR_MESSAGE)
     }
