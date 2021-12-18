@@ -108,10 +108,9 @@ app.get(
 app.get(
   '/bundle-api/bundles/:bundleId/configurations/:configurationId/contents/:contentsId/products',
   async (req, res) => {
-    console.log('make the call for the products')
     const queryString = objectToQueryString(req.query)
     const response = await request(
-      `${process.env.BUNDLE_API_URL}/api/bundles/${req.params.bundleId}/configurations/${req.params.configurationId}/contents${req.params.contentsId}/products?${queryString}`,
+      `${process.env.BUNDLE_API_URL}/api/bundles/${req.params.bundleId}/configurations/${req.params.configurationId}/contents/${req.params.contentsId}/products?${queryString}`,
       {
         method: 'get',
         headers: {
