@@ -10,7 +10,7 @@ ARG logo=""
 ENV LOGO_URL=$logo
 ARG appurl
 ENV PROXY_APP_URL=$appurl
-ARG title=""
+ARG title="QuickFresh Bundle Builder"
 ENV PAGE_TITLE=$title
 ARG storagekey
 ENV LOCAL_STORAGE_KEY=$storagekey

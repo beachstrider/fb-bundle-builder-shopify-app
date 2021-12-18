@@ -3,6 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="29d2f9b7-828f-4eaf-843c-d9eb0a2d7891" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/Dockerfile" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/buildspec-dev.yml" beforeDir="false" afterPath="$PROJECT_DIR$/buildspec-dev.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/buildspec.yml" beforeDir="false" afterPath="$PROJECT_DIR$/buildspec.yml" afterDir="false" />
     </list>
@@ -100,7 +101,7 @@
       <workItem from="1639450332604" duration="2028000" />
       <workItem from="1639702727559" duration="2246000" />
       <workItem from="1639778910329" duration="340000" />
-      <workItem from="1639784928386" duration="909000" />
+      <workItem from="1639784928386" duration="1128000" />
     </task>
     <servers />
   </component>
