@@ -126,20 +126,20 @@ const Dashboard = () => {
         if(configData.data.data.length > 0){
           const subscriptionArray = {};
           for( const config of configData.data.data){
-          for (const content of config.contents) {
-            if(!weeksMenu.includes(content.display_after.replace('T00:00:00.000Z', 'T12:00:00.000Z')).format('MMM DD')){
-              weeksMenu.push(dayjs(content.display_after.replace('T00:00:00.000Z', 'T12:00:00.000Z')).format('MMM DD'))
-              subscriptionArray[content.display_after.remove('T00:00:00.000Z')] = []
+            for (const content of config.contents) {
+              if(!weeksMenu.includes(dayjs(content.display_after.split('T')[0]).format('MMM DD'))){
+                weeksMenu.push(dayjs(content.display_after.replace('T00:00:00.000Z', 'T12:00:00.000Z')).format('MMM DD'))
+                subscriptionArray[content.display_after.split('T')[0]] = []
+              }
+              // TODO check orders for items
+              // TODO loop those and push
+              // TODO call this for default products if missing /bundle-api/bundles/1/configurations/1/contents/1/products?is_default=1
+              // '/bundle-api/bundles/:bundleId/configurations/:configurationId/contents/:contentsId/products'
+              const configContentsData = await request(`${process.env.PROXY_APP_URL}/bundle-api/bundles/${config.bundle_id}/configurations/${config.id}/contents/${content.id}/products?is_default=1`, { method: 'get', data: '', headers: { authorization: token }}, 3)
+              console.log('configuration contents call: ', configContentsData);
+
             }
-            // TODO check orders for items
-            // TODO loop those and push
-            // TODO call this for default products if missing /bundle-api/bundles/1/configurations/1/contents/1/products?is_default=1
-
-            const configContentsData = await request(`${process.env.PROXY_APP_URL}/api/bundles/${sub.bundle_id}/configurations/1/contents/${order.bundle_configuration_content_id}`, { method: 'get', data: '', headers: { authorization: token }}, 3)
-            console.log('configuration contents call: ', configContentsData);
-
           }
-        }
         }
         
 
