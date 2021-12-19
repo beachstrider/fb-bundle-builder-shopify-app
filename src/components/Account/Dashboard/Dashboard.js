@@ -6,7 +6,7 @@ import {
     selectFaqType,
     setTokens
   } from '../../../store/slices/rootSlice'
-import { Link, Redirect } from 'react-router-dom'
+import { Link, Redirect, useLocation } from 'react-router-dom'
 import styles from './Dashboard.module.scss'
 import { MenuItemCard } from '../Components/MenuItemCard'
 import { useUserToken } from '../../Hooks';
@@ -20,6 +20,13 @@ import { request } from '../../../utils';
 import { Spinner } from '../../Global';
 
 dayjs.extend(isSameOrAfter);
+const placeholderImg = '//cdn.shopify.com/shopifycloud/shopify/assets/no-image-2048-5e88c1b20e087fb7bbe9a3771824e743c244f437e4f8ba93bbf7b11b53f7824c_750x.gif'
+
+function useQuery () {
+  const { search } = useLocation();
+
+  return React.useMemo(() => new URLSearchParams(search), [search]);
+}
 
 const Dashboard = () => {
 
@@ -31,6 +38,7 @@ const Dashboard = () => {
 
   const state = useSelector((state) => state)
   const dispatch = useDispatch()
+  const query = useQuery();
   const [active, setActive] = React.useState([]);
   const [limit, setLimit] = React.useState([]);
   const [subscriptions, setSubscriptions] = React.useState([])
@@ -40,16 +48,17 @@ const Dashboard = () => {
 
 
   React.useEffect( () => {
-    console.log('The shopify customer: ', shopCustomer)
-
     dispatch(displayHeader(false))
     dispatch(displayFooter(false))
     dispatch(selectFaqType(null))
 
     if (!state.tokens.userToken) {
       const thisToken = getToken();
+      console.log('need new token')
+      // TODO the token call isnt triggering the next call
       getOrdersToShow(thisToken);
     } else {
+      console.log('token exists')
       getOrdersToShow(state.tokens.userToken);
     }
     
@@ -57,7 +66,6 @@ const Dashboard = () => {
 
   const getToken = async () => {
     const tokenResponse = await useUserToken();
-    console.log('tokenResponse: ', tokenResponse)
     if (tokenResponse.token) {
       dispatch(
         setTokens({
@@ -69,131 +77,85 @@ const Dashboard = () => {
     }
   }
 
-  const getMissingConfigurations = async (date, token, bundle, config) => {
-    const subContents = await request(`${process.env.PROXY_APP_URL}/bundle-api/bundles/${bundle}/configurations/${config}/contents?display_after=${date}T00:00:00.000Z`, { method: 'get', data: '', headers: { authorization: token }}, 3)
-    const pendingItems = []
-    
-    subContents.data.data.forEach( configuration => {
-      configuration.products.forEach( product => {
-        const shopProd = shopProducts.filter( p => p.id === product.platform_product_id)[0]
-
-        if(product.is_default === 1){
-          pendingItems.push({
-            title: shopProd ? shopProd.title : 'Missing Title',
-            platform_img: shopProd && shopProd.images.length > 0 ? shopProd.images[0]: '//cdn.shopify.com/shopifycloud/shopify/assets/no-image-2048-5e88c1b20e087fb7bbe9a3771824e743c244f437e4f8ba93bbf7b11b53f7824c_750x.gif',
-            quantity: product.default_quantity
-          })
-        }
-      })  
-    })
-
-    return pendingItems
-  }
-
   const getOrdersToShow = async (token) => {
-    console.log('shopifyProducts: ', shopProducts[0]);
-
+    const today = dayjs().subtract(1, 'week').day(0).format('YYYY-MM-DD');
     const activeWeeksArr = []
     const activeWeeksLimit = []
     const weeksMenu = []
-    let newWeeksArr = []
+    const subscriptionArray = {};
+
     const subApi = await request(`${process.env.PROXY_APP_URL}/bundle-api/subscriptions`, { method: 'get', data: '', headers: { authorization: token }}, 3)
 
     if(subApi.data.message && subApi.data.message !== 'Unexpected error.'){
-      getToken().then(token => getOrdersToShow(token))
+      console.log('token is bad')
+      const newToken = await getToken()
+      console.log('got new token: ', newToken)
+      getOrdersToShow(newToken)
     }
+
     if(subApi.data.data){
       for (const sub of subApi.data.data) {
-        const thisLoopSubList = [];
-        const subscriptionId = sub.id;
-
-        for (const [ index, order ] of sub.orders.entries()) {
-          const lastOrder = shopCustomer.orders.filter( ord => ord.id == order.platform_order_id )[0];
-
-          const lastOrderItems = [];
-          const nextSunday = dayjs().day(0).add((7 * index), 'day')
-          if(lastOrder){
-            lastOrder.lineItems.forEach(item => {
-              const shopProd = shopProducts.filter( p => p.id == item.productId)[0]
-              lastOrderItems.push({
-                title: item.title,
-                platform_img: shopProd && shopProd.images.length > 0 ? shopProd.images[0]: '//cdn.shopify.com/shopifycloud/shopify/assets/no-image-2048-5e88c1b20e087fb7bbe9a3771824e743c244f437e4f8ba93bbf7b11b53f7824c_750x.gif',
-                quantity: item.quantity
-              })
-            })
-
-            thisLoopSubList.push({
-              items: lastOrderItems,
-              subId: sub.id,
-              subscriptionType: sub.subscription_type,
-              subscriptionSubType: sub.subscription_sub_type,
-              date: nextSunday.format('YYYY-MM-DD'),
-              status: 'sent',
-              trackingUrl: lastOrder.fulfillments.length > 0 ? lastOrder.fulfillments[0].trackingUrl : lastOrder.orderLink,
-              subscriptionDate: nextSunday.format('MMM DD')
-            });
-          }
-          
-          if(!order.platform_order_id){
-            // call for bundle and look for selected menu's
-            const itemList = await request(`${process.env.PROXY_APP_URL}/bundle-api/subscriptions/${subscriptionId}/orders`, { method: 'get', data: '', headers: { authorization: token }}, 3)
-            console.log('requesting the selected items: ', itemList)
-            if(itemList){
-              if(itemList.items){
-                itemList.items.forEach(item => {
-                  // TODO drill down to the variant
-                  // const itemFromStore = shopifyProducts.filter(sI => item.platform_product_variant_id === sI.variant.id)
-                  const shopItem = shopifyProducts.map(p => p.variants.filter(e => e.id === item.platform_variant_id))[0];
-                  lastOrderItems.push({
-                    title: shopItem ? shopItem.title : 'default product',
-                    platform_img: shopItem && shopItem.images.length > 0 ? shopItem.images[0]: '//cdn.shopify.com/shopifycloud/shopify/assets/no-image-2048-5e88c1b20e087fb7bbe9a3771824e743c244f437e4f8ba93bbf7b11b53f7824c_750x.gif',
-                    quantity: item.quantity,
-                    type: sub.subscription_sub_type
-                  })
-                })
+        const subscriptionOrders = await request(`${process.env.PROXY_APP_URL}/bundle-api/subscriptions/${sub.bundle_id}/orders`, { method: 'get', data: '', headers: { authorization: token }}, 3)
+        const configData = await request(`${process.env.PROXY_APP_URL}/bundle-api/bundles/${sub.bundle_id}/configurations`, { method: 'get', data: '', headers: { authorization: token }}, 3)
+        if(configData.data.data.length > 0){
+          for( const config of configData.data.data){
+            let subCount = 0;
+            for (const content of config.contents) {
+              const displayDate = dayjs(content.display_after.split('T')[0]).format('YYYY-MM-DD')
+              if(subCount < 4 && dayjs(displayDate).isSameOrAfter(dayjs(today))){
+                const orderedItems = subscriptionOrders.data.data.filter(ord => ord.bundle_configuration_content.display_after === content.display_after);
+                const subscriptionObjKey = content.display_after.split('T')[0]
+                if(!weeksMenu.includes(dayjs(content.display_after.split('T')[0]).format('YYYY-MM-DD'))){
+                  weeksMenu.push(dayjs(content.display_after.replace('T00:00:00.000Z', 'T12:00:00.000Z')).format('YYYY-MM-DD'))
+                  subscriptionArray[subscriptionObjKey] = {}
+                }
+                // TODO check orders for items
+                // TODO loop those and push
+                // TODO call this for default products if missing /bundle-api/bundles/1/configurations/1/contents/1/products?is_default=1
+                if(orderedItems.length > 0){
+                  const orderFound = orderedItems[0]
+                  if(subscriptionArray[subscriptionObjKey]){
+                      const thisItemsArray = await buildProductArrayFromVariant(orderFound.items, sub.subscription_sub_type);
+                      subscriptionArray[subscriptionObjKey].subId = sub.bundle_id;
+                      subscriptionArray[subscriptionObjKey].items = thisItemsArray;
+                      subscriptionArray[subscriptionObjKey].status = orderFound.platform_order_id !== null ? 'sent' : dayjs(content.deliver_after).isSameOrAfter(dayjs()) ? 'pending' : 'locked';
+                      subscriptionArray[subscriptionObjKey].subscriptionDate = dayjs(subscriptionObjKey).format('YYYY-MM-DD');
+                      if(orderFound.platform_order_id !== null){
+                        subscriptionArray[subscriptionObjKey].trackingUrl = await getOrderTrackingUrl(orderFound.platform_order_id);
+                      }
+                  }
+                } else {
+                  const configContentsData = await request(`${process.env.PROXY_APP_URL}/bundle-api/bundles/${config.bundle_id}/configurations/${config.id}/contents/${content.id}/products?is_default=1`, { method: 'get', data: '', headers: { authorization: token }}, 3)
+                  const thisProductsArray = await buildProductArrayFromId(configContentsData.data.data, sub.subscription_sub_type);
+                  subscriptionArray[subscriptionObjKey].subId = sub.bundle_id;
+                  subscriptionArray[subscriptionObjKey].items = thisProductsArray;
+                  subscriptionArray[subscriptionObjKey].status = dayjs(content.deliver_after).isSameOrAfter(dayjs()) ?  'pending' : 'locked';
+                  subscriptionArray[subscriptionObjKey].subscriptionDate = dayjs(subscriptionObjKey).format('YYYY-MM-DD')
+                }
+                subCount++
               }
-            } 
-          }
-
-          if(!weeksMenu.includes(nextSunday.format('MMM DD'))){ weeksMenu.push(nextSunday.format('MMM DD')); }
-        }
-
-        if(thisLoopSubList.length < 4){
-          for(let j = thisLoopSubList.length; thisLoopSubList.length < 4; j++){
-            const nextSunday = dayjs().day(0).add((7 * j), 'day');
-
-            await getMissingConfigurations(nextSunday.format('YYYY-MM-DD'), token, 1, 1).then( data => {
-              thisLoopSubList.push({
-                items: data,
-                subId: sub.id,
-                subscriptionType: sub.subscription_type,
-                subscriptionSubType: sub.subscription_sub_type,
-                date: nextSunday.format('YYYY-MM-DD'),
-                status: 'pending',
-                subscriptionDate: nextSunday.format('MMM DD')
-              })
-            });
-
-            if(!weeksMenu.includes(nextSunday.format('MMM DD'))){ weeksMenu.push(nextSunday.format('MMM DD')); }
+            }
           }
         }
-
-        newWeeksArr = newWeeksArr.concat(thisLoopSubList)
       }
     }
 
-    newWeeksArr.forEach((sub) => {
-      const today = dayjs(new Date()).day(0).add(14, 'day').startOf('day');
-      const thisYear = dayjs().year();
-      const pastDate = dayjs(new Date(`${sub.subscriptionDate} ${thisYear}`)).startOf('day');
-
-      if(!pastDate.isSameOrAfter(today)){
-        activeWeeksArr.push(sub);
-        activeWeeksLimit.push(5)
+    let count = 0
+    for (const [key, value] of Object.entries(subscriptionArray)) {
+      activeWeeksLimit.push(5)
+      if(query.get("date") !== null){
+        if(key === query.get("date")){
+          activeWeeksArr.push(value)
+        }
+      } else {
+        if(count < 2){
+          count++
+          activeWeeksArr.push(value)
+        }
       }
-    })
-
-    setSubscriptions(newWeeksArr);
+    }
+  
+    setSubscriptions(subscriptionArray);
     setWeeksMenu(weeksMenu)
     setActive(activeWeeksArr)
     setLimit(activeWeeksLimit)
@@ -201,9 +163,9 @@ const Dashboard = () => {
   }
 
   const handleChange = (week) => {
-    console.log(subscriptions);
-    const newActive = subscriptions.filter( a => a.subscriptionDate === week)
-    console.log(newActive);
+    const subDate = dayjs(week).format('YYYY-MM-DD');
+    const newActive = [];
+    newActive.push(subscriptions[subDate])
     if(newActive.length > 0){
       setActive(newActive)
       const newLimitArr = [];
@@ -239,8 +201,61 @@ const Dashboard = () => {
     setLimit(newLimit);
   }
 
+  const getOrderTrackingUrl = async (orderId) => 
+  new Promise((resolve) => {
+    let orderLink = ''
+    if (shopCustomer.orders.length > 0){
+      const foundOrder = shopCustomer.orders.filter(ord => Number(ord.id) === orderId)
+      if(foundOrder.length > 0){
+        if(foundOrder[0].fulfillments.length > 0){
+          orderLink = foundOrder[0].fulfillments[0].trackingUrl
+        } else {
+          orderLink = foundOrder[0].orderLink
+        }
+      }
+    } 
+    resolve(orderLink)
+  })
+
+  const buildProductArrayFromVariant = async (items, subType) => 
+  new Promise((resolve) => {
+    const foundProductArray = [];
+    for( const variant of items){
+      const variantId = variant.platform_product_variant_id;
+      for (const product of shopProducts) {
+        const variant = product.variants.filter( v => v.id === variantId)
+        if(product.variants.filter( v => v.id === variantId).length > 0){
+          foundProductArray.push({
+            title: product.title, 
+            platform_img: product.images.length > 0 ? product.images[0] : placeholderImg,
+            quantity: variant.quantity,
+            type: subType
+          })
+        }
+      }
+    }
+    resolve(foundProductArray)
+  })
+
+  const buildProductArrayFromId = async (items, subType) => 
+  new Promise((resolve) => {
+    const foundProductArray = [];
+    for( const item of items){
+        const variant = shopProducts.filter( p => p.id === item.platform_product_id)[0]
+        if(shopProducts.filter( p => p.id === item.platform_product_id).length > 0){
+          foundProductArray.push({
+            title: variant.title, 
+            platform_img:  variant?.images.length > 0 ? variant.images[0] : placeholderImg,
+            quantity: item.default_quantity,
+            type: subType
+          })
+        }
+    }
+    resolve(foundProductArray)
+  })
+
   if (loading) {
-    // TODO: work in progress
+
     return (
       <Spinner label="Loading..." />
     )
@@ -259,23 +274,22 @@ const Dashboard = () => {
             <p className={styles.weekMenuLabel}>Select Week</p>
             <div className={`buttons ${styles.weekMenuItems}`}>
               {weeksMenu.map((date, index) => {
-                return ( <button key={index} onClick={() => handleChange(date)} className={ active.filter( a => a.subscriptionDate === date).length > 0 ? "primaryButton largeButton" : "secondaryButton largeButton"}>{date}</button> )
+                return ( <button key={index} onClick={() => handleChange(date)} className={ active.filter( a => a.subscriptionDate === date).length > 0 ? "primaryButton largeButton" : "secondaryButton largeButton"}>{dayjs(date).format('MMM DD')}</button> )
               })}
             </div>
         </div>
       </div>
-      <div className={styles.promoSection}>
-        <p>Promo Section</p>
-      </div>
+
+      {active.length > 0 ? (
       <div className="contentWrapper">
         {active.map((sub, idx) => (
           <div key={idx} className={styles.subscriptionRow}>
             <div className={styles.menuRow}>
               <div className={styles.headerWthLink}>
-                <h3>Week of {sub.subscriptionDate}</h3>
-                {sub.status === 'sent' ? <Link to={sub.trackingUrl} className={styles.primaryLink}>Track Package</Link> : ''}
+                <h3>Week of {dayjs(sub.subscriptionDate).format('MMM DD')}</h3>
+                {sub.status === 'sent' ? <a href={sub.trackingUrl} className={styles.primaryLink}>Track Package</a> : ''}
               </div>
-              {sub.status === 'sent' ? <Link to="/order-history" className="secondaryButton">Order Summary</Link>  : <Link to={`/edit-order/${sub.subId}?date=${sub.date}`} className="secondaryButton">Edit Order</Link>}
+              {sub.status === 'sent' || sub.status === 'locked' ? <Link to="/order-history" className="secondaryButton">Order Summary</Link>  : <Link to={`/edit-order/${sub.subId}?date=${sub.subscriptionDate}`} className="secondaryButton">Edit Order</Link>}
             </div>
             {sub.items.length > 0 ? (
             <div className={styles.accountMenuRow}>
@@ -302,6 +316,12 @@ const Dashboard = () => {
         </div>
         ))}
       </div>
+      ) : (
+        <div className="contentWrapper textCenter">
+          <h2>There are no subscriptions to show</h2>
+          <p>To sign up for a subscription please purchase a subscription <Link to="/">here</Link>.</p>
+        </div>
+      )}
     </div>
   )
 }

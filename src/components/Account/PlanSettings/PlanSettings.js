@@ -164,7 +164,7 @@ const PlanSettings = () => {
                                 <h3>Current Order</h3>
                                 <p>{subscription.subscriptionType} {subscription.subscriptionSubType}</p>
                               </div>
-                              <Link to={`/edit-order/${subscription.subId}?date=${subscription.date}`} className="secondaryButton">Edit Order</Link>
+                              {/* <Link to={`/edit-order/${subscription.subId}?date=${subscription.date}`} className="secondaryButton">Edit Order</Link> */}
                             </div>
                             <div className={styles.currentOrderMenu}>
                                 {subscription.items.map((item, index) => (

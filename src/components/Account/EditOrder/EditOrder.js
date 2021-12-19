@@ -365,6 +365,10 @@ const EditOrder = () => {
     if (quantitiesCountdown !== 0) {
       setDisabledNextButton(true)
     }
+    
+    if(shopCustomer.id === 0){
+      return <Redirect push to="/" />
+    }
 
     setQuantitiesCountdown(currentItem.countdown)
 
