@@ -1,4 +1,5 @@
-const placeholderImg = '//cdn.shopify.com/shopifycloud/shopify/assets/no-image-2048-5e88c1b20e087fb7bbe9a3771824e743c244f437e4f8ba93bbf7b11b53f7824c_750x.gif'
+const EMPTY_STATE_IMAGE =
+  'https://cdn.shopify.com/shopifycloud/shopify/assets/no-image-2048-5e88c1b20e087fb7bbe9a3771824e743c244f437e4f8ba93bbf7b11b53f7824c_750x.gif'
 
 const filterShopifyProducts = async (items, shopifyProducts) =>
   new Promise((resolve) => {
@@ -78,7 +79,7 @@ const filterShopifyVariants = async (state, shopifyProducts, configuration) =>
         if(product.variants.filter( v => v.id === variantId).length > 0){
           foundProductArray.push({
             title: product.title, 
-            platform_img: product.images.length > 0 ? product.images[0] : placeholderImg,
+            platform_img: product.images.length > 0 ? product.images[0] : EMPTY_STATE_IMAGE,
             quantity: variant.quantity,
             type: subType
           })
@@ -96,7 +97,7 @@ const filterShopifyVariants = async (state, shopifyProducts, configuration) =>
         if(shopProducts.filter( p => p.id === item.platform_product_id).length > 0){
           foundProductArray.push({
             title: variant.title, 
-            platform_img:  variant?.images.length > 0 ? variant.images[0] : placeholderImg,
+            platform_img:  variant?.images.length > 0 ? variant.images[0] : EMPTY_STATE_IMAGE,
             quantity: item.default_quantity,
             type: subType
           })
