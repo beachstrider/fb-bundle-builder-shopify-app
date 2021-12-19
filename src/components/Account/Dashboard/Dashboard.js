@@ -48,8 +48,6 @@ const Dashboard = () => {
 
 
   React.useEffect( () => {
-    // console.log('The shopify customer: ', shopCustomer)
-    console.log('query: ', query.get("date"))
     dispatch(displayHeader(false))
     dispatch(displayFooter(false))
     dispatch(selectFaqType(null))
@@ -68,7 +66,6 @@ const Dashboard = () => {
 
   const getToken = async () => {
     const tokenResponse = await useUserToken();
-    console.log('tokenResponse: ', tokenResponse)
     if (tokenResponse.token) {
       dispatch(
         setTokens({
@@ -81,15 +78,13 @@ const Dashboard = () => {
   }
 
   const getOrdersToShow = async (token) => {
-    console.log('shopifyProducts: ', shopProducts[0]);
-    const today = dayjs();
+    const today = dayjs().subtract(1, 'week').day(0).format('YYYY-MM-DD');
     const activeWeeksArr = []
     const activeWeeksLimit = []
     const weeksMenu = []
     const subscriptionArray = {};
 
     const subApi = await request(`${process.env.PROXY_APP_URL}/bundle-api/subscriptions`, { method: 'get', data: '', headers: { authorization: token }}, 3)
-    console.log('subApi response: ', subApi);
 
     if(subApi.data.message && subApi.data.message !== 'Unexpected error.'){
       console.log('token is bad')
@@ -101,46 +96,50 @@ const Dashboard = () => {
     if(subApi.data.data){
       for (const sub of subApi.data.data) {
         const subscriptionOrders = await request(`${process.env.PROXY_APP_URL}/bundle-api/subscriptions/${sub.bundle_id}/orders`, { method: 'get', data: '', headers: { authorization: token }}, 3)
-        console.log('subscriptionOrders call: ', subscriptionOrders);
         const configData = await request(`${process.env.PROXY_APP_URL}/bundle-api/bundles/${sub.bundle_id}/configurations`, { method: 'get', data: '', headers: { authorization: token }}, 3)
-        console.log('configuration call: ', configData);
         if(configData.data.data.length > 0){
           for( const config of configData.data.data){
+            let subCount = 0;
             for (const content of config.contents) {
-              const orderedItems = subscriptionOrders.data.data.filter(ord => ord.bundle_configuration_content.display_after === content.display_after);
-              const subscriptionObjKey = content.display_after.split('T')[0]
-              console.log('Found the order: ', orderedItems)
-              if(!weeksMenu.includes(dayjs(content.display_after.split('T')[0]).format('MMM DD'))){
-                weeksMenu.push(dayjs(content.display_after.replace('T00:00:00.000Z', 'T12:00:00.000Z')).format('MMM DD'))
-                subscriptionArray[subscriptionObjKey] = {}
-              }
-              // TODO check orders for items
-              // TODO loop those and push
-              // TODO call this for default products if missing /bundle-api/bundles/1/configurations/1/contents/1/products?is_default=1
-              if(orderedItems.length > 0){
-                console.log('configuration call: ', orderedItems[0]);
-                const orderFound = orderedItems[0]
-                if(subscriptionArray[subscriptionObjKey]){
-                    const thisItemsArray = await buildProductArrayFromVariant(orderFound.items, sub.subscription_sub_type);
-                    console.log('variant array: ', thisItemsArray);
-                    subscriptionArray[subscriptionObjKey].items = thisItemsArray;
-                    subscriptionArray[subscriptionObjKey].status = orderFound.platform_order_id !== null ? 'sent' : 'pending';
-                    subscriptionArray[subscriptionObjKey].subscriptionDate = dayjs(subscriptionObjKey).format('MMM DD')
+              const displayDate = dayjs(content.display_after.split('T')[0]).format('YYYY-MM-DD')
+              if(subCount < 4 && dayjs(displayDate).isSameOrAfter(dayjs(today))){
+                const orderedItems = subscriptionOrders.data.data.filter(ord => ord.bundle_configuration_content.display_after === content.display_after);
+                const subscriptionObjKey = content.display_after.split('T')[0]
+                if(!weeksMenu.includes(dayjs(content.display_after.split('T')[0]).format('YYYY-MM-DD'))){
+                  weeksMenu.push(dayjs(content.display_after.replace('T00:00:00.000Z', 'T12:00:00.000Z')).format('YYYY-MM-DD'))
+                  subscriptionArray[subscriptionObjKey] = {}
                 }
-              } else {
-                const configContentsData = await request(`${process.env.PROXY_APP_URL}/bundle-api/bundles/${config.bundle_id}/configurations/${config.id}/contents/${content.id}/products?is_default=1`, { method: 'get', data: '', headers: { authorization: token }}, 3)
-                console.log('configuration contents call: ', configContentsData);
-                const thisProductsArray = await buildProductArrayFromId(configContentsData.data.data, sub.subscription_sub_type);
-                subscriptionArray[subscriptionObjKey].items = thisProductsArray;
-                subscriptionArray[subscriptionObjKey].status = 'pending';
-                subscriptionArray[subscriptionObjKey].subscriptionDate = dayjs(subscriptionObjKey).format('MMM DD')
+                // TODO check orders for items
+                // TODO loop those and push
+                // TODO call this for default products if missing /bundle-api/bundles/1/configurations/1/contents/1/products?is_default=1
+                if(orderedItems.length > 0){
+                  const orderFound = orderedItems[0]
+                  if(subscriptionArray[subscriptionObjKey]){
+                      const thisItemsArray = await buildProductArrayFromVariant(orderFound.items, sub.subscription_sub_type);
+                      subscriptionArray[subscriptionObjKey].subId = sub.bundle_id;
+                      subscriptionArray[subscriptionObjKey].items = thisItemsArray;
+                      subscriptionArray[subscriptionObjKey].status = orderFound.platform_order_id !== null ? 'sent' : dayjs(content.deliver_after).isSameOrAfter(dayjs()) ? 'pending' : 'locked';
+                      subscriptionArray[subscriptionObjKey].subscriptionDate = dayjs(subscriptionObjKey).format('YYYY-MM-DD');
+                      if(orderFound.platform_order_id !== null){
+                        subscriptionArray[subscriptionObjKey].trackingUrl = await getOrderTrackingUrl(orderFound.platform_order_id);
+                      }
+                  }
+                } else {
+                  const configContentsData = await request(`${process.env.PROXY_APP_URL}/bundle-api/bundles/${config.bundle_id}/configurations/${config.id}/contents/${content.id}/products?is_default=1`, { method: 'get', data: '', headers: { authorization: token }}, 3)
+                  const thisProductsArray = await buildProductArrayFromId(configContentsData.data.data, sub.subscription_sub_type);
+                  subscriptionArray[subscriptionObjKey].subId = sub.bundle_id;
+                  subscriptionArray[subscriptionObjKey].items = thisProductsArray;
+                  subscriptionArray[subscriptionObjKey].status = dayjs(content.deliver_after).isSameOrAfter(dayjs()) ?  'pending' : 'locked';
+                  subscriptionArray[subscriptionObjKey].subscriptionDate = dayjs(subscriptionObjKey).format('YYYY-MM-DD')
+                }
+                subCount++
               }
             }
           }
         }
       }
     }
-    console.log('get variant images: ', subscriptionArray);
+
     let count = 0
     for (const [key, value] of Object.entries(subscriptionArray)) {
       activeWeeksLimit.push(5)
@@ -164,9 +163,9 @@ const Dashboard = () => {
   }
 
   const handleChange = (week) => {
-    console.log(subscriptions);
-    const newActive = subscriptions.filter( a => a.subscriptionDate === week)
-    console.log(newActive);
+    const subDate = dayjs(week).format('YYYY-MM-DD');
+    const newActive = [];
+    newActive.push(subscriptions[subDate])
     if(newActive.length > 0){
       setActive(newActive)
       const newLimitArr = [];
@@ -202,6 +201,22 @@ const Dashboard = () => {
     setLimit(newLimit);
   }
 
+  const getOrderTrackingUrl = async (orderId) => 
+  new Promise((resolve) => {
+    let orderLink = ''
+    if (shopCustomer.orders.length > 0){
+      const foundOrder = shopCustomer.orders.filter(ord => Number(ord.id) === orderId)
+      if(foundOrder.length > 0){
+        if(foundOrder[0].fulfillments.length > 0){
+          orderLink = foundOrder[0].fulfillments[0].trackingUrl
+        } else {
+          orderLink = foundOrder[0].orderLink
+        }
+      }
+    } 
+    resolve(orderLink)
+  })
+
   const buildProductArrayFromVariant = async (items, subType) => 
   new Promise((resolve) => {
     const foundProductArray = [];
@@ -230,7 +245,7 @@ const Dashboard = () => {
         if(shopProducts.filter( p => p.id === item.platform_product_id).length > 0){
           foundProductArray.push({
             title: variant.title, 
-            platform_img:  variant?.images.length > 0 ? product.images[0] : placeholderImg,
+            platform_img:  variant?.images.length > 0 ? variant.images[0] : placeholderImg,
             quantity: item.default_quantity,
             type: subType
           })
@@ -259,7 +274,7 @@ const Dashboard = () => {
             <p className={styles.weekMenuLabel}>Select Week</p>
             <div className={`buttons ${styles.weekMenuItems}`}>
               {weeksMenu.map((date, index) => {
-                return ( <button key={index} onClick={() => handleChange(date)} className={ active.filter( a => a.subscriptionDate === date).length > 0 ? "primaryButton largeButton" : "secondaryButton largeButton"}>{date}</button> )
+                return ( <button key={index} onClick={() => handleChange(date)} className={ active.filter( a => a.subscriptionDate === date).length > 0 ? "primaryButton largeButton" : "secondaryButton largeButton"}>{dayjs(date).format('MMM DD')}</button> )
               })}
             </div>
         </div>
@@ -271,10 +286,10 @@ const Dashboard = () => {
           <div key={idx} className={styles.subscriptionRow}>
             <div className={styles.menuRow}>
               <div className={styles.headerWthLink}>
-                <h3>Week of {sub.subscriptionDate}</h3>
-                {sub.status === 'sent' ? <Link to={sub.trackingUrl} className={styles.primaryLink}>Track Package</Link> : ''}
+                <h3>Week of {dayjs(sub.subscriptionDate).format('MMM DD')}</h3>
+                {sub.status === 'sent' ? <a href={sub.trackingUrl} className={styles.primaryLink}>Track Package</a> : ''}
               </div>
-              {sub.status === 'sent' ? <Link to="/order-history" className="secondaryButton">Order Summary</Link>  : <Link to={`/edit-order/${sub.subId}?date=${sub.date}`} className="secondaryButton">Edit Order</Link>}
+              {sub.status === 'sent' || sub.status === 'locked' ? <Link to="/order-history" className="secondaryButton">Order Summary</Link>  : <Link to={`/edit-order/${sub.subId}?date=${sub.subscriptionDate}`} className="secondaryButton">Edit Order</Link>}
             </div>
             {sub.items.length > 0 ? (
             <div className={styles.accountMenuRow}>
