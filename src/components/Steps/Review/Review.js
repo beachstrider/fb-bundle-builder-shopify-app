@@ -15,6 +15,7 @@ import styles from './Review.module.scss'
 import Loading from '../Components/Loading'
 import MenuItemCard from '../../Account/Components/MenuItemCard/MenuItemCard'
 import DeliveryDateModal from '../Components/DeliveryDatesModal/DeliveryDateModal'
+import { getBundleByPlatformId } from '../../Hooks/withBundleApi'
 
 dayjs.extend(advancedFormat)
 dayjs.extend(weekday)
@@ -76,7 +77,7 @@ const Review = () => {
       await addShopifyCartItems()
 
       const shopifyProduct = getSelectedBundle(state.bundle.breakfast.tag)
-      const currentBundle = await getBundle(
+      const currentBundle = await getBundleByPlatformId(
         state.tokens.guestToken,
         shopifyProduct.id
       )

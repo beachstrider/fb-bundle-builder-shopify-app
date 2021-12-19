@@ -5,7 +5,6 @@ module.exports = async (req, res, next) => {
   if (process.env.NODE_ENV === 'development') {
     return next()
   }
-  console.log('hmac call')
   const validateSignature = (query) => {
     if (!query) {
       return false

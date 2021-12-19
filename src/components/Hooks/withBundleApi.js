@@ -24,10 +24,27 @@ const getMenuItems = async (
   }
 }
 
-const getBundle = async (token, productId) => {
+const getBundle = async (token, id) => {
   try {
     return await request(
-      `${process.env.PROXY_APP_URL}/bundle-api/bundles?platform_product_id=${productId}`,
+      `${process.env.PROXY_APP_URL}/bundle-api/bundles/${id}`,
+      {
+        method: 'get',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        }
+      }
+    )
+  } catch (error) {
+    return error
+  }
+}
+
+const getBundleByPlatformId = async (token, productPlatformId) => {
+  try {
+    return await request(
+      `${process.env.PROXY_APP_URL}/bundle-api/bundles-query?platform_product_id=${productPlatformId}`,
       {
         method: 'get',
         headers: {
@@ -69,4 +86,4 @@ const saveCart = async (
   }
 }
 
-export { getMenuItems, getBundle, saveCart }
+export { getMenuItems, getBundle, getBundleByPlatformId, saveCart }
