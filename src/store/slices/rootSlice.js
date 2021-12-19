@@ -192,6 +192,9 @@ const rootSlice = createSlice({
     cartClear: (state) => {
       state.cart = []
     },
+    cartUpdate: (state, action) => {
+      state.cart = action.payload
+    },
     cartAddItem: (state, action) => {
       const existingItem = state.cart.find(
         (i) => Number(i.id) === Number(action.payload.id)
@@ -237,6 +240,7 @@ export const {
   cartAddItem,
   cartRemoveItem,
   cartClear,
+  cartUpdate,
   selectFaqType,
   setActiveStep,
   setEmail,
