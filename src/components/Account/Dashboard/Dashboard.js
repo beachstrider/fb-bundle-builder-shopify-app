@@ -16,11 +16,15 @@ import {
 } from '@shopify/polaris-icons';
 import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
 import * as dayjs from 'dayjs';
-import { request } from '../../../utils';
+import { 
+  request,
+  getOrderTrackingUrl,
+  buildProductArrayFromVariant,
+  buildProductArrayFromId 
+} from '../../../utils';
 import { Spinner } from '../../Global';
 
 dayjs.extend(isSameOrAfter);
-const placeholderImg = '//cdn.shopify.com/shopifycloud/shopify/assets/no-image-2048-5e88c1b20e087fb7bbe9a3771824e743c244f437e4f8ba93bbf7b11b53f7824c_750x.gif'
 
 function useQuery () {
   const { search } = useLocation();
@@ -115,18 +119,18 @@ const Dashboard = () => {
                 if(orderedItems.length > 0){
                   const orderFound = orderedItems[0]
                   if(subscriptionArray[subscriptionObjKey]){
-                      const thisItemsArray = await buildProductArrayFromVariant(orderFound.items, sub.subscription_sub_type);
+                      const thisItemsArray = await buildProductArrayFromVariant(orderFound.items, sub.subscription_sub_type, shopProducts);
                       subscriptionArray[subscriptionObjKey].subId = sub.bundle_id;
                       subscriptionArray[subscriptionObjKey].items = thisItemsArray;
                       subscriptionArray[subscriptionObjKey].status = orderFound.platform_order_id !== null ? 'sent' : dayjs(content.deliver_after).isSameOrAfter(dayjs()) ? 'pending' : 'locked';
                       subscriptionArray[subscriptionObjKey].subscriptionDate = dayjs(subscriptionObjKey).format('YYYY-MM-DD');
                       if(orderFound.platform_order_id !== null){
-                        subscriptionArray[subscriptionObjKey].trackingUrl = await getOrderTrackingUrl(orderFound.platform_order_id);
+                        subscriptionArray[subscriptionObjKey].trackingUrl = await getOrderTrackingUrl(orderFound.platform_order_id, shopCustomer);
                       }
                   }
                 } else {
                   const configContentsData = await request(`${process.env.PROXY_APP_URL}/bundle-api/bundles/${config.bundle_id}/configurations/${config.id}/contents/${content.id}/products?is_default=1`, { method: 'get', data: '', headers: { authorization: token }}, 3)
-                  const thisProductsArray = await buildProductArrayFromId(configContentsData.data.data, sub.subscription_sub_type);
+                  const thisProductsArray = await buildProductArrayFromId(configContentsData.data.data, sub.subscription_sub_type, shopProducts);
                   subscriptionArray[subscriptionObjKey].subId = sub.bundle_id;
                   subscriptionArray[subscriptionObjKey].items = thisProductsArray;
                   subscriptionArray[subscriptionObjKey].status = dayjs(content.deliver_after).isSameOrAfter(dayjs()) ?  'pending' : 'locked';
@@ -200,59 +204,6 @@ const Dashboard = () => {
     });
     setLimit(newLimit);
   }
-
-  const getOrderTrackingUrl = async (orderId) => 
-  new Promise((resolve) => {
-    let orderLink = ''
-    if (shopCustomer.orders.length > 0){
-      const foundOrder = shopCustomer.orders.filter(ord => Number(ord.id) === orderId)
-      if(foundOrder.length > 0){
-        if(foundOrder[0].fulfillments.length > 0){
-          orderLink = foundOrder[0].fulfillments[0].trackingUrl
-        } else {
-          orderLink = foundOrder[0].orderLink
-        }
-      }
-    } 
-    resolve(orderLink)
-  })
-
-  const buildProductArrayFromVariant = async (items, subType) => 
-  new Promise((resolve) => {
-    const foundProductArray = [];
-    for( const variant of items){
-      const variantId = variant.platform_product_variant_id;
-      for (const product of shopProducts) {
-        const variant = product.variants.filter( v => v.id === variantId)
-        if(product.variants.filter( v => v.id === variantId).length > 0){
-          foundProductArray.push({
-            title: product.title, 
-            platform_img: product.images.length > 0 ? product.images[0] : placeholderImg,
-            quantity: variant.quantity,
-            type: subType
-          })
-        }
-      }
-    }
-    resolve(foundProductArray)
-  })
-
-  const buildProductArrayFromId = async (items, subType) => 
-  new Promise((resolve) => {
-    const foundProductArray = [];
-    for( const item of items){
-        const variant = shopProducts.filter( p => p.id === item.platform_product_id)[0]
-        if(shopProducts.filter( p => p.id === item.platform_product_id).length > 0){
-          foundProductArray.push({
-            title: variant.title, 
-            platform_img:  variant?.images.length > 0 ? variant.images[0] : placeholderImg,
-            quantity: item.default_quantity,
-            type: subType
-          })
-        }
-    }
-    resolve(foundProductArray)
-  })
 
   if (loading) {
 
