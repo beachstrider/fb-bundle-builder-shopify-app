@@ -121,7 +121,7 @@ const Dashboard = () => {
                 console.log('configuration call: ', orderedItems[0]);
                 const orderFound = orderedItems[0]
                 if(subscriptionArray[subscriptionObjKey]){
-                    const thisItemsArray = await buildProductArrayFromVariant(orderFound.items, orderFound.subscription.subscription_sub_type);
+                    const thisItemsArray = await buildProductArrayFromVariant(orderFound.items, sub.subscription_sub_type);
                     console.log('variant array: ', thisItemsArray);
                     subscriptionArray[subscriptionObjKey].items = thisItemsArray;
                     subscriptionArray[subscriptionObjKey].status = orderFound.platform_order_id !== null ? 'sent' : 'pending';
@@ -130,7 +130,8 @@ const Dashboard = () => {
               } else {
                 const configContentsData = await request(`${process.env.PROXY_APP_URL}/bundle-api/bundles/${config.bundle_id}/configurations/${config.id}/contents/${content.id}/products?is_default=1`, { method: 'get', data: '', headers: { authorization: token }}, 3)
                 console.log('configuration contents call: ', configContentsData);
-                subscriptionArray[subscriptionObjKey].items = configContentsData.data.data;
+                const thisProductsArray = await buildProductArrayFromId(configContentsData.data.data, sub.subscription_sub_type);
+                subscriptionArray[subscriptionObjKey].items = thisProductsArray;
                 subscriptionArray[subscriptionObjKey].status = 'pending';
                 subscriptionArray[subscriptionObjKey].subscriptionDate = dayjs(subscriptionObjKey).format('MMM DD')
               }
@@ -142,13 +143,14 @@ const Dashboard = () => {
     console.log('get variant images: ', subscriptionArray);
     let count = 0
     for (const [key, value] of Object.entries(subscriptionArray)) {
-      count++
+      activeWeeksLimit.push(5)
       if(query.get("date") !== null){
         if(key === query.get("date")){
           activeWeeksArr.push(value)
         }
       } else {
         if(count < 2){
+          count++
           activeWeeksArr.push(value)
         }
       }
@@ -210,7 +212,7 @@ const Dashboard = () => {
         if(product.variants.filter( v => v.id === variantId).length > 0){
           foundProductArray.push({
             title: product.title, 
-            image: product.images.length > 0 ? product.images[0] : placeholderImg,
+            platform_img: product.images.length > 0 ? product.images[0] : placeholderImg,
             quantity: variant.quantity,
             type: subType
           })
@@ -220,8 +222,25 @@ const Dashboard = () => {
     resolve(foundProductArray)
   })
 
+  const buildProductArrayFromId = async (items, subType) => 
+  new Promise((resolve) => {
+    const foundProductArray = [];
+    for( const item of items){
+        const variant = shopProducts.filter( p => p.id === item.platform_product_id)[0]
+        if(shopProducts.filter( p => p.id === item.platform_product_id).length > 0){
+          foundProductArray.push({
+            title: variant.title, 
+            platform_img:  variant?.images.length > 0 ? product.images[0] : placeholderImg,
+            quantity: item.default_quantity,
+            type: subType
+          })
+        }
+    }
+    resolve(foundProductArray)
+  })
+
   if (loading) {
-    // TODO: work in progress
+
     return (
       <Spinner label="Loading..." />
     )
