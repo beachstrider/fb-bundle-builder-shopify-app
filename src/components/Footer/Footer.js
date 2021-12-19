@@ -62,7 +62,7 @@ const Footer = () => {
   }
 
   return (
-    <div className={`${styles.wrapper} defaultWrapper mt-10 mb-10`}>
+    <div className={`${styles.wrapper} defaultWrapper`}>
       <div className="buttons">
         <div
           className="button lightButton"

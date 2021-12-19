@@ -5,8 +5,9 @@ import CardQuantities from '../../Cards/CardQuantities'
 import {
   getMenuItems,
   getSelectedBundle,
-  getBundle,
-  withActiveStep
+  getBundleByPlatformId,
+  withActiveStep,
+  getBundleConfiguration
 } from '../../Hooks'
 import {
   cartRemoveItem,
@@ -14,22 +15,26 @@ import {
   setIsNextButtonActive
 } from '../../../store/slices/rootSlice'
 import styles from './Entrees.module.scss'
-import weekday from 'dayjs/plugin/weekday'
 import dayjs from 'dayjs'
+import weekday from 'dayjs/plugin/weekday'
+import isBetween from 'dayjs/plugin/isBetween'
 import Loading from '../Components/Loading'
 import {
   cart,
   filterShopifyProducts,
-  filterShopifyVariants
+  filterShopifyVariants,
+  getNextWeekDates
 } from '../../../utils'
-import { getBundleByPlatformId } from '../../Hooks/withBundleApi'
 
 const FAQ_TYPE = 'entrees'
 const STEP_ID = 4
 const EMPTY_STATE_IMAGE =
   'https://cdn.shopify.com/shopifycloud/shopify/assets/no-image-2048-5e88c1b20e087fb7bbe9a3771824e743c244f437e4f8ba93bbf7b11b53f7824c_750x.gif'
+const WEEK_START_DAY = 0
+const WEEK_END_DAY = 6
 
 dayjs.extend(weekday)
+dayjs.extend(isBetween)
 
 const Entrees = () => {
   const state = useSelector((state) => state)
@@ -132,15 +137,29 @@ const Entrees = () => {
   }
 
   const getProducts = async (configuration) => {
-    const nextWeekSunday = dayjs()
+    const currentContent = await getNextWeekDates(
+      getBundleConfiguration,
+      state,
+      configuration.bundleId,
+      configuration.id,
+      WEEK_START_DAY,
+      WEEK_END_DAY
+    )
+
+    const defaultDisplayAfter = dayjs()
       .weekday(7)
       .format('YYYY-MM-DDT00:00:00.000[Z]')
+
+    const displayAfterDate =
+      currentContent.length > 0
+        ? currentContent[0].display_after
+        : defaultDisplayAfter
 
     const response = await getMenuItems(
       state.tokens.guestToken,
       configuration.bundleId,
       configuration.id,
-      `is_enabled=1&display_after=${nextWeekSunday}`
+      `is_enabled=1&display_after=${displayAfterDate}`
     )
 
     if (response.data?.data && response.data?.data.length > 0) {

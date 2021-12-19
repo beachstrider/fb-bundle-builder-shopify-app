@@ -1,5 +1,11 @@
 import withActiveStep from './withActiveStep'
-import { getMenuItems, getBundle, saveCart } from './withBundleApi'
+import {
+  getMenuItems,
+  getBundle,
+  getBundleConfiguration,
+  saveCart,
+  getBundleByPlatformId
+} from './withBundleApi'
 import useGuestToken from './useGuestToken'
 import getSelectedBundle from './getSelectedBundle'
 import {
@@ -14,6 +20,8 @@ export {
   getMenuItems,
   getSelectedBundle,
   getBundle,
+  getBundleConfiguration,
+  getBundleByPlatformId,
   withActiveStep,
   useUserToken,
   hasUserToken,

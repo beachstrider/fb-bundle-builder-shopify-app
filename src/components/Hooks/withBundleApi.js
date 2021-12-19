@@ -5,7 +5,7 @@ const getMenuItems = async (
   token,
   bundleId,
   configurationId,
-  queryString = `diplay_after=${dayjs().format('YYYY-MM-DDT00:00:00.000[Z]')}`
+  queryString = `display_after=${dayjs().format('YYYY-MM-DDT00:00:00.000[Z]')}`
 ) => {
   try {
     console.log('call aaasdlaksjdlakjsdlakjdaksjl')
@@ -28,6 +28,23 @@ const getBundle = async (token, id) => {
   try {
     return await request(
       `${process.env.PROXY_APP_URL}/bundle-api/bundles/${id}`,
+      {
+        method: 'get',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        }
+      }
+    )
+  } catch (error) {
+    return error
+  }
+}
+
+const getBundleConfiguration = async (token, bundleId, configurationId) => {
+  try {
+    return await request(
+      `${process.env.PROXY_APP_URL}/bundle-api/bundles/${bundleId}/configurations/${configurationId}`,
       {
         method: 'get',
         headers: {
@@ -86,4 +103,10 @@ const saveCart = async (
   }
 }
 
-export { getMenuItems, getBundle, getBundleByPlatformId, saveCart }
+export {
+  getMenuItems,
+  getBundle,
+  getBundleConfiguration,
+  getBundleByPlatformId,
+  saveCart
+}
