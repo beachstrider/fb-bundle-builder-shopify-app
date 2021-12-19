@@ -232,7 +232,7 @@ const Dashboard = () => {
       </div>
 
       {active.length > 0 ? (
-      <div className="contentWrapper">
+      <div className="contentWrapper mt-10">
         {active.map((sub, idx) => (
           <div key={idx} className={styles.subscriptionRow}>
             <div className={styles.menuRow}>
