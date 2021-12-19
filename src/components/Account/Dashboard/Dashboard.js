@@ -240,7 +240,7 @@ const Dashboard = () => {
                 <h3>Week of {dayjs(sub.subscriptionDate).format('MMM DD')}</h3>
                 {sub.status === 'sent' ? <a href={sub.trackingUrl} className={styles.primaryLink}>Track Package</a> : ''}
               </div>
-              {sub.status === 'sent' || sub.status === 'locked' ? <Link to="/order-history" className="secondaryButton">Order Summary</Link>  : <Link to={`/edit-order/${sub.subId}?date=${sub.subscriptionDate}`} className="secondaryButton">Edit Order</Link>}
+              {sub.status === 'sent' || sub.status === 'locked' ? <Link to={`/order-history?date=${sub.subscriptionDate}`} className="secondaryButton">Order Summary</Link>  : <Link to={`/edit-order/${sub.subId}?date=${sub.subscriptionDate}`} className="secondaryButton">Edit Order</Link>}
             </div>
             {sub.items.length > 0 ? (
             <div className={styles.accountMenuRow}>

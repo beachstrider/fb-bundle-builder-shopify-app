@@ -6,7 +6,7 @@ import {
     selectFaqType,
     setTokens
   } from '../../../store/slices/rootSlice'
-import { Link, Redirect } from 'react-router-dom'
+import { Link, Redirect, useLocation } from 'react-router-dom'
 import { SideMenu } from '../Components/SideMenu'
 import styles from './PlanSettings.module.scss'
 import { MenuItemCard } from '../Components/MenuItemCard'
@@ -19,12 +19,18 @@ import { request } from '../../../utils';
 import { Spinner } from '../../Global';
 import { DeliveryDayModal } from '../Components/DeliveryDayModal';
 
+function useQuery () {
+  const { search } = useLocation();
+
+  return React.useMemo(() => new URLSearchParams(search), [search]);
+}
+
 const PlanSettings = () => {
 
   if(shopCustomer.id === 0){
     return <Redirect push to="/" />
   }
-
+  const query = useQuery();
   const state = useSelector((state) => state)
   const dispatch = useDispatch()
   const [subscriptions, setSubscriptions] = React.useState([])
@@ -67,7 +73,7 @@ const PlanSettings = () => {
     const newWeeksArr = []
     const subApi = await request(`${process.env.PROXY_APP_URL}/bundle-api/subscriptions`, { method: 'get', data: '', headers: { authorization: token }}, 3)
     console.log('customer subscription: ', subApi);
-    const thisWeek = dayjs().day(0).add((7), 'day');
+    const thisWeek = query.get("date") !== null ? dayjs(query.get("date")) : dayjs().day(0);
     console.log('this weeks: ', thisWeek.format('YYYY-MM-DD'));
 
 
