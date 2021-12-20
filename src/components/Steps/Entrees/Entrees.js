@@ -276,12 +276,13 @@ const Entrees = () => {
                 <CardQuantities
                   key={item.id}
                   title={item.name}
+                  description={item.description}
                   image={
                     item.feature_image
                       ? item.feature_image.src
                       : item.images.length > 0
                       ? item.images[0]
-                      : EMPTY_STATE_IMAGE
+                      : process.env.EMPTY_STATE_IMAGE
                   }
                   metafields={item.metafields}
                   isChecked={cartUtility.isItemSelected(state.cart, item)}

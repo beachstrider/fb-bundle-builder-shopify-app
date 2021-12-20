@@ -1,9 +1,11 @@
-import React, { useState } from 'react'
-import { ButtonCheckMark, ButtonQuantities } from '../Buttons'
-import ItemDescriptionModal from '../Steps/Components/ItemDescriptionModal/ItemDescriptionModal'
-import styles from './CardQuantities.module.scss'
+import React from 'react'
+import { ButtonCheckMark, ButtonQuantities } from '../../../Buttons'
+import Modal from '../../../Global/Modal'
+import styles from './ItemDescriptionModal.module.scss'
 
-const CardQuantities = ({
+const ItemDescriptionModal = ({
+  open,
+  close,
   title,
   description,
   image,
@@ -15,20 +17,12 @@ const CardQuantities = ({
   onRemove,
   disableAdd = false
 }) => {
-  const [openModal, setOpenModal] = useState(false)
-
   return (
-    <>
-      <div
-        className={styles.card}
-        style={{
-          border: isChecked ? '4px solid #3DAE2B' : '1px solid #e5e5e5'
-        }}
-      >
+    <Modal open={open} close={close}>
+      <div className={styles.card} onClick={() => setOpenModal(true)}>
         <div
           className={styles.image}
           style={{ backgroundImage: `url('${image}')` }}
-          onClick={() => setOpenModal(true)}
         >
           &nbsp;
         </div>
@@ -38,9 +32,18 @@ const CardQuantities = ({
             {metafields.map((metafield) => (
               <div key={metafield.key}>
                 <div className={styles.subTitle}>{metafield.value}</div>
-                <div>{metafield.name}</div>
+                <div className={styles.subTitleDescription}>
+                  {metafield.name}
+                </div>
               </div>
             ))}
+          </div>
+          <div className={styles.descriptionHtml}>
+            <div
+              dangerouslySetInnerHTML={{
+                __html: description
+              }}
+            ></div>
           </div>
           <div className={`${styles.actions} mt-5`}>
             <div>
@@ -59,22 +62,8 @@ const CardQuantities = ({
           </div>
         </div>
       </div>
-      <ItemDescriptionModal
-        title={title}
-        description={description}
-        image={image}
-        metafields={metafields}
-        quantity={quantity}
-        isChecked={isChecked}
-        onClick={onClick}
-        onAdd={onAdd}
-        onRemove={onRemove}
-        disableAdd={disableAdd}
-        open={openModal}
-        close={() => setOpenModal(false)}
-      />
-    </>
+    </Modal>
   )
 }
 
-export default CardQuantities
+export default ItemDescriptionModal

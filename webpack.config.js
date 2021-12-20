@@ -41,7 +41,10 @@ module.exports = {
       'process.env.LOCAL_STORAGE_KEY': JSON.stringify(
         process.env.LOCAL_STORAGE_KEY
       ),
-      'process.env.BUNDLE_API_URL': JSON.stringify(process.env.BUNDLE_API_URL)
+      'process.env.BUNDLE_API_URL': JSON.stringify(process.env.BUNDLE_API_URL),
+      'process.env.EMPTY_STATE_IMAGE': JSON.stringify(
+        process.env.EMPTY_STATE_IMAGE
+      )
     })
   ],
   output: {
