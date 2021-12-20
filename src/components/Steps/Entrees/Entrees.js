@@ -128,7 +128,8 @@ const Entrees = () => {
       setIsLoading(false)
     } catch (error) {
       // TODO: display error
-      // return history.push('/')
+      console.error(error)
+      //return history.push('/')
     }
   }
 
