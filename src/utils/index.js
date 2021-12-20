@@ -7,7 +7,7 @@ import {
   getNextWeekDates,
   mapDeliveryDays
 } from './zones'
-import { filterShopifyProducts, filterShopifyVariants } from './products'
+import { filterShopifyProducts, filterShopifyVariants, getOrderTrackingUrl, buildProductArrayFromVariant, buildProductArrayFromId } from './products'
 import cart from './cart'
 
 export {
@@ -20,5 +20,8 @@ export {
   isValidEmail,
   mapDeliveryDays,
   request,
-  smoothScrollingToId
+  smoothScrollingToId,
+  getOrderTrackingUrl,
+  buildProductArrayFromVariant,
+  buildProductArrayFromId
 }

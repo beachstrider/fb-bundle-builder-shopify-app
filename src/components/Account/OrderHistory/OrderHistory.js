@@ -6,7 +6,7 @@ import {
     selectFaqType,
     setTokens
   } from '../../../store/slices/rootSlice'
-import { Link, Redirect } from 'react-router-dom'
+import { Link, Redirect, useLocation } from 'react-router-dom'
 import { SideMenu } from '../Components/SideMenu'
 import styles from './OrderHistory.module.scss'
 import { MenuItemCard } from '../Components/MenuItemCard'
@@ -18,12 +18,21 @@ import * as dayjs from 'dayjs';
 import { request } from '../../../utils';
 import { Spinner } from '../../Global';
 
+const EMPTY_STATE_IMAGE =
+  'https://cdn.shopify.com/shopifycloud/shopify/assets/no-image-2048-5e88c1b20e087fb7bbe9a3771824e743c244f437e4f8ba93bbf7b11b53f7824c_750x.gif'
+
+function useQuery () {
+  const { search } = useLocation();
+
+  return React.useMemo(() => new URLSearchParams(search), [search]);
+}
+
 const OrderHistory = () => {
 
   if(shopCustomer.id === 0){
     return <Redirect push to="/" />
   }
-
+  const query = useQuery();
   const state = useSelector((state) => state)
   const dispatch = useDispatch()
   const [subscriptions, setSubscriptions] = React.useState([])
@@ -68,7 +77,7 @@ const OrderHistory = () => {
   const getOrdersToShow = async (token) => {
     const newWeeksArr = []
     const subApi = await request(`${process.env.PROXY_APP_URL}/bundle-api/subscriptions`, { method: 'get', data: '', headers: { authorization: token }}, 3)
-    const thisWeek = dayjs().day(0).add((7), 'day');
+    const thisWeek = dayjs().day(0);
 
     for (const sub of subApi.data.data) {
       const thisLoopSubList = [];
@@ -84,7 +93,7 @@ const OrderHistory = () => {
               const shopProd = shopProducts.filter( p => p.id === product.platform_product_variant_id)[0]
               thisLoopSubList.push({
                 title:  shopProd ? shopProd.title : 'Missing Title',
-                platform_img: shopProd && shopProd.images.length > 0 ? shopProd.images[0]: '//cdn.shopify.com/shopifycloud/shopify/assets/no-image-2048-5e88c1b20e087fb7bbe9a3771824e743c244f437e4f8ba93bbf7b11b53f7824c_750x.gif',
+                platform_img: shopProd && shopProd.images.length > 0 ? shopProd.images[0]: EMPTY_STATE_IMAGEg,
                 quantity: item.quantity,
                 type: order.subscription.subscription_sub_type
               })
@@ -102,7 +111,7 @@ const OrderHistory = () => {
               const shopProd = shopProducts.filter( p => p.id === product.platform_product_id)[0]
               thisLoopSubList.push({
                 title:  shopProd ? shopProd.title : 'Missing Title',
-                platform_img: shopProd && shopProd.images.length > 0 ? shopProd.images[0]: '//cdn.shopify.com/shopifycloud/shopify/assets/no-image-2048-5e88c1b20e087fb7bbe9a3771824e743c244f437e4f8ba93bbf7b11b53f7824c_750x.gif',
+                platform_img: shopProd && shopProd.images.length > 0 ? shopProd.images[0]: EMPTY_STATE_IMAGE,
                 quantity: product.default_quantity,
                 type: sub.subscription_sub_type
               })
@@ -169,7 +178,7 @@ const OrderHistory = () => {
                             {subscription.items.map((item, idx) => (
                                 idx < 3 ? <MenuItemCard key={idx} title={item.title} image={item.platform_img} quantity={item.quantity} type={item.type} />  : ''
                             ))}
-                            <Link to="/account" className={styles.seeAllMenu}>
+                            <Link to={`/account?date=${subscription.date}`} className={styles.seeAllMenu}>
                                 See All <ChevronRightMinor />
                             </Link>
                         </div>

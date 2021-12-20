@@ -35,6 +35,13 @@
                 trackingUrl: '{{ fulfillment.tracking_url }}',
               },
             {% endfor %}
+          ],
+          transactions: [
+            {% for transaction in order.transactions %}
+              {
+                cardNumber :'{{ transaction.payment_details.credit_card_number }}'
+              }
+            {% endfor %}
           ]
         },
       {% endfor %}
