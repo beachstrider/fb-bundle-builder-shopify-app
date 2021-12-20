@@ -28,8 +28,7 @@ import {
 
 const FAQ_TYPE = 'entrees'
 const STEP_ID = 4
-const EMPTY_STATE_IMAGE =
-  'https://cdn.shopify.com/shopifycloud/shopify/assets/no-image-2048-5e88c1b20e087fb7bbe9a3771824e743c244f437e4f8ba93bbf7b11b53f7824c_750x.gif'
+const EMPTY_STATE_IMAGE = 'https://cdn.shopify.com/shopifycloud/shopify/assets/no-image-2048-5e88c1b20e087fb7bbe9a3771824e743c244f437e4f8ba93bbf7b11b53f7824c_750x.gif'
 const WEEK_START_DAY = 0
 const WEEK_END_DAY = 6
 
@@ -132,6 +131,7 @@ const Entrees = () => {
       setMenuItems(newItems)
       setIsLoading(false)
     } catch (error) {
+      console.error(error)
       return history.push('/')
     }
   }
