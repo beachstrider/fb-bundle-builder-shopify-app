@@ -1,6 +1,8 @@
 import dayjs from 'dayjs'
 import weekday from 'dayjs/plugin/weekday'
 import isBetween from 'dayjs/plugin/isBetween'
+import isSameOrAfter from 'dayjs/plugin/isSameOrAfter'
+import isSameOrBefore from 'dayjs/plugin/isSameOrBefore'
 
 dayjs.extend(weekday)
 dayjs.extend(isBetween)
@@ -39,42 +41,38 @@ const mapDeliveryDays = (availableDays, deliveryDays) => {
   }))
 }
 
-const getNextWeekDates = async (
+const getConfigurationContent = async (
+  date,
   getBundleConfiguration,
   state,
   bundleId,
-  configurationId,
-  weekStartDay = 0,
-  weekEndDay = 6
+  configurationId
 ) => {
   const bundleConfiguration = await getBundleConfiguration(
     state.tokens.guestToken,
     bundleId,
     configurationId
   )
-  const nextWeek = dayjs().add(1, 'week')
-  let content = null
+
+  let result = null
 
   if (bundleConfiguration) {
-    content = bundleConfiguration.data?.data.contents.filter((content) => {
-      const currentDate = dayjs(
-        dayjs(content.display_after).add(1, 'day')
-      ).format('YYYY-MM-DD')
+    bundleConfiguration.data?.data.contents.forEach((content) => {
+      const dateNow = new Date(date)
+      const displayAfter = new Date(content.display_after)
+      const displayBefore = new Date(content.display_before)
 
-      if (
-        dayjs(currentDate).isBetween(
-          nextWeek.weekday(weekStartDay).format('YYYY-MM-DD'),
-          nextWeek.weekday(weekEndDay).format('YYYY-MM-DD'),
-          null,
-          '[]'
-        )
-      ) {
-        return content
+      if (dateNow > displayAfter && dateNow < displayBefore) {
+        result = { ...content }
       }
-      return null
     })
   }
-  return content
+  return result
 }
 
-export { availableDeliveryDays, findZipCode, getNextWeekDates, mapDeliveryDays }
+export {
+  availableDeliveryDays,
+  findZipCode,
+  getConfigurationContent,
+  mapDeliveryDays
+}

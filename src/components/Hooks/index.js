@@ -1,6 +1,7 @@
 import withActiveStep from './withActiveStep'
 import {
-  getMenuItems,
+  getContents,
+  getContent,
   getBundle,
   getBundleConfiguration,
   saveCart,
@@ -17,7 +18,8 @@ import useShopifyCart from './useShopifyCart'
 
 export {
   useGuestToken,
-  getMenuItems,
+  getContent,
+  getContents,
   getSelectedBundle,
   getBundle,
   getBundleConfiguration,

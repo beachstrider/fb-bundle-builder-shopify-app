@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useHistory, Redirect } from 'react-router'
 import CardQuantities from '../../Cards/CardQuantities'
 import {
-  getMenuItems,
+  getContent,
   getSelectedBundle,
   getBundleByPlatformId,
   withActiveStep,
@@ -17,23 +17,20 @@ import {
 import styles from './Entrees.module.scss'
 import dayjs from 'dayjs'
 import weekday from 'dayjs/plugin/weekday'
-import isBetween from 'dayjs/plugin/isBetween'
+import utc from 'dayjs/plugin/utc'
 import Loading from '../Components/Loading'
 import {
   cart,
   filterShopifyProducts,
   filterShopifyVariants,
-  getNextWeekDates
+  getConfigurationContent
 } from '../../../utils'
+
+dayjs.extend(weekday)
+dayjs.extend(utc)
 
 const FAQ_TYPE = 'entrees'
 const STEP_ID = 4
-const EMPTY_STATE_IMAGE = 'https://cdn.shopify.com/shopifycloud/shopify/assets/no-image-2048-5e88c1b20e087fb7bbe9a3771824e743c244f437e4f8ba93bbf7b11b53f7824c_750x.gif'
-const WEEK_START_DAY = 0
-const WEEK_END_DAY = 6
-
-dayjs.extend(weekday)
-dayjs.extend(isBetween)
 
 const Entrees = () => {
   const state = useSelector((state) => state)
@@ -92,20 +89,19 @@ const Entrees = () => {
       const newQuantities = []
       const newQuantitiesCountdown = []
 
+      // uses selected tag in the first step
       const shopifyProduct = getSelectedBundle(state.bundle.breakfast.tag)
 
       const { data } = await getBundleByPlatformId(
         state.tokens.guestToken,
         shopifyProduct.id
       )
-
       if (data.data.length === 0) {
         throw new Error('Bundle could not be found')
       }
+      const currentBundle = data.data[0]
 
-      const currentApiBundle = data.data[0]
-
-      for (const configuration of currentApiBundle.configurations) {
+      for (const configuration of currentBundle.configurations) {
         const addItem = (items) => menuItems.concat(items)
 
         const response = await getProducts(configuration, addItem)
@@ -131,40 +127,34 @@ const Entrees = () => {
       setMenuItems(newItems)
       setIsLoading(false)
     } catch (error) {
+      // TODO: display error
       console.error(error)
-      return history.push('/')
+      //return history.push('/')
     }
   }
 
   const getProducts = async (configuration) => {
-    const currentContent = await getNextWeekDates(
+    const getContentByDate = await getConfigurationContent(
+      dayjs.utc().toISOString(),
       getBundleConfiguration,
       state,
       configuration.bundleId,
-      configuration.id,
-      WEEK_START_DAY,
-      WEEK_END_DAY
+      configuration.id
     )
 
-    const defaultDisplayAfter = dayjs()
-      .weekday(7)
-      .format('YYYY-MM-DDT00:00:00.000[Z]')
-
-    const displayAfterDate =
-      currentContent.length > 0
-        ? currentContent[0].display_after
-        : defaultDisplayAfter
-
-    const response = await getMenuItems(
+    const contentResponse = await getContent(
       state.tokens.guestToken,
       configuration.bundleId,
       configuration.id,
-      `is_enabled=1&display_after=${displayAfterDate}`
+      getContentByDate.id
     )
 
-    if (response.data?.data && response.data?.data.length > 0) {
+    if (
+      contentResponse.data?.data &&
+      contentResponse.data?.data.products.length > 0
+    ) {
       const filteredProducts = await filterShopifyProducts(
-        response.data.data[0].products,
+        contentResponse.data.data.products,
         shopProducts
       )
 
@@ -179,7 +169,7 @@ const Entrees = () => {
         subTotal = cartUtility.sumQuantity(state, configuration.id)
       }
 
-      const quantity = response.data.data[0].configuration.quantity
+      const quantity = contentResponse.data.data.configuration.quantity
 
       return {
         products: filteredVariants,

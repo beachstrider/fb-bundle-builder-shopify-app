@@ -1,7 +1,7 @@
 import dayjs from 'dayjs'
 import { request } from '../../utils'
 
-const getMenuItems = async (
+const getContents = async (
   token,
   bundleId,
   configurationId,
@@ -10,6 +10,23 @@ const getMenuItems = async (
   try {
     return await request(
       `${process.env.PROXY_APP_URL}/bundle-api/bundles/${bundleId}/configurations/${configurationId}/contents?${queryString}`,
+      {
+        method: 'get',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        }
+      }
+    )
+  } catch (error) {
+    return error
+  }
+}
+
+const getContent = async (token, bundleId, configurationId, contentId) => {
+  try {
+    return await request(
+      `${process.env.PROXY_APP_URL}/bundle-api/bundles/${bundleId}/configurations/${configurationId}/contents/${contentId}`,
       {
         method: 'get',
         headers: {
@@ -103,9 +120,10 @@ const saveCart = async (
 }
 
 export {
-  getMenuItems,
+  getContents,
   getBundle,
   getBundleConfiguration,
   getBundleByPlatformId,
+  getContent,
   saveCart
 }

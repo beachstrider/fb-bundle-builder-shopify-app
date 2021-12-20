@@ -4,10 +4,16 @@ import smoothScrollingToId from './smoothScrollingToId'
 import {
   availableDeliveryDays,
   findZipCode,
-  getNextWeekDates,
+  getConfigurationContent,
   mapDeliveryDays
 } from './zones'
-import { filterShopifyProducts, filterShopifyVariants, getOrderTrackingUrl, buildProductArrayFromVariant, buildProductArrayFromId } from './products'
+import {
+  filterShopifyProducts,
+  filterShopifyVariants,
+  getOrderTrackingUrl,
+  buildProductArrayFromVariant,
+  buildProductArrayFromId
+} from './products'
 import cart from './cart'
 
 export {
@@ -16,7 +22,7 @@ export {
   filterShopifyProducts,
   findZipCode,
   filterShopifyVariants,
-  getNextWeekDates,
+  getConfigurationContent,
   isValidEmail,
   mapDeliveryDays,
   request,

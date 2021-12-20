@@ -9,7 +9,7 @@ import {
 import { useDispatch, useSelector } from 'react-redux'
 import CardQuantities from '../../Cards/CardQuantities'
 import {
-  getMenuItems,
+  getContents,
   getSelectedBundle,
   getBundle,
   useUserToken
@@ -303,7 +303,7 @@ const EditOrder = () => {
       'YYYY-MM-DDT00:00:00.000[Z]'
     )
 
-    const response = await getMenuItems(
+    const response = await getContents(
       state.tokens.guestToken,
       configuration.bundleId,
       configuration.id,
@@ -365,8 +365,8 @@ const EditOrder = () => {
     if (quantitiesCountdown !== 0) {
       setDisabledNextButton(true)
     }
-    
-    if(shopCustomer.id === 0){
+
+    if (shopCustomer.id === 0) {
       return <Redirect push to="/" />
     }
 
