@@ -93,7 +93,7 @@ const OrderHistory = () => {
               const shopProd = shopProducts.filter( p => p.id === product.platform_product_variant_id)[0]
               thisLoopSubList.push({
                 title:  shopProd ? shopProd.title : 'Missing Title',
-                platform_img: shopProd && shopProd.images.length > 0 ? shopProd.images[0]: EMPTY_STATE_IMAGEg,
+                platform_img: shopProd && shopProd.images.length > 0 ? shopProd.images[0]: EMPTY_STATE_IMAGE,
                 quantity: item.quantity,
                 type: order.subscription.subscription_sub_type
               })
