@@ -1,11 +1,11 @@
-@import '../../variables';
+@import '../../../../variables';
 
 .card {
-  border-radius: 1rem;
   display: grid;
-  grid-template-rows: 16rem;
-  cursor: pointer;
-  overflow: hidden;
+  justify-content: space-between;
+  grid-template-columns: 50% 50%;
+  min-height: 50vh;
+  border: 0 !important;
 
   & .description {
     display: grid;
@@ -13,30 +13,38 @@
     grid-template-columns: repeat(4, 1fr);
     font-size: $fontXSmall;
     column-gap: 1.4rem;
-    padding: 1rem;
 
     & .subTitle {
-      font-size: 1.8rem;
+      text-align: center;
+      font-size: $fontMediumLarge;
       font-weight: 700;
     }
+    & .subTitleDescription {
+      text-align: center;
+      font-size: $fontMedium;
+    }
+  }
+
+  & .descriptionHtml {
+    display: block;
   }
 
   & .actions {
     display: flex;
     & div {
-      margin: 0 0.5rem;
+      margin: 0 0.5rem 0 0;
     }
   }
 
   & .image {
     width: 100%;
     background-size: cover;
-    border-top-right-radius: 0.5rem;
-    border-top-left-radius: 0.5rem;
+    background-repeat: no-repeat;
   }
 
   & .title {
-    font-size: 2.2rem;
+    color: $primaryColor;
+    font-size: $fontMediumLarge;
     font-weight: 700;
   }
 
@@ -44,7 +52,8 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: center;
     background-color: $white;
+    row-gap: 2rem;
+    padding: 2rem 5rem;
   }
 }

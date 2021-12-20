@@ -32,14 +32,14 @@ const rootSlice = createSlice({
       {
         id: 4,
         name: 'Step 4',
-        description: 'Review',
+        description: 'Entrees',
         path: '/steps/4',
         isActive: false
       },
       {
         id: 5,
         name: 'Step 5',
-        description: 'Next',
+        description: 'Review',
         path: '/steps/5',
         isActive: false
       }
