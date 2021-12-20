@@ -47,6 +47,7 @@ const entreeTypes = [
   }
 ]
 
+// TODO: get from Shopify
 const entreeSubTypes = [
   {
     id: 1,

@@ -34,6 +34,7 @@ const filterShopifyVariants = async (state, shopifyProducts, configuration) =>
         f.images = product.images
         f.configurationBundleId = configuration.bundleId
         f.configurationContentId = product.bundle_configuration_content_id
+        f.description = product.description
         f.bundleContentId = configuration.id
         f.quantity = 0
         f.type = configuration.title
