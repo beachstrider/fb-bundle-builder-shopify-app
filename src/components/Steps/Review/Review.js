@@ -22,9 +22,6 @@ dayjs.extend(advancedFormat)
 dayjs.extend(weekday)
 
 const DEFAULT_ERROR_MESSAGE = 'There was an error. Please try again later'
-const EMPTY_STATE_IMAGE =
-  'https://cdn.shopify.com/shopifycloud/shopify/assets/no-image-2048-5e88c1b20e087fb7bbe9a3771824e743c244f437e4f8ba93bbf7b11b53f7824c_750x.gif'
-
 const STEP_ID = 5
 
 const Review = () => {
@@ -178,7 +175,7 @@ const Review = () => {
             {state.cart.map((item) => (
               <MenuItemCard
                 key={item.id}
-                image={item.images.length > 0 && item.images[0] ? item.images[0] : EMPTY_STATE_IMAGE}
+                image={item.images.length > 0 && item.images[0] ? item.images[0] : process.env.EMPTY_STATE_IMAGE}
                 title={item.name}
                 quantity={item.quantity}
                 type={item.title}
