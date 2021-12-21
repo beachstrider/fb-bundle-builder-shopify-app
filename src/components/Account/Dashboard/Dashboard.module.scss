@@ -52,7 +52,12 @@
 .weekMenu{
     margin-right: 5%;
 }
-
+.weekMenuItems{
+  grid-auto-flow: row;
+  @media (min-width: $breakpointTablet) {
+    grid-auto-flow: column;
+}
+}
 /* Menu Section */
 
 .accountMenuRow{

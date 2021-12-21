@@ -18,7 +18,7 @@ const FrequencyMainEntree = ({ data, quantity, isSelected, onClick }) => {
           <div className={styles.xSmallFont}>{data.description}</div>
         </div>
         <div className={styles.centerRow}>
-          <div className={`${styles.mediumFont} ${styles.fontBold}`}>
+          <div className={`${styles.semiMediumFont} ${styles.fontBold}`}>
             ${Number.parseFloat(data.price).toFixed(2)}
           </div>
           <div className={styles.xSmallFont}>Per Entree</div>

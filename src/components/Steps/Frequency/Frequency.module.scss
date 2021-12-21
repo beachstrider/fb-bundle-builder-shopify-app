@@ -9,14 +9,20 @@
   & .mediumFont {
     font-size: $fontMedium;
   }
+  & .semiMediumFont {
+    font-size: $semiMediumFont
+  }
   & .smallFont {
     font-size: $fontSmall;
+    font-family: $fontFamilyLight;
   }
   & .xSmallFont {
     font-size: $fontXSmall;
+    font-family: $fontFamilyLight;
   }
   & .fontBold {
     font-weight: 600;
+    font-family: $fontFamilyMedium;
   }
   & .noneIcon {
     svg {
@@ -93,6 +99,9 @@
       display: grid;
       grid-template-columns: 1fr 25% 20%;
       margin: 0 2rem;
+      @media only screen and (max-width: $breakpointDesktop) {
+        display: block;
+      }
     }
     & .entreeWrapper {
       display: grid;
@@ -101,6 +110,9 @@
 
     & .isSelected {
       border-right: 1px solid $white;
+      @media only screen and (max-width: $breakpointDesktop) {
+        border-right: none;
+      }
     }
     & .isUnselected {
       border-right: 1px solid $gray;
@@ -109,9 +121,14 @@
     & .entree {
       display: flex;
       flex-direction: column;
+      text-align: left;
+      @media only screen and (max-width: $breakpointDesktop) {
+        text-align: center;
+      }
     }
     & .title {
       font-size: $fontLarge;
+      font-family: $fontFamilyMedium;
       @media only screen and (max-width: $breakpointDesktop) {
         font-size: $fontMedium;
       }
@@ -125,7 +142,7 @@
       color: $grayMediumSecondary;
       @media only screen and (max-width: $breakpointTablet) {
         margin-top: 2rem;
-        width: 90vw;
+        column-gap: 1rem;
         grid-template-columns: 60% 40%;
       }
 
@@ -168,6 +185,7 @@
   & .breakfast {
     .subtitle {
       font-size: 1.2rem;
+      font-family: $fontFamilyMedium;
     }
   }
 }
