@@ -19,7 +19,7 @@ const ItemDescriptionModal = ({
 }) => {
   return (
     <Modal open={open} close={close}>
-      <div className={styles.card} onClick={() => setOpenModal(true)}>
+      <div className={styles.card}>
         <div
           className={styles.image}
           style={{ backgroundImage: `url('${image}')` }}

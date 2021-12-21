@@ -74,7 +74,7 @@ const rootSlice = createSlice({
             id: 3,
             day: 5,
             disabled: false,
-            isSelected: true
+            isSelected: false
           }
         ]
       },
@@ -107,7 +107,7 @@ const rootSlice = createSlice({
             id: 3,
             day: 5,
             disabled: false,
-            isSelected: true
+            isSelected: false
           }
         ]
       }

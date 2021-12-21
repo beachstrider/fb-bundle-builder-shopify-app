@@ -26,6 +26,30 @@
 
 `EMPTY_STATE_IMAGE` Use an public image example https://.....
 
+## Configuring Shopify Products Collection
+
+Env variable: SHOPIFY_PRODUCTS_COLLECTION
+
+1. In the Shopify Admin, go to `Settings``
+2. On the left menu, click on `Metafields`, `Variants`
+3. Add these metafields: <br >
+   <br> `Net Carbs` | Namespace and key: `my_fields.net_carbs`) | Measurement: `Weight`
+   <br> `Protein` | Namespace and key: `my_fields.net_carbs`) | Measurement: `Weight`
+   <br> `Calories` | Namespace and key: `my_fields.calories`) | Measurement: `Weight`
+   <br> `Total Fat` | Namespace and key: `my_fields.total_fat`) | Measurement: `Weight`
+4. Go to your collection and add values to each metafield, for all your variants
+
+## Configuring Shopify Bundles
+
+Env variable: SHOPIFY_BUNDLES_COLLECTION
+
+1. In the Shopify Admin, go to `Collections`
+2. Select the collection that you configured for the env variable above
+3. Add these tags to the respect bundle(product): <br >
+   <br>`7 Day with breakfast` | `7 Day`
+   <br>`5 Day with breakfast` | `5 Day`
+   <br>`3 Day with breakfast` | `3 Day`
+
 ### Opening the app in Shopify
 
 In one terminal, run:

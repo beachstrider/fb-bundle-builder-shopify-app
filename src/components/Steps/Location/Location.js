@@ -40,7 +40,6 @@ const Location = () => {
 
   useEffect(() => {
     dispatch(displayHeader(true))
-    dispatch(setIsNextButtonActive(true))
 
     if (state.email && state.location.zipCode) {
       setZipCode(state.location.zipCode)
@@ -55,7 +54,10 @@ const Location = () => {
       const newZone = getMappedZones(zone)
       setCurrentZone(newZone)
 
-      if (state.location.deliveryDate.id === 0) {
+      if (
+        state.location?.deliveryDate &&
+        state.location.deliveryDate.id === 0
+      ) {
         handleDeliveryDate(findDefaultSelectedDate(zone.deliveryDates))
       } else {
         checkCurrentSelectedDate(zone)
@@ -71,6 +73,14 @@ const Location = () => {
   useEffect(() => {
     if (Object.keys(currentZone).length > 0) {
       checkCurrentSelectedDate(currentZone)
+    }
+
+    if (!state.location.deliveryDate) {
+      dispatch(setIsNextButtonActive(false))
+    } else {
+      if (!state.isNextButtonActive) {
+        dispatch(setIsNextButtonActive(true))
+      }
     }
   }, [state.location.deliveryDate])
 
@@ -95,7 +105,10 @@ const Location = () => {
         date.isSelected = false
       }
 
-      if (date.id === state.location.deliveryDate.id) {
+      if (
+        state.location.deliveryDate &&
+        date.id === state.location.deliveryDate.id
+      ) {
         date.isSelected = true
       }
       return date

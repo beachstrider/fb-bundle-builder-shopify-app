@@ -24,12 +24,13 @@ const bundles = [
     id: 1,
     name: 'FreshStart',
     description: '7-Days All inclusive - (14 Entrees + 7 Breakfast)',
-    price: 7.3,
-    weeklyPrice: 153.3,
+    price: 9.95,
+    entreesQuantity: 14,
+    breakfastsQuantity: 7,
     breakfasts: [
       {
         name: '7',
-        price: 'Free',
+        price: 4.95,
         tag: '7 Day with breakfast'
       },
       {
@@ -43,12 +44,13 @@ const bundles = [
     id: 2,
     name: '10',
     description: '',
-    price: 10.95,
-    weeklyPrice: 109.5,
+    price: 11.95,
+    entreesQuantity: 10,
+    breakfastsQuantity: 5,
     breakfasts: [
       {
         name: '5',
-        price: 25,
+        price: 5.95,
         tag: '5 Day with breakfast'
       },
       {
@@ -62,12 +64,14 @@ const bundles = [
     id: 3,
     name: '6',
     description: '',
-    price: 11.95,
-    weeklyPrice: 71.7,
+    price: 12.95,
+    entreesQuantity: 6,
+    breakfastsQuantity: 3,
+
     breakfasts: [
       {
         name: '3',
-        price: 15,
+        price: 5.95,
         tag: '3 Day with breakfast'
       },
       {
@@ -143,6 +147,7 @@ const Frequency = () => {
             <div className={`${styles.subRow} ${styles.subRowFullWidth}`}>
               <FrequencyMainEntree
                 data={bundles[0]}
+                quantity={bundles[0].entreesQuantity}
                 isSelected={bundles[0].id === state.bundle.id}
                 onClick={() => handleSelectBundle(bundles[0])}
               />
@@ -152,8 +157,9 @@ const Frequency = () => {
                 (bundle, index) =>
                   index !== 0 && (
                     <FrequencyEntree
-                      data={bundle}
                       key={bundle.id}
+                      data={bundle}
+                      quantity={bundle.entreesQuantity}
                       isSelected={bundle.id === state.bundle.id}
                       onClick={() => handleSelectBundle(bundle)}
                     />
@@ -163,7 +169,9 @@ const Frequency = () => {
           </div>
           <div className="displayTablet">
             <FrequencySubTotal
-              entreePrice={state.bundle?.weeklyPrice}
+              entreesQuantity={state.bundle?.entreesQuantity}
+              breakfastsQuantity={state.bundle?.breakfastsQuantity}
+              entreePrice={state.bundle?.price}
               breakfastPrice={state.bundle?.breakfast?.price}
             />
           </div>
@@ -187,6 +195,7 @@ const Frequency = () => {
                   <FrequencyBreakfast
                     key={index}
                     data={breakfast}
+                    quantity={state.bundle?.breakfastsQuantity}
                     isSelected={breakfast.name === state.bundle.breakfast.name}
                     onClick={() => handleSelectBreakfast(breakfast)}
                   />
@@ -197,7 +206,9 @@ const Frequency = () => {
         </div>
         <div className="displayMobile">
           <FrequencySubTotal
-            entreePrice={state.bundle?.weeklyPrice}
+            entreesQuantity={state.bundle?.entreesQuantity}
+            breakfastsQuantity={state.bundle?.breakfastsQuantity}
+            entreePrice={state.bundle?.price}
             breakfastPrice={state.bundle?.breakfast?.price}
           />
         </div>

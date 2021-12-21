@@ -77,12 +77,29 @@ const cart = (state) => {
     }
   }
 
+  const calculateSubTotal = (
+    entreePrice,
+    breakfastPrice,
+    entreesQuantity,
+    breakfastsQuantity
+  ) => {
+    const entreesTotal = Number.parseFloat(entreePrice * entreesQuantity)
+    const breakfastsTotal = isNaN(breakfastPrice)
+      ? breakfastPrice
+      : Number.parseFloat(breakfastPrice) * breakfastsQuantity
+
+    return isNaN(breakfastsTotal)
+      ? entreesTotal
+      : entreesTotal + breakfastsTotal
+  }
+
   return {
-    getItemQuantity,
-    isItemSelected,
     addItem,
-    removeItem,
+    calculateSubTotal,
+    getItemQuantity,
     getQuantityCountdown,
+    isItemSelected,
+    removeItem,
     sumQuantity
   }
 }
