@@ -16,6 +16,7 @@ import MenuItemCard from '../../Account/Components/MenuItemCard/MenuItemCard'
 import DeliveryDateModal from '../Components/DeliveryDatesModal/DeliveryDateModal'
 import { getBundleByPlatformId } from '../../Hooks/withBundleApi'
 import { clearLocalStorage } from '../../../store/store'
+import { cart } from '../../../utils'
 
 dayjs.extend(advancedFormat)
 dayjs.extend(weekday)
@@ -30,6 +31,8 @@ const Review = () => {
   const [platformCartToken, setPlatformCartToken] = useState('')
   const shopifyCart = useShopifyCart()
   const [errorMessage, setErrorMessage] = useState('')
+
+  const cartUtility = cart(state)
 
   useEffect(() => {
     getShopifyCartToken()
@@ -46,6 +49,15 @@ const Review = () => {
   const getShopifyCartToken = async () => {
     const token = await shopifyCart.getToken()
     setPlatformCartToken(token)
+  }
+
+  const getTotal = () => {
+    return cartUtility.calculateSubTotal(
+      state.bundle.price,
+      state.bundle.breakfast.price,
+      state.bundle.entreesQuantity,
+      state.bundle.breakfastsQuantity
+    )
   }
 
   const addShopifyCartItems = async () => {
@@ -98,6 +110,8 @@ const Review = () => {
         platformCartToken,
         currentBundle.data.data[0].id,
         state.location.deliveryDate.day,
+        state.entreeType.title.toLowerCase(),
+        state.entreeSubType.title.toLowerCase(),
         mappedItems
       )
 
@@ -153,9 +167,7 @@ const Review = () => {
             <div className={styles.card}>
               <div className={styles.title}>
                 Total:
-                <span className={styles.price}>
-                  ${Number.parseFloat(state.bundle.weeklyPrice).toFixed(2)}
-                </span>
+                <span className={styles.price}>${getTotal().toFixed(2)}</span>
               </div>
             </div>
           </div>

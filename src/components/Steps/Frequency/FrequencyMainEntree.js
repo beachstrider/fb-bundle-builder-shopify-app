@@ -3,7 +3,7 @@ import { FrequencyWeeklyPrice } from '.'
 import { CardCheckMark } from '../../Cards'
 import styles from './Frequency.module.scss'
 
-const FrequencyMainEntree = ({ data, isSelected, onClick }) => {
+const FrequencyMainEntree = ({ data, quantity, isSelected, onClick }) => {
   return (
     <CardCheckMark isSelected={isSelected} onClick={onClick}>
       <div className={styles.mainEntreeWrapper}>
@@ -25,7 +25,7 @@ const FrequencyMainEntree = ({ data, isSelected, onClick }) => {
         </div>
         <div className={styles.centerRow}>
           <div className={styles.xSmallFont}>Total Per Week</div>
-          <FrequencyWeeklyPrice price={data.weeklyPrice} />
+          <FrequencyWeeklyPrice price={data.price * quantity} />
         </div>
       </div>
     </CardCheckMark>
