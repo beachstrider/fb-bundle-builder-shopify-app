@@ -37,7 +37,6 @@ const PlanSettings = () => {
   const [loading, setLoading] = React.useState(true);
 
   React.useEffect( () => {
-    console.log('The shopify customer: ', shopCustomer)
     dispatch(displayHeader(false))
     dispatch(displayFooter(false))
     dispatch(selectFaqType(null))
@@ -53,31 +52,25 @@ const PlanSettings = () => {
 
   const getToken = async () => {
     const tokenResponse = await useUserToken();
-    console.log('tokenResponse: ', tokenResponse)
     if (tokenResponse.token) {
       dispatch(
         setTokens({
           ...state.tokens,
-          userToken: `Bearer ${tokenResponse.token}`
+          userToken: tokenResponse.token
         })
       )
-      return `Bearer ${tokenResponse.token}`
+      return tokenResponse.token
     }
   }
 
   const updateDelivery = (day) => {
-    console.log('the day: ', dayjs().day(day).format('dddd'))
+
   }
 
   const getOrdersToShow = async (token) => {
     const newWeeksArr = []
-    const subApi = await request(`${process.env.PROXY_APP_URL}/bundle-api/subscriptions`, { method: 'get', data: '', headers: { authorization: token }}, 3)
-    console.log('customer subscription: ', subApi);
+    const subApi = await request(`${process.env.PROXY_APP_URL}/bundle-api/subscriptions`, { method: 'get', data: '', headers: { authorization: `Bearer ${token}` }}, 3)
     const thisWeek = dayjs().day(0);
-    console.log('this weeks: ', thisWeek.format('YYYY-MM-DD'));
-
-
-    
 
     for (const sub of subApi.data.data) {
       const thisLoopSubList = [];
@@ -129,12 +122,10 @@ const PlanSettings = () => {
         date: thisWeek.format('YYYY-MM-DD'),
         items: thisLoopSubList
       }
-      console.log('subscription orders: ', subItem);
       newWeeksArr.push(subItem)
     }
 
     setSubscriptions(newWeeksArr);
-    console.log('newWeeksArr: ', newWeeksArr);
     setLoading(false)
   }
   

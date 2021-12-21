@@ -91,7 +91,6 @@ const Entrees = () => {
 
       // uses selected tag in the first step
       const shopifyProduct = getSelectedBundle(state.bundle.breakfast.tag)
-      console.log('shopifyProduct: ', shopifyProduct)
       const { data } = await getBundleByPlatformId(
         state.tokens.guestToken,
         shopifyProduct.id
@@ -100,7 +99,6 @@ const Entrees = () => {
         throw new Error('Bundle could not be found')
       }
       const currentBundle = data.data[0]
-      console.log('currentBundle: ', currentBundle)
       for (const configuration of currentBundle.configurations) {
         const addItem = (items) => menuItems.concat(items)
 
@@ -162,7 +160,6 @@ const Entrees = () => {
         filteredProducts,
         configuration
       )
-      console.log('filteredVariants: ', filteredVariants)
       let subTotal = 0
       if (state.cart.length > 0) {
         subTotal = cartUtility.sumQuantity(state, configuration.id)

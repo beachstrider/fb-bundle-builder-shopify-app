@@ -36,7 +36,6 @@ const OrderHistory = () => {
   const [loading, setLoading] = React.useState(true);
 
   React.useEffect( () => {
-    console.log('The shopify customer: ', shopCustomer)
     dispatch(displayHeader(false))
     dispatch(displayFooter(false))
     dispatch(selectFaqType(null))
@@ -52,15 +51,14 @@ const OrderHistory = () => {
 
   const getToken = async () => {
     const tokenResponse = await useUserToken();
-    console.log('tokenResponse: ', tokenResponse)
     if (tokenResponse.token) {
       dispatch(
         setTokens({
           ...state.tokens,
-          userToken: `Bearer ${tokenResponse.token}`
+          userToken: tokenResponse.token
         })
       )
-      return `Bearer ${tokenResponse.token}`
+      return tokenResponse.token
     }
   }
 
@@ -73,7 +71,7 @@ const OrderHistory = () => {
   
   const getOrdersToShow = async (token) => {
     const newWeeksArr = []
-    const subApi = await request(`${process.env.PROXY_APP_URL}/bundle-api/subscriptions`, { method: 'get', data: '', headers: { authorization: token }}, 3)
+    const subApi = await request(`${process.env.PROXY_APP_URL}/bundle-api/subscriptions`, { method: 'get', data: '', headers: { authorization: `Bearer ${token}` }}, 3)
     const thisWeek = dayjs().day(0);
 
     for (const sub of subApi.data.data) {
@@ -126,12 +124,10 @@ const OrderHistory = () => {
         date: thisWeek.format('YYYY-MM-DD'),
         items: thisLoopSubList
       }
-      console.log('subscription orders: ', subItem);
       newWeeksArr.push(subItem)
     }
 
     setSubscriptions(newWeeksArr);
-    console.log('newWeeksArr: ', newWeeksArr);
     setLoading(false)
   }
   

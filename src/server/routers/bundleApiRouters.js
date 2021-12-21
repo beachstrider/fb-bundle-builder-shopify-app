@@ -10,7 +10,6 @@ app.get('/health', async (req, res) => {
 })
 
 app.post('/bundle-api/token/guest', async (req, res) => {
-  console.log(`POST ${process.env.BUNDLE_API_URL}/api/auth`)
   const response = await request(`${process.env.BUNDLE_API_URL}/api/auth`, {
     method: 'post',
     headers: {
