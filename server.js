@@ -6,7 +6,7 @@ const helmet = require('helmet')
 const verifyHmac = require('./src/server/middleware/verifyHmac')
 const { replaceString } = require('./src/server/utils')
 const cors = require('cors')
-const morgan = require('morgan')
+// const morgan = require('morgan')
 const bundleApiRouters = require('./src/server/routers/bundleApiRouters')
 const shopifyRouters = require('./src/server/routers/shopifyRouters')
 const rechargeRouters = require('./src/server/routers/rechargeRouters')
@@ -14,8 +14,8 @@ const rechargeRouters = require('./src/server/routers/rechargeRouters')
 const app = express()
 const SERVER_PORT = process.env.PORT || 3000
 
-const morganFormat = ':method :url :status auth::req[authorization] res-length::res[content-length] - :response-time ms'
-app.use(morgan(morganFormat))
+// const morganFormat = ':method :url :status auth::req[authorization] res-length::res[content-length] - :response-time ms'
+// app.use(morgan(morganFormat))
 
 const cachedVersion = Math.floor((1 + Math.random()) * 0x10000)
   .toString(16)

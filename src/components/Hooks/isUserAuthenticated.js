@@ -13,7 +13,7 @@ const useUserToken = async () => {
                 'Content-Type': 'application/json'
               },
               data: { 
-                  shop: `https://${domain.hostname}`,
+                  shop: `${domain.hostname}`,
                   email: shopCustomer.email
               }
             }

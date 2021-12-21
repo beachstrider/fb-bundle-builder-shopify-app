@@ -124,6 +124,7 @@ const Dashboard = () => {
                       subscriptionArray[subscriptionObjKey].items = thisItemsArray;
                       subscriptionArray[subscriptionObjKey].status = orderFound.platform_order_id !== null ? 'sent' : dayjs(content.deliver_after).isSameOrAfter(dayjs()) ? 'pending' : 'locked';
                       subscriptionArray[subscriptionObjKey].subscriptionDate = dayjs(subscriptionObjKey).format('YYYY-MM-DD');
+                      subscriptionArray[subscriptionObjKey].queryDate = content.display_after
                       if(orderFound.platform_order_id !== null){
                         subscriptionArray[subscriptionObjKey].trackingUrl = await getOrderTrackingUrl(orderFound.platform_order_id, shopCustomer);
                       }
@@ -135,6 +136,7 @@ const Dashboard = () => {
                   subscriptionArray[subscriptionObjKey].items = thisProductsArray;
                   subscriptionArray[subscriptionObjKey].status = dayjs(content.deliver_after).isSameOrAfter(dayjs()) ?  'pending' : 'locked';
                   subscriptionArray[subscriptionObjKey].subscriptionDate = dayjs(subscriptionObjKey).format('YYYY-MM-DD')
+                  subscriptionArray[subscriptionObjKey].queryDate = content.display_after
                 }
                 subCount++
               }
@@ -240,7 +242,7 @@ const Dashboard = () => {
                 <h3>Week of {dayjs(sub.subscriptionDate).format('MMM DD')}</h3>
                 {sub.status === 'sent' ? <a href={sub.trackingUrl} className={styles.primaryLink}>Track Package</a> : ''}
               </div>
-              {sub.status === 'sent' || sub.status === 'locked' ? <Link to={`/order-history?date=${sub.subscriptionDate}`} className="secondaryButton">Order Summary</Link>  : <Link to={`/edit-order/${sub.subId}?date=${sub.subscriptionDate}`} className="secondaryButton">Edit Order</Link>}
+              {sub.status === 'sent' || sub.status === 'locked' ? <Link to={`/order-history?date=${sub.queryDate}`} className="secondaryButton">Order Summary</Link>  : <Link to={`/edit-order/${sub.subId}?date=${sub.queryDate}`} className="secondaryButton">Edit Order</Link>}
             </div>
             {sub.items.length > 0 ? (
             <div className={styles.accountMenuRow}>
