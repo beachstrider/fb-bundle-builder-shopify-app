@@ -194,8 +194,8 @@ const EditOrder = () => {
     // if none just create items
     // if some exist loop and update quantities and make update call
     // if order skip making contents configuration
-    saveBundle(stuff)
-    updateBundle(more stuff)
+    saveBundle()
+    updateBundle()
   }
 
   const getToken = async () => {

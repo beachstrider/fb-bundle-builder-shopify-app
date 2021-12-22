@@ -5,7 +5,9 @@ import {
   getBundle,
   getBundleConfiguration,
   saveCart,
-  getBundleByPlatformId
+  getBundleByPlatformId,
+  saveBundle,
+  updateBundle
 } from './withBundleApi'
 import useGuestToken from './useGuestToken'
 import getSelectedBundle from './getSelectedBundle'
@@ -29,5 +31,7 @@ export {
   hasUserToken,
   isUserAuthenticated,
   useShopifyCart,
-  saveCart
+  saveCart,
+  saveBundle,
+  updateBundle
 }
