@@ -24,6 +24,7 @@ const entreeTypes = [
   {
     id: 1,
     title: 'Keto',
+    subType: 'keto',
     primaryColor: '#ec6120',
     options: [
       'Lorem ipsum dolor sit amet',
@@ -36,6 +37,7 @@ const entreeTypes = [
   {
     id: 2,
     title: 'LowCal',
+    subType: 'lowCal',
     primaryColor: '#3DAE2B',
     options: [
       'Lorem ipsum dolor sit amet',
@@ -47,36 +49,57 @@ const entreeTypes = [
   }
 ]
 
-// TODO: get from Shopify
-const entreeSubTypes = [
-  {
-    id: 1,
-    title: 'Regular',
-    netCarbs: '8-9g',
-    protein: '20-30g',
-    fat: '30-40g',
-    calories: '600-800',
-    isSelected: true
-  },
-  {
-    id: 2,
-    title: 'Lite',
-    netCarbs: '8-9g',
-    protein: '20-30g',
-    fat: '30-40g',
-    calories: '600-800',
-    isSelected: false
-  },
-  {
-    id: 3,
-    title: 'Savory',
-    netCarbs: '8-9g',
-    protein: '20-30g',
-    fat: '30-40g',
-    calories: '600-800',
-    isSelected: false
-  }
-]
+const subTypes = {
+  lowCal: [
+    {
+      id: 1,
+      title: 'Regular',
+      netCarbs: '8-9g',
+      protein: '20-30g',
+      fat: '30-40g',
+      calories: '600-800',
+      isSelected: true
+    },
+    {
+      id: 2,
+      title: 'Lite',
+      netCarbs: '8-9g',
+      protein: '20-30g',
+      fat: '30-40g',
+      calories: '600-800',
+      isSelected: false
+    },
+    {
+      id: 3,
+      title: 'Savory',
+      netCarbs: '8-9g',
+      protein: '20-30g',
+      fat: '30-40g',
+      calories: '600-800',
+      isSelected: false
+    }
+  ],
+  keto: [
+    {
+      id: 1,
+      title: 'Regular',
+      netCarbs: '8-9g',
+      protein: '20-30g',
+      fat: '30-40g',
+      calories: '600-800',
+      isSelected: true
+    },
+    {
+      id: 2,
+      title: 'High Protein',
+      netCarbs: '8-9g',
+      protein: '20-30g',
+      fat: '30-40g',
+      calories: '600-800',
+      isSelected: false
+    }
+  ]
+}
 
 const EntreeType = () => {
   const dispatch = useDispatch()
@@ -154,7 +177,7 @@ const EntreeType = () => {
             <>
               <div className={`${styles.title} mb-7`}>Choose Entree Type</div>
               <div className={`${styles.subTypesWrapper} mb-10`}>
-                {entreeSubTypes.map((subType) => (
+                {subTypes[state.entreeType.subType].map((subType) => (
                   <EntreeTypeSubType
                     data={subType}
                     isSelected={subType.id === state.entreeSubType.id}

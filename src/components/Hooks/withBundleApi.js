@@ -97,6 +97,8 @@ const saveCart = async (
   platformCartToken,
   bundleId,
   deliveryDay,
+  subscriptionType,
+  subscriptionSubType,
   items
 ) => {
   try {
@@ -109,6 +111,8 @@ const saveCart = async (
       data: {
         platform_customer_id: platformCustomerId,
         platform_cart_token: platformCartToken,
+        subscription_type: subscriptionType,
+        subscription_sub_type: subscriptionSubType,
         bundle_id: bundleId,
         delivery_day: deliveryDay,
         contents: [...items]

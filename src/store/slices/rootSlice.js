@@ -39,7 +39,7 @@ const rootSlice = createSlice({
       {
         id: 5,
         name: 'Step 5',
-        description: 'Review',
+        description: 'Next',
         path: '/steps/5',
         isActive: false
       }
@@ -74,7 +74,7 @@ const rootSlice = createSlice({
             id: 3,
             day: 5,
             disabled: false,
-            isSelected: true
+            isSelected: false
           }
         ]
       },
@@ -107,7 +107,7 @@ const rootSlice = createSlice({
             id: 3,
             day: 5,
             disabled: false,
-            isSelected: true
+            isSelected: false
           }
         ]
       }

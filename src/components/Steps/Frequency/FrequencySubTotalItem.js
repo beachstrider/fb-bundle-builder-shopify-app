@@ -5,7 +5,7 @@ const FrequencySubTotalItem = ({ label, price }) => (
   <div className={styles.prices}>
     <div>{label}</div>
     <div className={styles.fontBold}>
-      {isNaN(price) ? price : `$${Number.parseFloat(price).toFixed(2)}`}
+      {isNaN(price) ? String(price) : `$${Number.parseFloat(price).toFixed(2)}`}
     </div>
   </div>
 )

@@ -25,9 +25,6 @@ function useQuery () {
   return React.useMemo(() => new URLSearchParams(search), [search]);
 }
 
-const EMPTY_STATE_IMAGE =
-  'https://cdn.shopify.com/shopifycloud/shopify/assets/no-image-2048-5e88c1b20e087fb7bbe9a3771824e743c244f437e4f8ba93bbf7b11b53f7824c_750x.gif'
-
 const PlanSettings = () => {
 
   if(shopCustomer.id === 0){
@@ -40,7 +37,6 @@ const PlanSettings = () => {
   const [loading, setLoading] = React.useState(true);
 
   React.useEffect( () => {
-    console.log('The shopify customer: ', shopCustomer)
     dispatch(displayHeader(false))
     dispatch(displayFooter(false))
     dispatch(selectFaqType(null))
@@ -56,31 +52,25 @@ const PlanSettings = () => {
 
   const getToken = async () => {
     const tokenResponse = await useUserToken();
-    console.log('tokenResponse: ', tokenResponse)
     if (tokenResponse.token) {
       dispatch(
         setTokens({
           ...state.tokens,
-          userToken: `Bearer ${tokenResponse.token}`
+          userToken: tokenResponse.token
         })
       )
-      return `Bearer ${tokenResponse.token}`
+      return tokenResponse.token
     }
   }
 
   const updateDelivery = (day) => {
-    console.log('the day: ', dayjs().day(day).format('dddd'))
+
   }
 
   const getOrdersToShow = async (token) => {
     const newWeeksArr = []
-    const subApi = await request(`${process.env.PROXY_APP_URL}/bundle-api/subscriptions`, { method: 'get', data: '', headers: { authorization: token }}, 3)
-    console.log('customer subscription: ', subApi);
+    const subApi = await request(`${process.env.PROXY_APP_URL}/bundle-api/subscriptions`, { method: 'get', data: '', headers: { authorization: `Bearer ${token}` }}, 3)
     const thisWeek = dayjs().day(0);
-    console.log('this weeks: ', thisWeek.format('YYYY-MM-DD'));
-
-
-    
 
     for (const sub of subApi.data.data) {
       const thisLoopSubList = [];
@@ -96,7 +86,7 @@ const PlanSettings = () => {
               const shopProd = shopProducts.filter( p => p.id === product.platform_product_variant_id)[0]
               thisLoopSubList.push({
                 title:  shopProd ? shopProd.title : 'Missing Title',
-                platform_img: shopProd && shopProd.images.length > 0 ? shopProd.images[0]: EMPTY_STATE_IMAGE,
+                platform_img: shopProd && shopProd.images.length > 0 ? shopProd.images[0]: process.env.EMPTY_STATE_IMAGE,
                 quantity: item.quantity,
                 type: order.subscription.subscription_sub_type
               })
@@ -114,7 +104,7 @@ const PlanSettings = () => {
               const shopProd = shopProducts.filter( p => p.id === product.platform_product_id)[0]
               thisLoopSubList.push({
                 title:  shopProd ? shopProd.title : 'Missing Title',
-                platform_img: shopProd && shopProd.images.length > 0 ? shopProd.images[0]: EMPTY_STATE_IMAGE,
+                platform_img: shopProd && shopProd.images.length > 0 ? shopProd.images[0]: process.env.EMPTY_STATE_IMAGE,
                 quantity: product.default_quantity,
                 type: sub.subscription_sub_type
               })
@@ -132,12 +122,10 @@ const PlanSettings = () => {
         date: thisWeek.format('YYYY-MM-DD'),
         items: thisLoopSubList
       }
-      console.log('subscription orders: ', subItem);
       newWeeksArr.push(subItem)
     }
 
     setSubscriptions(newWeeksArr);
-    console.log('newWeeksArr: ', newWeeksArr);
     setLoading(false)
   }
   

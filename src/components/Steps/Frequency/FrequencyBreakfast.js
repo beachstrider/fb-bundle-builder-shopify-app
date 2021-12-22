@@ -5,7 +5,7 @@ import { Icon } from '@shopify/polaris'
 import { CircleDisabledMajor } from '@shopify/polaris-icons'
 import styles from './Frequency.module.scss'
 
-const FrequencyBreakfast = ({ data, isSelected, onClick }) => {
+const FrequencyBreakfast = ({ data, quantity, isSelected, onClick }) => {
   const isNone = data.name === 'none'
 
   return (
@@ -28,7 +28,9 @@ const FrequencyBreakfast = ({ data, isSelected, onClick }) => {
           <div className={styles.subtitle}>
             {isNone ? <div>&nbsp;</div> : 'Breakfasts'}
           </div>
-          <FrequencyWeeklyPrice price={data.price} />
+          <FrequencyWeeklyPrice
+            price={isNaN(data.price) ? data.price : data.price * quantity}
+          />
         </div>
       </div>
     </CardCheckMark>

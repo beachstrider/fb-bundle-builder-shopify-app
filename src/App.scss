@@ -1,5 +1,41 @@
 @import './variables';
 
+/* custom font start*/
+@font-face {
+  font-family: Gotham-Black;
+  src: url('https://cdn.shopify.com/s/files/1/0552/6549/3185/files/Gotham-Black.otf?v=1627982628');
+}
+@font-face {
+  font-family: Gotham-Bold;
+  src: url('https://cdn.shopify.com/s/files/1/0552/6549/3185/files/Gotham-Bold.otf?v=1627982628');
+}
+@font-face {
+  font-family: Gotham-Book;
+  src: url('https://cdn.shopify.com/s/files/1/0552/6549/3185/files/Gotham-Book.otf?v=1627982628');
+}
+@font-face {
+  font-family: Gotham-Light;
+  src: url('https://cdn.shopify.com/s/files/1/0552/6549/3185/files/Gotham-Light.otf?v=1627982628');
+}
+@font-face {
+  font-family: Gotham-Medium;
+  src: url('https://cdn.shopify.com/s/files/1/0552/6549/3185/files/Gotham-Medium.otf?v=1627982628');
+}
+@font-face {
+  font-family: Gotham-Thin;
+  src: url('https://cdn.shopify.com/s/files/1/0552/6549/3185/files/Gotham-Thin.otf?v=1627982628');
+}
+h1 ,h2, h3, h4, h5{
+  font-family: Gotham-Black !important;
+}
+h2, h3, h4, h5{
+  font-family: Gotham-Medium !important;
+}
+p{
+  font-family: Gotham-Book !important;
+}
+/* custom font end */
+
 .defaultWrapper {
   position: relative;
   display: flex;
@@ -34,6 +70,9 @@
   to {
     transform: rotate(360deg);
   }
+}
+.headerOffset{
+  margin-left:12px
 }
 .customSpinner {
   width: 100px;
