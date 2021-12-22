@@ -67,6 +67,11 @@ const DeliveryDateModal = ({ open, close }) => {
             dates={currentZone.deliveryDates}
           />
         )}
+        <div className={styles.buttonWrapper}>
+          <div className={`button primaryButton`} onClick={() => close()}>
+            Submit
+          </div>
+        </div>
       </div>
     </Modal>
   )
