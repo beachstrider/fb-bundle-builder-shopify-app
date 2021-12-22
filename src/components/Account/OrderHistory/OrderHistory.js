@@ -26,9 +26,10 @@ function useQuery () {
 
 const OrderHistory = () => {
 
-  if(shopCustomer.id === 0){
-    return <Redirect push to="/" />
+  if(!shopCustomer || shopCustomer.id === 0){
+    window.location = `https://${shopDomain}/account`
   }
+  
   const query = useQuery();
   const state = useSelector((state) => state)
   const dispatch = useDispatch()
@@ -98,7 +99,7 @@ const OrderHistory = () => {
       })
 
       if(thisLoopSubList.length === 0){
-        const subscriptionConfigContents = await request(`${process.env.PROXY_APP_URL}/bundle-api/bundles/${bundleId}/configurations/${configurationId}/contents?display_after=${thisWeek.format('YYYY-MM-DD')}T00:00:00.000Z`, { method: 'get', data: '', headers: { authorization: token }}, 3)
+        const subscriptionConfigContents = await request(`${process.env.PROXY_APP_URL}/bundle-api/bundles/${bundleId}/configurations/${configurationId}/contents?display_after=${thisWeek.format('YYYY-MM-DD')}T00:00:00.000Z`, { method: 'get', data: '', headers: { authorization: `Bearer ${token}` }}, 3)
         if(subscriptionConfigContents.data.data[0].products.length){
           subscriptionConfigContents.data.data[0].products.forEach( product => {
             if(product.is_default === 1){

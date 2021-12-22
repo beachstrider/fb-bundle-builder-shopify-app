@@ -37,7 +37,7 @@ function useQuery () {
 const Dashboard = () => {
 
   if(!shopCustomer || shopCustomer.id === 0){
-    return <Redirect push to="/" />
+    window.location = `https://${shopDomain}/account`
   }
 
 
@@ -119,7 +119,7 @@ const Dashboard = () => {
                   const orderFound = orderedItems[0]
                   if(subscriptionArray[subscriptionObjKey]){
                       const thisItemsArray = await buildProductArrayFromVariant(orderFound.items, sub.subscription_sub_type, shopProducts);
-                      subscriptionArray[subscriptionObjKey].subId = sub.bundle_id;
+                      subscriptionArray[subscriptionObjKey].subId = sub.id;
                       subscriptionArray[subscriptionObjKey].items = thisItemsArray;
                       subscriptionArray[subscriptionObjKey].status = orderFound.platform_order_id !== null ? 'sent' : dayjs(content.deliver_after).isSameOrAfter(dayjs()) ? 'pending' : 'locked';
                       subscriptionArray[subscriptionObjKey].subscriptionDate = dayjs(subscriptionObjKey).format('YYYY-MM-DD');
@@ -131,7 +131,7 @@ const Dashboard = () => {
                 } else {
                   const configContentsData = await request(`${process.env.PROXY_APP_URL}/bundle-api/bundles/${config.bundle_id}/configurations/${config.id}/contents/${content.id}/products?is_default=1`, { method: 'get', data: '', headers: { authorization: `Bearer ${token}` }}, 3)
                   const thisProductsArray = await buildProductArrayFromId(configContentsData.data.data, sub.subscription_sub_type, shopProducts);
-                  subscriptionArray[subscriptionObjKey].subId = sub.bundle_id;
+                  subscriptionArray[subscriptionObjKey].subId = sub.id;
                   subscriptionArray[subscriptionObjKey].items = thisProductsArray;
                   subscriptionArray[subscriptionObjKey].status = dayjs(content.deliver_after).isSameOrAfter(dayjs()) ?  'pending' : 'locked';
                   subscriptionArray[subscriptionObjKey].subscriptionDate = dayjs(subscriptionObjKey).format('YYYY-MM-DD')
@@ -274,7 +274,6 @@ const Dashboard = () => {
           <p>To sign up for a subscription please purchase a subscription <Link to="/">here</Link>.</p>
         </div>
       )}
-      <Toast status="Success" message="Thats my toast" autoDelete />
     </div>
   )
 }

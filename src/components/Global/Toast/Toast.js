@@ -11,15 +11,20 @@ import styles from './Toast.module.scss';
 // }
 
 const Toast = props => {
-    const { status, message, autoDelete } = props;
+    const { open, status, message, autoDelete, handleClose } = props;
     const [show, setShow] = useState(false)
     const [background, setBackground] = useState('green')
     const [icon, setIcon] = useState()
 
     useEffect(() => {
+
+        if(open){
+            setShow(true)
+        }
+
         switch (status) {
             case 'Success':
-                setBackground('#4AA155');
+                setBackground('#3CAD2A');
                 setShow(true)
                 // setIcon(<checkIcon />)
                 break;
@@ -54,6 +59,7 @@ const Toast = props => {
 
     const deleteToast = () => {
         setShow(false)
+        handleClose()
     }
     return (
         <>
@@ -68,9 +74,9 @@ const Toast = props => {
                         </div>
                         <div>
                             <p className={styles.notificationTitle}>{status}</p>
-                            <p className={styles.notificationMessage}>
+                            <div className={styles.notificationMessage}>
                                 {message}
-                            </p>
+                            </div>
                         </div>
                     </div>
                 </div>
