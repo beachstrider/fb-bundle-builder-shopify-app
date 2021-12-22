@@ -1,3 +1,4 @@
+import React, { useEffect } from 'react'
 import { HashRouter as Router, Route, Switch } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import enTranslations from '@shopify/polaris/locales/en.json'
@@ -24,9 +25,34 @@ import {
   EditOrder
 } from './components/Account'
 import Faq from './components/Faq/Faq'
+import { getSelectedBundle } from './components/Hooks'
 
 function App() {
   const state = useSelector((state) => state)
+
+  useEffect(() => {
+    // TODO: remove this block of code later (testing purposes)
+    findMissingTags()
+  }, [])
+
+  // TODO: remove this block of code later (testing purposes)
+  const findMissingTags = async () => {
+    const expectedTags = [
+      '7 Day with breakfast',
+      '7 Day',
+      '5 Day with breakfast',
+      '5 Day',
+      '3 Day with breakfast',
+      '3 Day'
+    ]
+
+    for (const findTag of expectedTags) {
+      const currentTag = await getSelectedBundle(findTag)
+      if (Object.keys(currentTag).length === 0) {
+        console.log('TAG not found:', findTag)
+      }
+    }
+  }
 
   return (
     <AppProvider i18n={enTranslations}>
