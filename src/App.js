@@ -30,8 +30,8 @@ import { getSelectedBundle } from './components/Hooks'
 function App() {
   const state = useSelector((state) => state)
 
-  useEffect(async () => {
-    await findMissingTags()
+  useEffect(() => {
+    findMissingTags()
   }, [])
 
   const findMissingTags = async () => {
@@ -45,14 +45,14 @@ function App() {
     ]
 
     console.log('Searching for Shopify tags in products', expectedTags)
-    const missingTags = [];
+    const missingTags = []
     for (const findTag of expectedTags) {
       const currentTag = await getSelectedBundle(findTag)
       if (Object.keys(currentTag).length === 0) {
         missingTags.push(findTag)
       }
     }
-    if(missingTags.length){
+    if (missingTags.length) {
       console.error('ERROR: Shopify tags missing from products', missingTags)
     }
   }
