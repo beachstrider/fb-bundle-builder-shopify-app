@@ -230,10 +230,11 @@ const EditOrder = () => {
 
       // const shopifyProduct = getSelectedBundle(state.bundle.breakfast.tag)
 
-      const { data } = await getBundle(
+      const bundleResponse = await getBundle(
         state.tokens.guestToken,
         savedItems[0].bundleId
       )
+      console.log('bundleResponse', bundleResponse)
 
       if (data.data.length === 0) {
         throw new Error('Bundle could not be found')
@@ -358,7 +359,7 @@ const EditOrder = () => {
     if (!currentItem) {
       return
     }
-    
+
     if (shopCustomer.id === 0) {
       return <Redirect push to="/" />
     }
@@ -374,9 +375,9 @@ const EditOrder = () => {
   }
 
   const reduceQuantities = (items) => {
-    if(items.length > 0){
-      let count = 0;
-      for(const item of items){
+    if (items.length > 0) {
+      let count = 0
+      for (const item of items) {
         count = count + item.quantity
       }
       return count

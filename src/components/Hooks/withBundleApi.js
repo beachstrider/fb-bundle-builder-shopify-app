@@ -7,6 +7,14 @@ const getContents = async (
   configurationId,
   queryString = `display_after=${dayjs().format('YYYY-MM-DDT00:00:00.000[Z]')}`
 ) => {
+  // TODO: delete line
+  console.log(
+    bundleId,
+    configurationId,
+    (queryString = `display_after=${dayjs().format(
+      'YYYY-MM-DDT00:00:00.000[Z]'
+    )}`)
+  )
   try {
     return await request(
       `${process.env.PROXY_APP_URL}/bundle-api/bundles/${bundleId}/configurations/${configurationId}/contents?${queryString}`,
