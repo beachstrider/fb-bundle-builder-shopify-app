@@ -29,7 +29,6 @@ import {
 dayjs.extend(weekday)
 dayjs.extend(utc)
 
-const FAQ_TYPE = 'entrees'
 const STEP_ID = 4
 
 const Entrees = () => {
@@ -91,21 +90,24 @@ const Entrees = () => {
 
       // uses selected tag in the first step
       const shopifyProduct = getSelectedBundle(state.bundle.breakfast.tag)
+      console.log('shopifyProduct',shopifyProduct)
 
       const { data } = await getBundleByPlatformId(
         state.tokens.guestToken,
         shopifyProduct.id
       )
+      console.log('getBundleByPlatformId', shopifyProduct.id, data)
       if (data.data.length === 0) {
         throw new Error('Bundle could not be found')
       }
       const currentBundle = data.data[0]
 
       for (const configuration of currentBundle.configurations) {
+        console.log('currentBundle.configurations', currentBundle.configurations)
         const addItem = (items) => menuItems.concat(items)
-
+        console.log('currentBundle.configurations', currentBundle.configurations)
         const response = await getProducts(configuration, addItem)
-
+        console.log('getProducts', response)
         newItems.push({
           id: configuration.id,
           title: configuration.title,
@@ -141,14 +143,14 @@ const Entrees = () => {
       configuration.bundleId,
       configuration.id
     )
-
+    console.log('getContentByDate', getContentByDate)
     const contentResponse = await getContent(
       state.tokens.guestToken,
       configuration.bundleId,
       configuration.id,
       getContentByDate.id
     )
-
+    console.log('contentResponse', contentResponse)
     if (
       contentResponse.data?.data &&
       contentResponse.data?.data.products.length > 0

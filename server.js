@@ -14,12 +14,42 @@ const rechargeRouters = require('./src/server/routers/rechargeRouters')
 const app = express()
 const SERVER_PORT = process.env.PORT || 3000
 
+// Sentry
+const Sentry = require('@sentry/node')
+const Tracing = require('@sentry/tracing')
+Sentry.init({
+  environment: process.env.SENTRY_ENVIRONMENT,
+  dsn: process.env.SENTRY_DSN,
+  tracesSampleRate: process.env.SENTRY_SAMPLE_RATE,
+  integrations: [
+    // enable HTTP calls tracing
+    new Sentry.Integrations.Http({ tracing: true }),
+    // enable Express.js middleware tracing
+    new Tracing.Integrations.Express({ app })
+  ]
+})
+// RequestHandler creates a separate execution context using domains, so that every
+// transaction/span/breadcrumb is attached to its own Hub instance
+app.use(Sentry.Handlers.requestHandler())
+// TracingHandler creates a trace for every incoming request
+app.use(Sentry.Handlers.tracingHandler())
+// The error handler must be before any other error middleware and after all controllers
+app.use(Sentry.Handlers.errorHandler())
+// Optional fallthrough error handler
+app.use((err, req, res, next) => {
+  // The error id is attached to `res.sentry` to be returned
+  // and optionally displayed to the user for support.
+  res.statusCode = 500
+  res.end(res.sentry + '\n')
+})
+// END Sentry
+
 const morganFormat = ':method :url :status auth::req[authorization] res-length::res[content-length] - :response-time ms'
 app.use(morgan(morganFormat))
 
 const cachedVersion = Math.floor((1 + Math.random()) * 0x10000)
-  .toString(16)
-  .substring(1)
+.toString(16)
+.substring(1)
 
 app.use(cors())
 app.use(express.json())
@@ -74,14 +104,14 @@ app.get('/', verifyHmac, (req, res) => {
       ])
 
       res
-        .header({
-          'Content-Type': 'application/liquid'
-        })
-        .header({
-          'Strict-Transport-Security':
-            'max-age=63072000; includeSubDomains; preload'
-        })
-        .send(formattedData)
+      .header({
+        'Content-Type': 'application/liquid'
+      })
+      .header({
+        'Strict-Transport-Security':
+          'max-age=63072000; includeSubDomains; preload'
+      })
+      .send(formattedData)
     }
   )
 })

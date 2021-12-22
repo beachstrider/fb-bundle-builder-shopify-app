@@ -51,24 +51,32 @@ const Review = () => {
   const addShopifyCartItems = async () => {
     await shopifyCart.clearCart()
 
-    const shopifyBundleProduct = getSelectedBundle(state.bundle.breakfast.tag)
-
-    if (
-      shopifyBundleProduct.variants &&
-      shopifyBundleProduct.variants.length > 0
-    ) {
-      await shopifyCart.create([
-        {
-          id: shopifyBundleProduct.variants[0].id,
-          quantity: 1,
-          properties: {
-            'Customer Id': shopCustomer?.id,
-            'Cart Token': platformCartToken
+    try {
+      const shopifyBundleProduct = getSelectedBundle(state.bundle.breakfast.tag)
+      console.log('shopifyBundleProduct', shopifyBundleProduct)
+      if (
+        shopifyBundleProduct.variants &&
+        shopifyBundleProduct.variants.length > 0
+      ) {
+        const variant = shopifyBundleProduct.variants[0]
+        const sellingPlanId = variant.selling_plan_allocations[0].selling_plan_id;
+        const response = await shopifyCart.create([
+          {
+            id: variant.id,
+            selling_plan: sellingPlanId,
+            quantity: 1,
+            properties: {
+              'Customer Id': shopCustomer?.id,
+              'Cart Token': platformCartToken
+            }
           }
-        }
-      ])
-    } else {
-      return setErrorMessage(DEFAULT_ERROR_MESSAGE)
+        ])
+        console.log('add to cart response', response)
+      } else {
+        return setErrorMessage(DEFAULT_ERROR_MESSAGE)
+      }
+    }catch (e){
+      console.error(e)
     }
   }
 
@@ -100,9 +108,7 @@ const Review = () => {
         state.location.deliveryDate.day,
         mappedItems
       )
-
       clearLocalStorage()
-
       window.location.href = '/checkout'
     } catch (error) {
       return setErrorMessage(DEFAULT_ERROR_MESSAGE)
