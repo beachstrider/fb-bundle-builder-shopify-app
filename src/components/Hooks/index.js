@@ -4,8 +4,9 @@ import {
   getContent,
   getBundle,
   getBundleConfiguration,
-  saveCart,
   getBundleByPlatformId,
+  getSubscriptionOrder,
+  saveCart,
   saveBundle,
   updateBundle
 } from './withBundleApi'
@@ -26,6 +27,7 @@ export {
   getBundle,
   getBundleConfiguration,
   getBundleByPlatformId,
+  getSubscriptionOrder,
   withActiveStep,
   useUserToken,
   hasUserToken,

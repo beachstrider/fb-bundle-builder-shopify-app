@@ -10,11 +10,11 @@ import { useDispatch, useSelector } from 'react-redux'
 import CardQuantities from '../../Cards/CardQuantities'
 import {
   getContents,
-  getSelectedBundle,
   getBundle,
   useUserToken,
   saveBundle,
-  updateBundle
+  updateBundle,
+  getSubscriptionOrder
 } from '../../Hooks'
 import {
   cartRemoveItem,
@@ -68,7 +68,9 @@ const EditOrder = () => {
     dispatch(displayFooter(false))
     dispatch(selectFaqType(null))
 
+    console.log('useEffect 01')
     getCurrentMenuItems()
+    console.log('useEffect 02')
   }, [])
 
   useEffect(() => {
@@ -121,14 +123,8 @@ const EditOrder = () => {
   const getCustomerBundleItems = async (token) => {
     const thisWeek = dayjs(query.get('date'))
 
-    const subApi = await request(
-      `${process.env.PROXY_APP_URL}/bundle-api/subscriptions/${orderId}/orders`,
-      {
-        method: 'get',
-        data: '',
-        headers: { authorization: `Bearer ${token}` }
-      }
-    )
+    const subApi = await getSubscriptionOrder(token, orderId)
+    console.log('subApi', subApi)
 
     const bunQty = {}
     // TODO call bundle to get configurations
@@ -220,6 +216,7 @@ const EditOrder = () => {
       const newQuantities = []
       const newQuantitiesCountdown = []
 
+      console.log('HERE!!')
       let savedItems = []
       if (!state.tokens.userToken) {
         const thisToken = getToken()
@@ -230,17 +227,18 @@ const EditOrder = () => {
 
       // const shopifyProduct = getSelectedBundle(state.bundle.breakfast.tag)
 
+      console.log('saved item>>', savedItems)
       const bundleResponse = await getBundle(
-        state.tokens.guestToken,
+        state.tokens.userToken,
         savedItems[0].bundleId
       )
       console.log('bundleResponse', bundleResponse)
 
-      if (data.data.length === 0) {
+      if (bundleResponse.data.data.length === 0) {
         throw new Error('Bundle could not be found')
       }
 
-      const currentApiBundle = data.data
+      const currentApiBundle = bundleResponse.data.data
 
       for (const configuration of currentApiBundle.configurations) {
         const response = await getProducts(configuration, savedItems[0])
@@ -302,7 +300,7 @@ const EditOrder = () => {
     const nextWeekDate = query.get('date')
 
     const response = await getContents(
-      state.tokens.guestToken,
+      state.tokens.userToken,
       configuration.bundleId,
       configuration.id,
       `is_enabled=1&display_after=${nextWeekDate}`
@@ -323,6 +321,7 @@ const EditOrder = () => {
       let subTotal = 0
       const quantity = response.data.data[0].configuration.quantity
 
+      console.log('filter variants>>>', filteredVariants)
       const mappedProducts = filteredVariants.map((product) => {
         const savedProduct = savedItems.products.find(
           (i) => i.id === product.id

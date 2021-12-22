@@ -20,7 +20,13 @@ const filterShopifyProducts = async (items, shopifyProducts) =>
     resolve(mappedProducts)
   })
 
-const filterShopifyVariants = async (state, shopifyProducts, configuration) =>
+const filterShopifyVariants = async (
+  state,
+  shopifyProducts,
+  type,
+  subType,
+  configuration
+) =>
   new Promise((resolve) => {
     console.log('filterShopifyVariants', shopifyProducts, configuration)
     const filteredVariants = []
