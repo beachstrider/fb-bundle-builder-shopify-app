@@ -35,9 +35,6 @@ import {
   request
 } from '../../../utils'
 
-const EMPTY_STATE_IMAGE =
-  'https://cdn.shopify.com/shopifycloud/shopify/assets/no-image-2048-5e88c1b20e087fb7bbe9a3771824e743c244f437e4f8ba93bbf7b11b53f7824c_750x.gif'
-
 dayjs.extend(weekday)
 
 const useQuery = () => {
@@ -98,6 +95,9 @@ const EditOrder = () => {
     //     }
     //   }
     // }
+    if (reduceQuantities(quantitiesCountdown) === 0) {
+      setDisabledNextButton(false)
+    }
   }, [quantities, quantitiesCountdown])
 
   const findProductFromVariant = async (variantId) =>
@@ -124,7 +124,7 @@ const EditOrder = () => {
       {
         method: 'get',
         data: '',
-        headers: { authorization: token }
+        headers: { authorization: `Bearer ${token}` }
       }
     )
 
@@ -159,7 +159,7 @@ const EditOrder = () => {
                   currentProduct?.product?.images &&
                   currentProduct.product?.images.length > 0
                     ? currentProduct.product.images[0]
-                    : EMPTY_STATE_IMAGE,
+                    : process.env.EMPTY_STATE_IMAGE,
                 metafields:
                   currentProduct?.metafields?.length > 0
                     ? currentProduct.metafields
@@ -206,10 +206,10 @@ const EditOrder = () => {
       dispatch(
         setTokens({
           ...state.tokens,
-          userToken: `Bearer ${tokenResponse.token}`
+          userToken: tokenResponse.token
         })
       )
-      return `Bearer ${tokenResponse.token}`
+      return tokenResponse.token
     }
   }
 
@@ -299,9 +299,7 @@ const EditOrder = () => {
   }
 
   const getProducts = async (configuration, savedItems) => {
-    const nextWeekDate = dayjs(query.get('date')).format(
-      'YYYY-MM-DDT00:00:00.000[Z]'
-    )
+    const nextWeekDate = query.get('date')
 
     const response = await getContents(
       state.tokens.guestToken,
@@ -352,8 +350,8 @@ const EditOrder = () => {
     }
   }
 
-  const handleAddItem = (item, bundleContentId) => {
-    const currentItem = cartUtility.addItem(
+  const handleAddItem = async (item, bundleContentId) => {
+    const currentItem = await cartUtility.addItem(
       item,
       bundleContentId,
       quantitiesCountdown
@@ -361,11 +359,7 @@ const EditOrder = () => {
     if (!currentItem) {
       return
     }
-
-    if (quantitiesCountdown !== 0) {
-      setDisabledNextButton(true)
-    }
-
+    
     if (shopCustomer.id === 0) {
       return <Redirect push to="/" />
     }
@@ -378,6 +372,17 @@ const EditOrder = () => {
         ...newItem
       })
     )
+  }
+
+  const reduceQuantities = (items) => {
+    if(items.length > 0){
+      let count = 0;
+      for(const item of items){
+        count = count + item.quantity
+      }
+      return count
+    }
+    return 99
   }
 
   const handleRemoveItem = (item, bundleContentId) => {
@@ -396,9 +401,9 @@ const EditOrder = () => {
     )
   }
 
-  const getQuantity = (id) => {
-    return quantities.find((q) => q.id === id) || { id: 0, quantity: 0 }
-  }
+  // const getQuantity = (id) => {
+  //   return quantities.find((q) => q.id === id) || { id: 0, quantity: 0 }
+  // }
 
   const getQuantityCountdown = (id) => {
     return (
@@ -448,7 +453,7 @@ const EditOrder = () => {
                       ? item.feature_image.src
                       : item.images.length > 0
                       ? item.images[0]
-                      : EMPTY_STATE_IMAGE
+                      : process.env.EMPTY_STATE_IMAGE
                   }
                   metafields={item.metafields}
                   isChecked={cartUtility.isItemSelected(state.cart, item)}
