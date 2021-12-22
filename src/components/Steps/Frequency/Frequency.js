@@ -5,7 +5,9 @@ import {
   selectFaqType,
   displayHeader,
   displayFooter,
-  setIsNextButtonActive
+  setIsNextButtonActive,
+  cartClear,
+  clearBundle
 } from '../../../store/slices/rootSlice'
 import {
   FrequencyBreakfast,
@@ -89,18 +91,15 @@ const Frequency = () => {
   const [selectedBundle, setSelectedBundle] = useState({})
 
   useEffect(() => {
+    dispatch(cartClear())
+
     dispatch(selectFaqType(FAQ_TYPE))
     dispatch(displayHeader(true))
     dispatch(displayFooter(true))
     dispatch(setIsNextButtonActive(true))
 
-    if (!state.bundle.id) {
-      const defaultEntree = mapBundleToStore(
-        bundles[0],
-        bundles[0].breakfasts[0]
-      )
-      dispatch(setBundle(defaultEntree))
-    }
+    const defaultEntree = mapBundleToStore(bundles[0], bundles[0].breakfasts[0])
+    dispatch(setBundle(defaultEntree))
   }, [])
 
   useEffect(() => {
