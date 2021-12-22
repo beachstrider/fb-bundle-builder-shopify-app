@@ -12,7 +12,9 @@ import {
   getContents,
   getSelectedBundle,
   getBundle,
-  useUserToken
+  useUserToken,
+  saveBundle,
+  updateBundle
 } from '../../Hooks'
 import {
   cartRemoveItem,
@@ -188,15 +190,12 @@ const EditOrder = () => {
   }
 
   const handleSave = () => {
-    const myOrder = []
-    bundle.configurations.forEach((config) => {
-      config.contents.forEach((item) => {
-        if (item.quantity > 0) {
-          myOrder.push(item)
-        }
-      })
-    })
-    console.log('My order: ', myOrder)
+    // TODO check for existing order items
+    // if none just create items
+    // if some exist loop and update quantities and make update call
+    // if order skip making contents configuration
+    saveBundle(stuff)
+    updateBundle(more stuff)
   }
 
   const getToken = async () => {

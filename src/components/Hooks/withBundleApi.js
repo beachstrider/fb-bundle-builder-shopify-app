@@ -123,11 +123,47 @@ const saveCart = async (
   }
 }
 
+const saveBundle = async (token, id) => {
+  try {
+    return await request(
+      `${process.env.PROXY_APP_URL}/bundle-api/bundles/${id}`,
+      {
+        method: 'get',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        }
+      }
+    )
+  } catch (error) {
+    return error
+  }
+}
+
+const updateBundle = async (token, id) => {
+  try {
+    return await request(
+      `${process.env.PROXY_APP_URL}/bundle-api/bundles/${id}`,
+      {
+        method: 'get',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        }
+      }
+    )
+  } catch (error) {
+    return error
+  }
+}
+
 export {
   getContents,
   getBundle,
   getBundleConfiguration,
   getBundleByPlatformId,
   getContent,
-  saveCart
+  saveCart,
+  saveBundle,
+  updateBundle
 }
