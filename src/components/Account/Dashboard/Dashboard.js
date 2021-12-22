@@ -24,6 +24,8 @@ import {
 } from '../../../utils';
 import { Spinner } from '../../Global';
 
+import Toast from '../../Global/Toast';
+
 dayjs.extend(isSameOrAfter);
 
 function useQuery () {
@@ -272,6 +274,7 @@ const Dashboard = () => {
           <p>To sign up for a subscription please purchase a subscription <Link to="/">here</Link>.</p>
         </div>
       )}
+      <Toast status="Success" message="Thats my toast" autoDelete />
     </div>
   )
 }

@@ -1,0 +1,82 @@
+import React, { useState, useEffect } from 'react';
+import styles from './Toast.module.scss';
+// import checkIcon from './assets/check.svg';
+// import errorIcon from './assets/error.svg';
+// import infoIcon from './assets/info.svg';
+// import warningIcon from './assets/warning.svg';
+
+// {
+//     status: 'Success',
+//     description: 'This is a success toast component',
+// }
+
+const Toast = props => {
+    const { status, message, autoDelete } = props;
+    const [show, setShow] = useState(false)
+    const [background, setBackground] = useState('green')
+    const [icon, setIcon] = useState()
+
+    useEffect(() => {
+        switch (status) {
+            case 'Success':
+                setBackground('#4AA155');
+                setShow(true)
+                // setIcon(<checkIcon />)
+                break;
+            case 'Warning':
+                setBackground('#DF954B')
+                setShow(true)
+                // setIcon(<warningIcon />)
+                break;
+            case 'Danger':
+                setBackground('#C74243')
+                setShow(true)
+                // setIcon(<errorIcon />)
+                break;
+            default:
+                setBackground('#3DABC6')
+                setShow(true)
+                // setIcon(<infoIcon />)
+        }
+    }, [status]);
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            if (autoDelete) {
+                deleteToast();
+            }
+        }, 1600);
+        
+        return () => {
+            clearInterval(interval);
+        }
+    }, [autoDelete]);
+
+    const deleteToast = () => {
+        setShow(false)
+    }
+    return (
+        <>
+            {show ? (
+                <div className={`${styles.notificationContainer} ${styles.toastPosition}`}>
+                    <div className={`${styles.notification} ${styles.toast}`} style={{ backgroundColor: background }}>
+                        <button onClick={() => deleteToast()}>
+                            X
+                        </button>
+                        <div className={styles.notificationImage}>
+                        
+                        </div>
+                        <div>
+                            <p className={styles.notificationTitle}>{status}</p>
+                            <p className={styles.notificationMessage}>
+                                {message}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            ) : ''}
+        </>
+    );
+}
+
+export default Toast;
