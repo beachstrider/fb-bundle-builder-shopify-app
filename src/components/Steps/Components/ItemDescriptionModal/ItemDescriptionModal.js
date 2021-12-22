@@ -26,7 +26,7 @@ const ItemDescriptionModal = ({
         >
           &nbsp;
         </div>
-        <div className={`${styles.descriptionWrapper} py-5`}>
+        <div className={styles.descriptionWrapper}>
           <div className={`${styles.title} mb-3`}>{title}</div>
           <div className={styles.description}>
             {metafields.map((metafield) => (

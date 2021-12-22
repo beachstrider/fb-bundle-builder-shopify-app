@@ -58,11 +58,9 @@ const Dashboard = () => {
 
     if (!state.tokens.userToken) {
       const thisToken = getToken();
-      console.log('need new token')
       // TODO the token call isnt triggering the next call
       getOrdersToShow(thisToken);
     } else {
-      console.log('token exists')
       getOrdersToShow(state.tokens.userToken);
     }
     
@@ -74,37 +72,36 @@ const Dashboard = () => {
       dispatch(
         setTokens({
           ...state.tokens,
-          userToken: `Bearer ${tokenResponse.token}`
+          userToken: tokenResponse.token
         })
       )
-      return `Bearer ${tokenResponse.token}`
+      return tokenResponse.token
     }
   }
 
   const getOrdersToShow = async (token) => {
-    const today = dayjs().subtract(1, 'week').day(0).format('YYYY-MM-DD');
     const activeWeeksArr = []
     const activeWeeksLimit = []
     const weeksMenu = []
     const subscriptionArray = {};
 
-    const subApi = await request(`${process.env.PROXY_APP_URL}/bundle-api/subscriptions`, { method: 'get', data: '', headers: { authorization: token }}, 3)
+    const subApi = await request(`${process.env.PROXY_APP_URL}/bundle-api/subscriptions`, { method: 'get', data: '', headers: { authorization: `Bearer ${token}` }}, 3)
 
     if(subApi.data.message && subApi.data.message !== 'Unexpected error.'){
-      console.log('token is bad')
       const newToken = await getToken()
-      console.log('got new token: ', newToken)
       getOrdersToShow(newToken)
     }
 
     if(subApi.data.data){
       for (const sub of subApi.data.data) {
-        const subscriptionOrders = await request(`${process.env.PROXY_APP_URL}/bundle-api/subscriptions/${sub.bundle_id}/orders`, { method: 'get', data: '', headers: { authorization: token }}, 3)
-        const configData = await request(`${process.env.PROXY_APP_URL}/bundle-api/bundles/${sub.bundle_id}/configurations`, { method: 'get', data: '', headers: { authorization: token }}, 3)
+        const subscriptionOrders = await request(`${process.env.PROXY_APP_URL}/bundle-api/subscriptions/${sub.bundle_id}/orders`, { method: 'get', data: '', headers: { authorization: `Bearer ${token}` }}, 3)
+        const configData = await request(`${process.env.PROXY_APP_URL}/bundle-api/bundles/${sub.bundle_id}/configurations`, { method: 'get', data: '', headers: { authorization:`Bearer ${token}` }}, 3)
         if(configData.data.data.length > 0){
           for( const config of configData.data.data){
             let subCount = 0;
             for (const content of config.contents) {
+              const dayOfTheWeek = dayjs(content.display_after.split('T')[0]).day()
+              const today = dayjs().subtract(1, 'week').day(dayOfTheWeek).format('YYYY-MM-DD');
               const displayDate = dayjs(content.display_after.split('T')[0]).format('YYYY-MM-DD')
               if(subCount < 4 && dayjs(displayDate).isSameOrAfter(dayjs(today))){
                 const orderedItems = subscriptionOrders.data.data.filter(ord => ord.bundle_configuration_content.display_after === content.display_after);
@@ -124,17 +121,19 @@ const Dashboard = () => {
                       subscriptionArray[subscriptionObjKey].items = thisItemsArray;
                       subscriptionArray[subscriptionObjKey].status = orderFound.platform_order_id !== null ? 'sent' : dayjs(content.deliver_after).isSameOrAfter(dayjs()) ? 'pending' : 'locked';
                       subscriptionArray[subscriptionObjKey].subscriptionDate = dayjs(subscriptionObjKey).format('YYYY-MM-DD');
+                      subscriptionArray[subscriptionObjKey].queryDate = content.display_after
                       if(orderFound.platform_order_id !== null){
                         subscriptionArray[subscriptionObjKey].trackingUrl = await getOrderTrackingUrl(orderFound.platform_order_id, shopCustomer);
                       }
                   }
                 } else {
-                  const configContentsData = await request(`${process.env.PROXY_APP_URL}/bundle-api/bundles/${config.bundle_id}/configurations/${config.id}/contents/${content.id}/products?is_default=1`, { method: 'get', data: '', headers: { authorization: token }}, 3)
+                  const configContentsData = await request(`${process.env.PROXY_APP_URL}/bundle-api/bundles/${config.bundle_id}/configurations/${config.id}/contents/${content.id}/products?is_default=1`, { method: 'get', data: '', headers: { authorization: `Bearer ${token}` }}, 3)
                   const thisProductsArray = await buildProductArrayFromId(configContentsData.data.data, sub.subscription_sub_type, shopProducts);
                   subscriptionArray[subscriptionObjKey].subId = sub.bundle_id;
                   subscriptionArray[subscriptionObjKey].items = thisProductsArray;
                   subscriptionArray[subscriptionObjKey].status = dayjs(content.deliver_after).isSameOrAfter(dayjs()) ?  'pending' : 'locked';
                   subscriptionArray[subscriptionObjKey].subscriptionDate = dayjs(subscriptionObjKey).format('YYYY-MM-DD')
+                  subscriptionArray[subscriptionObjKey].queryDate = content.display_after
                 }
                 subCount++
               }
@@ -240,7 +239,7 @@ const Dashboard = () => {
                 <h3>Week of {dayjs(sub.subscriptionDate).format('MMM DD')}</h3>
                 {sub.status === 'sent' ? <a href={sub.trackingUrl} className={styles.primaryLink}>Track Package</a> : ''}
               </div>
-              {sub.status === 'sent' || sub.status === 'locked' ? <Link to={`/order-history?date=${sub.subscriptionDate}`} className="secondaryButton">Order Summary</Link>  : <Link to={`/edit-order/${sub.subId}?date=${sub.subscriptionDate}`} className="secondaryButton">Edit Order</Link>}
+              {sub.status === 'sent' || sub.status === 'locked' ? <Link to={`/order-history?date=${sub.queryDate}`} className="secondaryButton">Order Summary</Link>  : <Link to={`/edit-order/${sub.subId}?date=${sub.queryDate}`} className="secondaryButton">Edit Order</Link>}
             </div>
             {sub.items.length > 0 ? (
             <div className={styles.accountMenuRow}>

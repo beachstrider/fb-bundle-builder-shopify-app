@@ -175,7 +175,7 @@ const Review = () => {
             {state.cart.map((item) => (
               <MenuItemCard
                 key={item.id}
-                image={item.images.length > 0 && item.images[0]}
+                image={item.images.length > 0 && item.images[0] ? item.images[0] : process.env.EMPTY_STATE_IMAGE}
                 title={item.name}
                 quantity={item.quantity}
                 type={item.title}
