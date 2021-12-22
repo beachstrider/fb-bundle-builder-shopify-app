@@ -12,6 +12,11 @@ import { request } from '../../../utils';
   
 
 const AccountInfo = () => {
+
+    if(!shopCustomer || shopCustomer.id === 0){
+        window.location = `https://${shopDomain}/account`
+    }
+
     const dispatch = useDispatch()
 
     React.useEffect( () => {
@@ -25,10 +30,6 @@ const AccountInfo = () => {
         const subApi = await request(`${process.env.PROXY_APP_URL}/recharge/customer?email=${shopCustomer.email}`, { method: 'get', data: '', headers: { authorization: 'qweqweqwe' }}, 3)
 
         window.location.href = `https://quickfresh-sandbox.myshopify.com/tools/recurring/portal/${subApi.data.customers[0].hash}/addresses?token=${window.customerToken}`;
-    }
-
-    if(shopCustomer.id === 0){
-        return <Redirect push to="/" />
     }
 
     return (

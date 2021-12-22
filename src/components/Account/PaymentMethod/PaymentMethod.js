@@ -13,8 +13,8 @@ import { request } from '../../../utils';
 
 const PaymentMethod = () => {
 
-    if(shopCustomer.id === 0){
-        return <Redirect push to="/" />
+    if(!shopCustomer || shopCustomer.id === 0){
+      window.location = `https://${shopDomain}/account`
     }
 
     const [cardNumber, setCardNumber] = React.useState('')

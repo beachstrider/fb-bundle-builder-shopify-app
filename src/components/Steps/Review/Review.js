@@ -17,6 +17,7 @@ import DeliveryDateModal from '../Components/DeliveryDatesModal/DeliveryDateModa
 import { getBundleByPlatformId } from '../../Hooks/withBundleApi'
 import { clearLocalStorage } from '../../../store/store'
 import { cart } from '../../../utils'
+import Toast from '../../Global/Toast'
 
 dayjs.extend(advancedFormat)
 dayjs.extend(weekday)
@@ -30,7 +31,7 @@ const Review = () => {
   const [openEditDateModal, setOpenEditDateModal] = useState(false)
   const [platformCartToken, setPlatformCartToken] = useState('')
   const shopifyCart = useShopifyCart()
-  const [errorMessage, setErrorMessage] = useState('')
+  const [errorMessage, setErrorMessage] = useState(false)
 
   const cartUtility = cart(state)
 
@@ -129,6 +130,10 @@ const Review = () => {
     }
   }
 
+  const closeAlert = () => {
+    setErrorMessage(false)
+  }
+
   if (Number(shopCustomer.id) === 0 || state.bundle.weeklyPrice === 0) {
     return <Redirect push to="/steps/2" />
   }
@@ -191,6 +196,7 @@ const Review = () => {
           </div>
         </div>
       </div>
+      <Toast open={errorMessage} status="Danger" message={errorMessage} autoDelete handleClose={closeAlert} />
       <DeliveryDateModal
         open={openEditDateModal}
         close={() => setOpenEditDateModal(false)}
