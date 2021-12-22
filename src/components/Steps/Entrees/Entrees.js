@@ -90,11 +90,7 @@ const Entrees = () => {
 
       // uses selected tag in the first step
       const shopifyProduct = getSelectedBundle(state.bundle.breakfast.tag)
-<<<<<<< HEAD
       console.log('shopifyProduct',shopifyProduct)
-
-=======
->>>>>>> 2576a184a3b758441fd58069e80e877b22f95b53
       const { data } = await getBundleByPlatformId(
         state.tokens.guestToken,
         shopifyProduct.id
@@ -109,10 +105,7 @@ const Entrees = () => {
         const addItem = (items) => menuItems.concat(items)
         console.log('currentBundle.configurations', currentBundle.configurations)
         const response = await getProducts(configuration, addItem)
-<<<<<<< HEAD
         console.log('getProducts', response)
-=======
->>>>>>> 2576a184a3b758441fd58069e80e877b22f95b53
         newItems.push({
           id: configuration.id,
           title: configuration.title,
@@ -148,11 +141,7 @@ const Entrees = () => {
       configuration.bundleId,
       configuration.id
     )
-<<<<<<< HEAD
-    console.log('getContentByDate', getContentByDate)
-=======
-    
->>>>>>> 2576a184a3b758441fd58069e80e877b22f95b53
+
     const contentResponse = await getContent(
       state.tokens.guestToken,
       configuration.bundleId,
@@ -168,7 +157,7 @@ const Entrees = () => {
         contentResponse.data.data.products,
         shopProducts
       )
-      
+
       const filteredVariants = await filterShopifyVariants(
         state,
         filteredProducts,
