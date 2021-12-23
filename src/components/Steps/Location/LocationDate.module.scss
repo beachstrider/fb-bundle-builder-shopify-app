@@ -12,9 +12,10 @@
     display: flex;
     justify-content: center;
     align-items: flex-start;
-
+    margin-top: 1rem;
     & .dateNumber {
       font-size: 5.7rem;
+      line-height: 4.2rem;
       font-weight: 700;
       text-transform: uppercase;
       & .ordinal {
