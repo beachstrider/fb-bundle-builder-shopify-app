@@ -5,6 +5,7 @@ const IV_LENGTH = 16
 const ALGORITHM = 'aes-128-cbc'
 
 const shopifyMultipass = (secret, returnTo) => {
+  console.log('shopifyMultipass', secret)
   const key = crypto.createHash('sha256').update(secret).digest()
   const encryptedKey = key.slice(0, 16)
   const signatureKey = key.slice(16, 32)
