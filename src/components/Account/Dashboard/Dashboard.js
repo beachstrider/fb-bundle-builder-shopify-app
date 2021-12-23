@@ -102,28 +102,29 @@ const Dashboard = () => {
           for( const config of configData.data.data){
             let subCount = 0;
             for (const content of config.contents) {
-              const dayOfTheWeek = dayjs(content.display_after.split('T')[0]).day()
+              const dayOfTheWeek = dayjs(content.deliver_after.split('T')[0]).day()
               const today = dayjs().subtract(1, 'week').day(dayOfTheWeek).format('YYYY-MM-DD');
-              const displayDate = dayjs(content.display_after.split('T')[0]).format('YYYY-MM-DD')
-              if(subCount < 4 && dayjs(displayDate).isSameOrAfter(dayjs(today))){
-                const orderedItems = subscriptionOrders.data.data.filter(ord => ord.bundle_configuration_content.display_after === content.display_after);
-                const subscriptionObjKey = content.display_after.split('T')[0]
-                if(!weeksMenu.includes(dayjs(content.display_after.split('T')[0]).format('YYYY-MM-DD'))){
-                  weeksMenu.push(dayjs(content.display_after.replace('T00:00:00.000Z', 'T12:00:00.000Z')).format('YYYY-MM-DD'))
+              const displayDate = dayjs(content.deliver_after.split('T')[0]).format('YYYY-MM-DD');
+              const cutoffDate = dayjs().day(sub.delivery_day).add(4, 'day');
+              if(subCount < 3 && dayjs(displayDate).isSameOrAfter(dayjs(today))){
+                const orderedItems = subscriptionOrders.data.data.filter(ord => ord.bundle_configuration_content.deliver_after === content.deliver_after);
+                const subscriptionObjKey = content.deliver_after.split('T')[0]
+                console.log('content.deliver_after: ', content.deliver_after)
+                if(!weeksMenu.includes(dayjs(content.deliver_after.split('T')[0]).format('YYYY-MM-DD'))){
+                  weeksMenu.push(dayjs(content.deliver_after.replace('T00:00:00.000Z', 'T12:00:00.000Z')).format('YYYY-MM-DD'))
                   subscriptionArray[subscriptionObjKey] = {}
                 }
-                // TODO check orders for items
-                // TODO loop those and push
-                // TODO call this for default products if missing /bundle-api/bundles/1/configurations/1/contents/1/products?is_default=1
+
                 if(orderedItems.length > 0){
                   const orderFound = orderedItems[0]
                   if(subscriptionArray[subscriptionObjKey]){
                       const thisItemsArray = await buildProductArrayFromVariant(orderFound.items, sub.subscription_sub_type, shopProducts);
                       subscriptionArray[subscriptionObjKey].subId = sub.id;
+                      subscriptionArray[subscriptionObjKey].deliveryDay = sub.delivery_day;
                       subscriptionArray[subscriptionObjKey].items = thisItemsArray;
-                      subscriptionArray[subscriptionObjKey].status = orderFound.platform_order_id !== null ? 'sent' : dayjs(content.deliver_after).isSameOrAfter(dayjs()) ? 'pending' : 'locked';
+                      subscriptionArray[subscriptionObjKey].status = orderFound.platform_order_id !== null ? 'sent' : dayjs(content.deliver_after).isSameOrAfter(cutoffDate) ? 'pending' : 'locked';
                       subscriptionArray[subscriptionObjKey].subscriptionDate = dayjs(subscriptionObjKey).format('YYYY-MM-DD');
-                      subscriptionArray[subscriptionObjKey].queryDate = content.display_after
+                      subscriptionArray[subscriptionObjKey].queryDate = content.deliver_after
                       if(orderFound.platform_order_id !== null){
                         subscriptionArray[subscriptionObjKey].trackingUrl = await getOrderTrackingUrl(orderFound.platform_order_id, shopCustomer);
                       }
@@ -133,9 +134,9 @@ const Dashboard = () => {
                   const thisProductsArray = await buildProductArrayFromId(configContentsData.data.data, sub.subscription_sub_type, shopProducts);
                   subscriptionArray[subscriptionObjKey].subId = sub.id;
                   subscriptionArray[subscriptionObjKey].items = thisProductsArray;
-                  subscriptionArray[subscriptionObjKey].status = dayjs(content.deliver_after).isSameOrAfter(dayjs()) ?  'pending' : 'locked';
+                  subscriptionArray[subscriptionObjKey].status = dayjs(content.deliver_after).isSameOrAfter(cutoffDate) ?  'pending' : 'locked';
                   subscriptionArray[subscriptionObjKey].subscriptionDate = dayjs(subscriptionObjKey).format('YYYY-MM-DD')
-                  subscriptionArray[subscriptionObjKey].queryDate = content.display_after
+                  subscriptionArray[subscriptionObjKey].queryDate = content.deliver_after
                 }
                 subCount++
               }
