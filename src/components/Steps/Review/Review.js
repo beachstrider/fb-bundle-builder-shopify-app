@@ -67,11 +67,15 @@ const Review = () => {
     try {
       const shopifyBundleProduct = getSelectedBundle(state.bundle.breakfast.tag)
       console.log('shopifyBundleProduct', shopifyBundleProduct)
+      console.log('state.entreeType.title: ', state.entreeType.title)
+      console.log('state.entreeSubType.title: ', state.entreeSubType.title)
+      const selectedVariant = shopifyBundleProduct.variants.filter(v => v.title.includes(state.entreeType.title) && v.title.includes(state.entreeSubType.title))
+      console.log('selectedVariant', selectedVariant)
       if (
         shopifyBundleProduct.variants &&
         shopifyBundleProduct.variants.length > 0
       ) {
-        const variant = shopifyBundleProduct.variants[0]
+        const variant = selectedVariant.length > 0 ? selectedVariant[0].id : shopifyBundleProduct.variants[0] 
         const sellingPlanId = variant.selling_plan_allocations[0].selling_plan_id;
         const response = await shopifyCart.create([
           {
@@ -99,34 +103,34 @@ const Review = () => {
     try {
       await addShopifyCartItems()
 
-      const shopifyProduct = getSelectedBundle(state.bundle.breakfast.tag)
-      const currentBundle = await getBundleByPlatformId(
-        state.tokens.guestToken,
-        shopifyProduct.id
-      )
+      // const shopifyProduct = getSelectedBundle(state.bundle.breakfast.tag)
+      // const currentBundle = await getBundleByPlatformId(
+      //   state.tokens.guestToken,
+      //   shopifyProduct.id
+      // )
 
-      if (currentBundle.data.data.length === 0) {
-        return setErrorMessage(DEFAULT_ERROR_MESSAGE)
-      }
+      // if (currentBundle.data.data.length === 0) {
+      //   return setErrorMessage(DEFAULT_ERROR_MESSAGE)
+      // }
 
-      const mappedItems = state.cart.map((item) => ({
-        bundle_configuration_content_id: item.configurationContentId,
-        platform_product_variant_id: item.id,
-        quantity: item.quantity
-      }))
+      // const mappedItems = state.cart.map((item) => ({
+      //   bundle_configuration_content_id: item.configurationContentId,
+      //   platform_product_variant_id: item.id,
+      //   quantity: item.quantity
+      // }))
 
-      await saveCart(
-        state.tokens.guestToken,
-        shopCustomer.id,
-        platformCartToken,
-        currentBundle.data.data[0].id,
-        state.location.deliveryDate.day,
-        state.entreeType.title.toLowerCase(),
-        state.entreeSubType.title.toLowerCase(),
-        mappedItems
-      )
-      clearLocalStorage()
-      window.location.href = '/checkout'
+      // await saveCart(
+      //   state.tokens.guestToken,
+      //   shopCustomer.id,
+      //   platformCartToken,
+      //   currentBundle.data.data[0].id,
+      //   state.location.deliveryDate.day,
+      //   state.entreeType.title.toLowerCase(),
+      //   state.entreeSubType.title.toLowerCase(),
+      //   mappedItems
+      // )
+      // clearLocalStorage()
+      // window.location.href = '/checkout'
     } catch (error) {
       setShowError(true)
       return setErrorMessage(DEFAULT_ERROR_MESSAGE)
