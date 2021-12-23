@@ -32,7 +32,7 @@ const Review = () => {
   const [platformCartToken, setPlatformCartToken] = useState('')
   const shopifyCart = useShopifyCart()
   const [errorMessage, setErrorMessage] = useState(false)
-
+  const [showError, setShowError] = useState(false)
   const cartUtility = cart(state)
 
   useEffect(() => {
@@ -86,6 +86,7 @@ const Review = () => {
         ])
         console.log('add to cart response', response)
       } else {
+        setShowError(true)
         return setErrorMessage(DEFAULT_ERROR_MESSAGE)
       }
     }catch (e){
@@ -126,11 +127,13 @@ const Review = () => {
       clearLocalStorage()
       window.location.href = '/checkout'
     } catch (error) {
+      setShowError(true)
       return setErrorMessage(DEFAULT_ERROR_MESSAGE)
     }
   }
 
   const closeAlert = () => {
+    setShowError(false)
     setErrorMessage(false)
   }
 
@@ -196,7 +199,7 @@ const Review = () => {
           </div>
         </div>
       </div>
-      <Toast open={errorMessage} status="Danger" message={errorMessage} autoDelete handleClose={closeAlert} />
+      {showError ? <Toast open={showError} status="Danger" message={errorMessage} autoDelete handleClose={closeAlert} /> : ''}
       <DeliveryDateModal
         open={openEditDateModal}
         close={() => setOpenEditDateModal(false)}

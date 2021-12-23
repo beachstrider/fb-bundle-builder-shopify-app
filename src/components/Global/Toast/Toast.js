@@ -17,11 +17,7 @@ const Toast = props => {
     const [icon, setIcon] = useState()
 
     useEffect(() => {
-
-        if(open){
-            setShow(true)
-        }
-
+        setShow(open)
         switch (status) {
             case 'Success':
                 setBackground('#3CAD2A');
@@ -43,7 +39,7 @@ const Toast = props => {
                 setShow(true)
                 // setIcon(<infoIcon />)
         }
-    }, [status]);
+    }, [status, open]);
 
     useEffect(() => {
         const interval = setInterval(() => {

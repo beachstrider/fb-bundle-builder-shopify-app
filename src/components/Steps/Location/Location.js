@@ -46,6 +46,7 @@ const Location = () => {
       setEmail(state.email)
 
       const zone = findZipCode(state.deliveryZones, state.location.zipCode)
+      console.log('zone: ', zone)
       if (!zone) {
         dispatch(displayFooter(false))
         return setZipCodeError('Delivery is not available to your zip code')
@@ -99,7 +100,7 @@ const Location = () => {
   const checkCurrentSelectedDate = (zone) => {
     let deliveryDates = JSON.parse(JSON.stringify([...zone.deliveryDates]))
     const selectedDateIndex = deliveryDates.find((date) => date.isSelected)
-
+    console.log('deliveryDates : ', deliveryDates)
     deliveryDates = deliveryDates.map((date) => {
       if (selectedDateIndex && date.id === selectedDateIndex.id) {
         date.isSelected = false
