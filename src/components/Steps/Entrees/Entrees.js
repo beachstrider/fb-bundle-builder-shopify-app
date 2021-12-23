@@ -96,7 +96,7 @@ const Entrees = () => {
 
       // uses selected tag in the first step
       const shopifyProduct = getSelectedBundle(state.bundle.breakfast.tag)
-      console.log('shopifyProduct',shopifyProduct)
+      console.log('shopifyProduct', shopifyProduct)
       const { data } = await getBundleByPlatformId(
         state.tokens.guestToken,
         shopifyProduct.id
@@ -109,7 +109,10 @@ const Entrees = () => {
       for (const configuration of currentBundle.configurations) {
         console.log('configuration run', configuration)
         const addItem = (items) => menuItems.concat(items)
-        console.log('currentBundle.configurations', currentBundle.configurations)
+        console.log(
+          'currentBundle.configurations',
+          currentBundle.configurations
+        )
         const response = await getProducts(configuration, addItem)
         console.log('getProducts', response)
         newItems.push({
@@ -140,7 +143,7 @@ const Entrees = () => {
         status: 'Danger',
         message: 'Failed to retrieve products'
       })
-      //return history.push('/')
+      // return history.push('/')
     }
   }
 
@@ -172,6 +175,8 @@ const Entrees = () => {
       const filteredVariants = await filterShopifyVariants(
         state,
         filteredProducts,
+        state.entreeType.title,
+        state.entreeSubType.title,
         configuration
       )
       let subTotal = 0

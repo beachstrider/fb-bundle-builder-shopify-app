@@ -3,13 +3,12 @@ const EMPTY_STATE_IMAGE =
 
 const filterShopifyProducts = async (items, shopifyProducts) =>
   new Promise((resolve) => {
-    console.log('filterShopifyProducts', items, shopifyProducts)
     const apiProductIds = items.map((i) => Number(i.platform_product_id))
-    console.log('apiProductIds', apiProductIds)
+
     const filteredProducts = shopifyProducts.filter((p) =>
       apiProductIds.includes(p.id)
     )
-    console.log('filteredProducts', filteredProducts)
+
     const mappedProducts = filteredProducts.map((product) => ({
       ...product,
       bundle_configuration_content_id: items.find(
@@ -20,9 +19,14 @@ const filterShopifyProducts = async (items, shopifyProducts) =>
     resolve(mappedProducts)
   })
 
-const filterShopifyVariants = async (state, shopifyProducts, configuration) =>
+const filterShopifyVariants = async (
+  state,
+  shopifyProducts,
+  type,
+  subType,
+  configuration
+) =>
   new Promise((resolve) => {
-    console.log('filterShopifyVariants', shopifyProducts, configuration)
     const filteredVariants = []
     const formattedString = (value) => {
       return value.toLowerCase().split(' ').join('')
@@ -30,15 +34,13 @@ const filterShopifyVariants = async (state, shopifyProducts, configuration) =>
 
     for (const product of shopifyProducts) {
       const filtered = product.variants.filter((variant) => {
-        // TODO: remove console log
-        console.log('filter variants', variant.options)
         const formattedOptions = variant.options.map((option) =>
           formattedString(option)
         )
 
         return (
-          formattedOptions.includes(formattedString(state.entreeType.title)) &&
-          formattedOptions.includes(formattedString(state.entreeSubType.title))
+          formattedOptions.includes(formattedString(type)) &&
+          formattedOptions.includes(formattedString(subType))
         )
       })
 

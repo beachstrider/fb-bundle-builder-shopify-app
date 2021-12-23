@@ -10,9 +10,9 @@ import { useDispatch, useSelector } from 'react-redux'
 import CardQuantities from '../../Cards/CardQuantities'
 import {
   getContents,
-  getSelectedBundle,
   getBundle,
-  useUserToken
+  useUserToken,
+  getSubscriptionOrder
 } from '../../Hooks'
 import {
   cartRemoveItem,
@@ -31,12 +31,10 @@ import Loading from '../../Steps/Components/Loading'
 import {
   cart,
   filterShopifyProducts,
-  filterShopifyVariants,
-  request
+  filterShopifyVariants
 } from '../../../utils'
-
-const EMPTY_STATE_IMAGE =
-  'https://cdn.shopify.com/shopifycloud/shopify/assets/no-image-2048-5e88c1b20e087fb7bbe9a3771824e743c244f437e4f8ba93bbf7b11b53f7824c_750x.gif'
+import { updateSubscriptionOrder } from '../../Hooks/withBundleApi'
+import Toast from '../../Global/Toast'
 
 dayjs.extend(weekday)
 
@@ -54,10 +52,15 @@ const EditOrder = () => {
   const history = useHistory()
   const cartUtility = cart(state)
 
-  const [bundle, setBundle] = useState([])
+  const [bundle, setBundle] = useState({})
   const [disabledNextButton, setDisabledNextButton] = useState(true)
   const [isLoading, setIsLoading] = useState(false)
   const [menuItems, setMenuItems] = useState([])
+  const [error, setError] = useState({
+    open: false,
+    status: 'Success',
+    message: ''
+  })
 
   // total and remaining items to add
   const [quantities, setQuantities] = useState([])
@@ -73,31 +76,11 @@ const EditOrder = () => {
   }, [])
 
   useEffect(() => {
-    // if (
-    //   bundle.length > 0 &&
-    //   quantitiesCountdown.length > 0 &&
-    //   quantities.length > 0
-    // ) {
-    //   let canActivateButton = false
-    //   quantities.forEach((quantity) => {
-    //     const cartTotal = cartUtility.sumQuantity(quantity.id)
-    //     if (
-    //       cartTotal === getQuantity(quantity.id)?.quantity &&
-    //       getQuantityCountdown(quantity.id)?.quantity === 0
-    //     ) {
-    //       canActivateButton = true
-    //     } else {
-    //       canActivateButton = false
-    //     }
-    //   })
-    //   if (canActivateButton) {
-    //     setDisabledNextButton(true)
-    //   } else {
-    //     if (canActivateButton) {
-    //       setDisabledNextButton(false)
-    //     }
-    //   }
-    // }
+    if (reduceQuantities(quantitiesCountdown) === 0) {
+      setDisabledNextButton(false)
+    } else {
+      setDisabledNextButton(true)
+    }
   }, [quantities, quantitiesCountdown])
 
   const findProductFromVariant = async (variantId) =>
@@ -117,34 +100,17 @@ const EditOrder = () => {
     })
 
   const getCustomerBundleItems = async (token) => {
-    const thisWeek = dayjs(query.get('date'))
-
-    const subApi = await request(
-      `${process.env.PROXY_APP_URL}/bundle-api/subscriptions/${orderId}/orders`,
-      {
-        method: 'get',
-        data: '',
-        headers: { authorization: token }
-      }
-    )
-
-    const bunQty = {}
-    // TODO call bundle to get configurations
-    // TODO Check display date for config and call products available
-    // TODO Check customer order and add in QTY's if previously added
+    const subscriptionResponse = await getSubscriptionOrder(token, orderId)
 
     const currentItems = []
-    if (subApi.data.data) {
-      for (const order of subApi.data?.data) {
+    if (subscriptionResponse.data.data) {
+      for (const order of subscriptionResponse.data?.data) {
         const editItemsConfigArr = []
 
         if (order.bundle_configuration_content?.display_after) {
-          const bundleProducts = false // await getBundleItems(order.subscription.bundle_id, order.bundle_configuration_content_id, token)
+          const bundleProducts = false
 
           for (const product of order?.items) {
-            // TODO filter products looking for variant
-            // TODO need to combine order products into the product array and update quantities
-
             const currentProduct = await findProductFromVariant(
               product.platform_product_variant_id
             )
@@ -152,6 +118,8 @@ const EditOrder = () => {
             if (Object.entries(currentProduct).length > 0) {
               editItemsConfigArr.push({
                 id: product.platform_product_variant_id,
+                contentSelectionId: product.id,
+                subscriptionContentId: order.id,
                 title: currentProduct?.product?.title
                   ? currentProduct.product.title
                   : 'default product',
@@ -159,7 +127,7 @@ const EditOrder = () => {
                   currentProduct?.product?.images &&
                   currentProduct.product?.images.length > 0
                     ? currentProduct.product.images[0]
-                    : EMPTY_STATE_IMAGE,
+                    : process.env.EMPTY_STATE_IMAGE,
                 metafields:
                   currentProduct?.metafields?.length > 0
                     ? currentProduct.metafields
@@ -169,34 +137,72 @@ const EditOrder = () => {
             }
           }
 
-          // bunQty[order.bundle_configuration_content_id] = 12; // bundleProducts?.quantityCountdown
           currentItems.push({
             id: bundleProducts ? bundleProducts.id : order.id,
-            bundleId: subApi.data.data[0].subscription.bundle_id,
-            title: bundleProducts
-              ? bundleProducts.title
-              : `Config Title - ${order.id}`,
+            bundleId: subscriptionResponse.data.data[0].subscription.bundle_id,
             products: editItemsConfigArr
           })
         }
       }
 
-      // setBundle(currentItems)
+      setBundle(currentItems[0])
     }
 
     return currentItems
   }
 
-  const handleSave = () => {
-    const myOrder = []
-    bundle.configurations.forEach((config) => {
-      config.contents.forEach((item) => {
-        if (item.quantity > 0) {
-          myOrder.push(item)
+  const handleSave = async () => {
+    const itemsToSave = []
+
+    const getBundleProduct = (variantId) => {
+      return bundle.products.find((p) => p.id === variantId)
+    }
+
+    const subscriptionContentId =
+      bundle?.products[0].subscriptionContentId || null
+
+    for (const item of menuItems) {
+      for (const product of item.products) {
+        const cartItem = state.cart.find((c) => c.id === product.id)
+
+        if (cartItem) {
+          if (cartItem && cartItem.quantity > 0 && product.quantity === 0) {
+            itemsToSave.push({
+              platform_product_variant_id: product.id,
+              quantity: cartItem.quantity
+            })
+          } else {
+            if (cartItem.quantity !== product.quantity) {
+              const currentBundleProduct = getBundleProduct(product.id)
+              itemsToSave.push({
+                id: currentBundleProduct.contentSelectionId,
+                platform_product_variant_id: product.id,
+                quantity: cartItem.quantity
+              })
+            }
+          }
+        } else {
+          const currentBundleProduct = getBundleProduct(product.id)
+          if (currentBundleProduct) {
+            itemsToSave.push({
+              id: currentBundleProduct.contentSelectionId,
+              platform_product_variant_id: product.id,
+              quantity: 0
+            })
+          }
         }
-      })
-    })
-    console.log('My order: ', myOrder)
+      }
+    }
+
+    await updateSubscriptionOrder(
+      state.tokens.userToken,
+      orderId,
+      null,
+      subscriptionContentId,
+      itemsToSave
+    )
+
+    return history.push(`/account?date=${query.get('date')}`)
   }
 
   const getToken = async () => {
@@ -206,10 +212,10 @@ const EditOrder = () => {
       dispatch(
         setTokens({
           ...state.tokens,
-          userToken: `Bearer ${tokenResponse.token}`
+          userToken: tokenResponse.token
         })
       )
-      return `Bearer ${tokenResponse.token}`
+      return tokenResponse.token
     }
   }
 
@@ -229,51 +235,51 @@ const EditOrder = () => {
         savedItems = await getCustomerBundleItems(state.tokens.userToken)
       }
 
-      // const shopifyProduct = getSelectedBundle(state.bundle.breakfast.tag)
-
-      const { data } = await getBundle(
-        state.tokens.guestToken,
+      const bundleResponse = await getBundle(
+        state.tokens.userToken,
         savedItems[0].bundleId
       )
 
-      if (data.data.length === 0) {
+      if (bundleResponse.data.data.length === 0) {
         throw new Error('Bundle could not be found')
       }
 
-      const currentApiBundle = data.data
+      const currentApiBundle = bundleResponse.data.data
 
       for (const configuration of currentApiBundle.configurations) {
         const response = await getProducts(configuration, savedItems[0])
 
-        const mappedProducts = response.products.map((product) => {
-          const savedProduct = savedItems[0].products.find(
-            (i) => i.id === product.id
-          )
-          let quantity = 0
-          if (savedProduct) {
-            quantity = savedProduct.quantity
-          }
-          return {
-            ...product,
-            quantity
-          }
-        })
+        if (response) {
+          const mappedProducts = response.products.map((product) => {
+            const savedProduct = savedItems[0].products.find(
+              (i) => i.id === product.id
+            )
+            let quantity = 0
+            if (savedProduct) {
+              quantity = savedProduct.quantity
+            }
+            return {
+              ...product,
+              quantity
+            }
+          })
 
-        newItems.push({
-          id: configuration.id,
-          title: configuration.title,
-          products: [...mappedProducts]
-        })
+          newItems.push({
+            id: configuration.id,
+            title: configuration.title,
+            products: [...mappedProducts]
+          })
 
-        newQuantities.push({
-          id: configuration.id,
-          quantity: response.quantity
-        })
+          newQuantities.push({
+            id: configuration.id,
+            quantity: response.quantity
+          })
 
-        newQuantitiesCountdown.push({
-          id: configuration.id,
-          quantity: response.quantityCountdown
-        })
+          newQuantitiesCountdown.push({
+            id: configuration.id,
+            quantity: response.quantityCountdown
+          })
+        }
       }
 
       const productsToCart = []
@@ -292,19 +298,19 @@ const EditOrder = () => {
       setMenuItems(newItems)
       setIsLoading(false)
     } catch (error) {
-      // TODO: do something with the error...
-      console.log('error')
-      console.log(error)
+      setError({
+        open: true,
+        status: 'Danger',
+        message: 'Failed to retrieve products'
+      })
     }
   }
 
   const getProducts = async (configuration, savedItems) => {
-    const nextWeekDate = dayjs(query.get('date')).format(
-      'YYYY-MM-DDT00:00:00.000[Z]'
-    )
+    const nextWeekDate = query.get('date')
 
     const response = await getContents(
-      state.tokens.guestToken,
+      state.tokens.userToken,
       configuration.bundleId,
       configuration.id,
       `is_enabled=1&display_after=${nextWeekDate}`
@@ -316,9 +322,21 @@ const EditOrder = () => {
         shopProducts
       )
 
+      const subscriptionOrder = await getSubscriptionOrder(
+        state.tokens.userToken,
+        orderId
+      )
+
+      // order was already placed, redirect the user
+      if (subscriptionOrder.platform_order_id) {
+        return history.push(`/account?dat=${query.get('date')}`)
+      }
+
       const filteredVariants = await filterShopifyVariants(
         state,
         filteredProducts,
+        subscriptionOrder.data.data[0].subscription.subscription_type,
+        subscriptionOrder.data.data[0].subscription.subscription_sub_type,
         configuration
       )
 
@@ -334,6 +352,7 @@ const EditOrder = () => {
         if (savedProduct) {
           quantity = savedProduct.quantity
         }
+
         return {
           ...product,
           quantity
@@ -352,18 +371,14 @@ const EditOrder = () => {
     }
   }
 
-  const handleAddItem = (item, bundleContentId) => {
-    const currentItem = cartUtility.addItem(
+  const handleAddItem = async (item, bundleContentId) => {
+    const currentItem = await cartUtility.addItem(
       item,
       bundleContentId,
       quantitiesCountdown
     )
     if (!currentItem) {
       return
-    }
-
-    if (quantitiesCountdown !== 0) {
-      setDisabledNextButton(true)
     }
 
     if (shopCustomer.id === 0) {
@@ -380,6 +395,17 @@ const EditOrder = () => {
     )
   }
 
+  const reduceQuantities = (items) => {
+    if (items.length > 0) {
+      let count = 0
+      for (const item of items) {
+        count = count + item.quantity
+      }
+      return count
+    }
+    return 99
+  }
+
   const handleRemoveItem = (item, bundleContentId) => {
     const currentItem = cartUtility.removeItem(
       item,
@@ -394,10 +420,6 @@ const EditOrder = () => {
         ...newItem
       })
     )
-  }
-
-  const getQuantity = (id) => {
-    return quantities.find((q) => q.id === id) || { id: 0, quantity: 0 }
   }
 
   const getQuantityCountdown = (id) => {
@@ -448,7 +470,7 @@ const EditOrder = () => {
                       ? item.feature_image.src
                       : item.images.length > 0
                       ? item.images[0]
-                      : EMPTY_STATE_IMAGE
+                      : process.env.EMPTY_STATE_IMAGE
                   }
                   metafields={item.metafields}
                   isChecked={cartUtility.isItemSelected(state.cart, item)}
@@ -475,6 +497,17 @@ const EditOrder = () => {
           Save
         </button>
       </div>
+      {error.open ? (
+        <Toast
+          open={error.open}
+          status={error.status}
+          message={error.message}
+          autoDelete
+          handleClose={closeAlert}
+        />
+      ) : (
+        ''
+      )}
     </div>
   )
 }

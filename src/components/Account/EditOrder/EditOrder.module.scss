@@ -62,6 +62,10 @@ $subTitleFontSize: 2.7rem;
     & .topBarQuantities {
       display: flex;
       justify-content: center;
+      @media only screen and (max-width: $breakpointTablet) {
+        display: block;
+        text-align: center;
+      }
     }
     & div {
       margin: 0.5rem;
@@ -93,6 +97,17 @@ $subTitleFontSize: 2.7rem;
   & .listHeader {
     display: flex;
     align-items: center;
+
+    & .quantities {
+      text-align: left;
+      @media only screen and (max-width: $breakpointTablet) {
+        display: center;
+      }
+    }
+
+    @media only screen and (max-width: $breakpointTablet) {
+      display: block;
+    }
   }
 
   & .cards {

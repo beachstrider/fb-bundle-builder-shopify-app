@@ -1,12 +1,6 @@
-import dayjs from 'dayjs'
 import { request } from '../../utils'
 
-const getContents = async (
-  token,
-  bundleId,
-  configurationId,
-  queryString = `display_after=${dayjs().format('YYYY-MM-DDT00:00:00.000[Z]')}`
-) => {
+const getContents = async (token, bundleId, configurationId, queryString) => {
   try {
     return await request(
       `${process.env.PROXY_APP_URL}/bundle-api/bundles/${bundleId}/configurations/${configurationId}/contents?${queryString}`,
@@ -123,11 +117,125 @@ const saveCart = async (
   }
 }
 
+const saveBundle = async (token, id) => {
+  try {
+    return await request(
+      `${process.env.PROXY_APP_URL}/bundle-api/bundles/${id}`,
+      {
+        method: 'get',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        }
+      }
+    )
+  } catch (error) {
+    return error
+  }
+}
+
+const updateBundle = async (token, id) => {
+  try {
+    return await request(
+      `${process.env.PROXY_APP_URL}/bundle-api/bundles/${id}`,
+      {
+        method: 'get',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        }
+      }
+    )
+  } catch (error) {
+    return error
+  }
+}
+
+const getSubscriptionOrder = async (token, orderId) => {
+  try {
+    return await request(
+      `${process.env.PROXY_APP_URL}/bundle-api/subscriptions/${orderId}/orders`,
+      {
+        method: 'get',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        }
+      }
+    )
+  } catch (error) {
+    return error
+  }
+}
+
+const saveSubscriptionOrder = async (
+  token,
+  subscriptionId,
+  platformOrderId,
+  contentId,
+  items
+) => {
+  try {
+    return await request(
+      `${process.env.PROXY_APP_URL}/bundle-api/subscriptions/${subscriptionId}/orders`,
+      {
+        method: 'post',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        data: {
+          platform_order_id: platformOrderId,
+          bundle_configuration_content_id: contentId,
+          items: [...items]
+        }
+      }
+    )
+  } catch (error) {
+    return error
+  }
+}
+
+const updateSubscriptionOrder = async (
+  token,
+  subscriptionId,
+  platformOrderId,
+  subscriptionContentId,
+  items,
+  isEnabled = 1
+) => {
+  try {
+    return await request(
+      `${process.env.PROXY_APP_URL}/bundle-api/subscriptions/${subscriptionId}/orders/${subscriptionContentId}`,
+      {
+        method: 'put',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        data: {
+          platform_order_id: platformOrderId,
+          bundle_configuration_content_id: subscriptionContentId,
+          is_enabled: isEnabled,
+          items
+        }
+      }
+    )
+  } catch (error) {
+    return error
+  }
+}
+
 export {
   getContents,
   getBundle,
   getBundleConfiguration,
   getBundleByPlatformId,
   getContent,
-  saveCart
+  getSubscriptionOrder,
+  saveCart,
+  saveBundle,
+  updateBundle,
+  saveSubscriptionOrder,
+  updateSubscriptionOrder
 }

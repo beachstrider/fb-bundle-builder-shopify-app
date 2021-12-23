@@ -4,8 +4,11 @@ import {
   getContent,
   getBundle,
   getBundleConfiguration,
+  getBundleByPlatformId,
+  getSubscriptionOrder,
   saveCart,
-  getBundleByPlatformId
+  saveBundle,
+  updateBundle
 } from './withBundleApi'
 import useGuestToken from './useGuestToken'
 import getSelectedBundle from './getSelectedBundle'
@@ -24,10 +27,13 @@ export {
   getBundle,
   getBundleConfiguration,
   getBundleByPlatformId,
+  getSubscriptionOrder,
   withActiveStep,
   useUserToken,
   hasUserToken,
   isUserAuthenticated,
   useShopifyCart,
-  saveCart
+  saveCart,
+  saveBundle,
+  updateBundle
 }
