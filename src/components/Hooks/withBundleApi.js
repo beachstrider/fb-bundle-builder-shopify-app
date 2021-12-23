@@ -168,6 +168,62 @@ const getSubscriptionOrder = async (token, orderId) => {
   }
 }
 
+const saveSubscriptionOrder = async (
+  token,
+  subscriptionId,
+  platformOrderId,
+  contentId,
+  items
+) => {
+  try {
+    return await request(
+      `${process.env.PROXY_APP_URL}/bundle-api/subscriptions/${subscriptionId}/orders`,
+      {
+        method: 'post',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        data: {
+          platform_order_id: platformOrderId,
+          bundle_configuration_content_id: contentId,
+          items: [...items]
+        }
+      }
+    )
+  } catch (error) {
+    return error
+  }
+}
+
+const updateSubscriptionOrder = async (
+  token,
+  subscriptionId,
+  platformOrderId,
+  contentId,
+  items
+) => {
+  try {
+    return await request(
+      `${process.env.PROXY_APP_URL}/bundle-api/subscriptions/${subscriptionId}/orders`,
+      {
+        method: 'put',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        data: {
+          platform_order_id: platformOrderId,
+          bundle_configuration_content_id: contentId,
+          items
+        }
+      }
+    )
+  } catch (error) {
+    return error
+  }
+}
+
 export {
   getContents,
   getBundle,
@@ -177,5 +233,7 @@ export {
   getSubscriptionOrder,
   saveCart,
   saveBundle,
-  updateBundle
+  updateBundle,
+  saveSubscriptionOrder,
+  updateSubscriptionOrder
 }

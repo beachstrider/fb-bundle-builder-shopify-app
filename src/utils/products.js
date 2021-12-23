@@ -43,8 +43,8 @@ const filterShopifyVariants = async (
         )
 
         return (
-          formattedOptions.includes(formattedString(state.entreeType.title)) &&
-          formattedOptions.includes(formattedString(state.entreeSubType.title))
+          formattedOptions.includes(formattedString(type)) &&
+          formattedOptions.includes(formattedString(subType))
         )
       })
 

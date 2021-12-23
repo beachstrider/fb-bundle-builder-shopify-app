@@ -33,9 +33,12 @@ import Loading from '../../Steps/Components/Loading'
 import {
   cart,
   filterShopifyProducts,
-  filterShopifyVariants,
-  request
+  filterShopifyVariants
 } from '../../../utils'
+import {
+  saveSubscriptionOrder,
+  updateSubscriptionOrder
+} from '../../Hooks/withBundleApi'
 
 dayjs.extend(weekday)
 
@@ -68,37 +71,10 @@ const EditOrder = () => {
     dispatch(displayFooter(false))
     dispatch(selectFaqType(null))
 
-    console.log('useEffect 01')
     getCurrentMenuItems()
-    console.log('useEffect 02')
   }, [])
 
   useEffect(() => {
-    // if (
-    //   bundle.length > 0 &&
-    //   quantitiesCountdown.length > 0 &&
-    //   quantities.length > 0
-    // ) {
-    //   let canActivateButton = false
-    //   quantities.forEach((quantity) => {
-    //     const cartTotal = cartUtility.sumQuantity(quantity.id)
-    //     if (
-    //       cartTotal === getQuantity(quantity.id)?.quantity &&
-    //       getQuantityCountdown(quantity.id)?.quantity === 0
-    //     ) {
-    //       canActivateButton = true
-    //     } else {
-    //       canActivateButton = false
-    //     }
-    //   })
-    //   if (canActivateButton) {
-    //     setDisabledNextButton(true)
-    //   } else {
-    //     if (canActivateButton) {
-    //       setDisabledNextButton(false)
-    //     }
-    //   }
-    // }
     if (reduceQuantities(quantitiesCountdown) === 0) {
       setDisabledNextButton(false)
     }
@@ -121,10 +97,8 @@ const EditOrder = () => {
     })
 
   const getCustomerBundleItems = async (token) => {
-    const thisWeek = dayjs(query.get('date'))
-
-    const subApi = await getSubscriptionOrder(token, orderId)
-    console.log('subApi', subApi)
+    // const thisWeek = dayjs(query.get('date'))
+    const subscriptionResponse = await getSubscriptionOrder(token, orderId)
 
     const bunQty = {}
     // TODO call bundle to get configurations
@@ -132,12 +106,13 @@ const EditOrder = () => {
     // TODO Check customer order and add in QTY's if previously added
 
     const currentItems = []
-    if (subApi.data.data) {
-      for (const order of subApi.data?.data) {
+    if (subscriptionResponse.data.data) {
+      for (const order of subscriptionResponse.data?.data) {
         const editItemsConfigArr = []
 
         if (order.bundle_configuration_content?.display_after) {
-          const bundleProducts = false // await getBundleItems(order.subscription.bundle_id, order.bundle_configuration_content_id, token)
+          const bundleProducts = false
+          // await getBundleItems(order.subscription.bundle_id, order.bundle_configuration_content_id, token)
 
           for (const product of order?.items) {
             // TODO filter products looking for variant
@@ -170,7 +145,7 @@ const EditOrder = () => {
           // bunQty[order.bundle_configuration_content_id] = 12; // bundleProducts?.quantityCountdown
           currentItems.push({
             id: bundleProducts ? bundleProducts.id : order.id,
-            bundleId: subApi.data.data[0].subscription.bundle_id,
+            bundleId: subscriptionResponse.data.data[0].subscription.bundle_id,
             title: bundleProducts
               ? bundleProducts.title
               : `Config Title - ${order.id}`,
@@ -185,13 +160,60 @@ const EditOrder = () => {
     return currentItems
   }
 
-  const handleSave = () => {
-    // TODO check for existing order items
-    // if none just create items
-    // if some exist loop and update quantities and make update call
-    // if order skip making contents configuration
-    saveBundle()
-    updateBundle()
+  const handleSave = async () => {
+    const itemsToSave = []
+    const itemsToUpdate = []
+
+    for (const item of menuItems) {
+      for (const product of item.products) {
+        const cartItem = state.cart.find((c) => c.id === product.id)
+        if (cartItem) {
+          if (cartItem && cartItem.quantity > 0 && product.quantity === 0) {
+            console.log('save!!!')
+            itemsToSave.push({
+              bundle_configuration_content_id: cartItem.configurationContentId,
+              platform_product_variant_id: cartItem.id,
+              quantity: cartItem.quantity
+            })
+          } else {
+            if (cartItem.quantity !== product.quantity) {
+              console.log('update !!')
+              itemsToUpdate.push({
+                bundle_configuration_content_id:
+                  cartItem.configurationContentId,
+                platform_product_variant_id: cartItem.id,
+                quantity: cartItem.quantity
+              })
+            }
+          }
+        }
+      }
+    }
+
+    // if (itemsToUpdate.length > 0) {
+    //   for (const updateItem of itemsToUpdate) {
+    //     await updateSubscriptionOrder(
+    //       state.tokens.userToken,
+    //       orderId,
+    //       null,
+    //       updateItem.bundle_configuration_content_id
+    //     )
+    //   }
+    // }
+
+    if (itemsToSave.length > 0) {
+      for (const saveItem of itemsToSave) {
+        await saveSubscriptionOrder(
+          state.tokens.userToken,
+          orderId,
+          null,
+          saveItem.bundle_configuration_content_id,
+          itemsToSave
+        )
+      }
+    }
+
+    return history.push(`/account?data=${query.get('date')}`)
   }
 
   const getToken = async () => {
@@ -216,7 +238,6 @@ const EditOrder = () => {
       const newQuantities = []
       const newQuantitiesCountdown = []
 
-      console.log('HERE!!')
       let savedItems = []
       if (!state.tokens.userToken) {
         const thisToken = getToken()
@@ -225,14 +246,10 @@ const EditOrder = () => {
         savedItems = await getCustomerBundleItems(state.tokens.userToken)
       }
 
-      // const shopifyProduct = getSelectedBundle(state.bundle.breakfast.tag)
-
-      console.log('saved item>>', savedItems)
       const bundleResponse = await getBundle(
         state.tokens.userToken,
         savedItems[0].bundleId
       )
-      console.log('bundleResponse', bundleResponse)
 
       if (bundleResponse.data.data.length === 0) {
         throw new Error('Bundle could not be found')
@@ -243,35 +260,37 @@ const EditOrder = () => {
       for (const configuration of currentApiBundle.configurations) {
         const response = await getProducts(configuration, savedItems[0])
 
-        const mappedProducts = response.products.map((product) => {
-          const savedProduct = savedItems[0].products.find(
-            (i) => i.id === product.id
-          )
-          let quantity = 0
-          if (savedProduct) {
-            quantity = savedProduct.quantity
-          }
-          return {
-            ...product,
-            quantity
-          }
-        })
+        if (response) {
+          const mappedProducts = response.products.map((product) => {
+            const savedProduct = savedItems[0].products.find(
+              (i) => i.id === product.id
+            )
+            let quantity = 0
+            if (savedProduct) {
+              quantity = savedProduct.quantity
+            }
+            return {
+              ...product,
+              quantity
+            }
+          })
 
-        newItems.push({
-          id: configuration.id,
-          title: configuration.title,
-          products: [...mappedProducts]
-        })
+          newItems.push({
+            id: configuration.id,
+            title: configuration.title,
+            products: [...mappedProducts]
+          })
 
-        newQuantities.push({
-          id: configuration.id,
-          quantity: response.quantity
-        })
+          newQuantities.push({
+            id: configuration.id,
+            quantity: response.quantity
+          })
 
-        newQuantitiesCountdown.push({
-          id: configuration.id,
-          quantity: response.quantityCountdown
-        })
+          newQuantitiesCountdown.push({
+            id: configuration.id,
+            quantity: response.quantityCountdown
+          })
+        }
       }
 
       const productsToCart = []
@@ -312,16 +331,27 @@ const EditOrder = () => {
         shopProducts
       )
 
+      const subscriptionOrder = await getSubscriptionOrder(
+        state.tokens.userToken,
+        orderId
+      )
+
+      // order was already placed, redirect the user
+      if (subscriptionOrder.platform_order_id) {
+        return history.push(`/account?dat=${query.get('date')}`)
+      }
+
       const filteredVariants = await filterShopifyVariants(
         state,
         filteredProducts,
+        subscriptionOrder.data.data[0].subscription.subscription_type,
+        subscriptionOrder.data.data[0].subscription.subscription_sub_type,
         configuration
       )
 
       let subTotal = 0
       const quantity = response.data.data[0].configuration.quantity
 
-      console.log('filter variants>>>', filteredVariants)
       const mappedProducts = filteredVariants.map((product) => {
         const savedProduct = savedItems.products.find(
           (i) => i.id === product.id
@@ -331,6 +361,7 @@ const EditOrder = () => {
         if (savedProduct) {
           quantity = savedProduct.quantity
         }
+
         return {
           ...product,
           quantity
@@ -399,10 +430,6 @@ const EditOrder = () => {
       })
     )
   }
-
-  // const getQuantity = (id) => {
-  //   return quantities.find((q) => q.id === id) || { id: 0, quantity: 0 }
-  // }
 
   const getQuantityCountdown = (id) => {
     return (

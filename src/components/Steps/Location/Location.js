@@ -144,9 +144,8 @@ const Location = () => {
       })
     )
 
-    const domain = new URL(window.location.href)
     const shopifyMultipass = await request(
-      `${process.env.PROXY_APP_URL}/shopify/multipass-url?shop=${domain.hostname}`,
+      `${process.env.PROXY_APP_URL}/shopify/multipass-url?shop=${shopDomain}`,
       {
         method: 'post',
         headers: {
