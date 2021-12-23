@@ -80,7 +80,8 @@ const Review = () => {
             quantity: 1,
             properties: {
               'Customer Id': shopCustomer?.id,
-              'Cart Token': platformCartToken
+              'Cart Token': platformCartToken,
+              'Delivery_Date': dayjs().day(state.location.deliveryDate.day).format('YYYY-MM-DD')
             }
           }
         ])

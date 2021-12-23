@@ -4,6 +4,7 @@ $subTitleFontSize: 2.7rem;
 
 .wrapper {
   width: $rowWidth;
+  max-width: 1200px;
   display: grid;
   grid-template-columns: 100%;
   column-gap: 10rem;
