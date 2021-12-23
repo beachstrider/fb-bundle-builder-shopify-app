@@ -329,7 +329,7 @@ const EditOrder = () => {
 
       // order was already placed, redirect the user
       if (subscriptionOrder.platform_order_id) {
-        return history.push(`/account?dat=${query.get('date')}`)
+        return history.push(`/account?date=${query.get('date')}`)
       }
 
       const filteredVariants = await filterShopifyVariants(
