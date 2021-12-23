@@ -83,37 +83,6 @@ const EditOrder = () => {
     }
   }, [quantities, quantitiesCountdown])
 
-  // useEffect(() => {
-  //   if (
-  //     state.cart.length > 0 &&
-  //     quantitiesCountdown.length > 0 &&
-  //     quantities.length > 0
-  //   ) {
-  //     let canActivateButton = false
-  //     let qtyCounter = 0
-  //     quantities.forEach((quantity) => {
-  //       const cartTotal = cartUtility.sumQuantity(state, quantity.id)
-  //       if (
-  //         cartTotal === getQuantity(quantity.id)?.quantity &&
-  //         getQuantityCountdown(quantity.id)?.quantity === 0
-  //       ) {
-  //         qtyCounter++
-  //         canActivateButton = true
-  //       } else {
-  //         canActivateButton = false
-  //       }
-  //     })
-
-  //     if (canActivateButton && qtyCounter === quantities.length) {
-  //       dispatch(setDisabledNextButton(true))
-  //     } else {
-  //       if (state.isNextButtonActive) {
-  //         dispatch(setDisabledNextButton(false))
-  //       }
-  //     }
-  //   }
-  // }, [quantities, quantitiesCountdown])
-
   const findProductFromVariant = async (variantId) =>
     new Promise((resolve) => {
       let foundProduct = {}
