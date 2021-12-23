@@ -13,24 +13,31 @@ import { request } from '../../../utils';
 
 const PaymentMethod = () => {
 
-    if(shopCustomer.id === 0){
-        return <Redirect push to="/" />
+    if(!shopCustomer || shopCustomer.id === 0){
+      window.location = `https://${shopDomain}/account`
     }
 
-    
+    const [cardNumber, setCardNumber] = React.useState('')
     const dispatch = useDispatch()
 
     React.useEffect( () => {
-        console.log('The shopify customer: ', shopCustomer)
         dispatch(displayHeader(false))
         dispatch(displayFooter(false))
         dispatch(selectFaqType(null))
+        let cardSearch = false;
+        for(const order of shopCustomer.orders){
+            for(const transaction of order.transactions){
+                if(!cardSearch && transaction.cardNumber !== ''){
+                    cardSearch = transaction.cardNumber
+                    setCardNumber(transaction.cardNumber)
+                }
+            }
+        }
         
       }, []);
 
     const handleEdit = async () => {
         const subApi = await request(`${process.env.PROXY_APP_URL}/recharge/customer?email=${shopCustomer.email}`, { method: 'get', data: '', headers: { authorization: 'qweqweqwe' }}, 3)
-        console.log('customer subscription hash: ', subApi.data.customers[0].hash);
 
         window.location.href = `https://quickfresh-sandbox.myshopify.com/tools/recurring/portal/${subApi.data.customers[0].hash}/payment_sources?token=${window.customerToken}`;
     }
@@ -60,7 +67,7 @@ const PaymentMethod = () => {
                         </div>
                         <div>
                             <p><span className={styles.boldTextField}>Name:</span>{shopCustomer.fullName}</p>
-                            <p><span className={styles.boldTextField}>Card Number:</span>***************4242</p>
+                            <p><span className={styles.boldTextField}>Card Number:</span>{cardNumber}</p>
                             <div className={styles.accountAddress}><p><span className={styles.boldTextField}>Billing Address:</span></p><p>{shopCustomer.address.street}<br />{shopCustomer.address.city}, {shopCustomer.address.provinceCode} {shopCustomer.address.zip}</p></div>
                         </div>
                     </div>

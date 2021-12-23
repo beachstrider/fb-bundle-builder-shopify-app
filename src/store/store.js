@@ -12,6 +12,15 @@ const saveToLocalStorage = (state) => {
   }
 }
 
+export const clearLocalStorage = () => {
+  try {
+    localStorage.removeItem(localStorageKey)
+  } catch (e) {
+    // TODO: track error somewhere
+    return null
+  }
+}
+
 const loadFromLocalStorage = () => {
   try {
     const stateStr = localStorage.getItem(localStorageKey)

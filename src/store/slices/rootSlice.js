@@ -1,151 +1,145 @@
 import { createSlice } from '@reduxjs/toolkit'
+import { zone1, zone2 } from '../data/zipcodes'
+
+const initialState = {
+  displayHeader: false,
+  displayFooter: false,
+  isNextButtonActive: true,
+  steps: [
+    {
+      id: 1,
+      name: 'Step 1',
+      description: 'Frequency',
+      path: '/',
+      isActive: true
+    },
+    {
+      id: 2,
+      name: 'Step 2',
+      description: 'Location',
+      path: '/steps/2',
+      isActive: false
+    },
+    {
+      id: 3,
+      name: 'Step 3',
+      description: 'Entree Type',
+      path: '/steps/3',
+      isActive: false
+    },
+    {
+      id: 4,
+      name: 'Step 4',
+      description: 'Entrees',
+      path: '/steps/4',
+      isActive: false
+    },
+    {
+      id: 5,
+      name: 'Step 5',
+      description: 'Next',
+      path: '/steps/5',
+      isActive: false
+    }
+  ],
+  deliveryZones: [
+    {
+      id: 1,
+      name: 'Zone 1',
+      earliestAvailableDay: 2,
+      leadTime: 5,
+      zipCodes: zone1,
+      deliveryDates: [
+        {
+          id: 0,
+          day: 2,
+          disabled: true,
+          isSelected: false
+        },
+        {
+          id: 1,
+          day: 3,
+          disabled: false,
+          isSelected: false
+        },
+        {
+          id: 2,
+          day: 4,
+          disabled: false,
+          isSelected: false
+        },
+        {
+          id: 3,
+          day: 5,
+          disabled: false,
+          isSelected: false
+        }
+      ]
+    },
+    {
+      id: 2,
+      name: 'Zone 2',
+      earliestAvailableDay: 3,
+      leadTime: 6,
+      zipCodes: zone2,
+      deliveryDates: [
+        {
+          id: 0,
+          day: 2,
+          disabled: true,
+          isSelected: false
+        },
+        {
+          id: 1,
+          day: 3,
+          disabled: false,
+          isSelected: false
+        },
+        {
+          id: 2,
+          day: 4,
+          disabled: false,
+          isSelected: false
+        },
+        {
+          id: 3,
+          day: 5,
+          disabled: false,
+          isSelected: false
+        }
+      ]
+    }
+  ],
+  bundle: {
+    id: 0,
+    price: 0,
+    weeklyPrice: '',
+    breakfast: {
+      id: 0,
+      tag: ''
+    }
+  },
+  entreeType: { id: 0 },
+  entreeSubType: { id: 0 },
+  faqType: null,
+  cart: [],
+  email: '',
+  location: {
+    zipCode: '',
+    deliveryDate: {
+      id: 0
+    }
+  },
+  tokens: {
+    guestToken: '',
+    userToken: ''
+  },
+  triggerLastStep: false
+}
 
 const rootSlice = createSlice({
   name: 'root',
-  initialState: {
-    displayHeader: false,
-    displayFooter: false,
-    isNextButtonActive: true,
-    steps: [
-      {
-        id: 1,
-        name: 'Step 1',
-        description: 'Frequency',
-        path: '/',
-        isActive: true
-      },
-      {
-        id: 2,
-        name: 'Step 2',
-        description: 'Location',
-        path: '/steps/2',
-        isActive: false
-      },
-      {
-        id: 3,
-        name: 'Step 3',
-        description: 'Entree Type',
-        path: '/steps/3',
-        isActive: false
-      },
-      {
-        id: 4,
-        name: 'Step 4',
-        description: 'Review',
-        path: '/steps/4',
-        isActive: false
-      },
-      {
-        id: 5,
-        name: 'Step 5',
-        description: 'Next',
-        path: '/steps/5',
-        isActive: false
-      }
-    ],
-    deliveryZones: [
-      {
-        id: 1,
-        name: 'Zone 1',
-        zipCodes: [90028, 90029, 90030],
-        deliveryDates: [
-          {
-            id: 0,
-            day: 1,
-            disabled: true,
-            isSelected: false
-          },
-          {
-            id: 1,
-            day: 3,
-            disabled: false,
-            isSelected: false
-          },
-          {
-            id: 2,
-            day: 5,
-            disabled: false,
-            isSelected: true
-          }
-        ]
-      },
-      {
-        id: 2,
-        name: 'Zone 2',
-        zipCodes: [50028, 50029, 50030],
-        deliveryDates: [
-          {
-            id: 0,
-            day: 0,
-            disabled: false,
-            isSelected: false
-          },
-          {
-            id: 1,
-            day: 1,
-            disabled: false,
-            isSelected: false
-          },
-          {
-            id: 2,
-            day: 2,
-            disabled: false,
-            isSelected: true
-          }
-        ]
-      },
-      {
-        id: 3,
-        name: 'Zone 3',
-        zipCodes: [60028, 60029, 60030],
-        deliveryDates: [
-          {
-            id: 0,
-            day: 0,
-            disabled: false,
-            isSelected: false
-          },
-          {
-            id: 1,
-            day: 1,
-            disabled: false,
-            isSelected: false
-          },
-          {
-            id: 2,
-            day: 2,
-            disabled: false,
-            isSelected: true
-          }
-        ]
-      }
-    ],
-    bundle: {
-      id: 0,
-      price: 0,
-      weeklyPrice: '',
-      breakfast: {
-        id: 0,
-        tag: ''
-      }
-    },
-    entreeType: { id: 0 },
-    entreeSubType: { id: 0 },
-    faqType: null,
-    cart: [],
-    email: '',
-    location: {
-      zipCode: '',
-      deliveryDate: {
-        id: 0
-      }
-    },
-    tokens: {
-      guestToken: '',
-      userToken: ''
-    },
-    triggerLastStep: false
-  },
+  initialState,
   reducers: {
     displayHeader: (state, action) => {
       state.displayHeader = action.payload
@@ -192,6 +186,9 @@ const rootSlice = createSlice({
     cartClear: (state) => {
       state.cart = []
     },
+    cartUpdate: (state, action) => {
+      state.cart = action.payload
+    },
     cartAddItem: (state, action) => {
       const existingItem = state.cart.find(
         (i) => Number(i.id) === Number(action.payload.id)
@@ -225,6 +222,9 @@ const rootSlice = createSlice({
     },
     triggerLastStep: (state, action) => {
       state.triggerLastStep = action.payload
+    },
+    clearBundle: (state) => {
+      state.bundle = { ...initialState.bundle }
     }
   }
 })
@@ -237,6 +237,8 @@ export const {
   cartAddItem,
   cartRemoveItem,
   cartClear,
+  cartUpdate,
+  clearBundle,
   selectFaqType,
   setActiveStep,
   setEmail,

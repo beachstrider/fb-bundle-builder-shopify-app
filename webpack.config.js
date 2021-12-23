@@ -1,9 +1,12 @@
 const path = require('path')
-require('dotenv').config({ path: path.resolve(__dirname, '.env') })
+require('dotenv').config()
 const webpack = require('webpack')
 
 module.exports = {
-  entry: path.resolve(__dirname, './src/index.js'),
+  entry: [
+    'regenerator-runtime/runtime.js',
+    path.resolve(__dirname, './src/index.js')
+  ],
   module: {
     rules: [
       {
@@ -38,7 +41,10 @@ module.exports = {
       'process.env.LOCAL_STORAGE_KEY': JSON.stringify(
         process.env.LOCAL_STORAGE_KEY
       ),
-      'process.env.BUNDLE_API_URL': JSON.stringify(process.env.BUNDLE_API_URL)
+      'process.env.BUNDLE_API_URL': JSON.stringify(process.env.BUNDLE_API_URL),
+      'process.env.EMPTY_STATE_IMAGE': JSON.stringify(
+        process.env.EMPTY_STATE_IMAGE
+      )
     })
   ],
   output: {

@@ -1,11 +1,11 @@
 import dayjs from 'dayjs'
 import { request } from '../../utils'
 
-const getMenuItems = async (
+const getContents = async (
   token,
   bundleId,
   configurationId,
-  queryString = `diplay_after=${dayjs().format('YYYY-MM-DDT00:00:00.000[Z]')}`
+  queryString = `display_after=${dayjs().format('YYYY-MM-DDT00:00:00.000[Z]')}`
 ) => {
   try {
     return await request(
@@ -23,10 +23,61 @@ const getMenuItems = async (
   }
 }
 
-const getBundle = async (token, productId) => {
+const getContent = async (token, bundleId, configurationId, contentId) => {
   try {
     return await request(
-      `${process.env.PROXY_APP_URL}/bundle-api/bundles?platform_product_id=${productId}`,
+      `${process.env.PROXY_APP_URL}/bundle-api/bundles/${bundleId}/configurations/${configurationId}/contents/${contentId}`,
+      {
+        method: 'get',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        }
+      }
+    )
+  } catch (error) {
+    return error
+  }
+}
+
+const getBundle = async (token, id) => {
+  try {
+    return await request(
+      `${process.env.PROXY_APP_URL}/bundle-api/bundles/${id}`,
+      {
+        method: 'get',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        }
+      }
+    )
+  } catch (error) {
+    return error
+  }
+}
+
+const getBundleConfiguration = async (token, bundleId, configurationId) => {
+  try {
+    return await request(
+      `${process.env.PROXY_APP_URL}/bundle-api/bundles/${bundleId}/configurations/${configurationId}`,
+      {
+        method: 'get',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        }
+      }
+    )
+  } catch (error) {
+    return error
+  }
+}
+
+const getBundleByPlatformId = async (token, productPlatformId) => {
+  try {
+    return await request(
+      `${process.env.PROXY_APP_URL}/bundle-api/bundles-query?platform_product_id=${productPlatformId}`,
       {
         method: 'get',
         headers: {
@@ -46,6 +97,8 @@ const saveCart = async (
   platformCartToken,
   bundleId,
   deliveryDay,
+  subscriptionType,
+  subscriptionSubType,
   items
 ) => {
   try {
@@ -58,6 +111,8 @@ const saveCart = async (
       data: {
         platform_customer_id: platformCustomerId,
         platform_cart_token: platformCartToken,
+        subscription_type: subscriptionType,
+        subscription_sub_type: subscriptionSubType,
         bundle_id: bundleId,
         delivery_day: deliveryDay,
         contents: [...items]
@@ -68,4 +123,11 @@ const saveCart = async (
   }
 }
 
-export { getMenuItems, getBundle, saveCart }
+export {
+  getContents,
+  getBundle,
+  getBundleConfiguration,
+  getBundleByPlatformId,
+  getContent,
+  saveCart
+}

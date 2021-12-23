@@ -20,6 +20,9 @@
     font-size: $fontLarge;
     font-weight: 700;
     text-align: center;
+    @media only screen and (max-width: $breakpointDesktop) {
+      font-size: $semiMediumFont
+    }
   }
 
   & .rows {
@@ -54,6 +57,7 @@
     div {
       display: flex;
       color: $red;
+      padding: 0.5rem;
     }
     & svg {
       margin: 0 1rem;

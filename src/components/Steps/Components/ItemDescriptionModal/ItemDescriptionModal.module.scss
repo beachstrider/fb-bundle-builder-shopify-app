@@ -1,0 +1,89 @@
+@import '../../../../variables';
+
+.card {
+  display: grid;
+  justify-content: space-between;
+  grid-template-columns: 50% 50%;
+  min-height: 60vh;
+  border: 0 !important;
+
+  @media only screen and (max-width: $breakpointTablet) {
+    display: block;
+  }
+
+  & .description {
+    display: grid;
+    text-align: center;
+    grid-template-columns: repeat(4, 1fr);
+    font-size: $fontXSmall;
+    column-gap: 1.4rem;
+
+    & div{
+      margin-bottom: 12px;
+    }
+
+    & .subTitle {
+      text-align: center;
+      font-size: $fontMediumLarge;
+      font-weight: 700;
+    }
+    & .subTitleDescription {
+      text-align: center;
+      font-size: $fontMedium;
+    }
+
+    @media only screen and (max-width: $breakpointTablet) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  & .descriptionHtml {
+    display: block;
+  }
+
+  & .actions {
+    display: flex;
+    justify-content: flex-start;
+
+    @media only screen and (max-width: $breakpointTablet) {
+      justify-content: center;
+    }
+
+    & div {
+      margin: 0 0.5rem 0 0;
+    }
+  }
+
+  & .image {
+    width: 100%;
+    background-size: cover;
+    background-repeat: no-repeat;
+
+    @media only screen and (max-width: $breakpointTablet) {
+      height: 220px;
+    }
+  }
+
+  & .title {
+    color: $primaryColor;
+    font-size: $fontMediumLarge;
+    font-weight: 700;
+    text-align: left;
+    @media only screen and (max-width: $breakpointTablet) {
+      text-align: center;
+    }
+  }
+
+  & .descriptionWrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background-color: $white;
+    row-gap: 2rem;
+    padding: 2rem 5rem;
+
+    @media only screen and (max-width: $breakpointTablet) {
+      padding: 2rem 1rem;
+    }
+  }
+}

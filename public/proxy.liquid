@@ -35,6 +35,13 @@
                 trackingUrl: '{{ fulfillment.tracking_url }}',
               },
             {% endfor %}
+          ],
+          transactions: [
+            {% for transaction in order.transactions %}
+              {
+                cardNumber :'{{ transaction.payment_details.credit_card_number }}'
+              }
+            {% endfor %}
           ]
         },
       {% endfor %}
@@ -79,6 +86,7 @@
     firstName: '',
     lastName: '',
     email: '',
+    orders: [],
     paymentInfo: {
       cardName:'',
       cardNumber: '',
@@ -185,7 +193,7 @@ function mapMetafieldsToVariant(product, metafields) {
     shopBundles = {{ collections["SHOPIFY_BUNDLES_COLLECTION"].products | json }}
   {% endpaginate %}
 {% endif %}
-const shopDomain = 'https://{{ shop.permanent_domain }}';
+const shopDomain = '{{ shop.permanent_domain }}';
 </script>
 
 

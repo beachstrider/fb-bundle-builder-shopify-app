@@ -8,8 +8,8 @@ import styles from './LocationDate.module.scss'
 dayjs.extend(advancedFormat)
 dayjs.extend(weekday)
 
-const LocationDate = ({ data, onClick }) => {
-  const getDay = (weekDay) => dayjs().weekday(weekDay)
+const LocationDate = ({ data, onClick, todayDate = dayjs() }) => {
+  const getDay = (weekDay) => dayjs(todayDate).weekday(weekDay).add(1, 'week')
 
   return (
     <CardCrossedLine

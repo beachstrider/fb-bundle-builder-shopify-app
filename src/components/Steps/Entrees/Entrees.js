@@ -3,10 +3,11 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useHistory, Redirect } from 'react-router'
 import CardQuantities from '../../Cards/CardQuantities'
 import {
-  getMenuItems,
+  getContent,
   getSelectedBundle,
-  getBundle,
-  withActiveStep
+  getBundleByPlatformId,
+  withActiveStep,
+  getBundleConfiguration
 } from '../../Hooks'
 import {
   cartRemoveItem,
@@ -14,21 +15,28 @@ import {
   setIsNextButtonActive
 } from '../../../store/slices/rootSlice'
 import styles from './Entrees.module.scss'
-import weekday from 'dayjs/plugin/weekday'
 import dayjs from 'dayjs'
+import weekday from 'dayjs/plugin/weekday'
+import utc from 'dayjs/plugin/utc'
 import Loading from '../Components/Loading'
-
-const FAQ_TYPE = 'entrees'
-const STEP_ID = 4
-const EMPTY_STATE_IMAGE =
-  'https://sunriseintegration.slack.com//cdn.shopify.com/shopifycloud/shopify/assets/no-image-2048-5e88c1b20e087fb7bbe9a3771824e743c244f437e4f8ba93bbf7b11b53f7824c_750x.gif'
+import {
+  cart,
+  filterShopifyProducts,
+  filterShopifyVariants,
+  getConfigurationContent
+} from '../../../utils'
 
 dayjs.extend(weekday)
+dayjs.extend(utc)
+
+const STEP_ID = 4
 
 const Entrees = () => {
   const state = useSelector((state) => state)
   const dispatch = useDispatch()
   const history = useHistory()
+
+  const cartUtility = cart(state)
 
   const [isLoading, setIsLoading] = useState(false)
   const [menuItems, setMenuItems] = useState([])
@@ -37,23 +45,7 @@ const Entrees = () => {
   const [quantities, setQuantities] = useState([])
   const [quantitiesCountdown, setQuantitiesCountdown] = useState([])
 
-  const getQuantity = (id) => {
-    return quantities.find((q) => q.id === id) || { id: 0, quantity: 0 }
-  }
-
-  const getQuantityCountdown = (id) => {
-    return (
-      quantitiesCountdown.find((q) => q.id === id) || { id: 0, quantity: 0 }
-    )
-  }
-
-  const getQuantityCountdownIndex = (id) => {
-    return quantitiesCountdown.findIndex((q) => q.id === id)
-  }
-
   useEffect(() => {
-    // TODO: wait to see if we will use the FAQ
-    // dispatch(selectFaqType(FAQ_TYPE))
     dispatch(setIsNextButtonActive(false))
 
     getCurrentMenuItems()
@@ -67,7 +59,7 @@ const Entrees = () => {
     ) {
       let canActivateButton = false
       quantities.forEach((quantity) => {
-        const cartTotal = sumQuantity(quantity.id)
+        const cartTotal = cartUtility.sumQuantity(state, quantity.id)
         if (
           cartTotal === getQuantity(quantity.id)?.quantity &&
           getQuantityCountdown(quantity.id)?.quantity === 0
@@ -88,15 +80,6 @@ const Entrees = () => {
     }
   }, [quantities, quantitiesCountdown])
 
-  const sumQuantity = (id) => {
-    let total = 0
-    const filteredValues = state.cart.filter((e) => e.bundleContentId === id)
-    total = filteredValues
-      .map((value) => value.quantity)
-      .reduce((sum, number) => sum + number, 0)
-    return total
-  }
-
   const getCurrentMenuItems = async () => {
     setIsLoading(true)
 
@@ -105,24 +88,24 @@ const Entrees = () => {
       const newQuantities = []
       const newQuantitiesCountdown = []
 
+      // uses selected tag in the first step
       const shopifyProduct = getSelectedBundle(state.bundle.breakfast.tag)
-
-      const { data } = await getBundle(
+      console.log('shopifyProduct',shopifyProduct)
+      const { data } = await getBundleByPlatformId(
         state.tokens.guestToken,
         shopifyProduct.id
       )
-
+      console.log('getBundleByPlatformId', shopifyProduct.id, data)
       if (data.data.length === 0) {
         throw new Error('Bundle could not be found')
       }
-
-      const currentApiBundle = data.data[0]
-
-      for (const configuration of currentApiBundle.configurations) {
+      const currentBundle = data.data[0]
+      for (const configuration of currentBundle.configurations) {
+        console.log('currentBundle.configurations', currentBundle.configurations)
         const addItem = (items) => menuItems.concat(items)
-
+        console.log('currentBundle.configurations', currentBundle.configurations)
         const response = await getProducts(configuration, addItem)
-
+        console.log('getProducts', response)
         newItems.push({
           id: configuration.id,
           title: configuration.title,
@@ -144,39 +127,48 @@ const Entrees = () => {
       setMenuItems(newItems)
       setIsLoading(false)
     } catch (error) {
-      return history.push('/')
+      // TODO: display error
+      console.error(error)
+      //return history.push('/')
     }
   }
 
-  const getProducts = async (configuration, setContent) => {
-    const nextWeekSunday = dayjs()
-      .weekday(7)
-      .format('YYYY-MM-DDT00:00:00.000[Z]')
+  const getProducts = async (configuration) => {
+    const getContentByDate = await getConfigurationContent(
+      dayjs.utc().toISOString(),
+      getBundleConfiguration,
+      state,
+      configuration.bundleId,
+      configuration.id
+    )
 
-    const response = await getMenuItems(
+    const contentResponse = await getContent(
       state.tokens.guestToken,
       configuration.bundleId,
       configuration.id,
-      `is_enabled=1&display_after=${nextWeekSunday}`
+      getContentByDate.id
     )
-
-    if (response.data?.data && response.data?.data.length > 0) {
+    console.log('contentResponse', contentResponse)
+    if (
+      contentResponse.data?.data &&
+      contentResponse.data?.data.products.length > 0
+    ) {
       const filteredProducts = await filterShopifyProducts(
-        response.data.data[0].products,
+        contentResponse.data.data.products,
         shopProducts
       )
 
       const filteredVariants = await filterShopifyVariants(
+        state,
         filteredProducts,
         configuration
       )
-
       let subTotal = 0
       if (state.cart.length > 0) {
-        subTotal = sumQuantity(configuration.id)
+        subTotal = cartUtility.sumQuantity(state, configuration.id)
       }
 
-      const quantity = response.data.data[0].configuration.quantity
+      const quantity = contentResponse.data.data.configuration.quantity
 
       return {
         products: filteredVariants,
@@ -186,113 +178,50 @@ const Entrees = () => {
     }
   }
 
-  const filterShopifyProducts = async (items, shopifyProducts) =>
-    new Promise((resolve) => {
-      const apiProductIds = items.map((i) => Number(i.platform_product_id))
-
-      const filteredProducts = shopifyProducts.filter((p) =>
-        apiProductIds.includes(p.id)
-      )
-
-      const mappedProducts = filteredProducts.map((product) => ({
-        ...product,
-        bundle_configuration_content_id: items.find(
-          (i) => Number(i.platform_product_id) === Number(product.id)
-        ).bundle_configuration_contents_id
-      }))
-
-      resolve(mappedProducts)
-    })
-
-  const filterShopifyVariants = async (shopifyProducts, configuration) =>
-    new Promise((resolve) => {
-      const filteredVariants = []
-
-      for (const product of shopifyProducts) {
-        const filtered = product.variants.filter(
-          (variant) =>
-            variant.options.includes(state.entreeType.title) &&
-            variant.options.includes(state.entreeSubType.title)
-        )
-
-        filtered.map((f) => {
-          f.images = product.images
-          f.configurationBundleId = configuration.bundleId
-          f.configurationContentId = product.bundle_configuration_content_id
-          f.bundleContentId = configuration.id
-          f.quantity = 0
-          f.type = configuration.title
-
-          if (f.name.includes('-')) {
-            f.name = f.name.split('-')[0]
-          }
-
-          return f
-        })
-
-        if (filtered.length > 0) {
-          filteredVariants.push(...filtered)
-        }
-      }
-
-      resolve(filteredVariants)
-    })
-
   const handleAddItem = (item, bundleContentId) => {
-    const countdown = getQuantityCountdown(bundleContentId)
-    if (countdown?.quantity === 0) {
+    const currentItem = cartUtility.addItem(
+      item,
+      bundleContentId,
+      quantitiesCountdown
+    )
+    if (!currentItem) {
       return
     }
 
-    const countdownIndex = getQuantityCountdownIndex(bundleContentId)
-    if (countdownIndex === -1) {
-      return
-    }
+    setQuantitiesCountdown(currentItem.countdown)
 
-    const newItemsCountdown = [...quantitiesCountdown]
-    newItemsCountdown[countdownIndex] = {
-      ...newItemsCountdown[countdownIndex],
-      quantity: countdown.quantity - 1
-    }
-    setQuantitiesCountdown([...newItemsCountdown])
-
+    const newItem = currentItem.item
     dispatch(
       cartAddItem({
-        ...item
+        ...newItem
       })
     )
   }
 
   const handleRemoveItem = (item, bundleContentId) => {
-    const countdown = getQuantityCountdown(bundleContentId)
+    const currentItem = cartUtility.removeItem(
+      item,
+      bundleContentId,
+      quantitiesCountdown
+    )
+    setQuantitiesCountdown(currentItem.countdown)
 
-    const countdownIndex = getQuantityCountdownIndex(bundleContentId)
-    if (countdownIndex === -1) {
-      return
-    }
-
-    const newItemsCountdown = [...quantitiesCountdown]
-    newItemsCountdown[countdownIndex] = {
-      ...newItemsCountdown[countdownIndex],
-      quantity: countdown.quantity + 1
-    }
-    setQuantitiesCountdown([...newItemsCountdown])
-
+    const newItem = currentItem.item
     dispatch(
       cartRemoveItem({
-        ...item
+        ...newItem
       })
     )
   }
 
-  const getItemQuantity = (item) => {
-    const currentItem = state.cart.find((i) => Number(i.id) === Number(item.id))
-
-    return currentItem?.quantity || 0
+  const getQuantity = (id) => {
+    return quantities.find((q) => q.id === id) || { id: 0, quantity: 0 }
   }
 
-  const isItemSelected = (item) => {
-    return !!state.cart.find((c) => c.id === item.id)
+  const getQuantityCountdown = (id) => {
+    return (
+      quantitiesCountdown.find((q) => q.id === id) || { id: 0, quantity: 0 }
+    )
   }
 
   if (state.entreeType.id === 0) {
@@ -336,16 +265,17 @@ const Entrees = () => {
                 <CardQuantities
                   key={item.id}
                   title={item.name}
+                  description={item.description}
                   image={
                     item.feature_image
                       ? item.feature_image.src
                       : item.images.length > 0
                       ? item.images[0]
-                      : EMPTY_STATE_IMAGE
+                      : process.env.EMPTY_STATE_IMAGE
                   }
                   metafields={item.metafields}
-                  isChecked={isItemSelected(item)}
-                  quantity={getItemQuantity(item)}
+                  isChecked={cartUtility.isItemSelected(state.cart, item)}
+                  quantity={cartUtility.getItemQuantity(state.cart, item)}
                   onClick={() => handleAddItem(item, content.id)}
                   onAdd={() => handleAddItem(item, content.id)}
                   onRemove={() => handleRemoveItem(item, content.id)}

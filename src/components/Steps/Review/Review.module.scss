@@ -4,7 +4,6 @@ $subTitleFontSize: 2.7rem;
 
 .wrapper {
   width: $rowWidth;
-  display: grid;
   grid-template-columns: 100%;
   column-gap: 10rem;
   @media only screen and (max-width: $breakpointDesktop) {
@@ -20,13 +19,22 @@ $subTitleFontSize: 2.7rem;
 
   & .title {
     font-size: $fontLarge;
+    font-family: $fontFamilyBold;
     font-weight: 700;
     text-align: center;
+    @media only screen and (max-width: $breakpointTablet) {
+      font-size: $semiMediumFont;
+    }
   }
 
   & .menuItemsWrapper {
     display: grid;
     grid-template-columns: repeat(auto-fill, 224px);
+    justify-content: flex-start;
+
+    @media only screen and (max-width: $breakpointTablet) {
+      justify-content: center;
+    }
 
     & p {
       align-items: center;
@@ -45,6 +53,9 @@ $subTitleFontSize: 2.7rem;
 
     & .columns {
       display: flex;
+      @media only screen and (max-width: $breakpointTablet) {
+        display: block;
+      }
     }
 
     & .card {
@@ -58,6 +69,8 @@ $subTitleFontSize: 2.7rem;
       & .startingDate {
         margin-left: 9rem;
         font-size: $fontMedium;
+        font-family: $fontFamilyBook;
+        display: flex;
         & .ordinal {
           font-size: $fontXSmall;
         }
@@ -74,15 +87,23 @@ $subTitleFontSize: 2.7rem;
       & .title {
         font-size: $fontMediumLarge;
         font-weight: 400;
+        font-family: $fontFamilyBook;
 
         & .day {
           color: $primaryColor;
+          font-family: $fontFamilyBold;
         }
         & .price {
           font-size: calc($fontMediumLarge + 0.5rem);
           font-weight: 700;
+          font-family: $fontFamilyBold;
+          margin-left: 12px;
         }
       }
+    }
+
+    @media only screen and (max-width: $breakpointDesktop) {
+      display: block;
     }
   }
 }

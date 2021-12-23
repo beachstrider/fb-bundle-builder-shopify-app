@@ -43,17 +43,10 @@ const DeliveryDateModal = ({ open, close }) => {
     deliveryDates.find((date) => date.isSelected)
 
   const checkCurrentSelectedDate = (zone) => {
-    let deliveryDates = JSON.parse(JSON.stringify([...zone.deliveryDates]))
-    const selectedDateIndex = deliveryDates.find((date) => date.isSelected)
+    let deliveryDates = JSON.parse(JSON.stringify(zone.deliveryDates))
 
     deliveryDates = deliveryDates.map((date) => {
-      if (date.id === selectedDateIndex.id) {
-        date.isSelected = false
-      }
-
-      if (date.id === state.location.deliveryDate.id) {
-        date.isSelected = true
-      }
+      date.isSelected = date.id === state.location.deliveryDate.id
       return date
     })
 
@@ -74,6 +67,11 @@ const DeliveryDateModal = ({ open, close }) => {
             dates={currentZone.deliveryDates}
           />
         )}
+        <div className={styles.buttonWrapper}>
+          <div className={`button primaryButton`} onClick={() => close()}>
+            Submit
+          </div>
+        </div>
       </div>
     </Modal>
   )

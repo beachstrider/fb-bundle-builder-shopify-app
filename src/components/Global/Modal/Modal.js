@@ -1,5 +1,5 @@
 import { Icon } from '@shopify/polaris'
-import { CircleCancelMinor } from '@shopify/polaris-icons'
+import { CancelSmallMinor } from '@shopify/polaris-icons'
 import React from 'react'
 import styles from './Modal.module.scss'
 
@@ -18,7 +18,7 @@ const Modal = ({ children, open, close }) => {
         }}
       >
         <div className={styles.closeButton} onClick={close}>
-          <Icon source={CircleCancelMinor} color="base" />
+          <Icon source={CancelSmallMinor} color="base" />
         </div>
         {children}
       </div>

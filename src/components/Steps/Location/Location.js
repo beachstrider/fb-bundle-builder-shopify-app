@@ -1,6 +1,7 @@
 import { InlineError } from '@shopify/polaris'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { Redirect } from 'react-router-dom'
 import {
   selectFaqType,
   displayHeader,
@@ -10,14 +11,22 @@ import {
   setIsNextButtonActive
 } from '../../../store/slices/rootSlice'
 import { InputEmail, InputText } from '../Components/Inputs'
-import { findZipCode, isValidEmail, request } from '../../../utils'
+import {
+  availableDeliveryDays,
+  findZipCode,
+  isValidEmail,
+  mapDeliveryDays,
+  request
+} from '../../../utils'
 import styles from './Location.module.scss'
 import { withActiveStep } from '../../Hooks'
 import SpinnerIcon from '../../Global/SpinnerIcon'
 import DeliveryDates from '../Components/DeliveryDates'
+import dayjs from 'dayjs'
 
 const FAQ_TYPE = 'location'
 const STEP_ID = 2
+const TODAY_DATE = dayjs()
 
 const Location = () => {
   const dispatch = useDispatch()
@@ -31,7 +40,6 @@ const Location = () => {
 
   useEffect(() => {
     dispatch(displayHeader(true))
-    dispatch(setIsNextButtonActive(true))
 
     if (state.email && state.location.zipCode) {
       setZipCode(state.location.zipCode)
@@ -40,11 +48,16 @@ const Location = () => {
       const zone = findZipCode(state.deliveryZones, state.location.zipCode)
       if (!zone) {
         dispatch(displayFooter(false))
-        return setZipCodeError('Zip code not within the delivery locations')
+        return setZipCodeError('Delivery is not available to your zip code')
       }
 
-      setCurrentZone(zone)
-      if (state.location.deliveryDate.id === 0) {
+      const newZone = getMappedZones(zone)
+      setCurrentZone(newZone)
+
+      if (
+        state.location?.deliveryDate &&
+        state.location.deliveryDate.id === 0
+      ) {
         handleDeliveryDate(findDefaultSelectedDate(zone.deliveryDates))
       } else {
         checkCurrentSelectedDate(zone)
@@ -61,42 +74,66 @@ const Location = () => {
     if (Object.keys(currentZone).length > 0) {
       checkCurrentSelectedDate(currentZone)
     }
+
+    if (!state.location.deliveryDate) {
+      dispatch(setIsNextButtonActive(false))
+    } else {
+      if (!state.isNextButtonActive) {
+        dispatch(setIsNextButtonActive(true))
+      }
+    }
   }, [state.location.deliveryDate])
+
+  const getMappedZones = (zone) => {
+    const availableDays = availableDeliveryDays(zone, TODAY_DATE.day())
+
+    const mappedDays = mapDeliveryDays(availableDays, zone.deliveryDates)
+    const newZone = {
+      ...zone,
+      deliveryDates: [...mappedDays]
+    }
+
+    return newZone
+  }
 
   const checkCurrentSelectedDate = (zone) => {
     let deliveryDates = JSON.parse(JSON.stringify([...zone.deliveryDates]))
     const selectedDateIndex = deliveryDates.find((date) => date.isSelected)
 
     deliveryDates = deliveryDates.map((date) => {
-      if (date.id === selectedDateIndex.id) {
+      if (selectedDateIndex && date.id === selectedDateIndex.id) {
         date.isSelected = false
       }
 
-      if (date.id === state.location.deliveryDate.id) {
+      if (
+        state.location.deliveryDate &&
+        date.id === state.location.deliveryDate.id
+      ) {
         date.isSelected = true
       }
       return date
     })
 
-    setCurrentZone({
+    const newZone = getMappedZones({
       ...zone,
       deliveryDates: [...deliveryDates]
     })
+
+    setCurrentZone(newZone)
   }
 
   const findDefaultSelectedDate = (deliveryDates) =>
     deliveryDates.find((date) => date.isSelected)
 
   const handleSubmit = async () => {
-    setIsLoading(true)
     if (!email || !isValidEmail(email)) {
       return setEmailError('Please type a valid email')
     }
 
-    // TODO: add more validations (wait to see zipCode format)
     if (zipCode.length < 4) {
       return setZipCodeError('Please type a valid zip code')
     }
+    setIsLoading(true)
 
     dispatch(setStoreEmail(email))
     dispatch(
@@ -198,6 +235,7 @@ const Location = () => {
             onClick={handleDeliveryDate}
             title="Choose Delivery Date"
             dates={currentZone.deliveryDates}
+            todayDate={TODAY_DATE}
           />
         )}
       </div>

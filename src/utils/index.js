@@ -1,6 +1,33 @@
 import { isValidEmail } from './stringValidation'
 import request from './request'
 import smoothScrollingToId from './smoothScrollingToId'
-import { findZipCode } from './zones'
+import {
+  availableDeliveryDays,
+  findZipCode,
+  getConfigurationContent,
+  mapDeliveryDays
+} from './zones'
+import {
+  filterShopifyProducts,
+  filterShopifyVariants,
+  getOrderTrackingUrl,
+  buildProductArrayFromVariant,
+  buildProductArrayFromId
+} from './products'
+import cart from './cart'
 
-export { isValidEmail, request, smoothScrollingToId, findZipCode }
+export {
+  availableDeliveryDays,
+  cart,
+  filterShopifyProducts,
+  findZipCode,
+  filterShopifyVariants,
+  getConfigurationContent,
+  isValidEmail,
+  mapDeliveryDays,
+  request,
+  smoothScrollingToId,
+  getOrderTrackingUrl,
+  buildProductArrayFromVariant,
+  buildProductArrayFromId
+}

@@ -6,6 +6,8 @@
   grid-template-rows: 16rem;
   cursor: pointer;
   overflow: hidden;
+  min-width: 285px;
+  margin-bottom: 16px;
 
   & .description {
     display: grid;
@@ -13,6 +15,7 @@
     grid-template-columns: repeat(4, 1fr);
     font-size: $fontXSmall;
     column-gap: 1.4rem;
+    padding: 1rem;
 
     & .subTitle {
       font-size: 1.8rem;
@@ -37,6 +40,7 @@
   & .title {
     font-size: 2.2rem;
     font-weight: 700;
+    text-align: center;
   }
 
   & .descriptionWrapper {

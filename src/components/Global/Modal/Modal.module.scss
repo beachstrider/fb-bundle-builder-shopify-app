@@ -13,21 +13,26 @@
   z-index: 2;
 
   & .content {
-    width: 80%;
+    position: absolute;
+    width: 70%;
     min-height: 40vh;
     background-color: $white;
-    padding: 0.5rem 0.5rem 8.5rem 0.5rem;
-    border-radius: 1rem;
-  }
 
-  & .closeButton {
-    text-align: right;
-    cursor: pointer;
+    & .closeButton {
+      position: absolute;
+      right: 0.5rem;
+      cursor: pointer;
+      padding: 1rem;
 
-    & svg {
-      width: 32px;
-      height: 32px;
-      fill: $grayMedium;
+      & svg {
+        width: 24px;
+        height: 24px;
+        fill: $grayMedium;
+      }
+    }
+
+    @media only screen and (max-width: $breakpointTablet) {
+      width: 90%;
     }
   }
 }

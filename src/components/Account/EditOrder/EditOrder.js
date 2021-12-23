@@ -1,453 +1,482 @@
-import React, { useState } from 'react'
-import { useDispatch } from 'react-redux'
+import React, { useEffect, useState } from 'react'
 import {
-    displayHeader,
-    displayFooter,
-    selectFaqType
-  } from '../../../store/slices/rootSlice'
-import { Link, Redirect, useParams, useLocation } from 'react-router-dom'
-import styles from './EditOrder.module.scss'
+  Link,
+  Redirect,
+  useParams,
+  useLocation,
+  useHistory
+} from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
 import CardQuantities from '../../Cards/CardQuantities'
+import {
+  getContents,
+  getSelectedBundle,
+  getBundle,
+  useUserToken
+} from '../../Hooks'
+import {
+  cartRemoveItem,
+  cartAddItem,
+  displayHeader,
+  displayFooter,
+  selectFaqType,
+  cartClear,
+  setTokens,
+  cartUpdate
+} from '../../../store/slices/rootSlice'
+import styles from './EditOrder.module.scss'
+import weekday from 'dayjs/plugin/weekday'
+import dayjs from 'dayjs'
+import Loading from '../../Steps/Components/Loading'
+import {
+  cart,
+  filterShopifyProducts,
+  filterShopifyVariants,
+  request
+} from '../../../utils'
 
-const bundleObj = {
-    "id": 1,
-    "account_id": 1,
-    "product_id": null,
-    "platform_product_id": null,
-    "title": "3-Day with Breakfast",
-    "options": null,
-    "is_enabled": 1,
-    "createdAt": "2021-11-09T21:58:39.000Z",
-    "updatedAt": "2021-11-09T21:58:39.000Z",
-    "configurations": [
-      {
-        "id": 1,
-        "bundle_id": 1,
-        "title": "Breakfast",
-        "quantity": 5,
-        "createdAt": "2021-11-09T21:58:39.000Z",
-        "updatedAt": "2021-11-09T21:58:39.000Z",
-        "bundleId": 1,
-        "contents": [
-          {
-            "id": 1,
-            "customer_subscription_bundle_confirguration_id": 1,
-            "product_variant_id": 1,
-            "platform_product_variant_id": 41375600771257,
-            "created_at": "2021-11-09 21:58:39",
-            "updated_at": "2021-11-09 21:58:39",
-            "ProductVariants": {
-              "id": 1,
-              "product_id": 1,
-              "title": "Ancho Lime Chicken",
-              "sku": "KH-121",
-              "platform_id": 41375600771257,
-              "platform_url": "https://quickfresh-sandbox.myshopify.com/products/ancho-lime-chicken-high-protein",
-              "platform_img": "https://cdn.shopify.com/s/files/1/0596/3694/0985/products/ancho-lime-chicken-high-protein-943209.jpg?v=1631911470",
-              "platform_data": "description",
-              "metafields": {
-                "fat": 25,
-                "carbs": 25,
-                "protein": 26,
-                "calories": 24
-              }
-            }
-          },
-          {
-            "id": 2,
-            "customer_subscription_bundle_confirguration_id": 1,
-            "product_variant_id": 2,
-            "platform_product_variant_id": 41432952766649,
-            "created_at": "2021-11-09 21:58:39",
-            "updated_at": "2021-11-09 21:58:39",
-            "ProductVariants": {
-              "id": 2,
-              "product_id": 2,
-              "title": "Andouille Fennel Salad",
-              "sku": "KH-269",
-              "platform_id": 41432952766649,
-              "platform_url": "https://quickfresh-sandbox.myshopify.com/products/andouille-fennel-salad-high-protein",
-              "platform_img": "https://cdn.shopify.com/s/files/1/0596/3694/0985/products/andouille-fennel-salad-high-protein-469235.jpg?v=1635634422",
-              "platform_data": "description",
-              "metafields": {
-                "fat": 25,
-                "carbs": 25,
-                "protein": 26,
-                "calories": 24
-              }
-            }
-          },
-          {
-            "id": 3,
-            "customer_subscription_bundle_confirguration_id": 1,
-            "product_variant_id": 3,
-            "platform_product_variant_id": 41213176643769,
-            "created_at": "2021-11-09 21:58:39",
-            "updated_at": "2021-11-09 21:58:39",
-            "ProductVariants": {
-              "id": 3,
-              "product_id": 3,
-              "title": "Asian Slaw Salad",
-              "sku": "KH-176",
-              "platform_id": 41213176643769,
-              "platform_url": "https://quickfresh-sandbox.myshopify.com/products/asian-slaw-salad-high-protein",
-              "platform_img": "https://cdn.shopify.com/s/files/1/0596/3694/0985/products/asian-slaw-salad-high-protein-385481.jpg?v=1633122770",
-              "platform_data": "description",
-              "metafields": {
-                "fat": 25,
-                "carbs": 25,
-                "protein": 26,
-                "calories": 24
-              }
-            }
-          },
-          {
-            "id": 4,
-            "customer_subscription_bundle_confirguration_id": 1,
-            "product_variant_id": 4,
-            "platform_product_variant_id": 41213176545465,
-            "created_at": "2021-11-09 21:58:39",
-            "updated_at": "2021-11-09 21:58:39",
-            "ProductVariants": {
-              "id": 4,
-              "product_id": 4,
-              "title": "Asparagus Mushroom Frittata",
-              "sku": "KB-177",
-              "platform_id": 41213176545465,
-              "platform_url": "https://quickfresh-sandbox.myshopify.com/products/asparagus-mushroom-frittata-keto-breakfast",
-              "platform_img": "https://cdn.shopify.com/s/files/1/0596/3694/0985/products/asparagus-mushroom-frittata-keto-breakfast-367122.jpg?v=1633122770",
-              "platform_data": "description",
-              "metafields": {
-                "fat": 25,
-                "carbs": 25,
-                "protein": 26,
-                "calories": 24
-              }
-            }
-          },
-          {
-            "id": 5,
-            "customer_subscription_bundle_confirguration_id": 1,
-            "product_variant_id": 5,
-            "platform_product_variant_id": 41479168196793,
-            "created_at": "2021-11-09 21:58:39",
-            "updated_at": "2021-11-09 21:58:39",
-            "ProductVariants": {
-              "id": 5,
-              "product_id": 5,
-              "title": "Bacon Ranch Chicken",
-              "sku": "KH-165",
-              "platform_id": 6995052527801,
-              "platform_url": "https://quickfresh-sandbox.myshopify.com/products/bacon-ranch-chicken-high-protein-2",
-              "platform_img": "https://cdn.shopify.com/s/files/1/0596/3694/0985/products/bacon-ranch-chicken-high-protein-727471.jpg?v=1636153469",
-              "platform_data": "description",
-              "metafields": {
-                "fat": 25,
-                "carbs": 25,
-                "protein": 26,
-                "calories": 24
-              }
-            }
-          },
-          {
-            "id": 6,
-            "customer_subscription_bundle_confirguration_id": 1,
-            "product_variant_id": 6,
-            "platform_product_variant_id": 40812018729145,
-            "created_at": "2021-11-09 21:58:39",
-            "updated_at": "2021-11-09 21:58:39",
-            "ProductVariants": {
-              "id": 6,
-              "product_id": 6,
-              "title": "Barbados Sirloin",
-              "sku": "KH-100",
-              "platform_id": 40812018729145,
-              "platform_url": "https://quickfresh-sandbox.myshopify.com/products/barbados-sirloin-high",
-              "platform_img": "https://cdn.shopify.com/s/files/1/0596/3694/0985/products/barbados-sirloin-high-protein-374434.jpg?v=1630652440",
-              "platform_data": "description",
-              "metafields": {
-                "fat": 25,
-                "carbs": 25,
-                "protein": 26,
-                "calories": 24
-              }
-            }
+const EMPTY_STATE_IMAGE =
+  'https://cdn.shopify.com/shopifycloud/shopify/assets/no-image-2048-5e88c1b20e087fb7bbe9a3771824e743c244f437e4f8ba93bbf7b11b53f7824c_750x.gif'
+
+dayjs.extend(weekday)
+
+const useQuery = () => {
+  const { search } = useLocation()
+
+  return React.useMemo(() => new URLSearchParams(search), [search])
+}
+
+const EditOrder = () => {
+  const { orderId } = useParams()
+  const query = useQuery()
+  const state = useSelector((state) => state)
+  const dispatch = useDispatch()
+  const history = useHistory()
+  const cartUtility = cart(state)
+
+  const [bundle, setBundle] = useState([])
+  const [disabledNextButton, setDisabledNextButton] = useState(true)
+  const [isLoading, setIsLoading] = useState(false)
+  const [menuItems, setMenuItems] = useState([])
+
+  // total and remaining items to add
+  const [quantities, setQuantities] = useState([])
+  const [quantitiesCountdown, setQuantitiesCountdown] = useState([])
+
+  useEffect(() => {
+    dispatch(cartClear())
+    dispatch(displayHeader(false))
+    dispatch(displayFooter(false))
+    dispatch(selectFaqType(null))
+
+    getCurrentMenuItems()
+  }, [])
+
+  useEffect(() => {
+    // if (
+    //   bundle.length > 0 &&
+    //   quantitiesCountdown.length > 0 &&
+    //   quantities.length > 0
+    // ) {
+    //   let canActivateButton = false
+    //   quantities.forEach((quantity) => {
+    //     const cartTotal = cartUtility.sumQuantity(quantity.id)
+    //     if (
+    //       cartTotal === getQuantity(quantity.id)?.quantity &&
+    //       getQuantityCountdown(quantity.id)?.quantity === 0
+    //     ) {
+    //       canActivateButton = true
+    //     } else {
+    //       canActivateButton = false
+    //     }
+    //   })
+    //   if (canActivateButton) {
+    //     setDisabledNextButton(true)
+    //   } else {
+    //     if (canActivateButton) {
+    //       setDisabledNextButton(false)
+    //     }
+    //   }
+    // }
+  }, [quantities, quantitiesCountdown])
+
+  const findProductFromVariant = async (variantId) =>
+    new Promise((resolve) => {
+      let foundProduct = {}
+      for (const product of shopProducts) {
+        const variant = product.variants.filter((v) => v.id === variantId)
+        if (product.variants.filter((v) => v.id === variantId).length > 0) {
+          foundProduct = {
+            product,
+            metafields: variant[0].metafields
           }
-        ]
-      },
-      {
-        "id": 2,
-        "bundle_id": 1,
-        "title": "Entrees",
-        "quantity": 12,
-        "createdAt": "2021-11-09T21:58:39.000Z",
-        "updatedAt": "2021-11-09T21:58:39.000Z",
-        "bundleId": 1,
-        "contents": [
-          {
-            "id": 1,
-            "customer_subscription_bundle_confirguration_id": 1,
-            "product_variant_id": 1,
-            "platform_product_variant_id": 41375600771257,
-            "created_at": "2021-11-09 21:58:39",
-            "updated_at": "2021-11-09 21:58:39",
-            "ProductVariants": {
-              "id": 1,
-              "product_id": 1,
-              "title": "Ancho Lime Chicken",
-              "sku": "KH-121",
-              "platform_id": 41375600771257,
-              "platform_url": "https://quickfresh-sandbox.myshopify.com/products/ancho-lime-chicken-high-protein",
-              "platform_img": "https://cdn.shopify.com/s/files/1/0596/3694/0985/products/ancho-lime-chicken-high-protein-943209.jpg?v=1631911470",
-              "platform_data": "description",
-              "metafields": {
-                "fat": 25,
-                "carbs": 25,
-                "protein": 26,
-                "calories": 24
-              }
-            }
-          },
-          {
-            "id": 2,
-            "customer_subscription_bundle_confirguration_id": 1,
-            "product_variant_id": 2,
-            "platform_product_variant_id": 41432952766649,
-            "created_at": "2021-11-09 21:58:39",
-            "updated_at": "2021-11-09 21:58:39",
-            "ProductVariants": {
-              "id": 2,
-              "product_id": 2,
-              "title": "Andouille Fennel Salad",
-              "sku": "KH-269",
-              "platform_id": 41432952766649,
-              "platform_url": "https://quickfresh-sandbox.myshopify.com/products/andouille-fennel-salad-high-protein",
-              "platform_img": "https://cdn.shopify.com/s/files/1/0596/3694/0985/products/andouille-fennel-salad-high-protein-469235.jpg?v=1635634422",
-              "platform_data": "description",
-              "metafields": {
-                "fat": 25,
-                "carbs": 25,
-                "protein": 26,
-                "calories": 24
-              }
-            }
-          },
-          {
-            "id": 3,
-            "customer_subscription_bundle_confirguration_id": 1,
-            "product_variant_id": 3,
-            "platform_product_variant_id": 41213176643769,
-            "created_at": "2021-11-09 21:58:39",
-            "updated_at": "2021-11-09 21:58:39",
-            "ProductVariants": {
-              "id": 3,
-              "product_id": 3,
-              "title": "Asian Slaw Salad",
-              "sku": "KH-176",
-              "platform_id": 41213176643769,
-              "platform_url": "https://quickfresh-sandbox.myshopify.com/products/asian-slaw-salad-high-protein",
-              "platform_img": "https://cdn.shopify.com/s/files/1/0596/3694/0985/products/asian-slaw-salad-high-protein-385481.jpg?v=1633122770",
-              "platform_data": "description",
-              "metafields": {
-                "fat": 25,
-                "carbs": 25,
-                "protein": 26,
-                "calories": 24
-              }
-            }
-          },
-          {
-            "id": 4,
-            "customer_subscription_bundle_confirguration_id": 1,
-            "product_variant_id": 4,
-            "platform_product_variant_id": 41213176545465,
-            "created_at": "2021-11-09 21:58:39",
-            "updated_at": "2021-11-09 21:58:39",
-            "ProductVariants": {
-              "id": 4,
-              "product_id": 4,
-              "title": "Asparagus Mushroom Frittata",
-              "sku": "KB-177",
-              "platform_id": 41213176545465,
-              "platform_url": "https://quickfresh-sandbox.myshopify.com/products/asparagus-mushroom-frittata-keto-breakfast",
-              "platform_img": "https://cdn.shopify.com/s/files/1/0596/3694/0985/products/asparagus-mushroom-frittata-keto-breakfast-367122.jpg?v=1633122770",
-              "platform_data": "description",
-              "metafields": {
-                "fat": 25,
-                "carbs": 25,
-                "protein": 26,
-                "calories": 24
-              }
-            }
-          },
-          {
-            "id": 5,
-            "customer_subscription_bundle_confirguration_id": 1,
-            "product_variant_id": 5,
-            "platform_product_variant_id": 41479168196793,
-            "created_at": "2021-11-09 21:58:39",
-            "updated_at": "2021-11-09 21:58:39",
-            "ProductVariants": {
-              "id": 5,
-              "product_id": 5,
-              "title": "Bacon Ranch Chicken",
-              "sku": "KH-165",
-              "platform_id": 6995052527801,
-              "platform_url": "https://quickfresh-sandbox.myshopify.com/products/bacon-ranch-chicken-high-protein-2",
-              "platform_img": "https://cdn.shopify.com/s/files/1/0596/3694/0985/products/bacon-ranch-chicken-high-protein-727471.jpg?v=1636153469",
-              "platform_data": "description",
-              "metafields": {
-                "fat": 25,
-                "carbs": 25,
-                "protein": 26,
-                "calories": 24
-              }
-            }
-          },
-          {
-            "id": 6,
-            "customer_subscription_bundle_confirguration_id": 1,
-            "product_variant_id": 6,
-            "platform_product_variant_id": 40812018729145,
-            "created_at": "2021-11-09 21:58:39",
-            "updated_at": "2021-11-09 21:58:39",
-            "ProductVariants": {
-              "id": 6,
-              "product_id": 6,
-              "title": "Barbados Sirloin",
-              "sku": "KH-100",
-              "platform_id": 40812018729145,
-              "platform_url": "https://quickfresh-sandbox.myshopify.com/products/barbados-sirloin-high",
-              "platform_img": "https://cdn.shopify.com/s/files/1/0596/3694/0985/products/barbados-sirloin-high-protein-374434.jpg?v=1630652440",
-              "platform_data": "description",
-              "metafields": {
-                "fat": 25,
-                "carbs": 25,
-                "protein": 26,
-                "calories": 24
-              }
-            }
-          }
-        ]
+        }
       }
-    ]
+
+      resolve(foundProduct)
+    })
+
+  const getCustomerBundleItems = async (token) => {
+    const thisWeek = dayjs(query.get('date'))
+
+    const subApi = await request(
+      `${process.env.PROXY_APP_URL}/bundle-api/subscriptions/${orderId}/orders`,
+      {
+        method: 'get',
+        data: '',
+        headers: { authorization: token }
+      }
+    )
+
+    const bunQty = {}
+    // TODO call bundle to get configurations
+    // TODO Check display date for config and call products available
+    // TODO Check customer order and add in QTY's if previously added
+
+    const currentItems = []
+    if (subApi.data.data) {
+      for (const order of subApi.data?.data) {
+        const editItemsConfigArr = []
+
+        if (order.bundle_configuration_content?.display_after) {
+          const bundleProducts = false // await getBundleItems(order.subscription.bundle_id, order.bundle_configuration_content_id, token)
+
+          for (const product of order?.items) {
+            // TODO filter products looking for variant
+            // TODO need to combine order products into the product array and update quantities
+
+            const currentProduct = await findProductFromVariant(
+              product.platform_product_variant_id
+            )
+
+            if (Object.entries(currentProduct).length > 0) {
+              editItemsConfigArr.push({
+                id: product.platform_product_variant_id,
+                title: currentProduct?.product?.title
+                  ? currentProduct.product.title
+                  : 'default product',
+                image:
+                  currentProduct?.product?.images &&
+                  currentProduct.product?.images.length > 0
+                    ? currentProduct.product.images[0]
+                    : EMPTY_STATE_IMAGE,
+                metafields:
+                  currentProduct?.metafields?.length > 0
+                    ? currentProduct.metafields
+                    : [],
+                quantity: product.quantity
+              })
+            }
+          }
+
+          // bunQty[order.bundle_configuration_content_id] = 12; // bundleProducts?.quantityCountdown
+          currentItems.push({
+            id: bundleProducts ? bundleProducts.id : order.id,
+            bundleId: subApi.data.data[0].subscription.bundle_id,
+            title: bundleProducts
+              ? bundleProducts.title
+              : `Config Title - ${order.id}`,
+            products: editItemsConfigArr
+          })
+        }
+      }
+
+      // setBundle(currentItems)
+    }
+
+    return currentItems
   }
 
-function useQuery () {
-  const { search } = useLocation();
-
-  return React.useMemo(() => new URLSearchParams(search), [search]);
-}
-const EditOrder = () => {
-    const { orderId } = useParams();
-    const query = useQuery();
-    const dispatch = useDispatch()
-    const [bundle, setBundle] = useState(bundleObj)
-    const [bundleQty, setBundleQty] = useState({})
-    const [disabled, setDisabled] = useState(true)
-
-    React.useEffect(() => {
-        dispatch(displayHeader(false))
-        dispatch(displayFooter(false))
-        dispatch(selectFaqType(null))
-        console.log('orderId: ',orderId)
-        console.log('query: ',query.get("date"))
-        const qtyObj = {};
-        const newObj = bundleObj
-        bundleObj.configurations.forEach((c, i) => {
-            qtyObj[c.id] = c.quantity;
-            c.contents.forEach( (item, idx) => {
-                newObj.configurations[i].contents[idx].quantity = 0;
-            })
-        });
-        setBundleQty(qtyObj)
-        setBundle(newObj)
-    }, []);
-
-    if(shopCustomer.id === 0){
-        return <Redirect push to="/" />
-    }
-
-    // TODO: WIP
-    const handleAddItem = (listId, list, item) => {
-        if(bundleQty[listId] > 0){
-            const newBundle = bundle;
-            newBundle.configurations[list].contents[item].quantity = newBundle.configurations[list].contents[item].quantity + 1;
-            setBundle({ ...newBundle })
-            const qtyObj = { ...bundleQty, [newBundle.configurations[list].id]:  bundleQty[newBundle.configurations[list].id] - 1 };
-            setBundleQty(qtyObj)
+  const handleSave = () => {
+    const myOrder = []
+    bundle.configurations.forEach((config) => {
+      config.contents.forEach((item) => {
+        if (item.quantity > 0) {
+          myOrder.push(item)
         }
+      })
+    })
+    console.log('My order: ', myOrder)
+  }
 
-        let activateButton = 0;
-        for (const [key, value] of Object.entries(bundleQty)) {
-            activateButton = activateButton + value
-        }
-        if(activateButton === 0){
-            setDisabled(false)
-        }
-    }
+  const getToken = async () => {
+    const tokenResponse = await useUserToken()
 
-    const handleRemoveItem = (listId, list, item) => {
-        if(bundleQty[listId] > 0){
-            const newBundle = bundle;
-            newBundle.configurations[list].contents[item].quantity = newBundle.configurations[list].contents[item].quantity - 1;
-            setBundle(...newBundle)
-        }
-    }
-
-    const handleSave = () => {
-        const myOrder = [];
-        bundle.configurations.forEach(config => {
-            config.contents.forEach( item => {
-                if(item.quantity > 0){
-                    myOrder.push(item)
-                }
-            })
+    if (tokenResponse.token) {
+      dispatch(
+        setTokens({
+          ...state.tokens,
+          userToken: `Bearer ${tokenResponse.token}`
         })
-        console.log('My order: ', myOrder);
+      )
+      return `Bearer ${tokenResponse.token}`
+    }
+  }
+
+  const getCurrentMenuItems = async () => {
+    setIsLoading(true)
+
+    try {
+      const newItems = []
+      const newQuantities = []
+      const newQuantitiesCountdown = []
+
+      let savedItems = []
+      if (!state.tokens.userToken) {
+        const thisToken = getToken()
+        savedItems = await getCustomerBundleItems(thisToken)
+      } else {
+        savedItems = await getCustomerBundleItems(state.tokens.userToken)
+      }
+
+      // const shopifyProduct = getSelectedBundle(state.bundle.breakfast.tag)
+
+      const { data } = await getBundle(
+        state.tokens.guestToken,
+        savedItems[0].bundleId
+      )
+
+      if (data.data.length === 0) {
+        throw new Error('Bundle could not be found')
+      }
+
+      const currentApiBundle = data.data
+
+      for (const configuration of currentApiBundle.configurations) {
+        const response = await getProducts(configuration, savedItems[0])
+
+        const mappedProducts = response.products.map((product) => {
+          const savedProduct = savedItems[0].products.find(
+            (i) => i.id === product.id
+          )
+          let quantity = 0
+          if (savedProduct) {
+            quantity = savedProduct.quantity
+          }
+          return {
+            ...product,
+            quantity
+          }
+        })
+
+        newItems.push({
+          id: configuration.id,
+          title: configuration.title,
+          products: [...mappedProducts]
+        })
+
+        newQuantities.push({
+          id: configuration.id,
+          quantity: response.quantity
+        })
+
+        newQuantitiesCountdown.push({
+          id: configuration.id,
+          quantity: response.quantityCountdown
+        })
+      }
+
+      const productsToCart = []
+      newItems.forEach((i) => {
+        i.products.forEach((p) => {
+          if (p.quantity > 0) {
+            productsToCart.push(p)
+          }
+        })
+      })
+
+      dispatch(cartUpdate([...productsToCart]))
+
+      setQuantitiesCountdown(newQuantitiesCountdown)
+      setQuantities(newQuantities)
+      setMenuItems(newItems)
+      setIsLoading(false)
+    } catch (error) {
+      // TODO: do something with the error...
+      console.log('error')
+      console.log(error)
+    }
+  }
+
+  const getProducts = async (configuration, savedItems) => {
+    const nextWeekDate = dayjs(query.get('date')).format(
+      'YYYY-MM-DDT00:00:00.000[Z]'
+    )
+
+    const response = await getContents(
+      state.tokens.guestToken,
+      configuration.bundleId,
+      configuration.id,
+      `is_enabled=1&display_after=${nextWeekDate}`
+    )
+
+    if (response.data?.data && response.data?.data.length > 0) {
+      const filteredProducts = await filterShopifyProducts(
+        response.data.data[0].products,
+        shopProducts
+      )
+
+      const filteredVariants = await filterShopifyVariants(
+        state,
+        filteredProducts,
+        configuration
+      )
+
+      let subTotal = 0
+      const quantity = response.data.data[0].configuration.quantity
+
+      const mappedProducts = filteredVariants.map((product) => {
+        const savedProduct = savedItems.products.find(
+          (i) => i.id === product.id
+        )
+
+        let quantity = 0
+        if (savedProduct) {
+          quantity = savedProduct.quantity
+        }
+        return {
+          ...product,
+          quantity
+        }
+      })
+
+      subTotal = mappedProducts
+        .map((value) => value.quantity)
+        .reduce((sum, number) => sum + number, 0)
+
+      return {
+        products: filteredVariants,
+        quantity: quantity,
+        quantityCountdown: quantity - subTotal
+      }
+    }
+  }
+
+  const handleAddItem = (item, bundleContentId) => {
+    const currentItem = cartUtility.addItem(
+      item,
+      bundleContentId,
+      quantitiesCountdown
+    )
+    if (!currentItem) {
+      return
     }
 
-    return (
-        <div className="contentWrapper">
-            <div>
-                <h3 className={styles.header}>Choose {bundle.title} Items</h3>
-                <div className={styles.subHeaderRow}>
-                {bundle.configurations.map( (config, index) => (
-                    <p key={index} className={styles.subHeaders}><span className={styles.greenNumbers}>{bundleQty[config.id]}</span> {config.title} Left</p>
-                ))}
-                </div>
-            </div>
-            {bundle.configurations.map( (config, index) => (
-                <div key={index}>
-                    <div className={styles.headerRow}>
-                        <h3 className={styles.noMargin}>{config.title}</h3>
-                        <p className={styles.subHeaders}><span className={styles.greenNumbers}>{bundleQty[config.id]}</span> {config.title} Left</p>      
-                    </div>
-                    <div className={styles.menuRow}>
-                        {config.contents.map((item, idx) => (
-                            <div key={idx} className={`${styles.menuItemWrapper} mb-10 px-1`}>
-                                <CardQuantities
-                                    title={item.ProductVariants.title}
-                                    image={item.ProductVariants.platform_img}
-                                    info={item.ProductVariants.metafields}
-                                    isChecked={item.quantity > 0}
-                                    quantity={item.quantity}
-                                    onClick={() => handleAddItem(config.id, index, idx)}
-                                    onAdd={() => handleAddItem(config.id, index, idx)}
-                                    onRemove={() => handleRemoveItem(config.id, index, idx)}
-                                />
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            ))}
-            <div className={styles.buttonsRow}>
-                    <Link to="/account" className="secondaryButton">Cancel</Link>
-                    <button disabled={disabled} className="primaryButton" onClick={handleSave}>Save</button> 
-            </div>
-        </div>
+    if (quantitiesCountdown !== 0) {
+      setDisabledNextButton(true)
+    }
+
+    if (shopCustomer.id === 0) {
+      return <Redirect push to="/" />
+    }
+
+    setQuantitiesCountdown(currentItem.countdown)
+
+    const newItem = currentItem.item
+    dispatch(
+      cartAddItem({
+        ...newItem
+      })
     )
+  }
+
+  const handleRemoveItem = (item, bundleContentId) => {
+    const currentItem = cartUtility.removeItem(
+      item,
+      bundleContentId,
+      quantitiesCountdown
+    )
+    setQuantitiesCountdown(currentItem.countdown)
+
+    const newItem = currentItem.item
+    dispatch(
+      cartRemoveItem({
+        ...newItem
+      })
+    )
+  }
+
+  const getQuantity = (id) => {
+    return quantities.find((q) => q.id === id) || { id: 0, quantity: 0 }
+  }
+
+  const getQuantityCountdown = (id) => {
+    return (
+      quantitiesCountdown.find((q) => q.id === id) || { id: 0, quantity: 0 }
+    )
+  }
+
+  if (isLoading) {
+    return <Loading />
+  }
+
+  return (
+    <div className="contentWrapper">
+      <div className={styles.wrapper}>
+        <div className={`${styles.title} mb-7`}>Edit Order</div>
+        <div className={`${styles.quantitiesWrapper} mb-8`}>
+          <div className={styles.topBarQuantities}>
+            {menuItems.map((product) => (
+              <div key={product.id} className="px-3">
+                <span className={styles.number}>
+                  {getQuantityCountdown(product.id).quantity}
+                </span>{' '}
+                {product.title} Left
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {menuItems.map((content) => (
+          <div key={content.id}>
+            <div className={styles.listHeader}>
+              <div className={styles.title}>{content.title}</div>
+              <div className={`px-10 ${styles.quantities}`}>
+                <span className={styles.number}>
+                  {getQuantityCountdown(content.id).quantity}
+                </span>{' '}
+                {content.title} Left
+              </div>
+            </div>
+            <div className={`${styles.cards} mb-10`}>
+              {content.products.map((item) => (
+                <CardQuantities
+                  key={item.id}
+                  title={item.name}
+                  image={
+                    item.feature_image
+                      ? item.feature_image.src
+                      : item.images.length > 0
+                      ? item.images[0]
+                      : EMPTY_STATE_IMAGE
+                  }
+                  metafields={item.metafields}
+                  isChecked={cartUtility.isItemSelected(state.cart, item)}
+                  quantity={cartUtility.getItemQuantity(state.cart, item)}
+                  onClick={() => handleAddItem(item, content.id)}
+                  onAdd={() => handleAddItem(item, content.id)}
+                  onRemove={() => handleRemoveItem(item, content.id)}
+                  disableAdd={getQuantityCountdown(content.id).quantity === 0}
+                />
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+      <div className={styles.buttonsRow}>
+        <Link to="/account" className="secondaryButton">
+          Cancel
+        </Link>
+        <button
+          disabled={disabledNextButton}
+          className="primaryButton"
+          onClick={handleSave}
+        >
+          Save
+        </button>
+      </div>
+    </div>
+  )
 }
-    
+
 export default EditOrder
-    

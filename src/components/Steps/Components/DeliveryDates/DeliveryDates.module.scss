@@ -20,18 +20,22 @@
     font-size: $fontLarge;
     font-weight: 700;
     text-align: center;
+    @media only screen and (max-width: $breakpointDesktop) {
+      font-size: $semiMediumFont
+    }
   }
 
   & .rows {
     display: flex;
     column-gap: 3rem;
     justify-content: center;
-
+    flex-direction: row;
     @media only screen and (max-width: $breakpointDesktop) {
       justify-content: center;
       align-items: center;
       grid-template-columns: 1fr;
       row-gap: 1rem;
+      flex-direction: column;
     }
 
     & .required {

@@ -22,6 +22,11 @@ $subTitleFontSize: 2.7rem;
     & .topBarQuantities {
       display: flex;
       justify-content: center;
+      flex-direction:row;
+      text-align: center;
+      @media only screen and (max-width: $breakpointTablet) {
+        flex-direction:column;
+      }
     }
     & div {
       margin: 0.5rem;
@@ -53,6 +58,10 @@ $subTitleFontSize: 2.7rem;
   & .listHeader {
     display: flex;
     align-items: center;
+    flex-direction: row;
+    @media only screen and (max-width: $breakpointDesktop) {
+      flex-direction: column;
+    }
   }
 
   & .cards {

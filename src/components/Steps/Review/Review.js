@@ -5,7 +5,6 @@ import {
   getSelectedBundle,
   useShopifyCart,
   saveCart,
-  getBundle,
   withActiveStep
 } from '../../Hooks'
 import dayjs from 'dayjs'
@@ -15,6 +14,10 @@ import styles from './Review.module.scss'
 import Loading from '../Components/Loading'
 import MenuItemCard from '../../Account/Components/MenuItemCard/MenuItemCard'
 import DeliveryDateModal from '../Components/DeliveryDatesModal/DeliveryDateModal'
+import { getBundleByPlatformId } from '../../Hooks/withBundleApi'
+import { clearLocalStorage } from '../../../store/store'
+import { cart } from '../../../utils'
+import Toast from '../../Global/Toast'
 
 dayjs.extend(advancedFormat)
 dayjs.extend(weekday)
@@ -28,7 +31,9 @@ const Review = () => {
   const [openEditDateModal, setOpenEditDateModal] = useState(false)
   const [platformCartToken, setPlatformCartToken] = useState('')
   const shopifyCart = useShopifyCart()
-  const [errorMessage, setErrorMessage] = useState('')
+  const [errorMessage, setErrorMessage] = useState(false)
+
+  const cartUtility = cart(state)
 
   useEffect(() => {
     getShopifyCartToken()
@@ -40,34 +45,51 @@ const Review = () => {
     }
   }, [state.triggerLastStep])
 
-  const getDay = (weekDay) => dayjs().weekday(weekDay)
+  const getDay = (weekDay) => dayjs().add(1, 'week').weekday(weekDay)
 
   const getShopifyCartToken = async () => {
     const token = await shopifyCart.getToken()
     setPlatformCartToken(token)
   }
 
+  const getTotal = () => {
+    return cartUtility.calculateSubTotal(
+      state.bundle.price,
+      state.bundle.breakfast.price,
+      state.bundle.entreesQuantity,
+      state.bundle.breakfastsQuantity
+    )
+  }
+
   const addShopifyCartItems = async () => {
     await shopifyCart.clearCart()
 
-    const shopifyBundleProduct = getSelectedBundle(state.bundle.breakfast.tag)
-
-    if (
-      shopifyBundleProduct.variants &&
-      shopifyBundleProduct.variants.length > 0
-    ) {
-      await shopifyCart.create([
-        {
-          id: shopifyBundleProduct.variants[0].id,
-          quantity: 1,
-          properties: {
-            'Customer Id': shopCustomer?.id,
-            'Cart Token': platformCartToken
+    try {
+      const shopifyBundleProduct = getSelectedBundle(state.bundle.breakfast.tag)
+      console.log('shopifyBundleProduct', shopifyBundleProduct)
+      if (
+        shopifyBundleProduct.variants &&
+        shopifyBundleProduct.variants.length > 0
+      ) {
+        const variant = shopifyBundleProduct.variants[0]
+        const sellingPlanId = variant.selling_plan_allocations[0].selling_plan_id;
+        const response = await shopifyCart.create([
+          {
+            id: variant.id,
+            selling_plan: sellingPlanId,
+            quantity: 1,
+            properties: {
+              'Customer Id': shopCustomer?.id,
+              'Cart Token': platformCartToken
+            }
           }
-        }
-      ])
-    } else {
-      return setErrorMessage(DEFAULT_ERROR_MESSAGE)
+        ])
+        console.log('add to cart response', response)
+      } else {
+        return setErrorMessage(DEFAULT_ERROR_MESSAGE)
+      }
+    }catch (e){
+      console.error(e)
     }
   }
 
@@ -76,7 +98,7 @@ const Review = () => {
       await addShopifyCartItems()
 
       const shopifyProduct = getSelectedBundle(state.bundle.breakfast.tag)
-      const currentBundle = await getBundle(
+      const currentBundle = await getBundleByPlatformId(
         state.tokens.guestToken,
         shopifyProduct.id
       )
@@ -97,12 +119,19 @@ const Review = () => {
         platformCartToken,
         currentBundle.data.data[0].id,
         state.location.deliveryDate.day,
+        state.entreeType.title.toLowerCase(),
+        state.entreeSubType.title.toLowerCase(),
         mappedItems
       )
-      window.location.href = '/cart'
+      clearLocalStorage()
+      window.location.href = '/checkout'
     } catch (error) {
       return setErrorMessage(DEFAULT_ERROR_MESSAGE)
     }
+  }
+
+  const closeAlert = () => {
+    setErrorMessage(false)
   }
 
   if (Number(shopCustomer.id) === 0 || state.bundle.weeklyPrice === 0) {
@@ -149,9 +178,7 @@ const Review = () => {
             <div className={styles.card}>
               <div className={styles.title}>
                 Total:
-                <span className={styles.price}>
-                  ${Number.parseFloat(state.bundle.weeklyPrice).toFixed(2)}
-                </span>
+                <span className={styles.price}>${getTotal().toFixed(2)}</span>
               </div>
             </div>
           </div>
@@ -159,7 +186,7 @@ const Review = () => {
             {state.cart.map((item) => (
               <MenuItemCard
                 key={item.id}
-                image={item.images.length > 0 && item.images[0]}
+                image={item.images.length > 0 && item.images[0] ? item.images[0] : process.env.EMPTY_STATE_IMAGE}
                 title={item.name}
                 quantity={item.quantity}
                 type={item.title}
@@ -169,6 +196,7 @@ const Review = () => {
           </div>
         </div>
       </div>
+      <Toast open={errorMessage} status="Danger" message={errorMessage} autoDelete handleClose={closeAlert} />
       <DeliveryDateModal
         open={openEditDateModal}
         close={() => setOpenEditDateModal(false)}

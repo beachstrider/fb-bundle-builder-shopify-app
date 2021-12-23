@@ -1,4 +1,4 @@
-$primaryColor: #3dae2b;
+$primaryColor: #0a8d47;
 $gray: #4c4c4c;
 $grayLight: #e7eaec;
 $grayMedium: #737678;
@@ -18,9 +18,18 @@ $breakpointDesktop: 1024px;
 /* fonts */
 $fontLarge: 4.7rem;
 $fontMediumLarge: 3rem;
+$semiMediumFont: 2.5rem;
 $fontMedium: 2rem;
 $fontSmall: 1.5rem;
 $fontXSmall: 1.4rem;
+
+/* font family */
+$fontFamilyBook:'Gotham-Book';
+$fontFamilyBold:'Gotham-Bold';
+$fontFamilyBlack: 'Gotham-Black';
+$fontFamilyLight: 'Gotham-Light';
+$fontFamilyThin: 'Gotham-Thin';
+$fontFamilyMedium: 'Gotham-Medium';
 
 /* rows */
 $rowWidth: 75vw;
