@@ -126,9 +126,6 @@ const Entrees = () => {
           id: configuration.id,
           quantity: response.quantityCountdown
         })
-
-        console.log('newQuantities: ', newQuantities)
-        console.log('newQuantitiesCountdown: ', newQuantitiesCountdown)
       }
 
       setQuantitiesCountdown(newQuantitiesCountdown)
@@ -236,6 +233,14 @@ const Entrees = () => {
     return (
       quantitiesCountdown.find((q) => q.id === id) || { id: 0, quantity: 0 }
     )
+  }
+
+  const closeAlert = () => {
+    setError({
+      open: false,
+      status: 'Success',
+      message: ''
+    })
   }
 
   if (state.entreeType.id === 0) {
