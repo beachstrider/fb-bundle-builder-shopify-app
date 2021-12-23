@@ -109,16 +109,18 @@ const Dashboard = () => {
               if(subCount < 3 && dayjs(displayDate).isSameOrAfter(dayjs(today))){
                 const orderedItems = subscriptionOrders.data.data.filter(ord => ord.bundle_configuration_content.deliver_after === content.deliver_after);
                 const subscriptionObjKey = content.deliver_after.split('T')[0]
-                console.log('content.deliver_after: ', content.deliver_after)
                 if(!weeksMenu.includes(dayjs(content.deliver_after.split('T')[0]).format('YYYY-MM-DD'))){
                   weeksMenu.push(dayjs(content.deliver_after.replace('T00:00:00.000Z', 'T12:00:00.000Z')).format('YYYY-MM-DD'))
                   subscriptionArray[subscriptionObjKey] = {}
+                  subscriptionArray[subscriptionObjKey].items = []
                 }
-
+                
                 if(orderedItems.length > 0){
                   const orderFound = orderedItems[0]
                   if(subscriptionArray[subscriptionObjKey]){
                       const thisItemsArray = await buildProductArrayFromVariant(orderFound.items, sub.subscription_sub_type, shopProducts);
+                      console.log('subscriptionObjKey: ', subscriptionObjKey)
+                      console.log('thisItemsArray: ', thisItemsArray)
                       subscriptionArray[subscriptionObjKey].subId = sub.id;
                       subscriptionArray[subscriptionObjKey].deliveryDay = sub.delivery_day;
                       subscriptionArray[subscriptionObjKey].items = thisItemsArray;
@@ -132,11 +134,14 @@ const Dashboard = () => {
                 } else {
                   const configContentsData = await request(`${process.env.PROXY_APP_URL}/bundle-api/bundles/${config.bundle_id}/configurations/${config.id}/contents/${content.id}/products?is_default=1`, { method: 'get', data: '', headers: { authorization: `Bearer ${token}` }}, 3)
                   const thisProductsArray = await buildProductArrayFromId(configContentsData.data.data, sub.subscription_sub_type, shopProducts);
+                  console.log('subscriptionObjKey: ', subscriptionObjKey)
+                  console.log('thisProductsArray: ', thisProductsArray)
                   subscriptionArray[subscriptionObjKey].subId = sub.id;
-                  subscriptionArray[subscriptionObjKey].items = thisProductsArray;
+                  subscriptionArray[subscriptionObjKey].items = subscriptionArray[subscriptionObjKey].items.concat(thisProductsArray);
                   subscriptionArray[subscriptionObjKey].status = dayjs(content.deliver_after).isSameOrAfter(cutoffDate) ?  'pending' : 'locked';
                   subscriptionArray[subscriptionObjKey].subscriptionDate = dayjs(subscriptionObjKey).format('YYYY-MM-DD')
                   subscriptionArray[subscriptionObjKey].queryDate = content.deliver_after
+
                 }
                 subCount++
               }
@@ -160,7 +165,7 @@ const Dashboard = () => {
         }
       }
     }
-  
+    console.log('subscriptionArray: ', subscriptionArray)
     setSubscriptions(subscriptionArray);
     setWeeksMenu(weeksMenu)
     setActive(activeWeeksArr)
@@ -247,7 +252,7 @@ const Dashboard = () => {
             {sub.items.length > 0 ? (
             <div className={styles.accountMenuRow}>
               {sub.items.map((item, index) => (
-                index < limit[idx] ? <MenuItemCard key={index} title={item.title} image={item.platform_img} quantity={item.quantity} type={sub.subscriptionSubType} /> : ''
+                index < limit[idx] ? <MenuItemCard key={index} title={item.title} image={item.platform_img} quantity={item.quantity} type={item.type} /> : ''
               ))}
 
               {limit[idx] === 5 ? (
