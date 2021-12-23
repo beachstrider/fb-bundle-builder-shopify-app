@@ -25,7 +25,7 @@ import {
   filterShopifyVariants,
   getConfigurationContent
 } from '../../../utils'
-
+import Toast from '../../Global/Toast'
 dayjs.extend(weekday)
 dayjs.extend(utc)
 
@@ -40,7 +40,11 @@ const Entrees = () => {
 
   const [isLoading, setIsLoading] = useState(false)
   const [menuItems, setMenuItems] = useState([])
-
+  const [error, setError] = useState({
+    open: false,
+    status: 'Success',
+    message: ''
+  })
   // total and remaining items to add
   const [quantities, setQuantities] = useState([])
   const [quantitiesCountdown, setQuantitiesCountdown] = useState([])
@@ -58,19 +62,21 @@ const Entrees = () => {
       quantities.length > 0
     ) {
       let canActivateButton = false
+      let qtyCounter = 0;
       quantities.forEach((quantity) => {
         const cartTotal = cartUtility.sumQuantity(state, quantity.id)
         if (
           cartTotal === getQuantity(quantity.id)?.quantity &&
           getQuantityCountdown(quantity.id)?.quantity === 0
         ) {
+          qtyCounter++
           canActivateButton = true
         } else {
           canActivateButton = false
         }
       })
 
-      if (canActivateButton) {
+      if (canActivateButton && qtyCounter === quantities.length) {
         dispatch(setIsNextButtonActive(true))
       } else {
         if (state.isNextButtonActive) {
@@ -101,7 +107,7 @@ const Entrees = () => {
       }
       const currentBundle = data.data[0]
       for (const configuration of currentBundle.configurations) {
-        console.log('currentBundle.configurations', currentBundle.configurations)
+        console.log('configuration run', configuration)
         const addItem = (items) => menuItems.concat(items)
         console.log('currentBundle.configurations', currentBundle.configurations)
         const response = await getProducts(configuration, addItem)
@@ -129,6 +135,11 @@ const Entrees = () => {
     } catch (error) {
       // TODO: display error
       console.error(error)
+      setError({
+        open: true,
+        status: 'Danger',
+        message: 'Failed to retrieve products'
+      })
       //return history.push('/')
     }
   }
@@ -224,6 +235,14 @@ const Entrees = () => {
     )
   }
 
+  const closeAlert = () => {
+    setError({
+      open: false,
+      status: 'Success',
+      message: ''
+    })
+  }
+
   if (state.entreeType.id === 0) {
     return <Redirect push to="/steps/3" />
   }
@@ -285,6 +304,7 @@ const Entrees = () => {
             </div>
           </div>
         ))}
+        {error.open ? <Toast open={error.open} status={error.status} message={error.message} autoDelete handleClose={closeAlert} /> : ''}
       </div>
     </div>
   )
