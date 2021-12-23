@@ -12,8 +12,6 @@ import {
   getContents,
   getBundle,
   useUserToken,
-  saveBundle,
-  updateBundle,
   getSubscriptionOrder
 } from '../../Hooks'
 import {
@@ -35,10 +33,8 @@ import {
   filterShopifyProducts,
   filterShopifyVariants
 } from '../../../utils'
-import {
-  saveSubscriptionOrder,
-  updateSubscriptionOrder
-} from '../../Hooks/withBundleApi'
+import { updateSubscriptionOrder } from '../../Hooks/withBundleApi'
+import Toast from '../../Global/Toast'
 
 dayjs.extend(weekday)
 
@@ -60,6 +56,11 @@ const EditOrder = () => {
   const [disabledNextButton, setDisabledNextButton] = useState(true)
   const [isLoading, setIsLoading] = useState(false)
   const [menuItems, setMenuItems] = useState([])
+  const [error, setError] = useState({
+    open: false,
+    status: 'Success',
+    message: ''
+  })
 
   // total and remaining items to add
   const [quantities, setQuantities] = useState([])
@@ -77,8 +78,41 @@ const EditOrder = () => {
   useEffect(() => {
     if (reduceQuantities(quantitiesCountdown) === 0) {
       setDisabledNextButton(false)
+    } else {
+      setDisabledNextButton(true)
     }
   }, [quantities, quantitiesCountdown])
+
+  // useEffect(() => {
+  //   if (
+  //     state.cart.length > 0 &&
+  //     quantitiesCountdown.length > 0 &&
+  //     quantities.length > 0
+  //   ) {
+  //     let canActivateButton = false
+  //     let qtyCounter = 0
+  //     quantities.forEach((quantity) => {
+  //       const cartTotal = cartUtility.sumQuantity(state, quantity.id)
+  //       if (
+  //         cartTotal === getQuantity(quantity.id)?.quantity &&
+  //         getQuantityCountdown(quantity.id)?.quantity === 0
+  //       ) {
+  //         qtyCounter++
+  //         canActivateButton = true
+  //       } else {
+  //         canActivateButton = false
+  //       }
+  //     })
+
+  //     if (canActivateButton && qtyCounter === quantities.length) {
+  //       dispatch(setDisabledNextButton(true))
+  //     } else {
+  //       if (state.isNextButtonActive) {
+  //         dispatch(setDisabledNextButton(false))
+  //       }
+  //     }
+  //   }
+  // }, [quantities, quantitiesCountdown])
 
   const findProductFromVariant = async (variantId) =>
     new Promise((resolve) => {
@@ -150,7 +184,6 @@ const EditOrder = () => {
 
   const handleSave = async () => {
     const itemsToSave = []
-    const itemsToUpdate = []
 
     const getBundleProduct = (variantId) => {
       return bundle.products.find((p) => p.id === variantId)
@@ -296,9 +329,11 @@ const EditOrder = () => {
       setMenuItems(newItems)
       setIsLoading(false)
     } catch (error) {
-      // TODO: do something with the error...
-      console.log('error')
-      console.log(error)
+      setError({
+        open: true,
+        status: 'Danger',
+        message: 'Failed to retrieve products'
+      })
     }
   }
 
@@ -493,6 +528,17 @@ const EditOrder = () => {
           Save
         </button>
       </div>
+      {error.open ? (
+        <Toast
+          open={error.open}
+          status={error.status}
+          message={error.message}
+          autoDelete
+          handleClose={closeAlert}
+        />
+      ) : (
+        ''
+      )}
     </div>
   )
 }

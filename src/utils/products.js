@@ -3,13 +3,12 @@ const EMPTY_STATE_IMAGE =
 
 const filterShopifyProducts = async (items, shopifyProducts) =>
   new Promise((resolve) => {
-    console.log('filterShopifyProducts', items, shopifyProducts)
     const apiProductIds = items.map((i) => Number(i.platform_product_id))
-    console.log('apiProductIds', apiProductIds)
+
     const filteredProducts = shopifyProducts.filter((p) =>
       apiProductIds.includes(p.id)
     )
-    console.log('filteredProducts', filteredProducts)
+
     const mappedProducts = filteredProducts.map((product) => ({
       ...product,
       bundle_configuration_content_id: items.find(
