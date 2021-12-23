@@ -14,6 +14,8 @@ const rechargeRouters = require('./src/server/routers/rechargeRouters')
 const app = express()
 const SERVER_PORT = process.env.PORT || 3000
 
+console.log('shopifyMultipass', process.env.SHOPIFY_MULTIPASS_SECRET)
+
 // Sentry
 const Sentry = require('@sentry/node')
 const Tracing = require('@sentry/tracing')
