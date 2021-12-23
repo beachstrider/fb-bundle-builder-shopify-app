@@ -56,7 +56,7 @@ const EditOrder = () => {
   const history = useHistory()
   const cartUtility = cart(state)
 
-  const [bundle, setBundle] = useState([])
+  const [bundle, setBundle] = useState({})
   const [disabledNextButton, setDisabledNextButton] = useState(true)
   const [isLoading, setIsLoading] = useState(false)
   const [menuItems, setMenuItems] = useState([])
@@ -97,13 +97,7 @@ const EditOrder = () => {
     })
 
   const getCustomerBundleItems = async (token) => {
-    // const thisWeek = dayjs(query.get('date'))
     const subscriptionResponse = await getSubscriptionOrder(token, orderId)
-
-    const bunQty = {}
-    // TODO call bundle to get configurations
-    // TODO Check display date for config and call products available
-    // TODO Check customer order and add in QTY's if previously added
 
     const currentItems = []
     if (subscriptionResponse.data.data) {
@@ -112,12 +106,8 @@ const EditOrder = () => {
 
         if (order.bundle_configuration_content?.display_after) {
           const bundleProducts = false
-          // await getBundleItems(order.subscription.bundle_id, order.bundle_configuration_content_id, token)
 
           for (const product of order?.items) {
-            // TODO filter products looking for variant
-            // TODO need to combine order products into the product array and update quantities
-
             const currentProduct = await findProductFromVariant(
               product.platform_product_variant_id
             )
@@ -125,6 +115,8 @@ const EditOrder = () => {
             if (Object.entries(currentProduct).length > 0) {
               editItemsConfigArr.push({
                 id: product.platform_product_variant_id,
+                contentSelectionId: product.id,
+                subscriptionContentId: order.id,
                 title: currentProduct?.product?.title
                   ? currentProduct.product.title
                   : 'default product',
@@ -142,19 +134,15 @@ const EditOrder = () => {
             }
           }
 
-          // bunQty[order.bundle_configuration_content_id] = 12; // bundleProducts?.quantityCountdown
           currentItems.push({
             id: bundleProducts ? bundleProducts.id : order.id,
             bundleId: subscriptionResponse.data.data[0].subscription.bundle_id,
-            title: bundleProducts
-              ? bundleProducts.title
-              : `Config Title - ${order.id}`,
             products: editItemsConfigArr
           })
         }
       }
 
-      // setBundle(currentItems)
+      setBundle(currentItems[0])
     }
 
     return currentItems
@@ -164,56 +152,55 @@ const EditOrder = () => {
     const itemsToSave = []
     const itemsToUpdate = []
 
+    const getBundleProduct = (variantId) => {
+      return bundle.products.find((p) => p.id === variantId)
+    }
+
+    const subscriptionContentId =
+      bundle?.products[0].subscriptionContentId || null
+
     for (const item of menuItems) {
       for (const product of item.products) {
         const cartItem = state.cart.find((c) => c.id === product.id)
+
         if (cartItem) {
           if (cartItem && cartItem.quantity > 0 && product.quantity === 0) {
-            console.log('save!!!')
             itemsToSave.push({
-              bundle_configuration_content_id: cartItem.configurationContentId,
-              platform_product_variant_id: cartItem.id,
+              platform_product_variant_id: product.id,
               quantity: cartItem.quantity
             })
           } else {
             if (cartItem.quantity !== product.quantity) {
-              console.log('update !!')
-              itemsToUpdate.push({
-                bundle_configuration_content_id:
-                  cartItem.configurationContentId,
-                platform_product_variant_id: cartItem.id,
+              const currentBundleProduct = getBundleProduct(product.id)
+              itemsToSave.push({
+                id: currentBundleProduct.contentSelectionId,
+                platform_product_variant_id: product.id,
                 quantity: cartItem.quantity
               })
             }
+          }
+        } else {
+          const currentBundleProduct = getBundleProduct(product.id)
+          if (currentBundleProduct) {
+            itemsToSave.push({
+              id: currentBundleProduct.contentSelectionId,
+              platform_product_variant_id: product.id,
+              quantity: 0
+            })
           }
         }
       }
     }
 
-    // if (itemsToUpdate.length > 0) {
-    //   for (const updateItem of itemsToUpdate) {
-    //     await updateSubscriptionOrder(
-    //       state.tokens.userToken,
-    //       orderId,
-    //       null,
-    //       updateItem.bundle_configuration_content_id
-    //     )
-    //   }
-    // }
+    await updateSubscriptionOrder(
+      state.tokens.userToken,
+      orderId,
+      null,
+      subscriptionContentId,
+      itemsToSave
+    )
 
-    if (itemsToSave.length > 0) {
-      for (const saveItem of itemsToSave) {
-        await saveSubscriptionOrder(
-          state.tokens.userToken,
-          orderId,
-          null,
-          saveItem.bundle_configuration_content_id,
-          itemsToSave
-        )
-      }
-    }
-
-    return history.push(`/account?data=${query.get('date')}`)
+    return history.push(`/account?date=${query.get('date')}`)
   }
 
   const getToken = async () => {

@@ -28,7 +28,6 @@ const filterShopifyVariants = async (
   configuration
 ) =>
   new Promise((resolve) => {
-    console.log('filterShopifyVariants', shopifyProducts, configuration)
     const filteredVariants = []
     const formattedString = (value) => {
       return value.toLowerCase().split(' ').join('')
@@ -36,8 +35,6 @@ const filterShopifyVariants = async (
 
     for (const product of shopifyProducts) {
       const filtered = product.variants.filter((variant) => {
-        // TODO: remove console log
-        console.log('filter variants', variant.options)
         const formattedOptions = variant.options.map((option) =>
           formattedString(option)
         )

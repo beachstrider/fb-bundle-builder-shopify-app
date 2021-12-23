@@ -200,12 +200,13 @@ const updateSubscriptionOrder = async (
   token,
   subscriptionId,
   platformOrderId,
-  contentId,
-  items
+  subscriptionContentId,
+  items,
+  isEnabled = 1
 ) => {
   try {
     return await request(
-      `${process.env.PROXY_APP_URL}/bundle-api/subscriptions/${subscriptionId}/orders`,
+      `${process.env.PROXY_APP_URL}/bundle-api/subscriptions/${subscriptionId}/orders/${subscriptionContentId}`,
       {
         method: 'put',
         headers: {
@@ -214,7 +215,8 @@ const updateSubscriptionOrder = async (
         },
         data: {
           platform_order_id: platformOrderId,
-          bundle_configuration_content_id: contentId,
+          bundle_configuration_content_id: subscriptionContentId,
+          is_enabled: isEnabled,
           items
         }
       }

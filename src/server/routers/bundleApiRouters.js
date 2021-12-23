@@ -79,16 +79,22 @@ app.post(
 )
 
 app.put(
-  '/bundle-api/subscriptions/:subscriptionId/orders',
+  '/bundle-api/subscriptions/:subscriptionId/orders/:subscriptionContentId',
   async (req, res) => {
-    console.log('HERE 222!!!!!!!')
     const response = await request(
-      `${process.env.BUNDLE_API_URL}/api/subscriptions/${req.params.subscriptionId}/orders`,
+      `${process.env.BUNDLE_API_URL}/api/subscriptions/${req.params.subscriptionId}/orders/${req.params.subscriptionContentId}`,
       {
         method: 'put',
         headers: {
           Accept: 'application/json',
           authorization: req.headers.authorization
+        },
+        data: {
+          items: [...req.body.items],
+          bundle_configuration_content: {
+            id: req.body.bundle_configuration_content_id,
+            is_enabled: req.body.is_enabled
+          }
         }
       }
     )
