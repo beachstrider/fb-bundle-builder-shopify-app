@@ -16,7 +16,7 @@ import MenuItemCard from '../../Account/Components/MenuItemCard/MenuItemCard'
 import DeliveryDateModal from '../Components/DeliveryDatesModal/DeliveryDateModal'
 import { getBundleByPlatformId } from '../../Hooks/withBundleApi'
 import { clearLocalStorage } from '../../../store/store'
-import { cart } from '../../../utils'
+import { cart, filterShopifyVariants } from '../../../utils'
 import Toast from '../../Global/Toast'
 
 dayjs.extend(advancedFormat)
@@ -66,13 +66,13 @@ const Review = () => {
 
     try {
       const shopifyBundleProduct = getSelectedBundle(state.bundle.breakfast.tag)
-      console.log('shopifyBundleProduct', shopifyBundleProduct)
+      const selectedVariant = shopifyBundleProduct.variants.filter(v => v.title.includes(state.entreeType.title) && v.title.includes(state.entreeSubType.title))
       if (
         shopifyBundleProduct.variants &&
         shopifyBundleProduct.variants.length > 0
       ) {
-        const variant = shopifyBundleProduct.variants[0]
-        const sellingPlanId = variant.selling_plan_allocations[0].selling_plan_id;
+        const variant = selectedVariant.length > 0 ? selectedVariant[0] : shopifyBundleProduct.variants[0] 
+        const sellingPlanId = selectedVariant.length > 0 ? selectedVariant.selling_plan_allocations[0].selling_plan_id : variant.selling_plan_allocations[0].selling_plan_id;
         const response = await shopifyCart.create([
           {
             id: variant.id,
@@ -170,10 +170,16 @@ const Review = () => {
                 </span>
               </div>
               <div className={styles.startingDate}>
-                Starting {getDay(state.location.deliveryDate.day).format('MMM')}{' '}
-                {getDay(state.location.deliveryDate.day).format('DD')}
+                Starting{' '}
+                {getDay(state.location.deliveryDate.day)
+                  .add(1, 'week')
+                  .format('MMM')}{' '}
+                {getDay(state.location.deliveryDate.day)
+                  .add(1, 'week')
+                  .format('DD')}
                 <span className={styles.ordinal}>
                   {getDay(state.location.deliveryDate.day)
+                    .add(1, 'week')
                     .format('Do')
                     .match(/[a-zA-Z]+/g)}
                 </span>

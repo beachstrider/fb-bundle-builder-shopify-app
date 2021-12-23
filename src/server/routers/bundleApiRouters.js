@@ -49,6 +49,89 @@ app.post('/bundle-api/token/account', async (req, res) => {
   })
 })
 
+app.post(
+  '/bundle-api/subscriptions/:subscriptionId/orders',
+  async (req, res) => {
+    const response = await request(
+      `${process.env.BUNDLE_API_URL}/api/subscriptions/${req.params.subscriptionId}/orders`,
+      {
+        method: 'post',
+        headers: {
+          Accept: 'application/json',
+          authorization: req.headers.authorization
+        },
+        data: {
+          platform_order_id: req.body.platform_order_id,
+          bundle_configuration_content_id:
+            req.body.bundle_configuration_content_id,
+          items: [...req.body.items]
+        }
+      }
+    )
+    if (response.data) {
+      return res.status(200).send(response.data)
+    }
+
+    res.status(400).send({
+      message: 'Can not retrieve menu items'
+    })
+  }
+)
+
+app.put(
+  '/bundle-api/subscriptions/:subscriptionId/orders/:subscriptionContentId',
+  async (req, res) => {
+    const response = await request(
+      `${process.env.BUNDLE_API_URL}/api/subscriptions/${req.params.subscriptionId}/orders/${req.params.subscriptionContentId}`,
+      {
+        method: 'put',
+        headers: {
+          Accept: 'application/json',
+          authorization: req.headers.authorization
+        },
+        data: {
+          items: [...req.body.items],
+          bundle_configuration_content: {
+            id: req.body.bundle_configuration_content_id,
+            is_enabled: req.body.is_enabled
+          }
+        }
+      }
+    )
+    if (response.data) {
+      return res.status(200).send(response.data)
+    }
+
+    res.status(400).send({
+      message: 'Can not retrieve menu items'
+    })
+  }
+)
+
+app.get(
+  '/bundle-api/subscriptions/:subscriptionId/orders',
+  async (req, res) => {
+    const response = await request(
+      `${process.env.BUNDLE_API_URL}/api/subscriptions/${req.params.subscriptionId}/orders`,
+      {
+        method: 'get',
+        headers: {
+          Accept: 'application/json',
+          authorization: req.headers.authorization
+        }
+      }
+    )
+
+    if (response.data) {
+      return res.status(200).send(response.data)
+    }
+
+    res.status(400).send({
+      message: 'Can not retrieve menu items'
+    })
+  }
+)
+
 app.get('/bundle-api/subscriptions', async (req, res) => {
   const response = await request(
     `${process.env.BUNDLE_API_URL}/api/subscriptions`,
@@ -154,29 +237,6 @@ app.get(
   }
 )
 
-app.get(
-  '/bundle-api/subscriptions/:subscriptionId/orders',
-  async (req, res) => {
-    const response = await request(
-      `${process.env.BUNDLE_API_URL}/api/subscriptions/${req.params.subscriptionId}/orders`,
-      {
-        method: 'get',
-        headers: {
-          Accept: 'application/json',
-          authorization: req.headers.authorization
-        }
-      }
-    )
-
-    if (response.data) {
-      return res.status(200).send(response.data)
-    }
-
-    res.status(400).send({
-      message: 'Can not retrieve menu items'
-    })
-  }
-)
 app.get('/bundle-api/bundles/:bundleId', async (req, res) => {
   const queryString = objectToQueryString(req.query)
 
@@ -210,30 +270,6 @@ app.get('/bundle-api/bundles-query', async (req, res) => {
 
   return res.status(response.status).send(response.data)
 })
-
-app.get(
-  '/bundle-api/subscriptions/:subscriptionId/orders',
-  async (req, res) => {
-    const response = await request(
-      `${process.env.BUNDLE_API_URL}/api/subscriptions/${req.params.subscriptionId}/orders`,
-      {
-        method: 'get',
-        headers: {
-          Accept: 'application/json',
-          authorization: req.headers.authorization
-        }
-      }
-    )
-
-    if (response.data) {
-      return res.status(200).send(response.data)
-    }
-
-    res.status(400).send({
-      message: 'Can not retrieve menu items'
-    })
-  }
-)
 
 app.post('/bundle-api/carts', async (req, res) => {
   const response = await request(`${process.env.BUNDLE_API_URL}/api/carts`, {

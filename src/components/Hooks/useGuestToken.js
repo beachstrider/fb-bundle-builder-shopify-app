@@ -2,7 +2,6 @@ import { request } from '../../utils'
 
 const useGuestToken = async (token = null) => {
   const generateGuestToken = async () => {
-    const domain = new URL(window.location.href)
     try {
       return await request(
         `${process.env.PROXY_APP_URL}/bundle-api/token/guest`,
@@ -11,7 +10,7 @@ const useGuestToken = async (token = null) => {
           headers: {
             'Content-Type': 'application/json'
           },
-          data: { shop: `${domain.hostname}` }
+          data: { shop: shopDomain }
         }
       )
     } catch (error) {

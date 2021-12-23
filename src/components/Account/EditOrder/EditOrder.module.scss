@@ -2,39 +2,6 @@
 @import '../../../variables';
 @import '../../../App.scss';
 
-// .menuRow{
-//     display: grid;
-//     grid-template-columns: 1fr 1fr 1fr 1fr;
-//     gap: 0px 0px;
-// }
-// .menuItemWrapper{
-//     display: grid;
-// }
-// .header{
-//     text-align: center;
-//     margin: 20px 8px 8px;
-// }
-// .subHeaderRow{
-//     display: flex;
-//     justify-content: center;
-// }
-// .subHeaders{
-//     font-size: 21px;
-//     margin: 8px;
-// }
-// .greenNumbers{
-//     color:$primaryColor
-// }
-// .noMargin{
-//     margin: 8px;
-// }
-// .headerRow{
-//     display: flex;
-//     flex-wrap: wrap;
-//     align-items: flex-end;
-//     margin-top:60px;
-// }
-
 $subTitleFontSize: 2.7rem;
 .buttonsRow {
   margin: 20px 0px;
@@ -43,7 +10,6 @@ $subTitleFontSize: 2.7rem;
 }
 
 .wrapper {
-  width: $rowWidth;
   display: grid;
   grid-template-columns: 100%;
   column-gap: 10rem;
@@ -62,6 +28,10 @@ $subTitleFontSize: 2.7rem;
     & .topBarQuantities {
       display: flex;
       justify-content: center;
+      @media only screen and (max-width: $breakpointTablet) {
+        display: block;
+        text-align: center;
+      }
     }
     & div {
       margin: 0.5rem;
@@ -93,6 +63,17 @@ $subTitleFontSize: 2.7rem;
   & .listHeader {
     display: flex;
     align-items: center;
+
+    & .quantities {
+      text-align: left;
+      @media only screen and (max-width: $breakpointTablet) {
+        display: center;
+      }
+    }
+
+    @media only screen and (max-width: $breakpointTablet) {
+      display: block;
+    }
   }
 
   & .cards {
