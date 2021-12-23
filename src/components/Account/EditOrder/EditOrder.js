@@ -313,7 +313,7 @@ const EditOrder = () => {
       state.tokens.userToken,
       configuration.bundleId,
       configuration.id,
-      `is_enabled=1&display_after=${nextWeekDate}`
+      `is_enabled=1&deliver_after=${nextWeekDate}`
     )
 
     if (response.data?.data && response.data?.data.length > 0) {
