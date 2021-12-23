@@ -4,6 +4,7 @@ $subTitleFontSize: 2.7rem;
 
 .wrapper {
   width: $rowWidth;
+  max-width: 1200px;
   display: grid;
   grid-template-columns: 100%;
   column-gap: 10rem;
@@ -19,6 +20,13 @@ $subTitleFontSize: 2.7rem;
   }
 
   & .quantitiesWrapper {
+    top: 0;
+    background-color: #F6F6F7;
+    margin: 0;
+    position: -webkit-sticky;
+    position: sticky;
+    height: 50px;
+
     & .topBarQuantities {
       display: flex;
       justify-content: center;

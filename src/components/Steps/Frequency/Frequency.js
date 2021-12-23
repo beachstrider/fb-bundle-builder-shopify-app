@@ -24,7 +24,7 @@ const STEP_ID = 1
 const bundles = [
   {
     id: 1,
-    name: 'FreshStart',
+    name: '14 Entrees',
     description: '7-Days All inclusive - (14 Entrees + 7 Breakfast)',
     price: 9.95,
     entreesQuantity: 14,

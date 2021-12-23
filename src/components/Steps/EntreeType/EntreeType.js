@@ -27,12 +27,12 @@ const entreeTypes = [
     subType: 'keto',
     primaryColor: '#ec6120',
     options: [
-      'Lorem ipsum dolor sit amet',
-      'Lorem ipsum dolor sit amet',
-      'Lorem ipsum dolor sit amet'
+      'Low carbohydrates',
+      'High fat content',
+      'High protein'
     ],
     image:
-      'https://cdn.shopify.com/s/files/1/0596/3694/0985/files/keto-meal-001.png?v=1629490017'
+      `${process.env.PROXY_APP_URL}/images/keto-meal-plan.jpg`
   },
   {
     id: 2,
@@ -40,12 +40,12 @@ const entreeTypes = [
     subType: 'lowCal',
     primaryColor: '#3DAE2B',
     options: [
-      'Lorem ipsum dolor sit amet',
-      'Lorem ipsum dolor sit amet',
-      'Lorem ipsum dolor sit amet'
+      'Low in calories',
+      'High in protein',
+      'Balanced macros'
     ],
     image:
-      'https://cdn.shopify.com/s/files/1/0596/3694/0985/files/Chile-Con-Carne_Keto_C.jpg?v=1629490020'
+      `${process.env.PROXY_APP_URL}/images/lowcal-meal-plan.jpg`
   }
 ]
 
@@ -54,28 +54,28 @@ const subTypes = {
     {
       id: 1,
       title: 'Regular',
-      netCarbs: '8-9g',
-      protein: '20-30g',
-      fat: '30-40g',
-      calories: '600-800',
+      netCarbs: '24g',
+      protein: '54g',
+      fat: '25g',
+      calories: '560',
       isSelected: true
     },
     {
       id: 2,
       title: 'Lite',
-      netCarbs: '8-9g',
-      protein: '20-30g',
-      fat: '30-40g',
-      calories: '600-800',
+      netCarbs: '19g',
+      protein: '38g',
+      fat: '20g',
+      calories: '420',
       isSelected: false
     },
     {
       id: 3,
       title: 'Savory',
-      netCarbs: '8-9g',
-      protein: '20-30g',
-      fat: '30-40g',
-      calories: '600-800',
+      netCarbs: '40g',
+      protein: '66g',
+      fat: '33g',
+      calories: '760',
       isSelected: false
     }
   ],
@@ -83,19 +83,19 @@ const subTypes = {
     {
       id: 1,
       title: 'Regular',
-      netCarbs: '8-9g',
-      protein: '20-30g',
-      fat: '30-40g',
-      calories: '600-800',
+      netCarbs: '8g',
+      protein: '37g',
+      fat: '46g',
+      calories: '570',
       isSelected: true
     },
     {
       id: 2,
       title: 'High Protein',
-      netCarbs: '8-9g',
-      protein: '20-30g',
-      fat: '30-40g',
-      calories: '600-800',
+      netCarbs: '8g',
+      protein: '52g',
+      fat: '50g',
+      calories: '670',
       isSelected: false
     }
   ]
@@ -152,11 +152,11 @@ const EntreeType = () => {
   }
 
   if (!state.location.zipCode) {
-    return <Redirect push to="/steps/2" />
+    return <Redirect push to='/steps/2' />
   }
 
   return (
-    <div className="defaultWrapper">
+    <div className='defaultWrapper'>
       <div className={styles.wrapper}>
         <div className={`${styles.title} mb-7`}>Choose Entree Type</div>
         <div className={`${styles.entrees} mb-10`}>
@@ -172,7 +172,7 @@ const EntreeType = () => {
             />
           ))}
         </div>
-        <div id="entreeType">
+        <div id='entreeType'>
           {state.entreeType.id !== 0 && (
             <>
               <div className={`${styles.title} mb-7`}>Choose Entree Type</div>
