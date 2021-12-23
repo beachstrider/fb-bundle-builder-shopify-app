@@ -57,6 +57,8 @@ app.use(express.urlencoded({ extended: true }))
 app.disable('x-powered-by')
 app.use(helmet())
 
+app.use('/images', express.static('images'));
+
 app.get('/bundle.js', (req, res) => {
   res.sendFile('./public/bundle.js', { root: __dirname })
 })

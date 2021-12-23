@@ -32,7 +32,7 @@ const entreeTypes = [
       'High protein'
     ],
     image:
-      'https://cdn.shopify.com/s/files/1/0596/3694/0985/files/keto-meal-001.png?v=1629490017'
+      `${process.env.PROXY_APP_URL}/images/keto-meal-plan.jpg`
   },
   {
     id: 2,
@@ -45,7 +45,7 @@ const entreeTypes = [
       'Balanced macros'
     ],
     image:
-      'https://cdn.shopify.com/s/files/1/0596/3694/0985/files/Chile-Con-Carne_Keto_C.jpg?v=1629490020'
+      `${process.env.PROXY_APP_URL}/images/lowcal-meal-plan.jpg`
   }
 ]
 
