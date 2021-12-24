@@ -35,6 +35,7 @@ const shopifyMultipass = (secret, returnTo) => {
   }
 
   const url = (shopifyDomain, payload) => {
+    console.log('generate url for shopifyDomain', shopifyDomain)
     return `https://${shopifyDomain}/account/login/multipass/${generateToken(
       payload
     )}`

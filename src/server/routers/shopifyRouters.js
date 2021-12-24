@@ -13,8 +13,10 @@ app.post('/shopify/multipass-url', (req, res) => {
 
   const { email, created_at, return_to } = req.body
 
+  const shop = process.env.SHOPIFY_MULTIPASS_SHOP || req.query.shop
+
   const multipass = shopifyMultipass(process.env.SHOPIFY_MULTIPASS_SECRET)
-  const url = multipass.url(req.query.shop, {
+  const url = multipass.url(shop, {
     email,
     created_at,
     return_to
