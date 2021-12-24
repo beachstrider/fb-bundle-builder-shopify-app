@@ -1,5 +1,11 @@
 version: 0.2
-
+env:
+  variables:
+    LOGO_URL: $LOGO_URL
+    PROXY_APP_URL: $PROXY_APP_URL
+    PAGE_TITLE: $PAGE_TITLE
+    LOCAL_STORAGE_KEY: $LOCAL_STORAGE_KEY
+    BUNDLE_API_URL: $BUNDLE_API_URL
 phases:
   install:
     runtime-versions:
