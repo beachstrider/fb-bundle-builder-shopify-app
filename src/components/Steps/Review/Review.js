@@ -67,12 +67,15 @@ const Review = () => {
     try {
       const shopifyBundleProduct = getSelectedBundle(state.bundle.breakfast.tag)
       const selectedVariant = shopifyBundleProduct.variants.filter(v => v.title.includes(state.entreeType.title) && v.title.includes(state.entreeSubType.title))
+      console.log('shopifyBundleProduct', shopifyBundleProduct)
+      console.log('selectedVariant', selectedVariant)
       if (
         shopifyBundleProduct.variants &&
         shopifyBundleProduct.variants.length > 0
       ) {
-        const variant = selectedVariant.length > 0 ? selectedVariant[0] : shopifyBundleProduct.variants[0] 
-        const sellingPlanId = selectedVariant.length > 0 ? selectedVariant.selling_plan_allocations[0].selling_plan_id : variant.selling_plan_allocations[0].selling_plan_id;
+        const variant = selectedVariant.length > 0 ? selectedVariant[0] : shopifyBundleProduct.variants[0]
+        const sellingPlanId = selectedVariant.length > 0 ? variant.selling_plan_allocations[0].selling_plan_id : null;
+
         const response = await shopifyCart.create([
           {
             id: variant.id,

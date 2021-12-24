@@ -155,7 +155,7 @@ const Entrees = () => {
       configuration.bundleId,
       configuration.id
     )
-
+    console.log('getContentByDate',getContentByDate)
     const contentResponse = await getContent(
       state.tokens.guestToken,
       configuration.bundleId,
