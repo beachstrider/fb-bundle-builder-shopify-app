@@ -80,7 +80,7 @@ const initialState = {
       id: 2,
       name: 'Zone 2',
       earliestAvailableDay: 3,
-      leadTime: 6,
+      leadTime: 7,
       zipCodes: zone2,
       deliveryDates: [
         {
