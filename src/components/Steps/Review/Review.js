@@ -84,7 +84,7 @@ const Review = () => {
             properties: {
               'Customer Id': shopCustomer?.id,
               'Cart Token': platformCartToken,
-              'Delivery_Date': dayjs().day(state.location.deliveryDate.day).format('YYYY-MM-DD')
+              'Delivery_Date': dayjs().day(state.location.deliveryDate.day).add(1, 'week').format('YYYY-MM-DD')
             }
           }
         ])
@@ -175,14 +175,11 @@ const Review = () => {
               <div className={styles.startingDate}>
                 Starting{' '}
                 {getDay(state.location.deliveryDate.day)
-                  .add(1, 'week')
                   .format('MMM')}{' '}
                 {getDay(state.location.deliveryDate.day)
-                  .add(1, 'week')
                   .format('DD')}
                 <span className={styles.ordinal}>
                   {getDay(state.location.deliveryDate.day)
-                    .add(1, 'week')
                     .format('Do')
                     .match(/[a-zA-Z]+/g)}
                 </span>
