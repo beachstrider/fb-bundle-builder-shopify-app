@@ -23,6 +23,7 @@ import {
   cart,
   filterShopifyProducts,
   filterShopifyVariants,
+  smoothScrollingToId,
   getConfigurationContent
 } from '../../../utils'
 import Toast from '../../Global/Toast'
@@ -51,7 +52,7 @@ const Entrees = () => {
 
   useEffect(() => {
     dispatch(setIsNextButtonActive(false))
-
+    smoothScrollingToId('entreesTop')
     getCurrentMenuItems()
   }, [])
 
@@ -257,7 +258,7 @@ const Entrees = () => {
   }
 
   return (
-    <div className="defaultWrapper">
+    <div className="defaultWrapper" id='entreesTop'>
       <div className={styles.wrapper}>
         <div className={`${styles.title} mb-7`}>Choose Entrees</div>
         <div className={`${styles.quantitiesWrapper} mb-8`}>
