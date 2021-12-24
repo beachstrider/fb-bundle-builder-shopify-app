@@ -16,7 +16,7 @@ import MenuItemCard from '../../Account/Components/MenuItemCard/MenuItemCard'
 import DeliveryDateModal from '../Components/DeliveryDatesModal/DeliveryDateModal'
 import { getBundleByPlatformId } from '../../Hooks/withBundleApi'
 import { clearLocalStorage } from '../../../store/store'
-import { cart, filterShopifyVariants } from '../../../utils'
+import { cart, filterShopifyVariants, smoothScrollingToId } from '../../../utils'
 import Toast from '../../Global/Toast'
 
 dayjs.extend(advancedFormat)
@@ -37,6 +37,7 @@ const Review = () => {
 
   useEffect(() => {
     getShopifyCartToken()
+    smoothScrollingToId('reviewTop')
   }, [])
 
   useEffect(() => {
@@ -67,12 +68,15 @@ const Review = () => {
     try {
       const shopifyBundleProduct = getSelectedBundle(state.bundle.breakfast.tag)
       const selectedVariant = shopifyBundleProduct.variants.filter(v => v.title.includes(state.entreeType.title) && v.title.includes(state.entreeSubType.title))
+      console.log('shopifyBundleProduct', shopifyBundleProduct)
+      console.log('selectedVariant', selectedVariant)
       if (
         shopifyBundleProduct.variants &&
         shopifyBundleProduct.variants.length > 0
       ) {
-        const variant = selectedVariant.length > 0 ? selectedVariant[0] : shopifyBundleProduct.variants[0] 
-        const sellingPlanId = selectedVariant.length > 0 ? selectedVariant.selling_plan_allocations[0].selling_plan_id : variant.selling_plan_allocations[0].selling_plan_id;
+        const variant = selectedVariant.length > 0 ? selectedVariant[0] : shopifyBundleProduct.variants[0]
+        const sellingPlanId = selectedVariant.length > 0 ? variant.selling_plan_allocations[0].selling_plan_id : null;
+
         const response = await shopifyCart.create([
           {
             id: variant.id,
@@ -81,7 +85,7 @@ const Review = () => {
             properties: {
               'Customer Id': shopCustomer?.id,
               'Cart Token': platformCartToken,
-              'Delivery_Date': dayjs().day(state.location.deliveryDate.day).format('YYYY-MM-DD')
+              'Delivery_Date': dayjs().day(state.location.deliveryDate.day).add(1, 'week').format('YYYY-MM-DD')
             }
           }
         ])
@@ -152,7 +156,7 @@ const Review = () => {
 
   return (
     <>
-      <div className="defaultWrapper">
+      <div className="defaultWrapper" id="reviewTop">
         <div className={styles.wrapper}>
           <div className={`${styles.title} mb-7`}>Review Order</div>
           <div className={`${styles.topBarWrapper} mb-7`}>

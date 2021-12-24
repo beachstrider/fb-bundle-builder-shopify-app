@@ -48,11 +48,18 @@ const getConfigurationContent = async (
   bundleId,
   configurationId
 ) => {
+  console.log('getConfigurationContent', date,
+    getBundleConfiguration,
+    state,
+    bundleId,
+    configurationId);
+
   const bundleConfiguration = await getBundleConfiguration(
     state.tokens.guestToken,
     bundleId,
     configurationId
   )
+  console.log('bundleConfiguration',bundleConfiguration);
 
   let result = null
 
@@ -61,12 +68,14 @@ const getConfigurationContent = async (
       const dateNow = new Date(date)
       const displayAfter = new Date(content.display_after)
       const displayBefore = new Date(content.display_before)
-
+      console.log(dateNow, displayAfter, displayBefore)
       if (dateNow > displayAfter && dateNow < displayBefore) {
         result = { ...content }
       }
     })
   }
+  console.log('result',result);
+
   return result
 }
 
