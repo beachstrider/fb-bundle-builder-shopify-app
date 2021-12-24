@@ -30,14 +30,14 @@ const useShopifyCart = () => {
     }
   }
 
-  const create = async (items) => {
+  const create = async (data) => {
     try {
       return await request(`/cart/add.js`, {
         method: 'post',
         headers: {
           'Content-Type': 'application/json'
         },
-        data: { items }
+        data: data
       })
     } catch (error) {
       return error
