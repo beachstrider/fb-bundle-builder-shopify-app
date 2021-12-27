@@ -75,26 +75,33 @@ const Review = () => {
         shopifyBundleProduct.variants.length > 0
       ) {
         const variant = selectedVariant.length > 0 ? selectedVariant[0] : shopifyBundleProduct.variants[0]
-        const sellingPlanId = selectedVariant.length > 0 ? variant.selling_plan_allocations[0].selling_plan_id : null;
+        const sellingPlanId = selectedVariant.length > 0 ? variant.selling_plan_allocations[0].selling_plan_id : null
 
-        const response = await shopifyCart.create([
+        const response = await shopifyCart.create(
           {
-            id: variant.id,
-            selling_plan: sellingPlanId,
-            quantity: 1,
-            properties: {
-              'Customer Id': shopCustomer?.id,
-              'Cart Token': platformCartToken,
-              'Delivery_Date': dayjs().day(state.location.deliveryDate.day).add(1, 'week').format('YYYY-MM-DD')
-            }
-          }
-        ])
+            attributes: {
+              'delivery-date': dayjs().day(state.location.deliveryDate.day).add(1, 'week').format('YYYY-MM-DD'),
+              'delivery-day': getDay(state.location.deliveryDate.day).format('dddd')
+            },
+            items: [
+              {
+                id: variant.id,
+                selling_plan: sellingPlanId,
+                quantity: 1,
+                properties: {
+                  'Customer Id': shopCustomer?.id,
+                  'Cart Token': platformCartToken,
+                  'Delivery_Date': dayjs().day(state.location.deliveryDate.day).add(1, 'week').format('YYYY-MM-DD')
+                }
+              }
+            ]
+          })
         console.log('add to cart response', response)
       } else {
         setShowError(true)
         return setErrorMessage(DEFAULT_ERROR_MESSAGE)
       }
-    }catch (e){
+    } catch (e) {
       console.error(e)
     }
   }
@@ -143,11 +150,11 @@ const Review = () => {
   }
 
   if (Number(shopCustomer.id) === 0 || state.bundle.weeklyPrice === 0) {
-    return <Redirect push to="/steps/2" />
+    return <Redirect push to='/steps/2' />
   }
 
   if (state.cart.length === 0) {
-    return <Redirect push to="/steps/4" />
+    return <Redirect push to='/steps/4' />
   }
 
   if (isLoading) {
@@ -156,7 +163,7 @@ const Review = () => {
 
   return (
     <>
-      <div className="defaultWrapper" id="reviewTop">
+      <div className='defaultWrapper' id='reviewTop'>
         <div className={styles.wrapper}>
           <div className={`${styles.title} mb-7`}>Review Order</div>
           <div className={`${styles.topBarWrapper} mb-7`}>
@@ -176,16 +183,13 @@ const Review = () => {
               <div className={styles.startingDate}>
                 Starting{' '}
                 {getDay(state.location.deliveryDate.day)
-                  .add(1, 'week')
-                  .format('MMM')}{' '}
+                .format('MMM')}{' '}
                 {getDay(state.location.deliveryDate.day)
-                  .add(1, 'week')
-                  .format('DD')}
+                .format('DD')}
                 <span className={styles.ordinal}>
                   {getDay(state.location.deliveryDate.day)
-                    .add(1, 'week')
-                    .format('Do')
-                    .match(/[a-zA-Z]+/g)}
+                  .format('Do')
+                  .match(/[a-zA-Z]+/g)}
                 </span>
               </div>
             </div>
@@ -204,13 +208,14 @@ const Review = () => {
                 title={item.name}
                 quantity={item.quantity}
                 type={item.title}
-                quantityLabel=""
+                quantityLabel=''
               />
             ))}
           </div>
         </div>
       </div>
-      {showError ? <Toast open={showError} status="Danger" message={errorMessage} autoDelete handleClose={closeAlert} /> : ''}
+      {showError ?
+        <Toast open={showError} status='Danger' message={errorMessage} autoDelete handleClose={closeAlert} /> : ''}
       <DeliveryDateModal
         open={openEditDateModal}
         close={() => setOpenEditDateModal(false)}
