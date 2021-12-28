@@ -182,10 +182,30 @@ const Location = () => {
     )
   }
 
-  const handleZipCodeChange = (value) => {
+  const handleZipCodeChange = (value) => {    
     if (Number.isInteger(Number(value))) {
+      if (Object.keys(currentZone).length > 0) {
+        setCurrentZone({})
+        dispatch(setLocation({        
+          deliveryDate: {
+            id: 0
+          }
+        }))
+      }
       setZipCode(value)
     }
+  }
+
+  const handleEmailChange = (value) => {
+    if (Object.keys(currentZone).length > 0) {
+      setCurrentZone({})
+      dispatch(setLocation({        
+        deliveryDate: {
+          id: 0
+        }
+      }))
+    }
+    setEmail(value)    
   }
 
   if (state.bundle.id === 0) {
@@ -218,7 +238,7 @@ const Location = () => {
               <span className={styles.required}>(Required)</span>
             </div>
             <InputEmail
-              onChange={(value) => setEmail(value)}
+              onChange={(value) => handleEmailChange(value)}
               value={email}
               required={true}
             />
