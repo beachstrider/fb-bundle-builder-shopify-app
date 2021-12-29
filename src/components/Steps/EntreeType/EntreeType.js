@@ -190,7 +190,7 @@ const EntreeType = () => {
           {state.entreeType.id !== 0 && (
             <>
               <div className={`${styles.title} mb-7`}>Choose Entree Type</div>
-              <div className={`${styles.subTypesWrapper} mb-10`}>
+              <div className={`${state.entreeType.id === 1 ? styles.subTypesWrapper_2_Columns : styles.subTypesWrapper_3_Columns} mb-10`}>
                 {subTypes[state.entreeType.subType].map((subType) => (
                   <EntreeTypeSubType
                     data={subType}
