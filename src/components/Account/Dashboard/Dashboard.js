@@ -6,7 +6,7 @@ import {
     selectFaqType,
     setTokens
   } from '../../../store/slices/rootSlice'
-import { Link, Redirect, useLocation } from 'react-router-dom'
+import { Link, Redirect, useLocation, useHistory } from 'react-router-dom'
 import styles from './Dashboard.module.scss'
 import { MenuItemCard } from '../Components/MenuItemCard'
 import { useUserToken } from '../../Hooks';
@@ -15,6 +15,7 @@ import {
   ChevronLeftMinor
 } from '@shopify/polaris-icons';
 import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
+import utc from 'dayjs/plugin/utc'
 import * as dayjs from 'dayjs';
 import { 
   request,
@@ -27,6 +28,7 @@ import { Spinner } from '../../Global';
 import Toast from '../../Global/Toast';
 
 dayjs.extend(isSameOrAfter);
+dayjs.extend(utc)
 
 function useQuery () {
   const { search } = useLocation();
@@ -59,9 +61,10 @@ const Dashboard = () => {
     dispatch(selectFaqType(null))
 
     if (!state.tokens.userToken) {
-      const thisToken = getToken();
-      // TODO the token call isnt triggering the next call
-      getOrdersToShow(thisToken);
+      const thisToken = getToken();    
+      getOrdersToShow(thisToken)
+
+      location.reload()
     } else {
       getOrdersToShow(state.tokens.userToken);
     }
@@ -91,6 +94,7 @@ const Dashboard = () => {
 
     if(subApi.data.message && subApi.data.message !== 'Unexpected error.'){
       const newToken = await getToken()
+      //TODO: check token here
       getOrdersToShow(newToken)
     }
 
@@ -110,7 +114,8 @@ const Dashboard = () => {
                 const orderedItems = subscriptionOrders.data.data.filter(ord => ord.bundle_configuration_content.deliver_after === content.deliver_after);
                 const subscriptionObjKey = content.deliver_after.split('T')[0]
                 if(!weeksMenu.includes(dayjs(content.deliver_after.split('T')[0]).format('YYYY-MM-DD'))){
-                  weeksMenu.push(dayjs(content.deliver_after.replace('T00:00:00.000Z', 'T12:00:00.000Z')).format('YYYY-MM-DD'))
+                  // weeksMenu.push(dayjs(content.deliver_after.replace('T00:00:00.000Z', 'T12:00:00.000Z')).format('YYYY-MM-DD'))
+                  weeksMenu.push(dayjs(content.deliver_after).utc().format('YYYY-MM-DD'))
                   subscriptionArray[subscriptionObjKey] = {}
                   subscriptionArray[subscriptionObjKey].items = []
                 }
@@ -176,7 +181,7 @@ const Dashboard = () => {
   const handleChange = (week) => {
     const subDate = dayjs(week).format('YYYY-MM-DD');
     const newActive = [];
-    newActive.push(subscriptions[subDate])
+    newActive.push(subscriptions[subDate])    
     if(newActive.length > 0){
       setActive(newActive)
       const newLimitArr = [];
@@ -219,7 +224,6 @@ const Dashboard = () => {
     )
   }
 
-
   return (
     <div className={styles.accountWrapper}>
       <div className={styles.header}>
@@ -230,11 +234,11 @@ const Dashboard = () => {
         </div>
         <div className={styles.weekMenu}>
             <p className={styles.weekMenuLabel}>Select Week</p>
-            <div className={`buttons ${styles.weekMenuItems}`}>
-              {weeksMenu.map((date, index) => {
-                return ( <button key={index} onClick={() => handleChange(date)} className={ active.filter( a => a.subscriptionDate === date).length > 0 ? "primaryButton largeButton" : "secondaryButton largeButton"}>{dayjs(date).format('MMM DD')}</button> )
-              })}
-            </div>
+              <div className={`buttons ${styles.weekMenuItems}`}>
+                {weeksMenu.map((date, index) => {                
+                  return ( <button key={index} onClick={() => handleChange(date)} className={ active.filter( a => a.subscriptionDate === date).length > 0 ? "primaryButton largeButton" : "secondaryButton largeButton"}>{dayjs(date).format('MMM DD')}</button> )
+                })}
+              </div>            
         </div>
       </div>
 
