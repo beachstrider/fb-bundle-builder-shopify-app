@@ -23,6 +23,7 @@ import { withActiveStep } from '../../Hooks'
 import SpinnerIcon from '../../Global/SpinnerIcon'
 import DeliveryDates from '../Components/DeliveryDates'
 import dayjs from 'dayjs'
+import Toast from '../../Global/Toast'
 
 const FAQ_TYPE = 'location'
 const STEP_ID = 2
@@ -37,6 +38,11 @@ const Location = () => {
   const [zipCodeError, setZipCodeError] = useState('')
   const [emailError, setEmailError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState({
+    open: false,
+    status: 'Success',
+    message: ''
+  })
 
   useEffect(() => {
     dispatch(displayHeader(true))
@@ -239,6 +245,20 @@ const Location = () => {
           />
         )}
       </div>
+      {error.open ? 
+        <Toast 
+         open={error.open} 
+         status={error.status} 
+         message={error.message} 
+         autoDelete 
+         handleClose={() => {
+          setError({
+            open: false,
+            status: 'Success',
+            message: ''
+          })
+         }} 
+        /> : ''}
     </div>
   )
 }

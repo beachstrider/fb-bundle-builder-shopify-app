@@ -63,9 +63,13 @@ const Review = () => {
   }
 
   const addShopifyCartItems = async () => {
-    await shopifyCart.clearCart()
-
     try {
+      const clearCart = await shopifyCart.clearCart()
+      
+      if (clearCart.status !== 200) {
+        throw new Error('Can not clear cart.')
+      }
+
       const shopifyBundleProduct = getSelectedBundle(state.bundle.breakfast.tag)
       const selectedVariant = shopifyBundleProduct.variants.filter(v => v.title.includes(state.entreeType.title) && v.title.includes(state.entreeSubType.title))
       console.log('shopifyBundleProduct', shopifyBundleProduct)
@@ -96,13 +100,22 @@ const Review = () => {
               }
             ]
           })
+
         console.log('add to cart response', response)
+        
+        if (response.status !== 200) {
+          throw new Error('Can not add product to the cart')
+        }
       } else {
+        setIsLoading(false)
         setShowError(true)
         return setErrorMessage(DEFAULT_ERROR_MESSAGE)
       }
     } catch (e) {
       console.error(e)
+      setShowError(true)
+      setIsLoading(false)
+      return setErrorMessage(DEFAULT_ERROR_MESSAGE)
     }
   }
 
@@ -136,9 +149,11 @@ const Review = () => {
         state.entreeSubType.title.toLowerCase(),
         mappedItems
       )
+
       clearLocalStorage()
       window.location.href = '/checkout'
-    } catch (error) {
+    } catch (error) {     
+      setIsLoading(false)
       setShowError(true)
       return setErrorMessage(DEFAULT_ERROR_MESSAGE)
     }
@@ -214,8 +229,16 @@ const Review = () => {
           </div>
         </div>
       </div>
-      {showError ?
-        <Toast open={showError} status='Danger' message={errorMessage} autoDelete handleClose={closeAlert} /> : ''}
+      {showError 
+        ?
+          <Toast 
+            open={showError} 
+            status='Danger' 
+            message={errorMessage} 
+            displayTitle={false}
+            handleClose={closeAlert} 
+          /> 
+        : ''}
       <DeliveryDateModal
         open={openEditDateModal}
         close={() => setOpenEditDateModal(false)}

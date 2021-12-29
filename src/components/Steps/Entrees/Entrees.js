@@ -35,7 +35,6 @@ const STEP_ID = 4
 const Entrees = () => {
   const state = useSelector((state) => state)
   const dispatch = useDispatch()
-  const history = useHistory()
 
   const cartUtility = cart(state)
 
@@ -107,13 +106,8 @@ const Entrees = () => {
         throw new Error('Bundle could not be found')
       }
       const currentBundle = data.data[0]
-      for (const configuration of currentBundle.configurations) {
-        console.log('configuration run', configuration)
-        const addItem = (items) => menuItems.concat(items)
-        console.log(
-          'currentBundle.configurations',
-          currentBundle.configurations
-        )
+      for (const configuration of currentBundle.configurations) {       
+        const addItem = (items) => menuItems.concat(items)        
         const response = await getProducts(configuration, addItem)
         console.log('getProducts', response)
         newItems.push({
@@ -136,15 +130,13 @@ const Entrees = () => {
       setQuantities(newQuantities)
       setMenuItems(newItems)
       setIsLoading(false)
-    } catch (error) {
-      // TODO: display error
-      console.error(error)
+    } catch (error) {          
       setError({
         open: true,
         status: 'Danger',
         message: 'Failed to retrieve products'
       })
-      // return history.push('/')
+      dispatch(displayFooter(false))    
     }
   }
 
@@ -253,12 +245,14 @@ const Entrees = () => {
     return <Redirect push to="/steps/3" />
   }
 
-  if (isLoading) {
-    return <Loading />
-  }
 
   return (
     <div className="defaultWrapper" id='entreesTop'>
+      {isLoading 
+      ? (
+        <Loading />
+      )
+    : (
       <div className={styles.wrapper}>
         <div className={`${styles.title} mb-7`}>Choose Entrees</div>
         <div className={`${styles.quantitiesWrapper} mb-8`}>
@@ -309,9 +303,19 @@ const Entrees = () => {
               ))}
             </div>
           </div>
-        ))}
-        {error.open ? <Toast open={error.open} status={error.status} message={error.message} autoDelete handleClose={closeAlert} /> : ''}
+        ))}        
       </div>
+    )}
+      {error.open 
+          ? 
+          <Toast 
+            open={error.open} 
+            status={error.status} 
+            message={error.message} 
+            displayTitle={false}   
+            handleClose={closeAlert} 
+          /> 
+          : ''}
     </div>
   )
 }
