@@ -2,7 +2,7 @@ import { request } from '../../utils'
 
 const useUserToken = async () => {
   try {
-    const domain = new URL(window.location.href)
+    
     if(shopCustomer.email !== ''){
             
         const response = await request(
@@ -13,7 +13,7 @@ const useUserToken = async () => {
                 'Content-Type': 'application/json'
               },
               data: { 
-                  shop: `${domain.hostname}`,
+                  shop: shopDomain,
                   email: shopCustomer.email
               }
             }
