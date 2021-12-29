@@ -40,7 +40,7 @@
             {% for transaction in order.transactions %}
               {
                 cardNumber :'{{ transaction.payment_details.credit_card_number }}'
-              }
+              }{% unless forloop.last %},{% endunless %}
             {% endfor %}
           ]
         },
