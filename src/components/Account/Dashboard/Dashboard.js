@@ -42,8 +42,6 @@ const Dashboard = () => {
     window.location = `https://${shopDomain}/account`
   }
 
-
-
   const state = useSelector((state) => state)
   const dispatch = useDispatch()
   const query = useQuery();
@@ -60,16 +58,18 @@ const Dashboard = () => {
     dispatch(displayFooter(false))
     dispatch(selectFaqType(null))
 
-    if (!state.tokens.userToken) {
-      const thisToken = getToken();    
-      getOrdersToShow(thisToken)
-
-      location.reload()
-    } else {
-      getOrdersToShow(state.tokens.userToken);
-    }
-    
+    getData()    
 }, []);
+
+
+const getData = async () => {
+  if (!state.tokens.userToken) {
+    const thisToken = await getToken();    
+    await getOrdersToShow(thisToken)
+  } else {
+    await getOrdersToShow(state.tokens.userToken);
+  }
+}
 
   const getToken = async () => {
     const tokenResponse = await useUserToken();
@@ -91,12 +91,6 @@ const Dashboard = () => {
     const subscriptionArray = {};
 
     const subApi = await request(`${process.env.PROXY_APP_URL}/bundle-api/subscriptions`, { method: 'get', data: '', headers: { authorization: `Bearer ${token}` }}, 3)
-
-    if(subApi.data.message && subApi.data.message !== 'Unexpected error.'){
-      const newToken = await getToken()
-      //TODO: check token here
-      getOrdersToShow(newToken)
-    }
 
     if(subApi.data.data){
       for (const sub of subApi.data.data) {
