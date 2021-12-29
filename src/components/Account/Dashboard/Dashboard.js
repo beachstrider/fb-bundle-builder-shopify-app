@@ -101,7 +101,7 @@ const getData = async () => {
             let subCount = 0;
             for (const content of config.contents) {
               const dayOfTheWeek = dayjs(content.deliver_after.split('T')[0]).day()
-              const today = dayjs().subtract(1, 'week').day(dayOfTheWeek).format('YYYY-MM-DD');
+              const today = dayjs().day(dayOfTheWeek).format('YYYY-MM-DD');
               const displayDate = dayjs(content.deliver_after.split('T')[0]).format('YYYY-MM-DD');
               const cutoffDate = dayjs().day(sub.delivery_day).add(4, 'day');
               if(subCount < 3 && dayjs(displayDate).isSameOrAfter(dayjs(today))){
