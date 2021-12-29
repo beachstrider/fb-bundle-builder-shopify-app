@@ -29,7 +29,7 @@ const FrequencySubTotal = ({
     <div className={styles.column}>
       <div>
         <FrequencySubTotalItem
-          label="Per Entree"
+          label="Entrees"
           price={entreePrice * entreesQuantity}
         />
         <FrequencySubTotalItem

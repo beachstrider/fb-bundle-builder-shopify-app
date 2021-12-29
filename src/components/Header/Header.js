@@ -1,5 +1,5 @@
 import React from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import styles from './Header.module.scss'
 
 const Header = () => {
@@ -7,9 +7,9 @@ const Header = () => {
 
   return (
     <div className={`${styles.wrapper} defaultWrapper flexColumnDirection`}>
-      <div className={styles.logoWrapper}>
+      {/* <div className={styles.logoWrapper}>
         <img className={styles.logo} src={process.env.LOGO_URL} />
-      </div>
+      </div> */}
       <div className={styles.stepsWrapper}>
         {steps.map((step, index) => (
           <div className={styles.column} key={step.id}>
