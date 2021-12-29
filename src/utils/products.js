@@ -92,7 +92,7 @@ const buildProductArrayFromVariant = async (items, subType, shopProducts) =>
     for (const variant of items) {
       const variantId = variant.platform_product_variant_id
       for (const product of shopProducts) {
-        const variant = product.variants.filter((v) => v.id === variantId)
+        // const variant = product.variants.filter((v) => v.id === variantId)
         if (product.variants.filter((v) => v.id === variantId).length > 0) {
           foundProductArray.push({
             title: product.title,
