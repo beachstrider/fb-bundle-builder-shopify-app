@@ -6,7 +6,7 @@ import {
     selectFaqType,
     setTokens
   } from '../../../store/slices/rootSlice'
-import { Link, Redirect, useLocation } from 'react-router-dom'
+import { Link, Redirect, useLocation, useHistory } from 'react-router-dom'
 import styles from './Dashboard.module.scss'
 import { MenuItemCard } from '../Components/MenuItemCard'
 import { useUserToken } from '../../Hooks';
@@ -61,9 +61,10 @@ const Dashboard = () => {
     dispatch(selectFaqType(null))
 
     if (!state.tokens.userToken) {
-      const thisToken = getToken();
-      // TODO the token call isnt triggering the next call
-      getOrdersToShow(thisToken);
+      const thisToken = getToken();    
+      getOrdersToShow(thisToken)
+
+      location.reload()
     } else {
       getOrdersToShow(state.tokens.userToken);
     }
@@ -93,6 +94,7 @@ const Dashboard = () => {
 
     if(subApi.data.message && subApi.data.message !== 'Unexpected error.'){
       const newToken = await getToken()
+      //TODO: check token here
       getOrdersToShow(newToken)
     }
 
