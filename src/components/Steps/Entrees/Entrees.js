@@ -12,7 +12,8 @@ import {
 import {
   cartRemoveItem,
   cartAddItem,
-  setIsNextButtonActive
+  setIsNextButtonActive,
+  displayFooter
 } from '../../../store/slices/rootSlice'
 import styles from './Entrees.module.scss'
 import dayjs from 'dayjs'
