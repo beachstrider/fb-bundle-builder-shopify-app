@@ -94,7 +94,7 @@ const getData = async () => {
 
     if(subApi.data.data){
       for (const sub of subApi.data.data) {
-        const subscriptionOrders = await request(`${process.env.PROXY_APP_URL}/bundle-api/subscriptions/${sub.bundle_id}/orders`, { method: 'get', data: '', headers: { authorization: `Bearer ${token}` }}, 3)
+        const subscriptionOrders = await request(`${process.env.PROXY_APP_URL}/bundle-api/subscriptions/${sub.id}/orders`, { method: 'get', data: '', headers: { authorization: `Bearer ${token}` }}, 3)
         const configData = await request(`${process.env.PROXY_APP_URL}/bundle-api/bundles/${sub.bundle_id}/configurations`, { method: 'get', data: '', headers: { authorization:`Bearer ${token}` }}, 3)
         if(configData.data.data.length > 0){
           for( const config of configData.data.data){
