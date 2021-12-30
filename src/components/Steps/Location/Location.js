@@ -106,7 +106,7 @@ const Location = () => {
   const checkCurrentSelectedDate = (zone) => {
     let deliveryDates = JSON.parse(JSON.stringify([...zone.deliveryDates]))
     const selectedDateIndex = deliveryDates.find((date) => date.isSelected)
-    console.log('deliveryDates : ', deliveryDates)
+    
     deliveryDates = deliveryDates.map((date) => {
       if (selectedDateIndex && date.id === selectedDateIndex.id) {
         date.isSelected = false
