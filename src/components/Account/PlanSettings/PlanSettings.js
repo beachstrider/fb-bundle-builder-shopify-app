@@ -73,14 +73,27 @@ const PlanSettings = () => {
     const subApi = await request(`${process.env.PROXY_APP_URL}/bundle-api/subscriptions`, { method: 'get', data: '', headers: { authorization: `Bearer ${token}` }}, 3)
     const thisWeek = dayjs().day(0);
 
+    //TODO: there should be a better implementation for this
+    const configData = await request(`${process.env.PROXY_APP_URL}/bundle-api/bundles/${subApi.data.data[0].bundle_id}/configurations`, 
+      { 
+        method: 'get', 
+        data: '', headers: { authorization:`Bearer ${token}` }
+      })    
+      const configurationId = configData.data.data[0].id
+
     for (const sub of subApi.data.data) {
       const thisLoopSubList = [];
       const bundleId = sub.bundle_id;
-      let configurationId = sub.orders[0].bundle_configuration_content_id;
+      
+      if (sub.orders.length === 0) {
+        continue
+      }
+
+      let contentId = sub.orders[0].bundle_configuration_content_id;
 
       sub.orders.forEach( order => {
-        if(!order.platform_order_id && order.bundle_configuration_content_id <= configurationId){
-          configurationId = order.bundle_configuration_content_id;
+        if(!order.platform_order_id && order.bundle_configuration_content_id <= contentId){
+          contentId = order.bundle_configuration_content_id;
           if(order.items.length > 0){
             order.items.forEach( product => {
               // TODO need to filter for variant to get info
@@ -97,9 +110,9 @@ const PlanSettings = () => {
       })
 
       if(thisLoopSubList.length === 0){
-        const subscriptionConfigContents = await request(`${process.env.PROXY_APP_URL}/bundle-api/bundles/${bundleId}/configurations/${configurationId}/contents?deliver_after=${thisWeek.format('YYYY-MM-DD')}T00:00:00.000Z`, { method: 'get', data: '', headers: { authorization: `Bearer ${token}` }}, 3)
-        if(subscriptionConfigContents.data.data[0].products.length){
-          subscriptionConfigContents.data.data[0].products.forEach( product => {
+        const subscriptionConfigContents = await request(`${process.env.PROXY_APP_URL}/bundle-api/bundles/${bundleId}/configurations/${configurationId}/contents/${contentId}?deliver_after=${thisWeek.format('YYYY-MM-DD')}T00:00:00.000Z`, { method: 'get', data: '', headers: { authorization: `Bearer ${token}` }}, 3)
+        if(subscriptionConfigContents.data.data){
+          subscriptionConfigContents.data.data.products.forEach( product => {
             if(product.is_default === 1){
               // TODO Need to filter down to variant based on subscription sub type
               const shopProd = shopProducts.filter( p => p.id === product.platform_product_id)[0]

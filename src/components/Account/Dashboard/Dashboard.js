@@ -94,14 +94,14 @@ const getData = async () => {
 
     if(subApi.data.data){
       for (const sub of subApi.data.data) {
-        const subscriptionOrders = await request(`${process.env.PROXY_APP_URL}/bundle-api/subscriptions/${sub.bundle_id}/orders`, { method: 'get', data: '', headers: { authorization: `Bearer ${token}` }}, 3)
+        const subscriptionOrders = await request(`${process.env.PROXY_APP_URL}/bundle-api/subscriptions/${sub.id}/orders`, { method: 'get', data: '', headers: { authorization: `Bearer ${token}` }}, 3)
         const configData = await request(`${process.env.PROXY_APP_URL}/bundle-api/bundles/${sub.bundle_id}/configurations`, { method: 'get', data: '', headers: { authorization:`Bearer ${token}` }}, 3)
         if(configData.data.data.length > 0){
           for( const config of configData.data.data){
             let subCount = 0;
             for (const content of config.contents) {
               const dayOfTheWeek = dayjs(content.deliver_after.split('T')[0]).day()
-              const today = dayjs().subtract(1, 'week').day(dayOfTheWeek).format('YYYY-MM-DD');
+              const today = dayjs().day(dayOfTheWeek).format('YYYY-MM-DD');
               const displayDate = dayjs(content.deliver_after.split('T')[0]).format('YYYY-MM-DD');
               const cutoffDate = dayjs().day(sub.delivery_day).add(4, 'day');
               if(subCount < 3 && dayjs(displayDate).isSameOrAfter(dayjs(today))){
