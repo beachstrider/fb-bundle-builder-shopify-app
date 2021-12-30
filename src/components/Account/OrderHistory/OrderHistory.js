@@ -71,62 +71,83 @@ const OrderHistory = () => {
   }
   
   const getOrdersToShow = async (token) => {
+    const currentDate = query.get('date')
     const newWeeksArr = []
     const subApi = await request(`${process.env.PROXY_APP_URL}/bundle-api/subscriptions`, { method: 'get', data: '', headers: { authorization: `Bearer ${token}` }}, 3)
     const thisWeek = dayjs().day(0);
 
-    for (const sub of subApi.data.data) {
-      const thisLoopSubList = [];
-      const bundleId = sub.bundle_id;
-      let configurationId = sub.orders[0].bundle_configuration_content_id;
+    //TODO: there should be a better implementation for this
+    const configData = await request(`${process.env.PROXY_APP_URL}/bundle-api/bundles/${subApi.data.data[0].bundle_id}/configurations`, 
+      { 
+        method: 'get', 
+        data: '', headers: { authorization:`Bearer ${token}` }
+      })    
+      const configurationId = configData.data.data[0].id
 
-      sub.orders.forEach( order => {
-        if(!order.platform_order_id && order.bundle_configuration_content_id <= configurationId){
-          configurationId = order.bundle_configuration_content_id;
-          if(order.items.length > 0){
-            order.items.forEach( product => {
-              // TODO need to filter for variant to get info
-              const shopProd = shopProducts.filter( p => p.id === product.platform_product_variant_id)[0]
-              thisLoopSubList.push({
-                title:  shopProd ? shopProd.title : 'Missing Title',
-                platform_img: shopProd && shopProd.images.length > 0 ? shopProd.images[0]: process.env.EMPTY_STATE_IMAGE,
-                quantity: item.quantity,
-                type: order.subscription.subscription_sub_type
+    
+      for (const sub of subApi.data.data) {
+        const thisLoopSubList = [];
+        const bundleId = sub.bundle_id;  
+        
+        if (sub.orders.length === 0) {
+          continue
+        }
+  
+        let contentId = sub.orders[0].bundle_configuration_content_id;
+        
+  
+        sub.orders.forEach( order => {
+          if(!order.platform_order_id && order.bundle_configuration_content_id <= contentId){
+            contentId = order.bundle_configuration_content_id;
+            if(order.items.length > 0){
+              order.items.forEach( product => {
+                // TODO need to filter for variant to get info
+                const shopProd = shopProducts.filter( p => p.id === product.platform_product_variant_id)[0]
+                thisLoopSubList.push({
+                  title:  shopProd ? shopProd.title : 'Missing Title',
+                  platform_img: shopProd && shopProd.images.length > 0 ? shopProd.images[0]: process.env.EMPTY_STATE_IMAGE,
+                  quantity: item.quantity,
+                  type: order.subscription.subscription_sub_type
+                })
               })
+            }
+          }
+        })
+  
+        
+  
+        if(thisLoopSubList.length === 0){
+          const subscriptionConfigContents = await request(`${process.env.PROXY_APP_URL}/bundle-api/bundles/${bundleId}/configurations/${configurationId}/contents/${contentId}?deliver_after=${currentDate}`, { method: 'get', data: '', headers: { authorization: `Bearer ${token}` }}, 3)          
+          if(subscriptionConfigContents.data.data){
+            subscriptionConfigContents.data.data.products.forEach( product => {
+              if(product.is_default === 1){
+                // TODO Need to filter down to variant based on subscription sub type
+                const shopProd = shopProducts.filter( p => p.id === product.platform_product_id)[0]
+                thisLoopSubList.push({
+                  title:  shopProd ? shopProd.title : 'Missing Title',
+                  platform_img: shopProd && shopProd.images.length > 0 ? shopProd.images[0]: process.env.EMPTY_STATE_IMAGE,
+                  quantity: product.default_quantity,
+                  type: sub.subscription_sub_type
+                })
+              }
             })
           }
         }
-      })
-
-      if(thisLoopSubList.length === 0){
-        const subscriptionConfigContents = await request(`${process.env.PROXY_APP_URL}/bundle-api/bundles/${bundleId}/configurations/${configurationId}/contents?deliver_after=${thisWeek.format('YYYY-MM-DD')}T00:00:00.000Z`, { method: 'get', data: '', headers: { authorization: `Bearer ${token}` }}, 3)
-        if(subscriptionConfigContents.data.data[0].products.length){
-          subscriptionConfigContents.data.data[0].products.forEach( product => {
-            if(product.is_default === 1){
-              // TODO Need to filter down to variant based on subscription sub type
-              const shopProd = shopProducts.filter( p => p.id === product.platform_product_id)[0]
-              thisLoopSubList.push({
-                title:  shopProd ? shopProd.title : 'Missing Title',
-                platform_img: shopProd && shopProd.images.length > 0 ? shopProd.images[0]: process.env.EMPTY_STATE_IMAGE,
-                quantity: product.default_quantity,
-                type: sub.subscription_sub_type
-              })
-            }
-          })
+        
+        const subItem = {
+          subId: sub.id,
+          subscriptionType: sub.subscription_type,
+          subscriptionSubType: sub.subscription_sub_type,
+          deliveryDay: sub.delivery_day,
+          customerId: sub.customer_id,
+          date: thisWeek.format('YYYY-MM-DD'),
+          items: thisLoopSubList
         }
+        newWeeksArr.push(subItem)
+      
       }
       
-      const subItem = {
-        subId: sub.id,
-        subscriptionType: sub.subscription_type,
-        subscriptionSubType: sub.subscription_sub_type,
-        deliveryDay: sub.delivery_day,
-        customerId: sub.customer_id,
-        date: thisWeek.format('YYYY-MM-DD'),
-        items: thisLoopSubList
-      }
-      newWeeksArr.push(subItem)
-    }
+    
 
     setSubscriptions(newWeeksArr);
     setLoading(false)
