@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import {
   selectFaqType,
@@ -15,6 +15,7 @@ import { CardEntreeType } from '../../Cards'
 import styles from './EntreeType.module.scss'
 import EntreeTypeSubType from './EntreeTypeSubType'
 import { Redirect } from 'react-router'
+import Toast from '../../Global/Toast'
 
 const FAQ_TYPE = 'entreeType'
 const STEP_ID = 3
@@ -104,6 +105,11 @@ const subTypes = {
 const EntreeType = () => {
   const dispatch = useDispatch()
   const state = useSelector((state) => state)
+  const [error, setError] = useState({
+    open: false,
+    status: 'Success',
+    message: ''
+  })
 
   useEffect(() => {
     generateToken()
@@ -126,7 +132,8 @@ const EntreeType = () => {
   }, [state.entreeType, state.entreeSubType])
 
   const generateToken = async () => {
-    const currentToken = await useGuestToken()
+    
+    const currentToken = await useGuestToken()    
     if (currentToken) {
       dispatch(
         setTokens({
@@ -134,6 +141,13 @@ const EntreeType = () => {
           guestToken: currentToken
         })
       )
+    } else {
+      setError({
+        open: true,
+        status: 'Danger',
+        message: 'There was an error. Please try again'
+      })
+      dispatch(displayFooter(false))
     }
   }
 
@@ -176,7 +190,7 @@ const EntreeType = () => {
           {state.entreeType.id !== 0 && (
             <>
               <div className={`${styles.title} mb-7`}>Choose Entree Type</div>
-              <div className={`${styles.subTypesWrapper} mb-10`}>
+              <div className={`${state.entreeType.id === 1 ? styles.subTypesWrapper_2_Columns : styles.subTypesWrapper_3_Columns} mb-10`}>
                 {subTypes[state.entreeType.subType].map((subType) => (
                   <EntreeTypeSubType
                     data={subType}
@@ -190,6 +204,20 @@ const EntreeType = () => {
           )}
         </div>
       </div>
+      {error.open ? 
+        <Toast 
+          open={error.open} 
+          status={error.status} 
+          message={error.message} 
+          displayTitle={false}          
+          handleClose={() => {
+          setError({
+            open: false,
+            status: 'Success',
+            message: ''
+          })
+         }} 
+        /> : ''}
     </div>
   )
 }

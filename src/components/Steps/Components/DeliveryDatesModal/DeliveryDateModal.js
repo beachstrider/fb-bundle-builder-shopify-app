@@ -69,6 +69,7 @@ const DeliveryDateModal = ({ open, close }) => {
             onClick={handleDeliveryDate}
             title="Choose Delivery Date"
             dates={currentZone.deliveryDates}
+            todayDate={TODAY_DATE}
           />
         )}
         <div className={styles.buttonWrapper}>

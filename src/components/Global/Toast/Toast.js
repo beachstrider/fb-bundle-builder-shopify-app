@@ -11,7 +11,7 @@ import styles from './Toast.module.scss';
 // }
 
 const Toast = props => {
-    const { open, status, message, autoDelete, handleClose } = props;
+    const { open, status, message, autoDelete, handleClose, displayTitle = true } = props;
     const [show, setShow] = useState(false)
     const [background, setBackground] = useState('green')
     const [icon, setIcon] = useState()
@@ -69,7 +69,7 @@ const Toast = props => {
                         
                         </div>
                         <div>
-                            <p className={styles.notificationTitle}>{status}</p>
+                            {displayTitle && <p className={styles.notificationTitle}>{status}</p> }
                             <div className={styles.notificationMessage}>
                                 {message}
                             </div>

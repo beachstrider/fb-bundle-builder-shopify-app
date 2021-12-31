@@ -23,6 +23,7 @@ import { withActiveStep } from '../../Hooks'
 import SpinnerIcon from '../../Global/SpinnerIcon'
 import DeliveryDates from '../Components/DeliveryDates'
 import dayjs from 'dayjs'
+import Toast from '../../Global/Toast'
 
 const FAQ_TYPE = 'location'
 const STEP_ID = 2
@@ -37,6 +38,11 @@ const Location = () => {
   const [zipCodeError, setZipCodeError] = useState('')
   const [emailError, setEmailError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState({
+    open: false,
+    status: 'Success',
+    message: ''
+  })
 
   useEffect(() => {
     dispatch(displayHeader(true))
@@ -100,7 +106,7 @@ const Location = () => {
   const checkCurrentSelectedDate = (zone) => {
     let deliveryDates = JSON.parse(JSON.stringify([...zone.deliveryDates]))
     const selectedDateIndex = deliveryDates.find((date) => date.isSelected)
-    console.log('deliveryDates : ', deliveryDates)
+    
     deliveryDates = deliveryDates.map((date) => {
       if (selectedDateIndex && date.id === selectedDateIndex.id) {
         date.isSelected = false
@@ -176,10 +182,30 @@ const Location = () => {
     )
   }
 
-  const handleZipCodeChange = (value) => {
+  const handleZipCodeChange = (value) => {    
     if (Number.isInteger(Number(value))) {
+      if (Object.keys(currentZone).length > 0) {
+        setCurrentZone({})
+        dispatch(setLocation({        
+          deliveryDate: {
+            id: 0
+          }
+        }))
+      }
       setZipCode(value)
     }
+  }
+
+  const handleEmailChange = (value) => {
+    if (Object.keys(currentZone).length > 0) {
+      setCurrentZone({})
+      dispatch(setLocation({        
+        deliveryDate: {
+          id: 0
+        }
+      }))
+    }
+    setEmail(value)    
   }
 
   if (state.bundle.id === 0) {
@@ -212,7 +238,7 @@ const Location = () => {
               <span className={styles.required}>(Required)</span>
             </div>
             <InputEmail
-              onChange={(value) => setEmail(value)}
+              onChange={(value) => handleEmailChange(value)}
               value={email}
               required={true}
             />
@@ -239,6 +265,20 @@ const Location = () => {
           />
         )}
       </div>
+      {error.open ? 
+        <Toast 
+         open={error.open} 
+         status={error.status} 
+         message={error.message} 
+         autoDelete 
+         handleClose={() => {
+          setError({
+            open: false,
+            status: 'Success',
+            message: ''
+          })
+         }} 
+        /> : ''}
     </div>
   )
 }
