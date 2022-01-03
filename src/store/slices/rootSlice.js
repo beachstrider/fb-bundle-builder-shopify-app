@@ -186,6 +186,7 @@ const rootSlice = createSlice({
     cartClear: (state) => {
       state.cart = []
     },
+    reset: () => initialState,
     cartUpdate: (state, action) => {
       state.cart = action.payload
     },
@@ -239,6 +240,7 @@ export const {
   cartClear,
   cartUpdate,
   clearBundle,
+  reset,
   selectFaqType,
   setActiveStep,
   setEmail,
