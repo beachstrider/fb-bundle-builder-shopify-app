@@ -6,8 +6,7 @@ import {
   displayHeader,
   displayFooter,
   setIsNextButtonActive,
-  cartClear,
-  clearBundle
+  reset
 } from '../../../store/slices/rootSlice'
 import {
   FrequencyBreakfast,
@@ -17,6 +16,7 @@ import {
 } from '.'
 import styles from './Frequency.module.scss'
 import { withActiveStep } from '../../Hooks'
+import Loading from '../Components/Loading'
 
 const FAQ_TYPE = 'frequency'
 const STEP_ID = 1
@@ -85,14 +85,35 @@ const bundles = [
   }
 ]
 
+
 const Frequency = () => {
   const dispatch = useDispatch()
   const state = useSelector((state) => state)
   const [selectedBundle, setSelectedBundle] = useState({})
+  const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
-    dispatch(cartClear())
+    initializeApp()   
+  }, [])
 
+  useEffect(() => {
+    if (!isLoading) {
+      setSelectedBundle(() => bundles.find((e) => e.id === state.bundle.id) || [])
+    }
+  }, [state.bundle.id])
+
+  const clearState = () => new Promise((resolve) => {
+    setTimeout(() => {
+      dispatch(reset())
+      
+      resolve('ok');
+    }, 1000);
+  });
+
+  const initializeApp = async () => {
+    setIsLoading(true)
+    await clearState()
+    
     dispatch(selectFaqType(FAQ_TYPE))
     dispatch(displayHeader(true))
     dispatch(displayFooter(true))
@@ -100,11 +121,8 @@ const Frequency = () => {
 
     const defaultEntree = mapBundleToStore(bundles[0], bundles[0].breakfasts[0])
     dispatch(setBundle(defaultEntree))
-  }, [])
-
-  useEffect(() => {
-    setSelectedBundle(() => bundles.find((e) => e.id === state.bundle.id) || [])
-  }, [state.bundle.id])
+    setIsLoading(false)
+  }
 
   const mapBundleToStore = (bundle, breakfast = null) => {
     const defaultBreakfast = breakfast || bundle.breakfasts[0]
@@ -128,6 +146,10 @@ const Frequency = () => {
   const handleSelectBreakfast = (breakfast) => {
     const mappedBundle = mapBundleToStore(state.bundle, breakfast)
     dispatch(setBundle(mappedBundle))
+  }
+
+  if (isLoading) {
+    return <Loading />
   }
 
   return (
