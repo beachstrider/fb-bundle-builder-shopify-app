@@ -127,7 +127,7 @@ const initialState = {
   location: {
     zipCode: '',
     deliveryDate: {
-      id: 0
+      id: -1
     }
   },
   tokens: {
