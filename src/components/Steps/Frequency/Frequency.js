@@ -17,6 +17,7 @@ import {
 import styles from './Frequency.module.scss'
 import { withActiveStep } from '../../Hooks'
 import Loading from '../Components/Loading'
+import { clearLocalStorage } from '../../../store/store'
 
 const FAQ_TYPE = 'frequency'
 const STEP_ID = 1
@@ -106,8 +107,8 @@ const Frequency = () => {
   const clearState = () =>
     new Promise((resolve) => {
       setTimeout(() => {
+        clearLocalStorage()
         dispatch(reset())
-
         resolve('ok')
       }, 1000)
     })
