@@ -111,11 +111,13 @@ const buildProductArrayFromId = async (items, subType, shopProducts) =>
   new Promise((resolve) => {
     const foundProductArray = []
     for (const item of items) {
+      
       const variant = shopProducts.filter(
-        (p) => p.id === item.platform_product_id
+        (p) => Number(p.id) === Number(item.platform_product_id)
       )[0]
+      
       if (
-        shopProducts.filter((p) => p.id === item.platform_product_id).length > 0
+        shopProducts.filter((p) => Number(p.id) === Number(item.platform_product_id)).length > 0
       ) {
         foundProductArray.push({
           title: variant.title,
