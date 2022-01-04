@@ -82,7 +82,7 @@ const Location = () => {
       checkCurrentSelectedDate(currentZone)
     }
 
-    if (!state.location.deliveryDate) {
+    if (state.location.deliveryDate.id === -1) {
       dispatch(setIsNextButtonActive(false))
     } else {
       if (!state.isNextButtonActive) {

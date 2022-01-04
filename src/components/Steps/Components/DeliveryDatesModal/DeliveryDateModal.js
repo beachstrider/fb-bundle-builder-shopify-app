@@ -18,7 +18,7 @@ const DeliveryDateModal = ({ open, close }) => {
       const zone = findZipCode(state.deliveryZones, state.location.zipCode)
       setCurrentZone(zone)
 
-      if (state.location.deliveryDate.id === 0) {
+      if (state.location.deliveryDate.id === -1) {
         handleDeliveryDate(findDefaultSelectedDate(zone.deliveryDates))
       } else {
         checkCurrentSelectedDate(zone)
@@ -66,7 +66,7 @@ const DeliveryDateModal = ({ open, close }) => {
         {Object.keys(currentZone).length > 0 && currentZone.deliveryDates && (
           <DeliveryDates
             className={styles.modal}
-            onClick={handleDeliveryDate}
+            onClick={() => handleDeliveryDate()}
             title="Choose Delivery Date"
             dates={currentZone.deliveryDates}
             todayDate={TODAY_DATE}
