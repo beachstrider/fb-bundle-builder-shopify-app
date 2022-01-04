@@ -66,7 +66,7 @@ const DeliveryDateModal = ({ open, close }) => {
         {Object.keys(currentZone).length > 0 && currentZone.deliveryDates && (
           <DeliveryDates
             className={styles.modal}
-            onClick={() => handleDeliveryDate()}
+            onClick={handleDeliveryDate}
             title="Choose Delivery Date"
             dates={currentZone.deliveryDates}
             todayDate={TODAY_DATE}
