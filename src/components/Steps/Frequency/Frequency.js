@@ -85,7 +85,6 @@ const bundles = [
   }
 ]
 
-
 const Frequency = () => {
   const dispatch = useDispatch()
   const state = useSelector((state) => state)
@@ -93,27 +92,31 @@ const Frequency = () => {
   const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
-    initializeApp()   
+    initializeApp()
   }, [])
 
   useEffect(() => {
     if (!isLoading) {
-      setSelectedBundle(() => bundles.find((e) => e.id === state.bundle.id) || [])
+      setSelectedBundle(
+        () => bundles.find((e) => e.id === state.bundle.id) || []
+      )
     }
   }, [state.bundle.id])
 
-  const clearState = () => new Promise((resolve) => {
-    setTimeout(() => {
-      dispatch(reset())
-      
-      resolve('ok');
-    }, 1000);
-  });
+  const clearState = () =>
+    new Promise((resolve) => {
+      setTimeout(() => {
+        dispatch(reset())
+
+        resolve('ok')
+      }, 1000)
+    })
 
   const initializeApp = async () => {
     setIsLoading(true)
     await clearState()
-    
+    setSelectedBundle(bundles[0])
+
     dispatch(selectFaqType(FAQ_TYPE))
     dispatch(displayHeader(true))
     dispatch(displayFooter(true))
