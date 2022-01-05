@@ -34,9 +34,15 @@ const AccountInfo = () => {
 
     return (
         <div className="contentWrapper">
-            <div className="bundleRow">
+            <div className="bundleRow alignCenter">
                 <div className="bundleOneThird">
-                    <p></p>
+                    <p>
+                    <Link 
+                      to='/account'
+                      className="primaryButton">
+                        Go back to Meals
+                    </Link>
+                  </p> 
                 </div>
                 <div className="bundleTwoThirds">
                     <div className="headerOffset">

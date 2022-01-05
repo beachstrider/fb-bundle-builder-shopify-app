@@ -25,6 +25,11 @@ $subTitleFontSize: 2.7rem;
   }
 
   & .quantitiesWrapper {
+    top: 0;
+    background-color: #F6F6F7;
+    margin: 0;
+    position: -webkit-sticky;
+    position: sticky;
     & .topBarQuantities {
       display: flex;
       justify-content: center;

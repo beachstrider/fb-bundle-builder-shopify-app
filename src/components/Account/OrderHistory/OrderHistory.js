@@ -135,6 +135,8 @@ const OrderHistory = () => {
           (d) => d.display_after === currentDate
         )
 
+        console.log('getCurrentContent', getCurrentContent)
+
         const subscriptionConfigContents = await request(
           `${process.env.PROXY_APP_URL}/bundle-api/bundles/${bundleId}/configurations/${getCurrentContent.bundle_configuration_id}/contents/${getCurrentContent.id}?deliver_after=${currentDate}`,
           {
@@ -187,9 +189,15 @@ const OrderHistory = () => {
 
   return (
     <div className="contentWrapper">
-      <div className="bundleRow">
+      <div className="bundleRow alignCenter">
         <div className="bundleOneThird">
-          <p></p>
+          <p>
+            <Link 
+              to='/account'
+              className="primaryButton">
+                Go back to Meals
+            </Link>
+          </p> 
         </div>
         <div className="bundleTwoThirds">
           <div className="headerOffset">
