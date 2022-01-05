@@ -17,6 +17,8 @@ import {
 import * as dayjs from 'dayjs';
 import { request } from '../../../utils';
 import { Spinner } from '../../Global';
+import utc from 'dayjs/plugin/utc'
+dayjs.extend(utc)
 
 function useQuery () {
   const { search } = useLocation();
@@ -74,7 +76,7 @@ const OrderHistory = () => {
     const currentDate = query.get('date')
     const newWeeksArr = []
     const subApi = await request(`${process.env.PROXY_APP_URL}/bundle-api/subscriptions`, { method: 'get', data: '', headers: { authorization: `Bearer ${token}` }}, 3)
-    const thisWeek = dayjs().day(0);
+    const thisWeek = dayjs().day(0).add(1, 'week');
 
     //TODO: there should be a better implementation for this
     const configData = await request(`${process.env.PROXY_APP_URL}/bundle-api/bundles/${subApi.data.data[0].bundle_id}/configurations`, 
@@ -140,7 +142,7 @@ const OrderHistory = () => {
           subscriptionSubType: sub.subscription_sub_type,
           deliveryDay: sub.delivery_day,
           customerId: sub.customer_id,
-          date: thisWeek.format('YYYY-MM-DD'),
+          date: currentDate,
           items: thisLoopSubList
         }
         newWeeksArr.push(subItem)
@@ -193,7 +195,7 @@ const OrderHistory = () => {
                             {subscription.items.map((item, idx) => (
                                 idx < 3 ? <MenuItemCard key={idx} title={item.title} image={item.platform_img} quantity={item.quantity} type={item.type} />  : ''
                             ))}
-                            <Link to={`/account?date=${subscription.date}`} className={styles.seeAllMenu}>
+                            <Link to={`/account?date=${dayjs(subscription.date).utc().format('YYYY-MM-DD')}`} className={styles.seeAllMenu}>
                                 See All <ChevronRightMinor />
                             </Link>
                         </div>
@@ -240,7 +242,7 @@ const OrderHistory = () => {
                                 ))}
                             </tbody>
                         </table>
-                        <a href={`${shopDomain}/account`} className={styles.orderHistoryMoreLink}>See More </a>
+                        <a href={`/account`} className={styles.orderHistoryMoreLink}>See More </a>
                     </div>
                 </div>
             </div>
