@@ -94,13 +94,15 @@ const buildProductArrayFromVariant = async (items, subType, shopProducts) =>
       for (const product of shopProducts) {
         // const variant = product.variants.filter((v) => v.id === variantId)
         if (product.variants.filter((v) => v.id === variantId).length > 0) {
-          foundProductArray.push({
-            title: product.title,
-            platform_img:
-              product.images.length > 0 ? product.images[0] : EMPTY_STATE_IMAGE,
-            quantity: variant.quantity,
-            type: subType
-          })
+          if(Number(variant.quantity) !== 0){
+            foundProductArray.push({
+              title: product.title,
+              platform_img:
+                product.images.length > 0 ? product.images[0] : EMPTY_STATE_IMAGE,
+              quantity: variant.quantity,
+              type: subType
+            })
+          }
         }
       }
     }
