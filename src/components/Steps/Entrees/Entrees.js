@@ -63,7 +63,7 @@ const Entrees = () => {
       quantities.length > 0
     ) {
       let canActivateButton = false
-      let qtyCounter = 0;
+      let qtyCounter = 0
       quantities.forEach((quantity) => {
         const cartTotal = cartUtility.sumQuantity(state, quantity.id)
         if (
@@ -107,8 +107,8 @@ const Entrees = () => {
         throw new Error('Bundle could not be found')
       }
       const currentBundle = data.data[0]
-      for (const configuration of currentBundle.configurations) {       
-        const addItem = (items) => menuItems.concat(items)        
+      for (const configuration of currentBundle.configurations) {
+        const addItem = (items) => menuItems.concat(items)
         const response = await getProducts(configuration, addItem)
         console.log('getProducts', response)
         newItems.push({
@@ -127,17 +127,18 @@ const Entrees = () => {
         })
       }
 
+      dispatch(displayFooter(true))
       setQuantitiesCountdown(newQuantitiesCountdown)
       setQuantities(newQuantities)
       setMenuItems(newItems)
       setIsLoading(false)
-    } catch (error) {          
+    } catch (error) {
       setError({
         open: true,
         status: 'Danger',
         message: 'Failed to retrieve products'
       })
-      dispatch(displayFooter(false))    
+      dispatch(displayFooter(false))
     }
   }
 
@@ -149,7 +150,7 @@ const Entrees = () => {
       configuration.bundleId,
       configuration.id
     )
-    console.log('getContentByDate',getContentByDate)
+    console.log('getContentByDate', getContentByDate)
     const contentResponse = await getContent(
       state.tokens.guestToken,
       configuration.bundleId,
@@ -246,77 +247,75 @@ const Entrees = () => {
     return <Redirect push to="/steps/3" />
   }
 
-
   return (
-    <div className="defaultWrapper" id='entreesTop'>
-      {isLoading 
-      ? (
+    <div className="defaultWrapper" id="entreesTop">
+      {isLoading ? (
         <Loading />
-      )
-    : (
-      <div className={styles.wrapper}>
-        <div className={`${styles.title} mb-7`}>Choose Entrees</div>
-        <div className={`${styles.quantitiesWrapper} mb-8`}>
-          <div className={styles.topBarQuantities}>
-            {menuItems.map((product) => (
-              <div key={product.id} className="px-3">
-                <span className={styles.number}>
-                  {getQuantityCountdown(product.id).quantity}
-                </span>{' '}
-                {product.title} Left
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {menuItems.map((content) => (
-          <div key={content.id}>
-            <div className={styles.listHeader}>
-              <div className={styles.title}>{content.title}</div>
-              <div className={`px-10 ${styles.quantities}`}>
-                <span className={styles.number}>
-                  {getQuantityCountdown(content.id).quantity}
-                </span>{' '}
-                {content.title} Left
-              </div>
-            </div>
-            <div className={`${styles.cards} mb-10`}>
-              {content.products.map((item) => (
-                <CardQuantities
-                  key={item.id}
-                  title={item.name}
-                  description={item.description}
-                  image={
-                    item.feature_image
-                      ? item.feature_image.src
-                      : item.images.length > 0
-                      ? item.images[0]
-                      : process.env.EMPTY_STATE_IMAGE
-                  }
-                  metafields={item.metafields}
-                  isChecked={cartUtility.isItemSelected(state.cart, item)}
-                  quantity={cartUtility.getItemQuantity(state.cart, item)}
-                  onClick={() => handleAddItem(item, content.id)}
-                  onAdd={() => handleAddItem(item, content.id)}
-                  onRemove={() => handleRemoveItem(item, content.id)}
-                  disableAdd={getQuantityCountdown(content.id).quantity === 0}
-                />
+      ) : (
+        <div className={styles.wrapper}>
+          <div className={`${styles.title} mb-7`}>Choose Entrees</div>
+          <div className={`${styles.quantitiesWrapper} mb-8`}>
+            <div className={styles.topBarQuantities}>
+              {menuItems.map((product) => (
+                <div key={product.id} className="px-3">
+                  <span className={styles.number}>
+                    {getQuantityCountdown(product.id).quantity}
+                  </span>{' '}
+                  {product.title} Left
+                </div>
               ))}
             </div>
           </div>
-        ))}        
-      </div>
-    )}
-      {error.open 
-          ? 
-          <Toast 
-            open={error.open} 
-            status={error.status} 
-            message={error.message} 
-            displayTitle={false}   
-            handleClose={closeAlert} 
-          /> 
-          : ''}
+
+          {menuItems.map((content) => (
+            <div key={content.id}>
+              <div className={styles.listHeader}>
+                <div className={styles.title}>{content.title}</div>
+                <div className={`px-10 ${styles.quantities}`}>
+                  <span className={styles.number}>
+                    {getQuantityCountdown(content.id).quantity}
+                  </span>{' '}
+                  {content.title} Left
+                </div>
+              </div>
+              <div className={`${styles.cards} mb-10`}>
+                {content.products.map((item) => (
+                  <CardQuantities
+                    key={item.id}
+                    title={item.name}
+                    description={item.description}
+                    image={
+                      item.feature_image
+                        ? item.feature_image.src
+                        : item.images.length > 0
+                        ? item.images[0]
+                        : process.env.EMPTY_STATE_IMAGE
+                    }
+                    metafields={item.metafields}
+                    isChecked={cartUtility.isItemSelected(state.cart, item)}
+                    quantity={cartUtility.getItemQuantity(state.cart, item)}
+                    onClick={() => handleAddItem(item, content.id)}
+                    onAdd={() => handleAddItem(item, content.id)}
+                    onRemove={() => handleRemoveItem(item, content.id)}
+                    disableAdd={getQuantityCountdown(content.id).quantity === 0}
+                  />
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+      {error.open ? (
+        <Toast
+          open={error.open}
+          status={error.status}
+          message={error.message}
+          displayTitle={false}
+          handleClose={closeAlert}
+        />
+      ) : (
+        ''
+      )}
     </div>
   )
 }

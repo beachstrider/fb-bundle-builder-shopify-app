@@ -1,6 +1,7 @@
 const path = require('path')
 require('dotenv').config({ path: path.resolve(__dirname, '.env') })
 const fs = require('fs')
+const compression = require('compression')
 const express = require('express')
 const helmet = require('helmet')
 const verifyHmac = require('./src/server/middleware/verifyHmac')
@@ -46,20 +47,22 @@ app.use((err, req, res, next) => {
 })
 // END Sentry
 
-const morganFormat = ':method :url :status auth::req[authorization] res-length::res[content-length] - :response-time ms'
+const morganFormat =
+  ':method :url :status auth::req[authorization] res-length::res[content-length] - :response-time ms'
 app.use(morgan(morganFormat))
 
 const cachedVersion = Math.floor((1 + Math.random()) * 0x10000)
-.toString(16)
-.substring(1)
+  .toString(16)
+  .substring(1)
 
 app.use(cors())
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.disable('x-powered-by')
 app.use(helmet())
+app.use(compression())
 
-app.use('/images', express.static('images'));
+app.use('/images', express.static('images'))
 
 app.get('/bundle.js', (req, res) => {
   res.sendFile('./public/bundle.js', { root: __dirname })
@@ -108,14 +111,14 @@ app.get('/', verifyHmac, (req, res) => {
       ])
 
       res
-      .header({
-        'Content-Type': 'application/liquid'
-      })
-      .header({
-        'Strict-Transport-Security':
-          'max-age=63072000; includeSubDomains; preload'
-      })
-      .send(formattedData)
+        .header({
+          'Content-Type': 'application/liquid'
+        })
+        .header({
+          'Strict-Transport-Security':
+            'max-age=63072000; includeSubDomains; preload'
+        })
+        .send(formattedData)
     }
   )
 })
