@@ -117,6 +117,7 @@ const getData = async () => {
                     subscriptionArray[subscriptionObjKey] = {}
                     subscriptionArray[subscriptionObjKey].items = []
                   }
+                  
                   if(orderedItems.length > 0) {
                     const orderFound = orderedItems[0]
                     if(subscriptionArray[subscriptionObjKey]){

@@ -222,12 +222,12 @@ const OrderHistory = () => {
                         {subscription.subscriptionSubType}
                       </p>
                     </div>
-                    <Link
+                    {/* <Link
                       to={`/edit-order/${subscription.subId}?date=${subscription.date}`}
                       className="secondaryButton"
                     >
                       Edit Order
-                    </Link>
+                    </Link> */}
                   </div>
                   {subscription.items ? (
                     <div className={styles.currentOrderMenu}>
