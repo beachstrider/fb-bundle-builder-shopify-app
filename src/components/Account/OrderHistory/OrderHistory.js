@@ -135,6 +135,8 @@ const OrderHistory = () => {
           (d) => d.display_after === currentDate
         )
 
+        console.log('getCurrentContent', getCurrentContent)
+
         const subscriptionConfigContents = await request(
           `${process.env.PROXY_APP_URL}/bundle-api/bundles/${bundleId}/configurations/${getCurrentContent.bundle_configuration_id}/contents/${getCurrentContent.id}?deliver_after=${currentDate}`,
           {

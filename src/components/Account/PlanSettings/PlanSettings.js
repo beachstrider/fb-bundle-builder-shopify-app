@@ -64,11 +64,8 @@ const PlanSettings = () => {
     }
   }
 
-  const updateDelivery = (day) => {
-
-  }
-
   const getOrdersToShow = async (token) => {
+    const currentDate = query.get('date')
     const newWeeksArr = []
     const subApi = await request(`${process.env.PROXY_APP_URL}/bundle-api/subscriptions`, { method: 'get', data: '', headers: { authorization: `Bearer ${token}` }}, 3)
     const thisWeek = dayjs().day(0);
