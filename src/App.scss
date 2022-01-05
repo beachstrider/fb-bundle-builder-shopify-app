@@ -304,6 +304,10 @@ $multiplier: 0.5rem;
   display: flex;
   flex-direction: column;
 
+  &.alignCenter {
+    align-items: center;
+  }
+
   @media (min-width: $breakpointTablet) {
     flex-direction: row;
   }
