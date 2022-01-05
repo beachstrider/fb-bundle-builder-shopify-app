@@ -135,6 +135,7 @@ const getData = async () => {
                   const thisProductsArray = await buildProductArrayFromId(configContentsData.data.data, sub.subscription_sub_type, shopProducts);
                   console.log('subscriptionObjKey: ', subscriptionObjKey)
                   console.log('thisProductsArray: ', thisProductsArray)
+                  
                   subscriptionArray[subscriptionObjKey].subId = sub.id;
                   subscriptionArray[subscriptionObjKey].items = subscriptionArray[subscriptionObjKey].items.concat(thisProductsArray);
                   subscriptionArray[subscriptionObjKey].status = dayjs(content.deliver_after).isSameOrAfter(cutoffDate) ?  'pending' : 'locked';
