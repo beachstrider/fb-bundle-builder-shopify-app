@@ -73,7 +73,7 @@ const PlanSettings = () => {
     const subApi = await request(`${process.env.PROXY_APP_URL}/bundle-api/subscriptions`, { method: 'get', data: '', headers: { authorization: `Bearer ${token}` }}, 3)
     const thisWeek = dayjs().day(0);
 
-    //TODO: there should be a better implementation for this
+    // TODO: there should be a better implementation for this
     const configData = await request(`${process.env.PROXY_APP_URL}/bundle-api/bundles/${subApi.data.data[0].bundle_id}/configurations`, 
       { 
         method: 'get', 
@@ -110,12 +110,15 @@ const PlanSettings = () => {
       })
 
       if(thisLoopSubList.length === 0){
-        const subscriptionConfigContents = await request(`${process.env.PROXY_APP_URL}/bundle-api/bundles/${bundleId}/configurations/${configurationId}/contents/${contentId}?deliver_after=${thisWeek.format('YYYY-MM-DD')}T00:00:00.000Z`, { method: 'get', data: '', headers: { authorization: `Bearer ${token}` }}, 3)
+        const getCurrentContent = configData.data.data[0].contents.find(
+          (d) => d.display_after === currentDate
+        )
+        const subscriptionConfigContents = await request(`${process.env.PROXY_APP_URL}/bundle-api/bundles/${bundleId}/configurations/${getCurrentContent.bundle_configuration_id}/contents/${getCurrentContent.id}?deliver_after=${thisWeek.format('YYYY-MM-DD')}T00:00:00.000Z`, { method: 'get', data: '', headers: { authorization: `Bearer ${token}` }}, 3)
         if(subscriptionConfigContents.data.data){
           subscriptionConfigContents.data.data.products.forEach( product => {
             if(product.is_default === 1){
               // TODO Need to filter down to variant based on subscription sub type
-              const shopProd = shopProducts.filter( p => p.id === product.platform_product_id)[0]
+              const shopProd = shopProducts.filter( p => Number(p.id) === Number(product.platform_product_id))[0]
               thisLoopSubList.push({
                 title:  shopProd ? shopProd.title : 'Missing Title',
                 platform_img: shopProd && shopProd.images.length > 0 ? shopProd.images[0]: process.env.EMPTY_STATE_IMAGE,
