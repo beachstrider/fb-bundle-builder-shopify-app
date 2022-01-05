@@ -76,7 +76,6 @@ const PlanSettings = () => {
         method: 'get', 
         data: '', headers: { authorization:`Bearer ${token}` }
       })    
-      const configurationId = configData.data.data[0].id
 
     for (const sub of subApi.data.data) {
       const thisLoopSubList = [];
@@ -133,7 +132,7 @@ const PlanSettings = () => {
         subscriptionSubType: sub.subscription_sub_type,
         deliveryDay: sub.delivery_day,
         customerId: sub.customer_id,
-        date: thisWeek.format('YYYY-MM-DD'),
+        date: currentDate,
         items: thisLoopSubList
       }
       newWeeksArr.push(subItem)
