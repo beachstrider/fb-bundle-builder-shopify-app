@@ -339,12 +339,11 @@ const EditOrder = () => {
         const currentDeliverAfter =
           currentSubscription.bundle_configuration_content?.deliver_after
         const today = dayjs.utc()
-        const cuttingOffDate = dayjs(currentDeliverAfter).subtract(
-          DAYS_BEFORE_DISABLING,
-          'day'
-        )
+        const cuttingOffDate = dayjs(currentDeliverAfter)
+          .utc()
+          .subtract(DAYS_BEFORE_DISABLING, 'day')
 
-        if (today.diff(cuttingOffDate, 'day') > 1) {
+        if (cuttingOffDate.diff(today, 'day') < 0) {
           setDisableEditing(true)
         }
       }
