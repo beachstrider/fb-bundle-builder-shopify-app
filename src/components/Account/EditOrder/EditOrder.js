@@ -26,6 +26,7 @@ import {
 } from '../../../store/slices/rootSlice'
 import styles from './EditOrder.module.scss'
 import weekday from 'dayjs/plugin/weekday'
+import utc from 'dayjs/plugin/utc'
 import dayjs from 'dayjs'
 import Loading from '../../Steps/Components/Loading'
 import {
@@ -36,7 +37,10 @@ import {
 import { updateSubscriptionOrder } from '../../Hooks/withBundleApi'
 import Toast from '../../Global/Toast'
 
+dayjs.extend(utc)
 dayjs.extend(weekday)
+
+const DAYS_BEFORE_DISABLING = 5
 
 const useQuery = () => {
   const { search } = useLocation()
@@ -61,6 +65,7 @@ const EditOrder = () => {
     status: 'Success',
     message: ''
   })
+  const [disableEditing, setDisableEditing] = useState(false)
 
   // total and remaining items to add
   const [quantities, setQuantities] = useState([])
@@ -327,6 +332,23 @@ const EditOrder = () => {
         orderId
       )
 
+      if (subscriptionOrder?.data?.data[0]?.platform_order_id) {
+        setDisableEditing(true)
+      } else {
+        const currentSubscription = subscriptionOrder?.data?.data[0]
+        const currentDeliverAfter =
+          currentSubscription.bundle_configuration_content?.deliver_after
+        const today = dayjs.utc()
+        const cuttingOffDate = dayjs(currentDeliverAfter).subtract(
+          DAYS_BEFORE_DISABLING,
+          'day'
+        )
+
+        if (today.diff(cuttingOffDate, 'day') > 1) {
+          setDisableEditing(true)
+        }
+      }
+
       // order was already placed, redirect the user
       if (subscriptionOrder.platform_order_id) {
         return history.push(`/account?date=${query.get('date')}`)
@@ -372,6 +394,10 @@ const EditOrder = () => {
   }
 
   const handleAddItem = async (item, bundleContentId) => {
+    if (disableEditing) {
+      return
+    }
+
     const currentItem = await cartUtility.addItem(
       item,
       bundleContentId,
@@ -407,6 +433,10 @@ const EditOrder = () => {
   }
 
   const handleRemoveItem = (item, bundleContentId) => {
+    if (disableEditing) {
+      return
+    }
+
     const currentItem = cartUtility.removeItem(
       item,
       bundleContentId,
@@ -478,7 +508,10 @@ const EditOrder = () => {
                   onClick={() => handleAddItem(item, content.id)}
                   onAdd={() => handleAddItem(item, content.id)}
                   onRemove={() => handleRemoveItem(item, content.id)}
-                  disableAdd={getQuantityCountdown(content.id).quantity === 0}
+                  disableAdd={
+                    disableEditing ||
+                    getQuantityCountdown(content.id).quantity === 0
+                  }
                 />
               ))}
             </div>
@@ -489,13 +522,15 @@ const EditOrder = () => {
         <Link to="/account" className="secondaryButton">
           Cancel
         </Link>
-        <button
-          disabled={disabledNextButton}
-          className="primaryButton"
-          onClick={handleSave}
-        >
-          Save
-        </button>
+        {!disableEditing && (
+          <button
+            disabled={disabledNextButton}
+            className="primaryButton"
+            onClick={handleSave}
+          >
+            Save
+          </button>
+        )}
       </div>
       {error.open ? (
         <Toast
