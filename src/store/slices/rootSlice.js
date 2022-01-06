@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { zone1, zone2 } from '../data/zipcodes'
 
-const initialState = {
+export const initialState = {
   displayHeader: false,
   displayFooter: false,
   isNextButtonActive: true,
@@ -50,12 +50,12 @@ const initialState = {
       leadTime: 5,
       zipCodes: zone1,
       deliveryDates: [
-        {
-          id: 0,
-          day: 2,
-          disabled: true,
-          isSelected: false
-        },
+        // {
+        //   id: 0,
+        //   day: 2,
+        //   disabled: true,
+        //   isSelected: false
+        // },
         {
           id: 1,
           day: 3,
@@ -83,18 +83,18 @@ const initialState = {
       leadTime: 6,
       zipCodes: zone2,
       deliveryDates: [
-        {
-          id: 0,
-          day: 2,
-          disabled: true,
-          isSelected: false
-        },
-        {
-          id: 1,
-          day: 3,
-          disabled: false,
-          isSelected: false
-        },
+        // {
+        //   id: 0,
+        //   day: 2,
+        //   disabled: true,
+        //   isSelected: false
+        // },
+        // {
+        //   id: 1,
+        //   day: 3,
+        //   disabled: false,
+        //   isSelected: false
+        // },
         {
           id: 2,
           day: 4,
