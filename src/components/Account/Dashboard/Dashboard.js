@@ -117,20 +117,16 @@ const getData = async () => {
                     subscriptionArray[subscriptionObjKey] = {}
                     subscriptionArray[subscriptionObjKey].items = []
                   }
-
+                  
                   if(orderedItems.length > 0) {
                     const orderFound = orderedItems[0]
                     if(subscriptionArray[subscriptionObjKey]){
-                        let thisItemsArray = [];
-                        for(const order of orderedItems){
-                          const prodArr = await buildProductArrayFromVariant(order.items, sub.subscription_sub_type, shopProducts);
-                          thisItemsArray = thisItemsArray.concat(prodArr);
-                        }
+                        const thisItemsArray = await buildProductArrayFromVariant(orderFound.items, sub.subscription_sub_type, shopProducts);
                         console.log('subscriptionObjKey: ', subscriptionObjKey)
                         console.log('thisItemsArray: ', thisItemsArray)
                         subscriptionArray[subscriptionObjKey].subId = sub.id;
                         subscriptionArray[subscriptionObjKey].deliveryDay = sub.delivery_day;
-                        subscriptionArray[subscriptionObjKey].items = thisItemsArray;
+                        subscriptionArray[subscriptionObjKey].items = subscriptionArray[subscriptionObjKey].items.concat(thisItemsArray);
                         subscriptionArray[subscriptionObjKey].status = orderFound.platform_order_id !== null ? 'sent' : dayjs(content.deliver_after).isSameOrAfter(cutoffDate) ? 'pending' : 'locked';
                         subscriptionArray[subscriptionObjKey].subscriptionDate = dayjs(subscriptionObjKey).format('YYYY-MM-DD');
                         subscriptionArray[subscriptionObjKey].queryDate = content.deliver_after
