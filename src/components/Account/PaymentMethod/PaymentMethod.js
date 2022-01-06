@@ -39,7 +39,7 @@ const PaymentMethod = () => {
     const handleEdit = async () => {
         const subApi = await request(`${process.env.PROXY_APP_URL}/recharge/customer?email=${shopCustomer.email}`, { method: 'get', data: '', headers: { authorization: 'qweqweqwe' }}, 3)
 
-        window.location.href = `https://quickfresh-sandbox.myshopify.com/tools/recurring/portal/${subApi.data.customers[0].hash}/payment_sources`;
+        window.location.href = `https://quickfresh-sandbox.myshopify.com/tools/recurring/portal/${subApi.data.customers[0].hash}/payment_sources?token=${window.customerToken}`;
     }
 
   return (
