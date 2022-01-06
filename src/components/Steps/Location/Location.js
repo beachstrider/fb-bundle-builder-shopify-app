@@ -8,7 +8,8 @@ import {
   displayFooter,
   setLocation,
   setEmail as setStoreEmail,
-  setIsNextButtonActive
+  setIsNextButtonActive,
+  initialState
 } from '../../../store/slices/rootSlice'
 import { InputEmail, InputText } from '../Components/Inputs'
 import {
@@ -106,7 +107,7 @@ const Location = () => {
   const checkCurrentSelectedDate = (zone) => {
     let deliveryDates = JSON.parse(JSON.stringify([...zone.deliveryDates]))
     const selectedDateIndex = deliveryDates.find((date) => date.isSelected)
-    
+
     deliveryDates = deliveryDates.map((date) => {
       if (selectedDateIndex && date.id === selectedDateIndex.id) {
         date.isSelected = false
@@ -182,15 +183,11 @@ const Location = () => {
     )
   }
 
-  const handleZipCodeChange = (value) => {    
+  const handleZipCodeChange = (value) => {
     if (Number.isInteger(Number(value))) {
       if (Object.keys(currentZone).length > 0) {
         setCurrentZone({})
-        dispatch(setLocation({        
-          deliveryDate: {
-            id: 0
-          }
-        }))
+        dispatch(setLocation(initialState.location))
       }
       setZipCode(value)
     }
@@ -199,13 +196,15 @@ const Location = () => {
   const handleEmailChange = (value) => {
     if (Object.keys(currentZone).length > 0) {
       setCurrentZone({})
-      dispatch(setLocation({        
-        deliveryDate: {
-          id: 0
-        }
-      }))
+      dispatch(
+        setLocation({
+          deliveryDate: {
+            id: 0
+          }
+        })
+      )
     }
-    setEmail(value)    
+    setEmail(value)
   }
 
   if (state.bundle.id === 0) {
@@ -265,20 +264,23 @@ const Location = () => {
           />
         )}
       </div>
-      {error.open ? 
-        <Toast 
-         open={error.open} 
-         status={error.status} 
-         message={error.message} 
-         autoDelete 
-         handleClose={() => {
-          setError({
-            open: false,
-            status: 'Success',
-            message: ''
-          })
-         }} 
-        /> : ''}
+      {error.open ? (
+        <Toast
+          open={error.open}
+          status={error.status}
+          message={error.message}
+          autoDelete
+          handleClose={() => {
+            setError({
+              open: false,
+              status: 'Success',
+              message: ''
+            })
+          }}
+        />
+      ) : (
+        ''
+      )}
     </div>
   )
 }
