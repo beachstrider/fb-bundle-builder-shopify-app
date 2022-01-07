@@ -484,13 +484,12 @@ const EditOrder = () => {
 
       let currentSubscriptionOrder = null
       subscriptionOrder.data.data.forEach((subscription) => {
+        console.log('subscription :', subscription)
         if (
           subscription.bundle_configuration_content?.deliver_after ===
           currentDate
         ) {
-          if (!currentSubscriptionOrder) {
-            currentSubscriptionOrder = subscription
-          }
+          currentSubscriptionOrder = subscription
         }
       })
 
