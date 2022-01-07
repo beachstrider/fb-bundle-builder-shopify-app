@@ -457,6 +457,7 @@ const EditOrder = () => {
       configuration.id,
       `is_enabled=1&deliver_after=${nextWeekDate}`
     )
+    console.log('response', response)
 
     if (response.data?.data && response.data?.data.length > 0) {
       const filteredProducts = await filterShopifyProducts(
@@ -482,33 +483,20 @@ const EditOrder = () => {
         }
       })
 
-      let currentSubscriptionOrder = null
-      subscriptionOrder.data.data.forEach((subscription) => {
-        console.log('subscription :', subscription)
-        if (
-          subscription.bundle_configuration_content?.deliver_after ===
-          currentDate
-        ) {
-          currentSubscriptionOrder = subscription
-        }
-      })
-
-      console.log('currentDeliverAfter >> ', currentSubscriptionOrder)
       if (hasPlatformId) {
         setDisableEditing(true)
         console.log('01 Disable edit', hasPlatformId)
       } else {
-        const currentSubscription = currentSubscriptionOrder
-        const currentDeliverAfter =
-          currentSubscription.bundle_configuration_content?.deliver_after
+        const bundleWeek = response.data?.data[0]?.deliver_after
 
         const today = dayjs()
-        const cuttingOffDate = dayjs(currentDeliverAfter).subtract(
+        const cuttingOffDate = dayjs(bundleWeek).subtract(
           DAYS_BEFORE_DISABLING,
           'day'
         )
 
         console.log('cutting off date:', cuttingOffDate)
+        console.log('bundle deliver after', bundleWeek)
         console.log('valid?', dayjs(today).isSameOrAfter(cuttingOffDate))
         if (dayjs(today).isSameOrAfter(cuttingOffDate)) {
           console.log('02 Disable edit')
