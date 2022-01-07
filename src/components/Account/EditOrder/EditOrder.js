@@ -331,10 +331,11 @@ const EditOrder = () => {
         savedItemsResponse = await getCustomerBundleItems(thisToken)
         savedItems = savedItemsResponse.currentItems
       } else {
-        savedItemsResponse = await getCustomerBundleItems(state.tokens.userToken)
+        savedItemsResponse = await getCustomerBundleItems(
+          state.tokens.userToken
+        )
         savedItems = savedItemsResponse.currentItems
       }
-      
 
       let savedItemsExist = true
       const totalItems = savedItems.length
@@ -361,7 +362,6 @@ const EditOrder = () => {
 
       const currentApiBundle = bundleResponse.data.data
 
-      
       for (const configuration of currentApiBundle.configurations) {
         const mappedProducts = []
         const productsResponse = await getProducts(configuration, savedItems[0])
@@ -384,13 +384,19 @@ const EditOrder = () => {
               quantity = savedProduct.quantity
             } else {
               // set default quantities
+
               const defaultContent =
                 productsResponse?.contents[0]?.products.find(
                   (p) =>
                     Number(p.platform_product_id) ===
                     Number(product.productPlatformId)
                 )
-              quantity = (savedItemsExist && savedItems.length > 0) ? 0 : defaultContent.default_quantity
+              console.log('defaultContent', defaultContent)
+              quantity =
+                (savedItemsExist && savedItems.length > 0) ||
+                defaultContent.is_default === 0
+                  ? 0
+                  : defaultContent.default_quantity
             }
 
             mappedProducts.push({
@@ -463,17 +469,21 @@ const EditOrder = () => {
         orderId
       )
       let hasPlatformId = false
-      subscriptionOrder.data.data.forEach((subscription) => {        
-        if (subscription.bundle_configuration_content?.deliver_after === currentDate && subscription.platform_order_id) {
-          if(!hasPlatformId) {
+      subscriptionOrder.data.data.forEach((subscription) => {
+        if (
+          subscription.bundle_configuration_content?.deliver_after ===
+            currentDate &&
+          subscription.platform_order_id
+        ) {
+          if (!hasPlatformId) {
             console.log('set to true: platform id', hasPlatformId)
             hasPlatformId = true
           }
-        } 
+        }
       })
 
       if (hasPlatformId) {
-        // setDisableEditing(true)
+        setDisableEditing(true)
         console.log('01 Disable edit', hasPlatformId)
       } else {
         const currentSubscription = subscriptionOrder?.data?.data[0]
@@ -482,12 +492,12 @@ const EditOrder = () => {
         const today = dayjs.utc()
         const cuttingOffDate = dayjs(currentDeliverAfter)
           .utc()
-          .subtract(DAYS_BEFORE_DISABLING, 'day')     
-          console.log('today', [today, cuttingOffDate.diff(today, 'day')])     
-          console.log('valid?', cuttingOffDate.diff(today, 'day') < 0)
-        if (cuttingOffDate.diff(today, 'day') < 0) {
+          .subtract(DAYS_BEFORE_DISABLING, 'day')
+        console.log('today', [today, cuttingOffDate.diff(today, 'day')])
+        console.log('valid?', dayjs(cuttingOffDate).isSameOrAfter(dayjs(today)))
+        if (dayjs(today).isSameOrAfter(cuttingOffDate)) {
           console.log('02 Disable edit')
-          // setDisableEditing(true)
+          setDisableEditing(true)
         }
       }
 
@@ -504,25 +514,25 @@ const EditOrder = () => {
         configuration
       )
 
-      let subTotal = 0   
+      let subTotal = 0
       const quantity = response.data.data[0].configuration.quantity || 0
-      if (savedItems) {   
-        const mappedProducts = filteredVariants.map((product) => {      
-            const savedProduct = savedItems.products.find(
-              (i) => Number(i.id) === Number(product.id)
-            )
-    
-            let quantity = 0
-            if (savedProduct) {
-              quantity = savedProduct.quantity
-            }
-    
-            return {
-              ...product,
-              quantity
-            }        
+      if (savedItems) {
+        const mappedProducts = filteredVariants.map((product) => {
+          const savedProduct = savedItems.products.find(
+            (i) => Number(i.id) === Number(product.id)
+          )
+
+          let quantity = 0
+          if (savedProduct) {
+            quantity = savedProduct.quantity
+          }
+
+          return {
+            ...product,
+            quantity
+          }
         })
-            
+
         subTotal = mappedProducts
           .map((value) => value.quantity)
           .reduce((sum, number) => sum + number, 0)
@@ -533,8 +543,6 @@ const EditOrder = () => {
         quantityCountdown: quantity - subTotal,
         contents: response.data?.data
       }
-
-
     }
   }
 
