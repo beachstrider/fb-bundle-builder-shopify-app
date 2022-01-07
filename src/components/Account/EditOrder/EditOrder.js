@@ -112,9 +112,12 @@ const EditOrder = () => {
   const getCustomerBundleItems = async (token) => {
     const subscriptionResponse = await getSubscriptionOrders(token, orderId)
 
+    let currentBundleId = null
     const currentItems = []
     const currentBundles = []
     if (subscriptionResponse.data.data) {
+      currentBundleId = subscriptionResponse.data.data[0].subscription.bundle_id
+
       for (const order of subscriptionResponse.data?.data) {
         const editItemsConfigArr = []
         if (
@@ -168,7 +171,10 @@ const EditOrder = () => {
       setBundles(currentBundles)
     }
 
-    return currentItems
+    return {
+      currentItems,
+      bundleId: currentBundleId
+    }
   }
 
   const createNewOrder = async () => {
@@ -319,12 +325,16 @@ const EditOrder = () => {
       const newQuantitiesCountdown = []
 
       let savedItems = []
+      let savedItemsResponse = null
       if (!state.tokens.userToken) {
         const thisToken = getToken()
-        savedItems = await getCustomerBundleItems(thisToken)
+        savedItemsResponse = await getCustomerBundleItems(thisToken)
+        savedItems = savedItemsResponse.currentItems
       } else {
-        savedItems = await getCustomerBundleItems(state.tokens.userToken)
+        savedItemsResponse = await getCustomerBundleItems(state.tokens.userToken)
+        savedItems = savedItemsResponse.currentItems
       }
+      
 
       let savedItemsExist = true
       const totalItems = savedItems.length
@@ -338,11 +348,11 @@ const EditOrder = () => {
           savedItemsExist = false
         }
       })
-      setHasSavedItems(savedItemsExist)
+      setHasSavedItems(savedItemsExist && savedItems.length > 0)
 
       const bundleResponse = await getBundle(
         state.tokens.userToken,
-        savedItems[0].bundleId
+        savedItems[0]?.bundleId || savedItemsResponse.bundleId
       )
 
       if (bundleResponse.data.data.length === 0) {
@@ -351,6 +361,7 @@ const EditOrder = () => {
 
       const currentApiBundle = bundleResponse.data.data
 
+      
       for (const configuration of currentApiBundle.configurations) {
         const mappedProducts = []
         const productsResponse = await getProducts(configuration, savedItems[0])
@@ -379,7 +390,7 @@ const EditOrder = () => {
                     Number(p.platform_product_id) ===
                     Number(product.productPlatformId)
                 )
-              quantity = savedItemsExist ? 0 : defaultContent.default_quantity
+              quantity = (savedItemsExist && savedItems.length > 0) ? 0 : defaultContent.default_quantity
             }
 
             mappedProducts.push({
@@ -481,35 +492,37 @@ const EditOrder = () => {
         configuration
       )
 
-      let subTotal = 0
-      const quantity = response.data.data[0].configuration.quantity
-
-      const mappedProducts = filteredVariants.map((product) => {
-        const savedProduct = savedItems.products.find(
-          (i) => i.id === product.id
-        )
-
-        let quantity = 0
-        if (savedProduct) {
-          quantity = savedProduct.quantity
-        }
-
-        return {
-          ...product,
-          quantity
-        }
-      })
-
-      subTotal = mappedProducts
-        .map((value) => value.quantity)
-        .reduce((sum, number) => sum + number, 0)
-
+      let subTotal = 0   
+      const quantity = response.data.data[0].configuration.quantity || 0
+      if (savedItems) {   
+        const mappedProducts = filteredVariants.map((product) => {      
+            const savedProduct = savedItems.products.find(
+              (i) => Number(i.id) === Number(product.id)
+            )
+    
+            let quantity = 0
+            if (savedProduct) {
+              quantity = savedProduct.quantity
+            }
+    
+            return {
+              ...product,
+              quantity
+            }        
+        })
+            
+        subTotal = mappedProducts
+          .map((value) => value.quantity)
+          .reduce((sum, number) => sum + number, 0)
+      }
       return {
         products: filteredVariants,
         quantity: quantity,
         quantityCountdown: quantity - subTotal,
         contents: response.data?.data
       }
+
+
     }
   }
 
