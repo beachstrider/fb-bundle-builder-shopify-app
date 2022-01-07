@@ -151,7 +151,7 @@ const updateBundle = async (token, id) => {
   }
 }
 
-const getSubscriptionOrder = async (token, orderId) => {
+const getSubscriptionOrders = async (token, orderId) => {
   try {
     return await request(
       `${process.env.PROXY_APP_URL}/bundle-api/subscriptions/${orderId}/orders`,
@@ -200,6 +200,7 @@ const updateSubscriptionOrder = async (
   token,
   subscriptionId,
   platformOrderId,
+  configurationContentId,
   subscriptionContentId,
   items,
   isEnabled = 1
@@ -215,9 +216,59 @@ const updateSubscriptionOrder = async (
         },
         data: {
           platform_order_id: platformOrderId,
+          bundle_configuration_content_id: configurationContentId,
+          is_enabled: isEnabled,
+          items
+        }
+      }
+    )
+  } catch (error) {
+    return error
+  }
+}
+
+const createSubscriptionOrder = async (
+  token,
+  subscriptionId,
+  subscriptionContentId,
+  items,
+  isEnabled = 1
+) => {
+  try {
+    return await request(
+      `${process.env.PROXY_APP_URL}/bundle-api/subscriptions/${subscriptionId}/orders`,
+      {
+        method: 'post',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        data: {
           bundle_configuration_content_id: subscriptionContentId,
           is_enabled: isEnabled,
           items
+        }
+      }
+    )
+  } catch (error) {
+    return error
+  }
+}
+
+const getDefaultProducts = async (
+  token,
+  bundleId,
+  configurationId,
+  contentId
+) => {
+  try {
+    return await request(
+      `${process.env.PROXY_APP_URL}/bundle-api/bundles/${bundleId}/configurations/${configurationId}/contents/${contentId}/products?is_default=1`,
+      {
+        method: 'get',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
         }
       }
     )
@@ -232,10 +283,12 @@ export {
   getBundleConfiguration,
   getBundleByPlatformId,
   getContent,
-  getSubscriptionOrder,
+  getSubscriptionOrders,
   saveCart,
   saveBundle,
   updateBundle,
   saveSubscriptionOrder,
-  updateSubscriptionOrder
+  updateSubscriptionOrder,
+  createSubscriptionOrder,
+  getDefaultProducts
 }

@@ -5,10 +5,11 @@ import {
   getBundle,
   getBundleConfiguration,
   getBundleByPlatformId,
-  getSubscriptionOrder,
+  getSubscriptionOrders,
   saveCart,
   saveBundle,
-  updateBundle
+  updateBundle,
+  getDefaultProducts
 } from './withBundleApi'
 import useGuestToken from './useGuestToken'
 import getSelectedBundle from './getSelectedBundle'
@@ -27,7 +28,7 @@ export {
   getBundle,
   getBundleConfiguration,
   getBundleByPlatformId,
-  getSubscriptionOrder,
+  getSubscriptionOrders,
   withActiveStep,
   useUserToken,
   hasUserToken,
@@ -35,5 +36,6 @@ export {
   useShopifyCart,
   saveCart,
   saveBundle,
-  updateBundle
+  updateBundle,
+  getDefaultProducts
 }
