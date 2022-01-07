@@ -463,16 +463,18 @@ const EditOrder = () => {
         orderId
       )
       let hasPlatformId = false
-      subscriptionOrder.data.data.forEach((subscription) => {
+      subscriptionOrder.data.data.forEach((subscription) => {        
         if (subscription.bundle_configuration_content?.deliver_after === currentDate && subscription.platform_order_id) {
           if(!hasPlatformId) {
+            console.log('set to true: platform id', hasPlatformId)
             hasPlatformId = true
           }
         } 
       })
 
       if (hasPlatformId) {
-        setDisableEditing(true)
+        // setDisableEditing(true)
+        console.log('01 Disable edit', hasPlatformId)
       } else {
         const currentSubscription = subscriptionOrder?.data?.data[0]
         const currentDeliverAfter =
@@ -480,9 +482,12 @@ const EditOrder = () => {
         const today = dayjs.utc()
         const cuttingOffDate = dayjs(currentDeliverAfter)
           .utc()
-          .subtract(DAYS_BEFORE_DISABLING, 'day')          
+          .subtract(DAYS_BEFORE_DISABLING, 'day')     
+          console.log('today', [today, cuttingOffDate.diff(today, 'day')])     
+          console.log('valid?', cuttingOffDate.diff(today, 'day') < 0)
         if (cuttingOffDate.diff(today, 'day') < 0) {
-          setDisableEditing(true)
+          console.log('02 Disable edit')
+          // setDisableEditing(true)
         }
       }
 
