@@ -489,12 +489,14 @@ const EditOrder = () => {
         const currentSubscription = subscriptionOrder?.data?.data[0]
         const currentDeliverAfter =
           currentSubscription.bundle_configuration_content?.deliver_after
-        const today = dayjs.utc()
-        const cuttingOffDate = dayjs(currentDeliverAfter)
-          .utc()
-          .subtract(DAYS_BEFORE_DISABLING, 'day')
-        console.log('today', [today, cuttingOffDate.diff(today, 'day')])
-        console.log('valid?', dayjs(cuttingOffDate).isSameOrAfter(dayjs(today)))
+        const today = dayjs()
+        const cuttingOffDate = dayjs(currentDeliverAfter).subtract(
+          DAYS_BEFORE_DISABLING,
+          'day'
+        )
+
+        console.log('cutting off date:', cuttingOffDate)
+        console.log('valid?', dayjs(today).isSameOrAfter(cuttingOffDate))
         if (dayjs(today).isSameOrAfter(cuttingOffDate)) {
           console.log('02 Disable edit')
           setDisableEditing(true)
