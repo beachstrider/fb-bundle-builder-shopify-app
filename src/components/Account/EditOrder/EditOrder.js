@@ -462,8 +462,16 @@ const EditOrder = () => {
         state.tokens.userToken,
         orderId
       )
+      let hasPlatformId = false
+      subscriptionOrder.data.data.forEach((subscription) => {
+        if (subscription.bundle_configuration_content?.deliver_after === currentDate && subscription.platform_order_id) {
+          if(!hasPlatformId) {
+            hasPlatformId = true
+          }
+        } 
+      })
 
-      if (subscriptionOrder?.data?.data[0]?.platform_order_id) {
+      if (hasPlatformId) {
         setDisableEditing(true)
       } else {
         const currentSubscription = subscriptionOrder?.data?.data[0]
@@ -472,8 +480,7 @@ const EditOrder = () => {
         const today = dayjs.utc()
         const cuttingOffDate = dayjs(currentDeliverAfter)
           .utc()
-          .subtract(DAYS_BEFORE_DISABLING, 'day')
-
+          .subtract(DAYS_BEFORE_DISABLING, 'day')          
         if (cuttingOffDate.diff(today, 'day') < 0) {
           setDisableEditing(true)
         }
