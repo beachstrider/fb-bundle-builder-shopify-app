@@ -298,7 +298,7 @@ const EditOrder = () => {
     }
 
     return history.push(
-      `/account?date=${dayjs(currentDate).format('YYYY-MM-DD')}`
+      `/account?date=${dayjs(currentDate).utc().format('YYYY-MM-DD')}`
     )
   }
 
@@ -482,13 +482,27 @@ const EditOrder = () => {
         }
       })
 
+      let currentSubscriptionOrder = null
+      subscriptionOrder.data.data.forEach((subscription) => {
+        if (
+          subscription.bundle_configuration_content?.deliver_after ===
+          currentDate
+        ) {
+          if (!currentSubscriptionOrder) {
+            currentSubscriptionOrder = subscription
+          }
+        }
+      })
+
+      console.log('currentDeliverAfter >> ', currentSubscriptionOrder)
       if (hasPlatformId) {
         setDisableEditing(true)
         console.log('01 Disable edit', hasPlatformId)
       } else {
-        const currentSubscription = subscriptionOrder?.data?.data[0]
+        const currentSubscription = currentSubscriptionOrder
         const currentDeliverAfter =
           currentSubscription.bundle_configuration_content?.deliver_after
+
         const today = dayjs()
         const cuttingOffDate = dayjs(currentDeliverAfter).subtract(
           DAYS_BEFORE_DISABLING,
