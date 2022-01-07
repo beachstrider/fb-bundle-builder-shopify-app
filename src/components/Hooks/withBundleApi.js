@@ -151,7 +151,7 @@ const updateBundle = async (token, id) => {
   }
 }
 
-const getSubscriptionOrder = async (token, orderId) => {
+const getSubscriptionOrders = async (token, orderId) => {
   try {
     return await request(
       `${process.env.PROXY_APP_URL}/bundle-api/subscriptions/${orderId}/orders`,
@@ -200,6 +200,7 @@ const updateSubscriptionOrder = async (
   token,
   subscriptionId,
   platformOrderId,
+  configurationContentId,
   subscriptionContentId,
   items,
   isEnabled = 1
@@ -215,7 +216,7 @@ const updateSubscriptionOrder = async (
         },
         data: {
           platform_order_id: platformOrderId,
-          bundle_configuration_content_id: subscriptionContentId,
+          bundle_configuration_content_id: configurationContentId,
           is_enabled: isEnabled,
           items
         }
@@ -282,7 +283,7 @@ export {
   getBundleConfiguration,
   getBundleByPlatformId,
   getContent,
-  getSubscriptionOrder,
+  getSubscriptionOrders,
   saveCart,
   saveBundle,
   updateBundle,

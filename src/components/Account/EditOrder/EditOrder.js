@@ -12,8 +12,7 @@ import {
   getContents,
   getBundle,
   useUserToken,
-  getSubscriptionOrder,
-  getDefaultProducts
+  getSubscriptionOrders
 } from '../../Hooks'
 import {
   cartRemoveItem,
@@ -59,8 +58,9 @@ const EditOrder = () => {
   const dispatch = useDispatch()
   const history = useHistory()
   const cartUtility = cart(state)
+  const currentDate = query.get('date')
 
-  const [bundle, setBundle] = useState({})
+  const [bundles, setBundles] = useState([])
   const [disabledNextButton, setDisabledNextButton] = useState(true)
   const [isLoading, setIsLoading] = useState(false)
   const [menuItems, setMenuItems] = useState([])
@@ -70,6 +70,7 @@ const EditOrder = () => {
     message: ''
   })
   const [disableEditing, setDisableEditing] = useState(false)
+  const [hasSavedItems, setHasSavedItems] = useState(true)
 
   // total and remaining items to add
   const [quantities, setQuantities] = useState([])
@@ -109,15 +110,17 @@ const EditOrder = () => {
     })
 
   const getCustomerBundleItems = async (token) => {
-    const subscriptionResponse = await getSubscriptionOrder(token, orderId)
+    const subscriptionResponse = await getSubscriptionOrders(token, orderId)
 
     const currentItems = []
-    let currentBundle = null
+    const currentBundles = []
     if (subscriptionResponse.data.data) {
       for (const order of subscriptionResponse.data?.data) {
         const editItemsConfigArr = []
-
-        if (order.bundle_configuration_content?.display_after) {
+        if (
+          order.bundle_configuration_content?.deliver_after &&
+          order.bundle_configuration_content?.deliver_after === currentDate
+        ) {
           const bundleProducts = false
 
           for (const product of order?.items) {
@@ -153,15 +156,16 @@ const EditOrder = () => {
             products: editItemsConfigArr
           })
 
-          currentBundle =
-            order?.bundle_configuration_content?.deliver_after ===
-            query.get('date')
-              ? order
-              : null
+          // configuration content exists?
+          if (
+            order?.bundle_configuration_content?.deliver_after === currentDate
+          ) {
+            currentBundles.push(order)
+          }
         }
       }
 
-      setBundle(currentBundle)
+      setBundles(currentBundles)
     }
 
     return currentItems
@@ -192,50 +196,73 @@ const EditOrder = () => {
     }
 
     return history.push(
-      `/account?date=${dayjs(query.get('date')).format('YYYY-MM-DD')}`
+      `/account?date=${dayjs(currentDate).format('YYYY-MM-DD')}`
     )
   }
 
   const handleSave = async () => {
     const itemsToSave = []
 
-    if (!bundle) {
+    if (!hasSavedItems) {
       return createNewOrder()
     }
 
     const getBundleProduct = (variantId) => {
-      return bundle.products.find((p) => p.id === variantId)
-    }
+      let existingProduct = null
+      bundles.forEach((bundle) => {
+        const currentItem = bundle.items.find((p) => {
+          return Number(p.platform_product_variant_id) === Number(variantId)
+        })
+        if (currentItem) {
+          existingProduct = currentItem
+        }
+      })
 
-    const subscriptionContentId =
-      bundle?.products[0].subscriptionContentId || null
+      return existingProduct
+    }
 
     for (const item of menuItems) {
       for (const product of item.products) {
         const cartItem = state.cart.find((c) => c.id === product.id)
+        const currentContent = bundles.find(
+          (b) =>
+            Number(b.bundle_configuration_content_id) ===
+            Number(product.configurationContentId)
+        )
 
         if (cartItem) {
           if (cartItem && cartItem.quantity > 0 && product.quantity === 0) {
             itemsToSave.push({
               platform_product_variant_id: product.id,
-              quantity: cartItem.quantity
+              quantity: cartItem.quantity,
+              contentId: currentContent.id,
+              configurationContentId:
+                currentContent.bundle_configuration_content_id
             })
           } else {
             if (cartItem.quantity !== product.quantity) {
               const currentBundleProduct = getBundleProduct(product.id)
-              itemsToSave.push({
-                id: currentBundleProduct.contentSelectionId,
-                platform_product_variant_id: product.id,
-                quantity: cartItem.quantity
-              })
+              if (currentBundleProduct) {
+                itemsToSave.push({
+                  id: currentBundleProduct.id,
+                  platform_product_variant_id: product.id,
+                  contentId: currentContent.id,
+                  configurationContentId:
+                    currentContent.bundle_configuration_content_id,
+                  quantity: cartItem.quantity
+                })
+              }
             }
           }
         } else {
           const currentBundleProduct = getBundleProduct(product.id)
           if (currentBundleProduct) {
             itemsToSave.push({
-              id: currentBundleProduct.contentSelectionId,
+              id: currentBundleProduct.id,
               platform_product_variant_id: product.id,
+              contentId: currentContent.id,
+              configurationContentId:
+                currentContent.bundle_configuration_content_id,
               quantity: 0
             })
           }
@@ -243,16 +270,30 @@ const EditOrder = () => {
       }
     }
 
-    // TODO: put back
-    // await updateSubscriptionOrder(
-    //   state.tokens.userToken,
-    //   orderId,
-    //   null,
-    //   subscriptionContentId,
-    //   itemsToSave
-    // )
+    const separatedConfigurations = []
 
-    // return history.push(`/account?date=${query.get('date')}`)
+    itemsToSave.forEach((item) => {
+      if (!separatedConfigurations[`config_${item.contentId}`]) {
+        separatedConfigurations[`config_${item.contentId}`] = []
+      }
+
+      separatedConfigurations[`config_${item.contentId}`].push({ ...item })
+    })
+
+    for (const key of Object.keys(separatedConfigurations)) {
+      await updateSubscriptionOrder(
+        state.tokens.userToken,
+        orderId,
+        null,
+        separatedConfigurations[key][0].configurationContentId,
+        separatedConfigurations[key][0].contentId,
+        separatedConfigurations[key]
+      )
+    }
+
+    return history.push(
+      `/account?date=${dayjs(currentDate).format('YYYY-MM-DD')}`
+    )
   }
 
   const getToken = async () => {
@@ -285,6 +326,20 @@ const EditOrder = () => {
         savedItems = await getCustomerBundleItems(state.tokens.userToken)
       }
 
+      let savedItemsExist = true
+      const totalItems = savedItems.length
+      let count = 0
+      savedItems.forEach((s) => {
+        if (s.products.length === 0) {
+          count = count + 1
+        }
+
+        if (count === totalItems) {
+          savedItemsExist = false
+        }
+      })
+      setHasSavedItems(savedItemsExist)
+
       const bundleResponse = await getBundle(
         state.tokens.userToken,
         savedItems[0].bundleId
@@ -297,15 +352,24 @@ const EditOrder = () => {
       const currentApiBundle = bundleResponse.data.data
 
       for (const configuration of currentApiBundle.configurations) {
+        const mappedProducts = []
         const productsResponse = await getProducts(configuration, savedItems[0])
 
         if (productsResponse) {
-          const mappedProducts = productsResponse.products.map((product) => {
-            const savedProduct = savedItems[0].products.find(
-              (i) => i.id === product.id
-            )
+          productsResponse.products.forEach((product) => {
+            let savedProduct = null
+            savedItems.forEach((item) => {
+              const foundItem = item.products.find(
+                (i) => Number(i.id) === Number(product.id)
+              )
+              if (foundItem) {
+                savedProduct = foundItem
+              }
+            })
+
             let quantity = 0
-            if (savedProduct && Object.keys(bundle).length > 0) {
+
+            if (savedProduct) {
               quantity = savedProduct.quantity
             } else {
               // set default quantities
@@ -315,12 +379,13 @@ const EditOrder = () => {
                     Number(p.platform_product_id) ===
                     Number(product.productPlatformId)
                 )
-              quantity = defaultContent.default_quantity
+              quantity = savedItemsExist ? 0 : defaultContent.default_quantity
             }
-            return {
+
+            mappedProducts.push({
               ...product,
               quantity
-            }
+            })
           })
 
           newItems.push({
@@ -331,16 +396,13 @@ const EditOrder = () => {
 
           newQuantities.push({
             id: configuration.id,
-            quantity:
-              Object.keys(bundle).length > 0 ? productsResponse.quantity : 0
+            quantity: bundles.length > 0 ? productsResponse.quantity : 0
           })
 
           newQuantitiesCountdown.push({
             id: configuration.id,
             quantity:
-              Object.keys(bundle).length > 0
-                ? productsResponse.quantityCountdown
-                : 0
+              bundles.length > 0 ? productsResponse.quantityCountdown : 0
           })
         }
       }
@@ -370,7 +432,7 @@ const EditOrder = () => {
   }
 
   const getProducts = async (configuration, savedItems) => {
-    const nextWeekDate = query.get('date')
+    const nextWeekDate = currentDate
 
     const response = await getContents(
       state.tokens.userToken,
@@ -385,7 +447,7 @@ const EditOrder = () => {
         shopProducts
       )
 
-      const subscriptionOrder = await getSubscriptionOrder(
+      const subscriptionOrder = await getSubscriptionOrders(
         state.tokens.userToken,
         orderId
       )
@@ -401,18 +463,14 @@ const EditOrder = () => {
           .utc()
           .subtract(DAYS_BEFORE_DISABLING, 'day')
 
-        console.log('disable ?', [
-          cuttingOffDate.diff(today, 'day'),
-          cuttingOffDate.diff(today, 'day') > 0
-        ])
-        // if (cuttingOffDate.diff(today, 'day') > 0) {
-        //   setDisableEditing(true)
-        // }
+        if (cuttingOffDate.diff(today, 'day') < 0) {
+          setDisableEditing(true)
+        }
       }
 
       // order was already placed, redirect the user
       if (subscriptionOrder.platform_order_id) {
-        return history.push(`/account?date=${query.get('date')}`)
+        return history.push(`/account?date=${currentDate}`)
       }
 
       const filteredVariants = await filterShopifyVariants(
