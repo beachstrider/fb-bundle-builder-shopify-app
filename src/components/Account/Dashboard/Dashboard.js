@@ -176,6 +176,7 @@ const getData = async () => {
       }
     }
     console.log('subscriptionArray: ', subscriptionArray)
+    console.log('activeWeeksArr >>>', activeWeeksArr)
     setSubscriptions(subscriptionArray);
     setWeeksMenu(weeksMenu)
     setActive(activeWeeksArr)

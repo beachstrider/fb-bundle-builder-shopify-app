@@ -8,7 +8,8 @@ import {
   getSubscriptionOrder,
   saveCart,
   saveBundle,
-  updateBundle
+  updateBundle,
+  getDefaultProducts
 } from './withBundleApi'
 import useGuestToken from './useGuestToken'
 import getSelectedBundle from './getSelectedBundle'
@@ -35,5 +36,6 @@ export {
   useShopifyCart,
   saveCart,
   saveBundle,
-  updateBundle
+  updateBundle,
+  getDefaultProducts
 }

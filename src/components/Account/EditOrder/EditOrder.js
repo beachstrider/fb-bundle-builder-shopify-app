@@ -12,7 +12,8 @@ import {
   getContents,
   getBundle,
   useUserToken,
-  getSubscriptionOrder
+  getSubscriptionOrder,
+  getDefaultProducts
 } from '../../Hooks'
 import {
   cartRemoveItem,
@@ -34,7 +35,10 @@ import {
   filterShopifyProducts,
   filterShopifyVariants
 } from '../../../utils'
-import { updateSubscriptionOrder } from '../../Hooks/withBundleApi'
+import {
+  createSubscriptionOrder,
+  updateSubscriptionOrder
+} from '../../Hooks/withBundleApi'
 import Toast from '../../Global/Toast'
 
 dayjs.extend(utc)
@@ -108,6 +112,7 @@ const EditOrder = () => {
     const subscriptionResponse = await getSubscriptionOrder(token, orderId)
 
     const currentItems = []
+    let currentBundle = null
     if (subscriptionResponse.data.data) {
       for (const order of subscriptionResponse.data?.data) {
         const editItemsConfigArr = []
@@ -147,17 +152,56 @@ const EditOrder = () => {
             bundleId: subscriptionResponse.data.data[0].subscription.bundle_id,
             products: editItemsConfigArr
           })
+
+          currentBundle =
+            order?.bundle_configuration_content?.deliver_after ===
+            query.get('date')
+              ? order
+              : null
         }
       }
 
-      setBundle(currentItems[0])
+      setBundle(currentBundle)
     }
 
     return currentItems
   }
 
+  const createNewOrder = async () => {
+    const separatedConfigurations = []
+
+    state.cart.forEach((item) => {
+      if (!separatedConfigurations[`config_${item.configurationContentId}`]) {
+        separatedConfigurations[`config_${item.configurationContentId}`] = []
+      }
+
+      separatedConfigurations[`config_${item.configurationContentId}`].push({
+        bundle_configuration_content_id: item.configurationContentId,
+        platform_product_variant_id: item.id,
+        quantity: item.quantity
+      })
+    })
+
+    for (const key of Object.keys(separatedConfigurations)) {
+      await createSubscriptionOrder(
+        state.tokens.userToken,
+        orderId,
+        separatedConfigurations[key][0].bundle_configuration_content_id,
+        separatedConfigurations[key]
+      )
+    }
+
+    return history.push(
+      `/account?date=${dayjs(query.get('date')).format('YYYY-MM-DD')}`
+    )
+  }
+
   const handleSave = async () => {
     const itemsToSave = []
+
+    if (!bundle) {
+      return createNewOrder()
+    }
 
     const getBundleProduct = (variantId) => {
       return bundle.products.find((p) => p.id === variantId)
@@ -199,15 +243,16 @@ const EditOrder = () => {
       }
     }
 
-    await updateSubscriptionOrder(
-      state.tokens.userToken,
-      orderId,
-      null,
-      subscriptionContentId,
-      itemsToSave
-    )
+    // TODO: put back
+    // await updateSubscriptionOrder(
+    //   state.tokens.userToken,
+    //   orderId,
+    //   null,
+    //   subscriptionContentId,
+    //   itemsToSave
+    // )
 
-    return history.push(`/account?date=${query.get('date')}`)
+    // return history.push(`/account?date=${query.get('date')}`)
   }
 
   const getToken = async () => {
@@ -252,16 +297,25 @@ const EditOrder = () => {
       const currentApiBundle = bundleResponse.data.data
 
       for (const configuration of currentApiBundle.configurations) {
-        const response = await getProducts(configuration, savedItems[0])
+        const productsResponse = await getProducts(configuration, savedItems[0])
 
-        if (response) {
-          const mappedProducts = response.products.map((product) => {
+        if (productsResponse) {
+          const mappedProducts = productsResponse.products.map((product) => {
             const savedProduct = savedItems[0].products.find(
               (i) => i.id === product.id
             )
             let quantity = 0
-            if (savedProduct) {
+            if (savedProduct && Object.keys(bundle).length > 0) {
               quantity = savedProduct.quantity
+            } else {
+              // set default quantities
+              const defaultContent =
+                productsResponse?.contents[0]?.products.find(
+                  (p) =>
+                    Number(p.platform_product_id) ===
+                    Number(product.productPlatformId)
+                )
+              quantity = defaultContent.default_quantity
             }
             return {
               ...product,
@@ -277,12 +331,16 @@ const EditOrder = () => {
 
           newQuantities.push({
             id: configuration.id,
-            quantity: response.quantity
+            quantity:
+              Object.keys(bundle).length > 0 ? productsResponse.quantity : 0
           })
 
           newQuantitiesCountdown.push({
             id: configuration.id,
-            quantity: response.quantityCountdown
+            quantity:
+              Object.keys(bundle).length > 0
+                ? productsResponse.quantityCountdown
+                : 0
           })
         }
       }
@@ -343,9 +401,13 @@ const EditOrder = () => {
           .utc()
           .subtract(DAYS_BEFORE_DISABLING, 'day')
 
-        if (cuttingOffDate.diff(today, 'day') < 0) {
-          setDisableEditing(true)
-        }
+        console.log('disable ?', [
+          cuttingOffDate.diff(today, 'day'),
+          cuttingOffDate.diff(today, 'day') > 0
+        ])
+        // if (cuttingOffDate.diff(today, 'day') > 0) {
+        //   setDisableEditing(true)
+        // }
       }
 
       // order was already placed, redirect the user
@@ -387,7 +449,8 @@ const EditOrder = () => {
       return {
         products: filteredVariants,
         quantity: quantity,
-        quantityCountdown: quantity - subTotal
+        quantityCountdown: quantity - subTotal,
+        contents: response.data?.data
       }
     }
   }
