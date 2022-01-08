@@ -26,6 +26,7 @@ import {
 } from '../../../store/slices/rootSlice'
 import styles from './EditOrder.module.scss'
 import weekday from 'dayjs/plugin/weekday'
+import utc from 'dayjs/plugin/utc'
 import dayjs from 'dayjs'
 import Loading from '../../Steps/Components/Loading'
 import {
@@ -39,7 +40,10 @@ import {
 } from '../../Hooks/withBundleApi'
 import Toast from '../../Global/Toast'
 
+dayjs.extend(utc)
 dayjs.extend(weekday)
+
+const DAYS_BEFORE_DISABLING = 5
 
 const useQuery = () => {
   const { search } = useLocation()
@@ -546,6 +550,10 @@ const EditOrder = () => {
   }
 
   const handleAddItem = async (item, bundleContentId) => {
+    if (disableEditing) {
+      return
+    }
+
     const currentItem = await cartUtility.addItem(
       item,
       bundleContentId,
@@ -581,6 +589,10 @@ const EditOrder = () => {
   }
 
   const handleRemoveItem = (item, bundleContentId) => {
+    if (disableEditing) {
+      return
+    }
+
     const currentItem = cartUtility.removeItem(
       item,
       bundleContentId,
@@ -652,7 +664,10 @@ const EditOrder = () => {
                   onClick={() => handleAddItem(item, content.id)}
                   onAdd={() => handleAddItem(item, content.id)}
                   onRemove={() => handleRemoveItem(item, content.id)}
-                  disableAdd={getQuantityCountdown(content.id).quantity === 0}
+                  disableAdd={
+                    disableEditing ||
+                    getQuantityCountdown(content.id).quantity === 0
+                  }
                 />
               ))}
             </div>
@@ -663,13 +678,15 @@ const EditOrder = () => {
         <Link to="/account" className="secondaryButton">
           Cancel
         </Link>
-        <button
-          disabled={disabledNextButton}
-          className="primaryButton"
-          onClick={handleSave}
-        >
-          Save
-        </button>
+        {!disableEditing && (
+          <button
+            disabled={disabledNextButton}
+            className="primaryButton"
+            onClick={handleSave}
+          >
+            Save
+          </button>
+        )}
       </div>
       {error.open ? (
         <Toast
