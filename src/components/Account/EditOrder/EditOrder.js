@@ -202,7 +202,7 @@ const EditOrder = () => {
     }
 
     return history.push(
-      `/account?date=${dayjs(currentDate).format('YYYY-MM-DD')}`
+      `/account`
     )
   }
 
@@ -298,7 +298,7 @@ const EditOrder = () => {
     }
 
     return history.push(
-      `/account?date=${dayjs(currentDate).utc().format('YYYY-MM-DD')}`
+      `/account`
     )
   }
 
@@ -506,7 +506,7 @@ const EditOrder = () => {
 
       // order was already placed, redirect the user
       if (subscriptionOrder.platform_order_id) {
-        return history.push(`/account?date=${currentDate}`)
+        return history.push(`/account`)
       }
 
       const filteredVariants = await filterShopifyVariants(
