@@ -121,12 +121,16 @@ const getData = async () => {
                   if(orderedItems.length > 0) {
                     const orderFound = orderedItems[0]
                     if(subscriptionArray[subscriptionObjKey]){
-                        const thisItemsArray = await buildProductArrayFromVariant(orderFound.items, sub.subscription_sub_type, shopProducts);
+                      let thisItemsArray = [];
+                      for(const order of orderedItems){
+                        const prodArr = await buildProductArrayFromVariant(order.items, sub.subscription_sub_type, shopProducts);
+                        thisItemsArray = thisItemsArray.concat(prodArr);
+                      }                        
                         console.log('subscriptionObjKey: ', subscriptionObjKey)
                         console.log('thisItemsArray: ', thisItemsArray)
                         subscriptionArray[subscriptionObjKey].subId = sub.id;
                         subscriptionArray[subscriptionObjKey].deliveryDay = sub.delivery_day;
-                        subscriptionArray[subscriptionObjKey].items = subscriptionArray[subscriptionObjKey].items.concat(thisItemsArray);
+                        subscriptionArray[subscriptionObjKey].items = thisItemsArray;
                         subscriptionArray[subscriptionObjKey].status = orderFound.platform_order_id !== null ? 'sent' : dayjs(content.deliver_after).isSameOrAfter(cutoffDate) ? 'pending' : 'locked';
                         subscriptionArray[subscriptionObjKey].subscriptionDate = dayjs(subscriptionObjKey).format('YYYY-MM-DD');
                         subscriptionArray[subscriptionObjKey].queryDate = content.deliver_after
@@ -172,6 +176,7 @@ const getData = async () => {
       }
     }
     console.log('subscriptionArray: ', subscriptionArray)
+    console.log('activeWeeksArr >>>', activeWeeksArr)
     setSubscriptions(subscriptionArray);
     setWeeksMenu(weeksMenu)
     setActive(activeWeeksArr)

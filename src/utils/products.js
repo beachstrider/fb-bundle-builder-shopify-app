@@ -52,6 +52,7 @@ const filterShopifyVariants = async (
         f.bundleContentId = configuration.id
         f.quantity = 0
         f.type = configuration.title
+        f.productPlatformId = product.id
 
         if (f.name.includes('-')) {
           f.name = f.name.split('-')[0]
@@ -93,12 +94,17 @@ const buildProductArrayFromVariant = async (items, subType, shopProducts) =>
       const variantId = variant.platform_product_variant_id
       for (const product of shopProducts) {
         // const variant = product.variants.filter((v) => v.id === variantId)
-        if (product.variants.filter((v) => v.id === variantId).length > 0) {
-          if(Number(variant.quantity) !== 0){
+        if (
+          product.variants.filter((v) => Number(v.id) === Number(variantId))
+            .length > 0
+        ) {
+          if (Number(variant.quantity) !== 0) {
             foundProductArray.push({
               title: product.title,
               platform_img:
-                product.images.length > 0 ? product.images[0] : EMPTY_STATE_IMAGE,
+                product.images.length > 0
+                  ? product.images[0]
+                  : EMPTY_STATE_IMAGE,
               quantity: variant.quantity,
               type: subType
             })
@@ -113,13 +119,14 @@ const buildProductArrayFromId = async (items, subType, shopProducts) =>
   new Promise((resolve) => {
     const foundProductArray = []
     for (const item of items) {
-      
       const variant = shopProducts.filter(
         (p) => Number(p.id) === Number(item.platform_product_id)
       )[0]
-      
+
       if (
-        shopProducts.filter((p) => Number(p.id) === Number(item.platform_product_id)).length > 0
+        shopProducts.filter(
+          (p) => Number(p.id) === Number(item.platform_product_id)
+        ).length > 0
       ) {
         foundProductArray.push({
           title: variant.title,
