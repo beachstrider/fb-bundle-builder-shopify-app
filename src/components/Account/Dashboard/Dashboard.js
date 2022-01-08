@@ -117,15 +117,15 @@ const getData = async () => {
                     subscriptionArray[subscriptionObjKey] = {}
                     subscriptionArray[subscriptionObjKey].items = []
                   }
-
+                  
                   if(orderedItems.length > 0) {
                     const orderFound = orderedItems[0]
                     if(subscriptionArray[subscriptionObjKey]){
-                        let thisItemsArray = [];
-                        for(const order of orderedItems){
-                          const prodArr = await buildProductArrayFromVariant(order.items, sub.subscription_sub_type, shopProducts);
-                          thisItemsArray = thisItemsArray.concat(prodArr);
-                        }
+                      let thisItemsArray = [];
+                      for(const order of orderedItems){
+                        const prodArr = await buildProductArrayFromVariant(order.items, sub.subscription_sub_type, shopProducts);
+                        thisItemsArray = thisItemsArray.concat(prodArr);
+                      }                        
                         console.log('subscriptionObjKey: ', subscriptionObjKey)
                         console.log('thisItemsArray: ', thisItemsArray)
                         subscriptionArray[subscriptionObjKey].subId = sub.id;
