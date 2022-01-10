@@ -39,6 +39,7 @@ import {
   updateSubscriptionOrder
 } from '../../Hooks/withBundleApi'
 import Toast from '../../Global/Toast'
+import SpinnerIcon from '../../Global/SpinnerIcon'
 
 dayjs.extend(utc)
 dayjs.extend(weekday)
@@ -63,6 +64,7 @@ const EditOrder = () => {
   const [bundles, setBundles] = useState([])
   const [disabledNextButton, setDisabledNextButton] = useState(true)
   const [isLoading, setIsLoading] = useState(false)
+  const [isSaving, setIsSaving] = useState(false)
   const [menuItems, setMenuItems] = useState([])
   const [error, setError] = useState({
     open: false,
@@ -201,12 +203,11 @@ const EditOrder = () => {
       )
     }
 
-    return history.push(
-      `/account`
-    )
+    return history.push(`/account`)
   }
 
   const handleSave = async () => {
+    setIsSaving(true)
     const itemsToSave = []
 
     if (!hasSavedItems) {
@@ -297,9 +298,8 @@ const EditOrder = () => {
       )
     }
 
-    return history.push(
-      `/account`
-    )
+    setIsSaving(false)
+    return history.push(`/account`)
   }
 
   const getToken = async () => {
@@ -614,91 +614,103 @@ const EditOrder = () => {
     )
   }
 
+  const handleCancelButton = () => {
+    return history.push(`/account`)
+  }
+
   if (isLoading) {
     return <Loading />
   }
 
   return (
-    <div className="contentWrapper">
-      <div className={styles.wrapper}>
-        <div className={`${styles.title} mb-7`}>Edit Order</div>
-        <div className={`${styles.quantitiesWrapper} mb-8`}>
-          <div className={styles.topBarQuantities}>
-            {menuItems.map((product) => (
-              <div key={product.id} className="px-3">
-                <span className={styles.number}>
-                  {getQuantityCountdown(product.id).quantity}
-                </span>{' '}
-                {product.title} Left
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {menuItems.map((content) => (
-          <div key={content.id}>
-            <div className={styles.listHeader}>
-              <div className={styles.title}>{content.title}</div>
-              <div className={`px-10 ${styles.quantities}`}>
-                <span className={styles.number}>
-                  {getQuantityCountdown(content.id).quantity}
-                </span>{' '}
-                {content.title} Left
-              </div>
-            </div>
-            <div className={`${styles.cards} mb-10`}>
-              {content.products.map((item) => (
-                <CardQuantities
-                  key={item.id}
-                  title={item.name}
-                  image={
-                    item.feature_image
-                      ? item.feature_image.src
-                      : item.images.length > 0
-                      ? item.images[0]
-                      : process.env.EMPTY_STATE_IMAGE
-                  }
-                  metafields={item.metafields}
-                  isChecked={cartUtility.isItemSelected(state.cart, item)}
-                  quantity={cartUtility.getItemQuantity(state.cart, item)}
-                  onClick={() => handleAddItem(item, content.id)}
-                  onAdd={() => handleAddItem(item, content.id)}
-                  onRemove={() => handleRemoveItem(item, content.id)}
-                  disableAdd={
-                    disableEditing ||
-                    getQuantityCountdown(content.id).quantity === 0
-                  }
-                />
+    <div>
+      <div className="contentWrapper">
+        <div className={styles.wrapper}>
+          <div className={`${styles.title} mb-7`}>Edit Order</div>
+          <div className={`${styles.quantitiesWrapper} mb-8`}>
+            <div className={styles.topBarQuantities}>
+              {menuItems.map((product) => (
+                <div key={product.id} className="px-3">
+                  <span className={styles.number}>
+                    {getQuantityCountdown(product.id).quantity}
+                  </span>{' '}
+                  {product.title} Left
+                </div>
               ))}
             </div>
           </div>
-        ))}
-      </div>
-      <div className={styles.buttonsRow}>
-        <Link to="/account" className="secondaryButton">
-          Cancel
-        </Link>
-        {!disableEditing && (
-          <button
-            disabled={disabledNextButton}
-            className="primaryButton"
-            onClick={handleSave}
-          >
-            Save
-          </button>
+
+          {menuItems.map((content) => (
+            <div key={content.id}>
+              <div className={styles.listHeader}>
+                <div className={styles.title}>{content.title}</div>
+                <div className={`px-10 ${styles.quantities}`}>
+                  <span className={styles.number}>
+                    {getQuantityCountdown(content.id).quantity}
+                  </span>{' '}
+                  {content.title} Left
+                </div>
+              </div>
+              <div className={`${styles.cards} mb-10`}>
+                {content.products.map((item) => (
+                  <CardQuantities
+                    key={item.id}
+                    title={item.name}
+                    image={
+                      item.feature_image
+                        ? item.feature_image.src
+                        : item.images.length > 0
+                        ? item.images[0]
+                        : process.env.EMPTY_STATE_IMAGE
+                    }
+                    metafields={item.metafields}
+                    isChecked={cartUtility.isItemSelected(state.cart, item)}
+                    quantity={cartUtility.getItemQuantity(state.cart, item)}
+                    onClick={() => handleAddItem(item, content.id)}
+                    onAdd={() => handleAddItem(item, content.id)}
+                    onRemove={() => handleRemoveItem(item, content.id)}
+                    disableAdd={
+                      disableEditing ||
+                      getQuantityCountdown(content.id).quantity === 0
+                    }
+                  />
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+        {error.open ? (
+          <Toast
+            open={error.open}
+            status={error.status}
+            message={error.message}
+            autoDelete
+            handleClose={closeAlert}
+          />
+        ) : (
+          ''
         )}
       </div>
-      {error.open ? (
-        <Toast
-          open={error.open}
-          status={error.status}
-          message={error.message}
-          autoDelete
-          handleClose={closeAlert}
-        />
-      ) : (
-        ''
-      )}
+      <div className={styles.buttonsRow}>
+        <div className="buttons">
+          <div
+            className="button lightButton"
+            onClick={() => handleCancelButton()}
+          >
+            Cancel
+          </div>
+          {!disableEditing && (
+            <div
+              className={`button ${
+                disabledNextButton ? 'disabledButton' : 'primaryButton'
+              }`}
+              onClick={() => (disabledNextButton ? () => {} : handleSave())}
+            >
+              {isSaving ? <SpinnerIcon /> : 'Save'}
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   )
 }
