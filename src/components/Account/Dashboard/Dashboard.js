@@ -30,6 +30,12 @@ import Toast from '../../Global/Toast';
 dayjs.extend(isSameOrAfter);
 dayjs.extend(utc)
 
+const TOTAL_WEEKS_DISPLAY = 4 
+const CUT_OFF_BEFORE_DAYS = 4
+const STATUS_PENDING = 'pending'
+const STATUS_LOCKED = 'locked'
+const STATUS_SENT = 'sent'
+
 function useQuery () {
   const { search } = useLocation();
 
@@ -103,10 +109,9 @@ const getData = async () => {
               const dayOfTheWeek = dayjs(content.deliver_after.split('T')[0]).day()
               const today = dayjs().day(dayOfTheWeek).format('YYYY-MM-DD');
               const displayDate = dayjs(content.deliver_after.split('T')[0]).format('YYYY-MM-DD');
-              const cutoffDate = dayjs().day(sub.delivery_day).add(4, 'day');
-              
+              const cutoffDate = dayjs(content.deliver_after).subtract(CUT_OFF_BEFORE_DAYS, 'day');
 
-              if(subCount < 4 && dayjs(displayDate).isSameOrAfter(dayjs(today))){
+              if(subCount < TOTAL_WEEKS_DISPLAY && dayjs(displayDate).isSameOrAfter(dayjs(today))){
                 const orderedItems = subscriptionOrders.data.data.filter(ord => ord.bundle_configuration_content.deliver_after === content.deliver_after);
                 const subscriptionObjKey = content.deliver_after.split('T')[0]
                 
@@ -131,7 +136,9 @@ const getData = async () => {
                         subscriptionArray[subscriptionObjKey].subId = sub.id;
                         subscriptionArray[subscriptionObjKey].deliveryDay = sub.delivery_day;
                         subscriptionArray[subscriptionObjKey].items = thisItemsArray;
-                        subscriptionArray[subscriptionObjKey].status = orderFound.platform_order_id !== null ? 'sent' : dayjs(content.deliver_after).isSameOrAfter(cutoffDate) ? 'pending' : 'locked';
+                        subscriptionArray[subscriptionObjKey].status = orderFound.platform_order_id !== null 
+                          ? STATUS_SENT
+                          : dayjs().utc().isSameOrAfter(cutoffDate) ? STATUS_LOCKED : STATUS_PENDING;
                         subscriptionArray[subscriptionObjKey].subscriptionDate = dayjs(subscriptionObjKey).format('YYYY-MM-DD');
                         subscriptionArray[subscriptionObjKey].queryDate = content.deliver_after
                         if(orderFound.platform_order_id !== null){
@@ -146,7 +153,7 @@ const getData = async () => {
                     
                     subscriptionArray[subscriptionObjKey].subId = sub.id;
                     subscriptionArray[subscriptionObjKey].items = subscriptionArray[subscriptionObjKey].items.concat(thisProductsArray);
-                    subscriptionArray[subscriptionObjKey].status = dayjs(content.deliver_after).isSameOrAfter(cutoffDate) ?  'pending' : 'locked';
+                    subscriptionArray[subscriptionObjKey].status = dayjs().utc().isSameOrAfter(cutoffDate) ?  STATUS_LOCKED : STATUS_PENDING;
                     subscriptionArray[subscriptionObjKey].subscriptionDate = dayjs(subscriptionObjKey).format('YYYY-MM-DD')
                     subscriptionArray[subscriptionObjKey].queryDate = content.deliver_after
 
