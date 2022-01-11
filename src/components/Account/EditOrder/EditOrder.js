@@ -32,7 +32,9 @@ import Loading from '../../Steps/Components/Loading'
 import {
   cart,
   filterShopifyProducts,
-  filterShopifyVariants
+  filterShopifyVariants,
+  findWeekDayBetween,
+  getCutOffDate
 } from '../../../utils'
 import {
   createSubscriptionOrder,
@@ -465,10 +467,12 @@ const EditOrder = () => {
         shopProducts
       )
 
+      const subscriptionBundle = response.data?.data[0]
       const subscriptionOrder = await getSubscriptionOrders(
         state.tokens.userToken,
         orderId
       )
+      let currentSubscriptionData = null
       let hasPlatformId = false
       subscriptionOrder.data.data.forEach((subscription) => {
         if (
@@ -481,23 +485,42 @@ const EditOrder = () => {
             hasPlatformId = true
           }
         }
+
+        if (
+          subscription.bundle_configuration_content?.deliver_after ===
+          subscriptionBundle.deliver_after
+        ) {
+          currentSubscriptionData = subscription
+        }
       })
+
+      // TODO: remove logs
+      console.log('subscriptionOrder', subscriptionOrder)
+      console.log('currentSubscriptionData', currentSubscriptionData)
 
       if (hasPlatformId) {
         setDisableEditing(true)
         console.log('01 Disable edit', hasPlatformId)
       } else {
-        const bundleWeek = response.data?.data[0]?.deliver_after
+        // format: 2022-01-15T23:00:00.000-08:00
+        const today =
+          process.env.ENVIRONMENT !== 'production'
+            ? dayjs(query.get('forced_date')) || dayjs()
+            : dayjs()
 
-        const today = dayjs()
-        const cuttingOffDate = dayjs(bundleWeek).subtract(
-          DAYS_BEFORE_DISABLING,
-          'day'
+        console.log('today:', today)
+        const deliveryDate = findWeekDayBetween(
+          currentSubscriptionData.subscription.delivery_day,
+          subscriptionBundle.deliver_after,
+          subscriptionBundle.deliver_before
         )
+        const cuttingOffDate = getCutOffDate(deliveryDate)
 
+        // TODO: remove logs
         console.log('cutting off date:', cuttingOffDate)
-        console.log('bundle deliver after', bundleWeek)
+        console.log('bundle deliver after', subscriptionBundle)
         console.log('valid?', dayjs(today).isSameOrAfter(cuttingOffDate))
+
         if (dayjs(today).isSameOrAfter(cuttingOffDate)) {
           console.log('02 Disable edit')
           setDisableEditing(true)
