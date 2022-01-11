@@ -102,6 +102,7 @@ const getData = async () => {
       const todayDate = process.env.ENVIRONMENT !== 'production' 
         ? dayjs(query.get('forced_date')) || dayjs()
         : dayjs()
+      console.log('todayDate:', todayDate)
       
       for (const sub of subApi.data.data) {
         const subscriptionOrders = await request(`${process.env.PROXY_APP_URL}/bundle-api/subscriptions/${sub.id}/orders`, { method: 'get', data: '', headers: { authorization: `Bearer ${token}` }}, 3)
@@ -117,6 +118,8 @@ const getData = async () => {
               // find delivery date between range
               const deliveryDate = findWeekDayBetween(sub.delivery_day, content.deliver_after, content.deliver_before)
               const cutoffDate = getCutOffDate(deliveryDate)
+              console.log('deliveryDate:', deliveryDate)
+              console.log('Cut off date:', cutoffDate)
 
               if(subCount < TOTAL_WEEKS_DISPLAY && dayjs(displayDate).isSameOrAfter(dayjs(today))){
                 const orderedItems = subscriptionOrders.data.data.filter(ord => ord.bundle_configuration_content.deliver_after === content.deliver_after);
