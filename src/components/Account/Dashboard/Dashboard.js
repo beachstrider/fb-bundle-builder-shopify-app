@@ -99,7 +99,7 @@ const getData = async () => {
 
     if(subApi.data.data){
       // format: 2022-01-15T23:00:00.000-08:00
-      const todayDate = process.env.ENVIRONMENT === 'development' 
+      const todayDate = process.env.ENVIRONMENT !== 'production' 
         ? dayjs(query.get('forced_date')) || dayjs()
         : dayjs()
       
