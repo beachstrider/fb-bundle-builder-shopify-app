@@ -100,8 +100,10 @@ const getData = async () => {
     if(subApi.data.data){
       // format: 2022-01-15T23:00:00.000-08:00
       const todayDate = process.env.ENVIRONMENT !== 'production' 
-        ? dayjs(query.get('forced_date')) || dayjs()
+        ? query.get('forced_date') ? dayjs(query.get('forced_date')) : dayjs()
         : dayjs()
+
+      console.log('query string:', query.get('forced_date'))
       console.log('todayDate:', todayDate)
       
       for (const sub of subApi.data.data) {
@@ -140,6 +142,8 @@ const getData = async () => {
                         const prodArr = await buildProductArrayFromVariant(order.items, sub.subscription_sub_type, shopProducts);
                         thisItemsArray = thisItemsArray.concat(prodArr);
                       }                        
+                        // TODO: remove logs
+                        console.log('orderFound (if block)', orderFound)
                         console.log('subscriptionObjKey: ', subscriptionObjKey)
                         console.log('thisItemsArray: ', thisItemsArray)
                         subscriptionArray[subscriptionObjKey].subId = sub.id;
@@ -157,6 +161,8 @@ const getData = async () => {
                   } else {
                     const configContentsData = await request(`${process.env.PROXY_APP_URL}/bundle-api/bundles/${config.bundle_id}/configurations/${config.id}/contents/${content.id}/products?is_default=1`, { method: 'get', data: '', headers: { authorization: `Bearer ${token}` }}, 3)
                     const thisProductsArray = await buildProductArrayFromId(configContentsData.data.data, sub.subscription_sub_type, shopProducts);
+                    // TODO: remove logs
+                    console.log('(else block)')
                     console.log('subscriptionObjKey: ', subscriptionObjKey)
                     console.log('thisProductsArray: ', thisProductsArray)
                     

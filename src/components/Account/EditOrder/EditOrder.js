@@ -505,16 +505,26 @@ const EditOrder = () => {
         // format: 2022-01-15T23:00:00.000-08:00
         const today =
           process.env.ENVIRONMENT !== 'production'
-            ? dayjs(query.get('forced_date')) || dayjs()
+            ? query.get('forced_date') ? dayjs(query.get('forced_date')) : dayjs()
             : dayjs()
 
         console.log('today:', today)
-        const deliveryDate = findWeekDayBetween(
-          currentSubscriptionData.subscription.delivery_day,
-          subscriptionBundle.deliver_after,
-          subscriptionBundle.deliver_before
+        let cuttingOffDate = dayjs(subscriptionBundle.deliver_after).subtract(
+          DAYS_BEFORE_DISABLING,
+          'day'
         )
-        const cuttingOffDate = getCutOffDate(deliveryDate)
+
+        if (currentSubscriptionData) {
+          const deliveryDate = findWeekDayBetween(
+            currentSubscriptionData.subscription.delivery_day,
+            subscriptionBundle.deliver_after,
+            subscriptionBundle.deliver_before
+          )
+          cuttingOffDate = getCutOffDate(deliveryDate)
+          console.log('new cuttingOffDate:', cuttingOffDate)
+        }
+
+        
 
         // TODO: remove logs
         console.log('cutting off date:', cuttingOffDate)
