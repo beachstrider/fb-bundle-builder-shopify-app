@@ -99,9 +99,9 @@ const getData = async () => {
 
     if(subApi.data.data){
       // format: 2022-01-15T23:00:00.000-08:00
-      const todayDate = process.env.ENVIRONMENT !== 'production' 
-        ? query.get('forced_date') ? dayjs(query.get('forced_date')) : dayjs()
-        : dayjs()
+      const forcedDate = query.get('forced_date') && dayjs(query.get('forced_date'))
+      const todayDate = process.env.ENVIRONMENT !== 'production' && forcedDate ? forcedDate : dayjs()
+      // const todayDate = process.env.ENVIRONMENT !== 'production' && query.get('forced_date') ? dayjs(query.get('forced_date')) : dayjs()
 
       console.log('query string:', query.get('forced_date'))
       console.log('todayDate:', todayDate)

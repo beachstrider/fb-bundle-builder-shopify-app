@@ -503,9 +503,11 @@ const EditOrder = () => {
         console.log('01 Disable edit', hasPlatformId)
       } else {
         // format: 2022-01-15T23:00:00.000-08:00
+        const forcedDate =
+          query.get('forced_date') && dayjs(query.get('forced_date'))
         const today =
-          process.env.ENVIRONMENT !== 'production'
-            ? query.get('forced_date') ? dayjs(query.get('forced_date')) : dayjs()
+          process.env.ENVIRONMENT !== 'production' && forcedDate
+            ? forcedDate
             : dayjs()
 
         console.log('today:', today)
@@ -523,8 +525,6 @@ const EditOrder = () => {
           cuttingOffDate = getCutOffDate(deliveryDate)
           console.log('new cuttingOffDate:', cuttingOffDate)
         }
-
-        
 
         // TODO: remove logs
         console.log('cutting off date:', cuttingOffDate)
