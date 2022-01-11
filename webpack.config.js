@@ -35,6 +35,7 @@ module.exports = {
   },
   plugins: [
     new webpack.DefinePlugin({
+      'process.env.ENVIRONMENT': JSON.stringify(process.env.NODE_ENV),
       'process.env.LOGO_URL': JSON.stringify(process.env.LOGO_URL),
       'process.env.PROXY_APP_URL': JSON.stringify(process.env.PROXY_APP_URL),
       'process.env.PAGE_TITLE': JSON.stringify(process.env.PAGE_TITLE),

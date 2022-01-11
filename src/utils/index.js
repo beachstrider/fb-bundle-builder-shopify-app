@@ -15,6 +15,7 @@ import {
   buildProductArrayFromId
 } from './products'
 import cart from './cart'
+import { findWeekDayBetween, getCutOffDate } from './dates'
 
 export {
   availableDeliveryDays,
@@ -29,5 +30,7 @@ export {
   smoothScrollingToId,
   getOrderTrackingUrl,
   buildProductArrayFromVariant,
-  buildProductArrayFromId
+  buildProductArrayFromId,
+  findWeekDayBetween,
+  getCutOffDate
 }
