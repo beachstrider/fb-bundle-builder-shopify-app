@@ -213,9 +213,11 @@ const EditOrder = () => {
     const itemsToSave = []
 
     if (!hasSavedItems) {
+      console.log('saving...')
       return createNewOrder()
     }
 
+    console.log('updating...')
     const getBundleProduct = (variantId) => {
       let existingProduct = null
       bundles.forEach((bundle) => {
@@ -382,11 +384,11 @@ const EditOrder = () => {
 
             let quantity = 0
 
+            console.log('savedProduct:', savedProduct)
             if (savedProduct) {
               quantity = savedProduct.quantity
             } else {
               // set default quantities
-
               const defaultContent =
                 productsResponse?.contents[0]?.products.find(
                   (p) =>
@@ -418,10 +420,15 @@ const EditOrder = () => {
             quantity: bundles.length > 0 ? productsResponse.quantity : 0
           })
 
+          console.log('productsResponse:', productsResponse)
           newQuantitiesCountdown.push({
             id: configuration.id,
             quantity:
-              bundles.length > 0 ? productsResponse.quantityCountdown : 0
+              bundles.length > 0
+                ? productsResponse.quantityCountdown
+                : productsResponse.quantityCountdown !== 0
+                ? productsResponse.quantity - productsResponse.quantityCountdown
+                : 0
           })
         }
       }
@@ -511,21 +518,17 @@ const EditOrder = () => {
             : dayjs()
 
         console.log('today:', today)
-        let cuttingOffDate = dayjs(subscriptionBundle.deliver_after).subtract(
-          DAYS_BEFORE_DISABLING,
-          'day'
+        const deliveryDay = currentSubscriptionData
+          ? currentSubscriptionData.subscription.delivery_day
+          : subscriptionOrder?.data?.data[0].subscription.delivery_day
+
+        const deliveryDate = findWeekDayBetween(
+          deliveryDay,
+          subscriptionBundle.deliver_after,
+          subscriptionBundle.deliver_before
         )
 
-        if (currentSubscriptionData) {
-          const deliveryDate = findWeekDayBetween(
-            currentSubscriptionData.subscription.delivery_day,
-            subscriptionBundle.deliver_after,
-            subscriptionBundle.deliver_before
-          )
-          cuttingOffDate = getCutOffDate(deliveryDate)
-          console.log('new cuttingOffDate:', cuttingOffDate)
-        }
-
+        const cuttingOffDate = getCutOffDate(deliveryDate)
         // TODO: remove logs
         console.log('cutting off date:', cuttingOffDate)
         console.log('bundle deliver after', subscriptionBundle)
