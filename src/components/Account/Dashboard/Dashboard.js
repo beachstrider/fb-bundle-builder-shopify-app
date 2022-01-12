@@ -21,25 +21,26 @@ import {
   request,
   getOrderTrackingUrl,
   buildProductArrayFromVariant,
-  buildProductArrayFromId 
+  buildProductArrayFromId,
+  findWeekDayBetween, 
+  getCutOffDate
 } from '../../../utils';
 import { Spinner } from '../../Global';
 
 import Toast from '../../Global/Toast';
 
-dayjs.extend(isSameOrAfter);
+dayjs.extend(isSameOrAfter)
 dayjs.extend(utc)
 
-const TOTAL_WEEKS_DISPLAY = 4 
-const CUT_OFF_BEFORE_DAYS = 4
+const TOTAL_WEEKS_DISPLAY = 3
 const STATUS_PENDING = 'pending'
 const STATUS_LOCKED = 'locked'
 const STATUS_SENT = 'sent'
 
 function useQuery () {
-  const { search } = useLocation();
+  const { search } = useLocation()
 
-  return React.useMemo(() => new URLSearchParams(search), [search]);
+  return React.useMemo(() => new URLSearchParams(search), [search])
 }
 
 const Dashboard = () => {
@@ -50,14 +51,12 @@ const Dashboard = () => {
 
   const state = useSelector((state) => state)
   const dispatch = useDispatch()
-  const query = useQuery();
+  const query = useQuery()
   const [active, setActive] = React.useState([]);
   const [limit, setLimit] = React.useState([]);
   const [subscriptions, setSubscriptions] = React.useState([])
   const [weeksMenu, setWeeksMenu] = React.useState([])
   const [loading, setLoading] = React.useState(true);
-  // TODO make state call for user token for api
-
 
   React.useEffect( () => {
     dispatch(displayHeader(false))
@@ -99,6 +98,14 @@ const getData = async () => {
     const subApi = await request(`${process.env.PROXY_APP_URL}/bundle-api/subscriptions`, { method: 'get', data: '', headers: { authorization: `Bearer ${token}` }}, 3)
 
     if(subApi.data.data){
+      // format: 2022-01-15T23:00:00.000-08:00
+      const forcedDate = query.get('forced_date') && dayjs(query.get('forced_date'))
+      const todayDate = process.env.ENVIRONMENT !== 'production' && forcedDate ? forcedDate : dayjs()
+      // const todayDate = process.env.ENVIRONMENT !== 'production' && query.get('forced_date') ? dayjs(query.get('forced_date')) : dayjs()
+
+      console.log('query string:', query.get('forced_date'))
+      console.log('todayDate:', todayDate)
+      
       for (const sub of subApi.data.data) {
         const subscriptionOrders = await request(`${process.env.PROXY_APP_URL}/bundle-api/subscriptions/${sub.id}/orders`, { method: 'get', data: '', headers: { authorization: `Bearer ${token}` }}, 3)
         const configData = await request(`${process.env.PROXY_APP_URL}/bundle-api/bundles/${sub.bundle_id}/configurations`, { method: 'get', data: '', headers: { authorization:`Bearer ${token}` }}, 3)
@@ -107,9 +114,14 @@ const getData = async () => {
             let subCount = 0;
             for (const content of config.contents) {
               const dayOfTheWeek = dayjs(content.deliver_after.split('T')[0]).day()
-              const today = dayjs().day(dayOfTheWeek).format('YYYY-MM-DD');
-              const displayDate = dayjs(content.deliver_after.split('T')[0]).format('YYYY-MM-DD');
-              const cutoffDate = dayjs(content.deliver_after).subtract(CUT_OFF_BEFORE_DAYS, 'day');
+              const today = dayjs().day(dayOfTheWeek).format('YYYY-MM-DD')
+              const displayDate = dayjs(content.deliver_after.split('T')[0]).format('YYYY-MM-DD')
+              
+              // find delivery date between range
+              const deliveryDate = findWeekDayBetween(sub.delivery_day, content.deliver_after, content.deliver_before)
+              const cutoffDate = getCutOffDate(deliveryDate)
+              console.log('deliveryDate:', deliveryDate)
+              console.log('Cut off date:', cutoffDate)
 
               if(subCount < TOTAL_WEEKS_DISPLAY && dayjs(displayDate).isSameOrAfter(dayjs(today))){
                 const orderedItems = subscriptionOrders.data.data.filter(ord => ord.bundle_configuration_content.deliver_after === content.deliver_after);
@@ -117,7 +129,6 @@ const getData = async () => {
                 
                 if (orderedItems.length !== 0 || subCount !== 0) {
                   if(!weeksMenu.includes(dayjs(content.deliver_after.split('T')[0]).format('YYYY-MM-DD'))){
-                    // weeksMenu.push(dayjs(content.deliver_after.replace('T00:00:00.000Z', 'T12:00:00.000Z')).format('YYYY-MM-DD'))
                     weeksMenu.push(dayjs(content.deliver_after).utc().format('YYYY-MM-DD'))
                     subscriptionArray[subscriptionObjKey] = {}
                     subscriptionArray[subscriptionObjKey].items = []
@@ -131,6 +142,8 @@ const getData = async () => {
                         const prodArr = await buildProductArrayFromVariant(order.items, sub.subscription_sub_type, shopProducts);
                         thisItemsArray = thisItemsArray.concat(prodArr);
                       }                        
+                        // TODO: remove logs
+                        console.log('orderFound (if block)', orderFound)
                         console.log('subscriptionObjKey: ', subscriptionObjKey)
                         console.log('thisItemsArray: ', thisItemsArray)
                         subscriptionArray[subscriptionObjKey].subId = sub.id;
@@ -138,7 +151,7 @@ const getData = async () => {
                         subscriptionArray[subscriptionObjKey].items = thisItemsArray;
                         subscriptionArray[subscriptionObjKey].status = orderFound.platform_order_id !== null 
                           ? STATUS_SENT
-                          : dayjs().utc().isSameOrAfter(cutoffDate) ? STATUS_LOCKED : STATUS_PENDING;
+                          : todayDate.isSameOrAfter(cutoffDate) ? STATUS_LOCKED : STATUS_PENDING;
                         subscriptionArray[subscriptionObjKey].subscriptionDate = dayjs(subscriptionObjKey).format('YYYY-MM-DD');
                         subscriptionArray[subscriptionObjKey].queryDate = content.deliver_after
                         if(orderFound.platform_order_id !== null){
@@ -148,12 +161,14 @@ const getData = async () => {
                   } else {
                     const configContentsData = await request(`${process.env.PROXY_APP_URL}/bundle-api/bundles/${config.bundle_id}/configurations/${config.id}/contents/${content.id}/products?is_default=1`, { method: 'get', data: '', headers: { authorization: `Bearer ${token}` }}, 3)
                     const thisProductsArray = await buildProductArrayFromId(configContentsData.data.data, sub.subscription_sub_type, shopProducts);
+                    // TODO: remove logs
+                    console.log('(else block)')
                     console.log('subscriptionObjKey: ', subscriptionObjKey)
                     console.log('thisProductsArray: ', thisProductsArray)
                     
                     subscriptionArray[subscriptionObjKey].subId = sub.id;
                     subscriptionArray[subscriptionObjKey].items = subscriptionArray[subscriptionObjKey].items.concat(thisProductsArray);
-                    subscriptionArray[subscriptionObjKey].status = dayjs().utc().isSameOrAfter(cutoffDate) ?  STATUS_LOCKED : STATUS_PENDING;
+                    subscriptionArray[subscriptionObjKey].status = todayDate.isSameOrAfter(cutoffDate) ?  STATUS_LOCKED : STATUS_PENDING;
                     subscriptionArray[subscriptionObjKey].subscriptionDate = dayjs(subscriptionObjKey).format('YYYY-MM-DD')
                     subscriptionArray[subscriptionObjKey].queryDate = content.deliver_after
 
