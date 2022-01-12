@@ -241,8 +241,14 @@ const EditOrder = () => {
             Number(product.configurationContentId)
         )
 
+        const currentBundleProduct = getBundleProduct(product.id)
         if (cartItem) {
-          if (cartItem && cartItem.quantity > 0 && product.quantity === 0) {
+          if (
+            cartItem &&
+            cartItem.quantity > 0 &&
+            product.quantity === 0 &&
+            !currentBundleProduct
+          ) {
             itemsToSave.push({
               platform_product_variant_id: product.id,
               quantity: cartItem.quantity,
@@ -252,7 +258,6 @@ const EditOrder = () => {
             })
           } else {
             if (cartItem.quantity !== product.quantity) {
-              const currentBundleProduct = getBundleProduct(product.id)
               if (currentBundleProduct) {
                 itemsToSave.push({
                   id: currentBundleProduct.id,
@@ -266,7 +271,6 @@ const EditOrder = () => {
             }
           }
         } else {
-          const currentBundleProduct = getBundleProduct(product.id)
           if (currentBundleProduct) {
             itemsToSave.push({
               id: currentBundleProduct.id,
