@@ -50,12 +50,12 @@ export const initialState = {
       leadTime: 5,
       zipCodes: zone1,
       deliveryDates: [
-        // {
-        //   id: 0,
-        //   day: 2,
-        //   disabled: true,
-        //   isSelected: false
-        // },
+        {
+          id: 0,
+          day: 2,
+          disabled: true,
+          isSelected: false
+        },
         {
           id: 1,
           day: 3,
@@ -83,18 +83,18 @@ export const initialState = {
       leadTime: 6,
       zipCodes: zone2,
       deliveryDates: [
-        // {
-        //   id: 0,
-        //   day: 2,
-        //   disabled: true,
-        //   isSelected: false
-        // },
-        // {
-        //   id: 1,
-        //   day: 3,
-        //   disabled: false,
-        //   isSelected: false
-        // },
+        {
+          id: 0,
+          day: 2,
+          disabled: true,
+          isSelected: false
+        },
+        {
+          id: 1,
+          day: 3,
+          disabled: false,
+          isSelected: false
+        },
         {
           id: 2,
           day: 4,

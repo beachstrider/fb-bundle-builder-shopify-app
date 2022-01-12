@@ -34,7 +34,8 @@ import {
   filterShopifyProducts,
   filterShopifyVariants,
   findWeekDayBetween,
-  getCutOffDate
+  getCutOffDate,
+  getTodayDate
 } from '../../../utils'
 import {
   createSubscriptionOrder,
@@ -79,6 +80,9 @@ const EditOrder = () => {
   // total and remaining items to add
   const [quantities, setQuantities] = useState([])
   const [quantitiesCountdown, setQuantitiesCountdown] = useState([])
+
+  const today = getTodayDate()
+  console.log('today:', today)
 
   useEffect(() => {
     dispatch(cartClear())
@@ -294,6 +298,9 @@ const EditOrder = () => {
 
       separatedConfigurations[`config_${item.contentId}`].push({ ...item })
     })
+
+    console.log('items to save>>', itemsToSave)
+    console.log('items>>>', separatedConfigurations)
 
     for (const key of Object.keys(separatedConfigurations)) {
       await updateSubscriptionOrder(
@@ -513,15 +520,6 @@ const EditOrder = () => {
         setDisableEditing(true)
         console.log('01 Disable edit', hasPlatformId)
       } else {
-        // format: 2022-01-15T23:00:00.000-08:00
-        const forcedDate =
-          query.get('forced_date') && dayjs(query.get('forced_date'))
-        const today =
-          process.env.ENVIRONMENT !== 'production' && forcedDate
-            ? forcedDate
-            : dayjs()
-
-        console.log('today:', today)
         const deliveryDay = currentSubscriptionData
           ? currentSubscriptionData.subscription.delivery_day
           : subscriptionOrder?.data?.data[0].subscription.delivery_day
