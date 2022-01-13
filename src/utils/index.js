@@ -18,8 +18,8 @@ import cart from './cart'
 import {
   findWeekDayBetween,
   getCutOffDate,
-  getNextWeekDay,
-  getTodayDate
+  getTodayDate,
+  sortDatesArray
 } from './dates'
 
 export {
@@ -38,6 +38,6 @@ export {
   buildProductArrayFromId,
   findWeekDayBetween,
   getCutOffDate,
-  getNextWeekDay,
-  getTodayDate
+  getTodayDate,
+  sortDatesArray
 }

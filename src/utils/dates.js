@@ -61,4 +61,20 @@ const getTodayDate = () => {
   return todayDate
 }
 
-export { findWeekDayBetween, getCutOffDate, getNextWeekDay, getTodayDate }
+
+const sortDatesArray = (dates, sort = 'asc') =>
+  dates.sort((a, b) => {
+    const dateA = dayjs(a).unix()
+    const dateB = dayjs(b).unix()
+
+    return sort === 'asc' ? dateA - dateB : dateA + dateB
+  })
+
+export {
+  findWeekDayBetween,
+  getCutOffDate,
+  getNextWeekDay,
+  getTodayDate,
+  sortDatesArray
+}
+

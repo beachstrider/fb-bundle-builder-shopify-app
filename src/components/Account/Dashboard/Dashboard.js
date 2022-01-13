@@ -24,7 +24,8 @@ import {
   buildProductArrayFromId,
   findWeekDayBetween, 
   getCutOffDate,
-  getTodayDate
+  getTodayDate,
+  sortDatesArray
 } from '../../../utils';
 import { Spinner } from '../../Global';
 
@@ -33,7 +34,7 @@ import Toast from '../../Global/Toast';
 dayjs.extend(isSameOrAfter)
 dayjs.extend(utc)
 
-const TOTAL_WEEKS_DISPLAY = 3
+const TOTAL_WEEKS_DISPLAY = 4
 const STATUS_PENDING = 'pending'
 const STATUS_LOCKED = 'locked'
 const STATUS_SENT = 'sent'
@@ -102,39 +103,31 @@ const getData = async () => {
     const subApi = await request(`${process.env.PROXY_APP_URL}/bundle-api/subscriptions`, { method: 'get', data: '', headers: { authorization: `Bearer ${token}` }}, 3)
 
     if(subApi.data.data){
-      // format: 2022-01-15T23:00:00.000-08:00
-      // const forcedDate = query.get('forced_date') && dayjs(query.get('forced_date'))
-      // const todayDate = process.env.ENVIRONMENT !== 'production' && forcedDate ? forcedDate : dayjs()
-      
       for (const sub of subApi.data.data) {
         const subscriptionOrders = await request(`${process.env.PROXY_APP_URL}/bundle-api/subscriptions/${sub.id}/orders`, { method: 'get', data: '', headers: { authorization: `Bearer ${token}` }}, 3)
         const configData = await request(`${process.env.PROXY_APP_URL}/bundle-api/bundles/${sub.bundle_id}/configurations`, { method: 'get', data: '', headers: { authorization:`Bearer ${token}` }}, 3)
         if(configData.data.data.length > 0){
           for( const config of configData.data.data) {
-            let subCount = 0;
-            for (const content of config.contents) {
-              const dayOfTheWeek = dayjs(content.deliver_after.split('T')[0]).day()
-              const today = dayjs().day(dayOfTheWeek).format('YYYY-MM-DD')
-              const displayDate = dayjs(content.deliver_after.split('T')[0]).format('YYYY-MM-DD')
-              
+            let subCount = 0
+            for (const content of config.contents) {            
               // find delivery date between range
               const deliveryDate = findWeekDayBetween(sub.delivery_day, content.deliver_after, content.deliver_before)
               const cutoffDate = getCutOffDate(deliveryDate)
               console.log('deliveryDate:', deliveryDate)
               console.log('Cut off date:', cutoffDate)
 
-              if(subCount < TOTAL_WEEKS_DISPLAY && dayjs(displayDate).isSameOrAfter(dayjs(today))){
-                const orderedItems = subscriptionOrders.data.data.filter(ord => ord.bundle_configuration_content.deliver_after === content.deliver_after);
+              if (subCount < TOTAL_WEEKS_DISPLAY && dayjs(content.deliver_before).utc().isSameOrAfter(todayDate)) {
+                const orderedItems = subscriptionOrders.data.data.filter(ord => 
+                  ord.bundle_configuration_content.deliver_after === content.deliver_after
+                )
                 const subscriptionObjKey = content.deliver_after.split('T')[0]
                 
-                if (orderedItems.length !== 0 || subCount !== 0) {
-                  if(!weeksMenu.includes(dayjs(content.deliver_after.split('T')[0]).format('YYYY-MM-DD'))){
-                    weeksMenu.push(dayjs(content.deliver_after).utc().format('YYYY-MM-DD'))
+                if (!weeksMenu.includes(dayjs(content.deliver_after).format('YYYY-MM-DD'))) {
+                    weeksMenu.push(dayjs(content.deliver_after).format('YYYY-MM-DD'))                    
                     subscriptionArray[subscriptionObjKey] = {}
                     subscriptionArray[subscriptionObjKey].items = []
-                  }
                   
-                  if(orderedItems.length > 0) {
+                  if (orderedItems.length > 0) {
                     const orderFound = orderedItems[0]
                     if(subscriptionArray[subscriptionObjKey]){
                       let thisItemsArray = [];
@@ -171,9 +164,7 @@ const getData = async () => {
                     subscriptionArray[subscriptionObjKey].status = todayDate.isSameOrAfter(cutoffDate) ?  STATUS_LOCKED : STATUS_PENDING;
                     subscriptionArray[subscriptionObjKey].subscriptionDate = dayjs(subscriptionObjKey).format('YYYY-MM-DD')
                     subscriptionArray[subscriptionObjKey].queryDate = content.deliver_after
-
-                  }
-                  
+                  }                  
                 }
                 subCount++
               }
@@ -199,8 +190,9 @@ const getData = async () => {
     }
     console.log('subscriptionArray: ', subscriptionArray)
     console.log('activeWeeksArr >>>', activeWeeksArr)
+    const sortedDates = sortDatesArray([...weeksMenu])
     setSubscriptions(subscriptionArray);
-    setWeeksMenu(weeksMenu)
+    setWeeksMenu(sortedDates)
     setActive(activeWeeksArr)
     setLimit(activeWeeksLimit)
     setLoading(false)
