@@ -19,7 +19,8 @@ import {
   findWeekDayBetween,
   getCutOffDate,
   getTodayDate,
-  sortDatesArray
+  sortDatesArray,
+  getNextWeekDay
 } from './dates'
 
 export {
@@ -39,5 +40,6 @@ export {
   findWeekDayBetween,
   getCutOffDate,
   getTodayDate,
-  sortDatesArray
+  sortDatesArray,
+  getNextWeekDay
 }
