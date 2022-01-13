@@ -23,7 +23,8 @@ import {
   buildProductArrayFromVariant,
   buildProductArrayFromId,
   findWeekDayBetween, 
-  getCutOffDate
+  getCutOffDate,
+  getTodayDate
 } from '../../../utils';
 import { Spinner } from '../../Global';
 
@@ -57,6 +58,9 @@ const Dashboard = () => {
   const [subscriptions, setSubscriptions] = React.useState([])
   const [weeksMenu, setWeeksMenu] = React.useState([])
   const [loading, setLoading] = React.useState(true);
+
+  const todayDate = getTodayDate()   
+  console.log('todayDate:', todayDate)
 
   React.useEffect( () => {
     dispatch(displayHeader(false))
@@ -99,12 +103,8 @@ const getData = async () => {
 
     if(subApi.data.data){
       // format: 2022-01-15T23:00:00.000-08:00
-      const forcedDate = query.get('forced_date') && dayjs(query.get('forced_date'))
-      const todayDate = process.env.ENVIRONMENT !== 'production' && forcedDate ? forcedDate : dayjs()
-      // const todayDate = process.env.ENVIRONMENT !== 'production' && query.get('forced_date') ? dayjs(query.get('forced_date')) : dayjs()
-
-      console.log('query string:', query.get('forced_date'))
-      console.log('todayDate:', todayDate)
+      // const forcedDate = query.get('forced_date') && dayjs(query.get('forced_date'))
+      // const todayDate = process.env.ENVIRONMENT !== 'production' && forcedDate ? forcedDate : dayjs()
       
       for (const sub of subApi.data.data) {
         const subscriptionOrders = await request(`${process.env.PROXY_APP_URL}/bundle-api/subscriptions/${sub.id}/orders`, { method: 'get', data: '', headers: { authorization: `Bearer ${token}` }}, 3)
