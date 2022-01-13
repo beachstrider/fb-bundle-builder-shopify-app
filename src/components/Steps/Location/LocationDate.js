@@ -4,12 +4,13 @@ import weekday from 'dayjs/plugin/weekday'
 import advancedFormat from 'dayjs/plugin/advancedFormat'
 import { CardCrossedLine } from '../../Cards'
 import styles from './LocationDate.module.scss'
+import { getNextWeekDay } from '../../../utils'
 
 dayjs.extend(advancedFormat)
 dayjs.extend(weekday)
 
 const LocationDate = ({ data, onClick, todayDate = dayjs() }) => {
-  const getDay = (weekDay) => dayjs(todayDate).weekday(weekDay).add(1, 'week')
+  const getDay = (weekday) => getNextWeekDay(weekday, todayDate)
 
   return (
     <CardCrossedLine

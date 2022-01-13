@@ -61,6 +61,7 @@ const getTodayDate = () => {
   return todayDate
 }
 
+
 const sortDatesArray = (dates, sort = 'asc') =>
   dates.sort((a, b) => {
     const dateA = dayjs(a).unix()
@@ -76,3 +77,4 @@ export {
   getTodayDate,
   sortDatesArray
 }
+
