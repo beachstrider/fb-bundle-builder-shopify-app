@@ -300,7 +300,7 @@ const getData = async () => {
       </div>
       ) : (
         <div className="contentWrapper textCenter">
-          <h2>There are no subscriptions to show</h2>
+          <h2>There are no custom bundle subscriptions to show</h2>
           <p>To sign up for a subscription please purchase a subscription <Link to="/">here</Link>.</p>
         </div>
       )}
