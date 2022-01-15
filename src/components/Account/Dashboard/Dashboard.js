@@ -116,7 +116,7 @@ const getData = async () => {
               console.log('deliveryDate:', deliveryDate)
               console.log('Cut off date:', cutoffDate)
 
-              if (subCount < TOTAL_WEEKS_DISPLAY && dayjs(content.deliver_after).isSameOrAfter(todayDate)) {
+              if (subCount < TOTAL_WEEKS_DISPLAY && dayjs(content.deliver_after).utc().isSameOrAfter(todayDate)) {
                 const orderedItems = subscriptionOrders.data.data.filter(ord => 
                   ord.bundle_configuration_content.deliver_after === content.deliver_after
                 )
