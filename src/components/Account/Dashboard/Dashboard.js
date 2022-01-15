@@ -123,7 +123,7 @@ const getData = async () => {
                 const subscriptionObjKey = content.deliver_after.split('T')[0]
                 
                 if (!weeksMenu.includes(dayjs(content.deliver_after).format('YYYY-MM-DD'))) {
-                    weeksMenu.push(dayjs(content.deliver_after).format('YYYY-MM-DD'))                    
+                    weeksMenu.push(dayjs(content.deliver_after).utc().format('YYYY-MM-DD'))                    
                     subscriptionArray[subscriptionObjKey] = {}
                     subscriptionArray[subscriptionObjKey].items = []
                   
