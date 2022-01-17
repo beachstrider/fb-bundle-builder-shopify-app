@@ -22,7 +22,8 @@ import {
   findWeekDayBetween,
   getCutOffDate,
   getTodayDate,
-  sortDatesArray
+  sortDatesArray,
+  uniqueArray
 } from '../../../utils'
 import { Spinner } from '../../Global'
 
@@ -263,7 +264,8 @@ const Dashboard = () => {
     console.log('activeWeeksArr:', activeWeeksArr)
     console.log('weeksMenu:', weeksMenu)
 
-    const sortedDates = sortDatesArray([...weeksMenu])
+    const uniqueValues = uniqueArray([...weeksMenu])
+    const sortedDates = sortDatesArray(uniqueValues)
     setSubscriptions(subscriptionArray)
     setWeeksMenu(sortedDates)
     setActive(activeWeeksArr)
