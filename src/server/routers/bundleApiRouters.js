@@ -51,7 +51,7 @@ app.post('/bundle-api/token/account', async (req, res) => {
 
 app.post(
   '/bundle-api/subscriptions/:subscriptionId/orders',
-  async (req, res) => {    
+  async (req, res) => {
     const response = await request(
       `${process.env.BUNDLE_API_URL}/api/subscriptions/${req.params.subscriptionId}/orders`,
       {
@@ -133,8 +133,9 @@ app.get(
 )
 
 app.get('/bundle-api/subscriptions', async (req, res) => {
+  const queryString = objectToQueryString(req.query)
   const response = await request(
-    `${process.env.BUNDLE_API_URL}/api/subscriptions`,
+    `${process.env.BUNDLE_API_URL}/api/subscriptions?${queryString}`,
     {
       method: 'get',
       headers: {
