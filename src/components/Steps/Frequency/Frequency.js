@@ -18,6 +18,7 @@ import styles from './Frequency.module.scss'
 import { withActiveStep } from '../../Hooks'
 import Loading from '../Components/Loading'
 import { clearLocalStorage } from '../../../store/store'
+import { smoothScrollingToId } from '../../../utils'
 
 const FAQ_TYPE = 'frequency'
 const STEP_ID = 1
@@ -103,6 +104,12 @@ const Frequency = () => {
       )
     }
   }, [state.bundle.id])
+
+  useEffect(() => {
+    if (!isLoading) {
+      smoothScrollingToId('breakfasts')
+    }
+  }, [isLoading])
 
   const clearState = () =>
     new Promise((resolve) => {
@@ -202,7 +209,7 @@ const Frequency = () => {
           </div>
         </div>
       </div>
-
+      <div id="breakfasts" />
       <div className={`${styles.wrapper} mt-8`}>
         <div className={styles.row}>
           <div className={styles.column}>
