@@ -142,7 +142,7 @@ const Dashboard = () => {
 
               if (
                 subCount < TOTAL_WEEKS_DISPLAY &&
-                dayjs(content.deliver_after).utc().isSameOrAfter(todayDate)
+                dayjs(content.deliver_before).utc().isSameOrAfter(todayDate)
               ) {
                 const orderedItems = subscriptionOrders.data.data.filter(
                   (ord) =>
