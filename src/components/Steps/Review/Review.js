@@ -16,7 +16,11 @@ import MenuItemCard from '../../Account/Components/MenuItemCard/MenuItemCard'
 import DeliveryDateModal from '../Components/DeliveryDatesModal/DeliveryDateModal'
 import { getBundleByPlatformId } from '../../Hooks/withBundleApi'
 import { clearLocalStorage } from '../../../store/store'
-import { cart, filterShopifyVariants, smoothScrollingToId } from '../../../utils'
+import {
+  cart,
+  filterShopifyVariants,
+  smoothScrollingToId
+} from '../../../utils'
 import Toast from '../../Global/Toast'
 
 dayjs.extend(advancedFormat)
@@ -37,7 +41,6 @@ const Review = () => {
 
   useEffect(() => {
     getShopifyCartToken()
-    // smoothScrollingToId('reviewTop')
   }, [])
 
   useEffect(() => {
@@ -45,6 +48,10 @@ const Review = () => {
       handleSubmit()
     }
   }, [state.triggerLastStep])
+
+  useEffect(() => {
+    smoothScrollingToId('reviewTop')
+  })
 
   const getDay = (weekDay) => dayjs().add(1, 'week').weekday(weekDay)
 
@@ -65,44 +72,61 @@ const Review = () => {
   const addShopifyCartItems = async () => {
     try {
       const clearCart = await shopifyCart.clearCart()
-      
+
       if (clearCart.status !== 200) {
         throw new Error('Can not clear cart.')
       }
 
       const shopifyBundleProduct = getSelectedBundle(state.bundle.breakfast.tag)
-      const selectedVariant = shopifyBundleProduct.variants.filter(v => v.title.includes(state.entreeType.title) && v.title.includes(state.entreeSubType.title))
+      const selectedVariant = shopifyBundleProduct.variants.filter(
+        (v) =>
+          v.title.includes(state.entreeType.title) &&
+          v.title.includes(state.entreeSubType.title)
+      )
       console.log('shopifyBundleProduct', shopifyBundleProduct)
       console.log('selectedVariant', selectedVariant)
       if (
         shopifyBundleProduct.variants &&
         shopifyBundleProduct.variants.length > 0
       ) {
-        const variant = selectedVariant.length > 0 ? selectedVariant[0] : shopifyBundleProduct.variants[0]
-        const sellingPlanId = selectedVariant.length > 0 ? variant.selling_plan_allocations[0].selling_plan_id : null
+        const variant =
+          selectedVariant.length > 0
+            ? selectedVariant[0]
+            : shopifyBundleProduct.variants[0]
+        const sellingPlanId =
+          selectedVariant.length > 0
+            ? variant.selling_plan_allocations[0].selling_plan_id
+            : null
 
-        const response = await shopifyCart.create(
-          {
-            attributes: {
-              'delivery-date': dayjs().day(state.location.deliveryDate.day).add(1, 'week').format('YYYY-MM-DD'),
-              'delivery-day': getDay(state.location.deliveryDate.day).format('dddd')
-            },
-            items: [
-              {
-                id: variant.id,
-                selling_plan: sellingPlanId,
-                quantity: 1,
-                properties: {
-                  'Customer Id': shopCustomer?.id,
-                  'Cart Token': platformCartToken,
-                  'Delivery_Date': dayjs().day(state.location.deliveryDate.day).add(1, 'week').format('YYYY-MM-DD')
-                }
+        const response = await shopifyCart.create({
+          attributes: {
+            'delivery-date': dayjs()
+              .day(state.location.deliveryDate.day)
+              .add(1, 'week')
+              .format('YYYY-MM-DD'),
+            'delivery-day': getDay(state.location.deliveryDate.day).format(
+              'dddd'
+            )
+          },
+          items: [
+            {
+              id: variant.id,
+              selling_plan: sellingPlanId,
+              quantity: 1,
+              properties: {
+                'Customer Id': shopCustomer?.id,
+                'Cart Token': platformCartToken,
+                Delivery_Date: dayjs()
+                  .day(state.location.deliveryDate.day)
+                  .add(1, 'week')
+                  .format('YYYY-MM-DD')
               }
-            ]
-          })
+            }
+          ]
+        })
 
         console.log('add to cart response', response)
-        
+
         if (response.status !== 200) {
           throw new Error('Can not add product to the cart')
         }
@@ -152,7 +176,7 @@ const Review = () => {
 
       clearLocalStorage()
       window.location.href = '/checkout'
-    } catch (error) {     
+    } catch (error) {
       setIsLoading(false)
       setShowError(true)
       return setErrorMessage(DEFAULT_ERROR_MESSAGE)
@@ -165,11 +189,11 @@ const Review = () => {
   }
 
   if (Number(shopCustomer.id) === 0 || state.bundle.weeklyPrice === 0) {
-    return <Redirect push to='/steps/2' />
+    return <Redirect push to="/steps/2" />
   }
 
   if (state.cart.length === 0) {
-    return <Redirect push to='/steps/4' />
+    return <Redirect push to="/steps/4" />
   }
 
   if (isLoading) {
@@ -178,7 +202,7 @@ const Review = () => {
 
   return (
     <>
-      <div className='defaultWrapper' id='reviewTop'>
+      <div className="defaultWrapper" id="reviewTop">
         <div className={styles.wrapper}>
           <div className={`${styles.title} mb-7`}>Review Order</div>
           <div className={`${styles.topBarWrapper} mb-7`}>
@@ -196,15 +220,12 @@ const Review = () => {
                 </span>
               </div>
               <div className={styles.startingDate}>
-                Starting{' '}
-                {getDay(state.location.deliveryDate.day)
-                .format('MMM')}{' '}
-                {getDay(state.location.deliveryDate.day)
-                .format('DD')}
+                Starting {getDay(state.location.deliveryDate.day).format('MMM')}{' '}
+                {getDay(state.location.deliveryDate.day).format('DD')}
                 <span className={styles.ordinal}>
                   {getDay(state.location.deliveryDate.day)
-                  .format('Do')
-                  .match(/[a-zA-Z]+/g)}
+                    .format('Do')
+                    .match(/[a-zA-Z]+/g)}
                 </span>
               </div>
             </div>
@@ -219,26 +240,31 @@ const Review = () => {
             {state.cart.map((item) => (
               <MenuItemCard
                 key={item.id}
-                image={item.images.length > 0 && item.images[0] ? item.images[0] : process.env.EMPTY_STATE_IMAGE}
+                image={
+                  item.images.length > 0 && item.images[0]
+                    ? item.images[0]
+                    : process.env.EMPTY_STATE_IMAGE
+                }
                 title={item.name}
                 quantity={item.quantity}
                 type={item.title}
-                quantityLabel=''
+                quantityLabel=""
               />
             ))}
           </div>
         </div>
       </div>
-      {showError 
-        ?
-          <Toast 
-            open={showError} 
-            status='Danger' 
-            message={errorMessage} 
-            displayTitle={false}
-            handleClose={closeAlert} 
-          /> 
-        : ''}
+      {showError ? (
+        <Toast
+          open={showError}
+          status="Danger"
+          message={errorMessage}
+          displayTitle={false}
+          handleClose={closeAlert}
+        />
+      ) : (
+        ''
+      )}
       <DeliveryDateModal
         open={openEditDateModal}
         close={() => setOpenEditDateModal(false)}
