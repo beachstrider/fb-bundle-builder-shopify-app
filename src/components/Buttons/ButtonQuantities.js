@@ -7,12 +7,15 @@ const ButtonQuantities = ({
   onAdd,
   onRemove,
   quantity = 0,
-  disableAdd = false
+  disableAdd = false,
+  disableRemove = false
 }) => {
   return (
     <div className={styles.wrapper}>
       <div
-        className={`${styles.button} ${styles.leftButton}`}
+        className={`${styles.button} ${styles.leftButton} ${
+          disableRemove && styles.disabled
+        }`}
         onClick={onRemove}
       >
         <Icon source={MinusMinor} />

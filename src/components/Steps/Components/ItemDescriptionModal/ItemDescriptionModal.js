@@ -15,7 +15,8 @@ const ItemDescriptionModal = ({
   onClick,
   onAdd,
   onRemove,
-  disableAdd = false
+  disableAdd = false,
+  disableRemove = false
 }) => {
   return (
     <Modal open={open} close={close}>
@@ -56,6 +57,7 @@ const ItemDescriptionModal = ({
                   onAdd={onAdd}
                   onRemove={onRemove}
                   disableAdd={disableAdd}
+                  disableRemove={disableRemove}
                 />
               </div>
             )}
