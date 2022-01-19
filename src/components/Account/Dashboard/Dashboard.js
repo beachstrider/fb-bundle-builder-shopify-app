@@ -382,7 +382,7 @@ const Dashboard = () => {
                 </div>
                 {sub.status === 'sent' || sub.status === 'locked' ? (
                   <Link
-                    to={`/order-history?date=${sub.queryDate}`}
+                    to={`/order-history/${sub.subId}?date=${sub.queryDate}`}
                     className="secondaryButton"
                   >
                     Order Summary

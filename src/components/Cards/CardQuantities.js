@@ -13,7 +13,8 @@ const CardQuantities = ({
   onClick,
   onAdd,
   onRemove,
-  disableAdd = false
+  disableAdd = false,
+  disableRemove = false
 }) => {
   const [openModal, setOpenModal] = useState(false)
 
@@ -53,6 +54,7 @@ const CardQuantities = ({
                   onAdd={onAdd}
                   onRemove={onRemove}
                   disableAdd={disableAdd}
+                  disableRemove={disableRemove}
                 />
               </div>
             )}
@@ -70,6 +72,7 @@ const CardQuantities = ({
         onAdd={onAdd}
         onRemove={onRemove}
         disableAdd={disableAdd}
+        disableRemove={disableRemove}
         open={openModal}
         close={() => setOpenModal(false)}
       />

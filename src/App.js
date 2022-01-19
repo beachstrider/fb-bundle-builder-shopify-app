@@ -60,22 +60,26 @@ function App() {
   return (
     <AppProvider i18n={enTranslations}>
       <Router>
-        <div className='defaultWrapper flexColumnDirection'>
+        <div className="defaultWrapper flexColumnDirection">
           {state.displayHeader && <Header />}
-          <div className='content mb-9'>
+          <div className="content mb-9">
             <Switch>
-              <Route exact path='/account' component={Dashboard} />
-              <Route exact path='/order-history' component={OrderHistory} />
-              <Route exact path='/account-info' component={AccountInfo} />
-              <Route exact path='/payment-method' component={PaymentMethod} />
-              <Route exact path='/plan-settings' component={PlanSettings} />
-              <Route exact path='/edit-order/:orderId' component={EditOrder} />
+              <Route exact path="/account" component={Dashboard} />
+              <Route
+                exact
+                path="/order-history/:orderId"
+                component={OrderHistory}
+              />
+              <Route exact path="/account-info" component={AccountInfo} />
+              <Route exact path="/payment-method" component={PaymentMethod} />
+              <Route exact path="/plan-settings" component={PlanSettings} />
+              <Route exact path="/edit-order/:orderId" component={EditOrder} />
 
-              <Route path='/steps/2' component={Location} />
-              <Route path='/steps/3' component={EntreeType} />
-              <Route path='/steps/4' component={Entrees} />
-              <Route path='/steps/5' component={Review} />
-              <Route path='*' component={Frequency} />
+              <Route path="/steps/2" component={Location} />
+              <Route path="/steps/3" component={EntreeType} />
+              <Route path="/steps/4" component={Entrees} />
+              <Route path="/steps/5" component={Review} />
+              <Route path="*" component={Frequency} />
             </Switch>
           </div>
           {state.displayFooter && <Footer />}
