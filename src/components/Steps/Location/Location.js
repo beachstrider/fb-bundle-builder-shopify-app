@@ -49,7 +49,11 @@ const Location = () => {
   useEffect(() => {
     dispatch(displayHeader(true))
 
-    if (state.email && state.location.zipCode) {
+    if (
+      state.email &&
+      state.location.zipCode &&
+      shopCustomer.email === state.email
+    ) {
       setZipCode(state.location.zipCode)
       setEmail(state.email)
 
@@ -73,6 +77,9 @@ const Location = () => {
       dispatch(selectFaqType(FAQ_TYPE))
       dispatch(displayFooter(true))
     } else {
+      setCurrentZone({})
+      setEmail('')
+      setZipCode('')
       dispatch(selectFaqType(null))
       dispatch(displayFooter(false))
     }
