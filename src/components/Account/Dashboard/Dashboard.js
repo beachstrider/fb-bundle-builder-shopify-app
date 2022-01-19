@@ -4,7 +4,9 @@ import {
   displayHeader,
   displayFooter,
   selectFaqType,
-  setTokens
+  setTokens,
+  reset,
+  setEmail
 } from '../../../store/slices/rootSlice'
 import { Link, Redirect, useLocation, useHistory } from 'react-router-dom'
 import styles from './Dashboard.module.scss'
@@ -22,6 +24,7 @@ import {
   findWeekDayBetween,
   getCutOffDate
 } from '../../../utils'
+import { clearLocalStorage } from '../../../store/store'
 import { Spinner } from '../../Global'
 
 import Toast from '../../Global/Toast'
@@ -62,13 +65,24 @@ const Dashboard = () => {
     getData()
   }, [])
 
+  const clearState = () =>
+    new Promise((resolve) => {
+      setTimeout(() => {
+        clearLocalStorage()
+        dispatch(reset())
+        resolve('ok')
+      }, 1000)
+    })
+
   const getData = async () => {
-    if (!state.tokens.userToken) {
-      const thisToken = await getToken()
-      await getOrdersToShow(thisToken)
+    if (shopCustomer.email !== state.email || !state.tokens.userToken) {
+      const userToken = await getToken()
+      await clearState()
+      await getOrdersToShow(userToken)
     } else {
       await getOrdersToShow(state.tokens.userToken)
     }
+    dispatch(setEmail(shopCustomer?.email || ''))
   }
 
   const getToken = async () => {
