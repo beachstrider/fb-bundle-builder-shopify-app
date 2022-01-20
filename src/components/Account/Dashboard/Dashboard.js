@@ -11,7 +11,11 @@ import {
 import { Link, Redirect, useLocation, useHistory } from 'react-router-dom'
 import styles from './Dashboard.module.scss'
 import { MenuItemCard } from '../Components/MenuItemCard'
-import { useUserToken } from '../../Hooks'
+import {
+  getActiveSubscriptions,
+  getSubscriptionOrders,
+  useUserToken
+} from '../../Hooks'
 import { ChevronRightMinor, ChevronLeftMinor } from '@shopify/polaris-icons'
 import isSameOrAfter from 'dayjs/plugin/isSameOrAfter'
 import utc from 'dayjs/plugin/utc'
@@ -29,16 +33,19 @@ import {
 } from '../../../utils'
 import { Spinner } from '../../Global'
 import { clearLocalStorage } from '../../../store/store'
+import {
+  STATUS_LOCKED,
+  STATUS_PENDING,
+  STATUS_SENT
+} from '../../../constants/order'
 
 import Toast from '../../Global/Toast'
+import WeekActions from '../Components/WeekActions'
 
 dayjs.extend(isSameOrAfter)
 dayjs.extend(utc)
 
 const TOTAL_WEEKS_DISPLAY = 4
-const STATUS_PENDING = 'pending'
-const STATUS_LOCKED = 'locked'
-const STATUS_SENT = 'sent'
 
 function useQuery() {
   const { search } = useLocation()
@@ -110,26 +117,11 @@ const Dashboard = () => {
     const weeksMenu = []
     const subscriptionArray = {}
 
-    const subApi = await request(
-      `${process.env.PROXY_APP_URL}/bundle-api/subscriptions?is_active=1`,
-      {
-        method: 'get',
-        data: '',
-        headers: { authorization: `Bearer ${token}` }
-      }
-    )
+    const subApi = await getActiveSubscriptions(token)
 
     if (subApi.data.data) {
       for (const sub of subApi.data.data) {
-        const subscriptionOrders = await request(
-          `${process.env.PROXY_APP_URL}/bundle-api/subscriptions/${sub.id}/orders`,
-          {
-            method: 'get',
-            data: '',
-            headers: { authorization: `Bearer ${token}` }
-          },
-          3
-        )
+        const subscriptionOrders = await getSubscriptionOrders(token, sub.id)
         const configData = await request(
           `${process.env.PROXY_APP_URL}/bundle-api/bundles/${sub.bundle_id}/configurations`,
           {
@@ -380,21 +372,11 @@ const Dashboard = () => {
                     ''
                   )}
                 </div>
-                {sub.status === 'sent' || sub.status === 'locked' ? (
-                  <Link
-                    to={`/order-history/${sub.subId}?date=${sub.queryDate}`}
-                    className="secondaryButton"
-                  >
-                    Order Summary
-                  </Link>
-                ) : (
-                  <Link
-                    to={`/edit-order/${sub.subId}?date=${sub.queryDate}`}
-                    className="secondaryButton"
-                  >
-                    Edit Order
-                  </Link>
-                )}
+                <WeekActions
+                  orderId={sub.subId}
+                  date={sub.queryDate}
+                  status={sub.status}
+                />
               </div>
               {sub.items.length > 0 ? (
                 <div className={styles.accountMenuRow}>

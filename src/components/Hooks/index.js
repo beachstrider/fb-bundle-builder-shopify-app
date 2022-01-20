@@ -9,7 +9,8 @@ import {
   saveCart,
   saveBundle,
   updateBundle,
-  getDefaultProducts
+  getDefaultProducts,
+  getActiveSubscriptions
 } from './withBundleApi'
 import useGuestToken from './useGuestToken'
 import getSelectedBundle from './getSelectedBundle'
@@ -28,6 +29,7 @@ export {
   getBundle,
   getBundleConfiguration,
   getBundleByPlatformId,
+  getActiveSubscriptions,
   getSubscriptionOrders,
   withActiveStep,
   useUserToken,
