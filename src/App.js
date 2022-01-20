@@ -26,6 +26,7 @@ import {
 } from './components/Account'
 import Faq from './components/Faq/Faq'
 import { getSelectedBundle } from './components/Hooks'
+import { OrderSummary } from './components/Account/OrderSummary'
 
 function App() {
   const state = useSelector((state) => state)
@@ -65,10 +66,11 @@ function App() {
           <div className="content mb-9">
             <Switch>
               <Route exact path="/account" component={Dashboard} />
+              <Route exact path="/order-history" component={OrderHistory} />
               <Route
                 exact
-                path="/order-history/:orderId"
-                component={OrderHistory}
+                path="/order-summary/:orderId"
+                component={OrderSummary}
               />
               <Route exact path="/account-info" component={AccountInfo} />
               <Route exact path="/payment-method" component={PaymentMethod} />

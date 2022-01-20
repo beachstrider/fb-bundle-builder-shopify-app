@@ -1,158 +1,113 @@
-import React, { useEffect, useState } from 'react'
-import { useParams, useLocation, useHistory } from 'react-router-dom'
+import React, { useState, useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import CardQuantities from '../../Cards/CardQuantities'
-import {
-  getContents,
-  getBundle,
-  useUserToken,
-  getSubscriptionOrders
-} from '../../Hooks'
 import {
   displayHeader,
   displayFooter,
   selectFaqType,
-  cartClear,
   setTokens,
-  cartUpdate
+  reset,
+  setEmail
 } from '../../../store/slices/rootSlice'
+import { Link, useLocation } from 'react-router-dom'
 import styles from './OrderHistory.module.scss'
-import menuItemStyles from '../MenuItems.module.scss'
-import weekday from 'dayjs/plugin/weekday'
-import utc from 'dayjs/plugin/utc'
-import dayjs from 'dayjs'
-import Loading from '../../Steps/Components/Loading'
+import { MenuItemCard } from '../Components/MenuItemCard'
 import {
-  cart,
-  filterShopifyProducts,
-  filterShopifyVariants
+  getActiveSubscriptions,
+  getSubscriptionOrders,
+  useUserToken
+} from '../../Hooks'
+import { ChevronRightMinor } from '@shopify/polaris-icons'
+import isSameOrAfter from 'dayjs/plugin/isSameOrAfter'
+import utc from 'dayjs/plugin/utc'
+import * as dayjs from 'dayjs'
+import {
+  request,
+  getOrderTrackingUrl,
+  buildProductArrayFromVariant,
+  buildProductArrayFromId,
+  findWeekDayBetween,
+  getCutOffDate,
+  getTodayDate,
+  sortDatesArray,
+  uniqueArray
 } from '../../../utils'
-import Toast from '../../Global/Toast'
+import { Spinner } from '../../Global'
+import { clearLocalStorage } from '../../../store/store'
 
+import Toast from '../../Global/Toast'
+import { SideMenu } from '../Components/SideMenu'
+import WeekActions from '../Components/WeekActions'
+import {
+  STATUS_LOCKED,
+  STATUS_PENDING,
+  STATUS_SENT
+} from '../../../constants/order'
+
+dayjs.extend(isSameOrAfter)
 dayjs.extend(utc)
-dayjs.extend(weekday)
 
 const useQuery = () => {
   const { search } = useLocation()
-
-  return React.useMemo(() => new URLSearchParams(search), [search])
+  return useMemo(() => new URLSearchParams(search), [search])
 }
 
-const EditOrder = () => {
-  const { orderId } = useParams()
-  const query = useQuery()
+const OrderHistory = () => {
+  if (!shopCustomer || shopCustomer.id === 0) {
+    window.location = `https://${shopDomain}/account`
+  }
+
   const state = useSelector((state) => state)
   const dispatch = useDispatch()
-  const history = useHistory()
-  const cartUtility = cart(state)
-  const currentDate = query.get('date')
-
-  const [bundles, setBundles] = useState([])
-  const [isLoading, setIsLoading] = useState(false)
-  const [weekDate, setWeekDate] = useState(false)
-  const [menuItems, setMenuItems] = useState([])
+  const query = useQuery()
+  const [active, setActive] = useState([])
+  const [subscriptions, setSubscriptions] = useState([])
+  const [loading, setLoading] = useState(true)
   const [error, setError] = useState({
     open: false,
     status: 'Success',
     message: ''
   })
 
+  const todayDate = getTodayDate()
+
   useEffect(() => {
-    dispatch(cartClear())
     dispatch(displayHeader(false))
     dispatch(displayFooter(false))
     dispatch(selectFaqType(null))
 
-    getCurrentMenuItems()
+    getData()
   }, [])
 
-  const findProductFromVariant = async (variantId) =>
+  const clearState = () =>
     new Promise((resolve) => {
-      let foundProduct = {}
-      for (const product of shopProducts) {
-        const variant = product.variants.filter((v) => v.id === variantId)
-        if (product.variants.filter((v) => v.id === variantId).length > 0) {
-          foundProduct = {
-            product,
-            metafields: variant[0].metafields
-          }
-        }
-      }
-
-      resolve(foundProduct)
+      setTimeout(() => {
+        clearLocalStorage()
+        dispatch(reset())
+        resolve('ok')
+      }, 1000)
     })
 
-  const getCustomerBundleItems = async (token) => {
-    const subscriptionResponse = await getSubscriptionOrders(token, orderId)
-
-    let currentBundleId = null
-    const currentItems = []
-    const currentBundles = []
-    if (subscriptionResponse.data.data) {
-      currentBundleId = subscriptionResponse.data.data[0].subscription.bundle_id
-
-      for (const order of subscriptionResponse.data?.data) {
-        const editItemsConfigArr = []
-        if (
-          order.bundle_configuration_content?.deliver_after &&
-          order.bundle_configuration_content?.deliver_after === currentDate
-        ) {
-          const bundleProducts = false
-
-          for (const product of order?.items) {
-            const currentProduct = await findProductFromVariant(
-              product.platform_product_variant_id
-            )
-
-            if (Object.entries(currentProduct).length > 0) {
-              editItemsConfigArr.push({
-                id: product.platform_product_variant_id,
-                contentSelectionId: product.id,
-                subscriptionContentId: order.id,
-                title: currentProduct?.product?.title
-                  ? currentProduct.product.title
-                  : 'default product',
-                image:
-                  currentProduct?.product?.images &&
-                  currentProduct.product?.images.length > 0
-                    ? currentProduct.product.images[0]
-                    : process.env.EMPTY_STATE_IMAGE,
-                metafields:
-                  currentProduct?.metafields?.length > 0
-                    ? currentProduct.metafields
-                    : [],
-                quantity: product.quantity
-              })
-            }
-          }
-
-          currentItems.push({
-            id: bundleProducts ? bundleProducts.id : order.id,
-            bundleId: subscriptionResponse.data.data[0].subscription.bundle_id,
-            products: editItemsConfigArr
-          })
-
-          // configuration content exists?
-          if (
-            order?.bundle_configuration_content?.deliver_after === currentDate
-          ) {
-            currentBundles.push(order)
-          }
-        }
+  const getData = async () => {
+    try {
+      if (shopCustomer.email !== state.email || !state.tokens.userToken) {
+        const userToken = await getToken()
+        await clearState()
+        await getOrdersToShow(userToken)
+      } else {
+        await getOrdersToShow(state.tokens.userToken)
       }
-
-      setBundles(currentBundles)
+    } catch (error) {
+      setError({
+        open: true,
+        status: 'Danger',
+        message: 'Failed to retrieve products'
+      })
     }
-
-    return {
-      currentItems,
-      bundleId: currentBundleId
-    }
+    dispatch(setEmail(shopCustomer?.email || ''))
   }
 
   const getToken = async () => {
     const tokenResponse = await useUserToken()
-
     if (tokenResponse.token) {
       dispatch(
         setTokens({
@@ -164,287 +119,311 @@ const EditOrder = () => {
     }
   }
 
-  const getCurrentMenuItems = async () => {
-    setIsLoading(true)
+  const getOrdersToShow = async (token) => {
+    const activeWeeksArr = []
+    const activeWeeksLimit = []
+    const weeksMenu = []
+    const subscriptionArray = {}
 
-    try {
-      const newItems = []
+    const subscriptionResponse = await getActiveSubscriptions(token)
 
-      let savedItems = []
-      let savedItemsResponse = null
-      if (!state.tokens.userToken) {
-        const thisToken = getToken()
-        savedItemsResponse = await getCustomerBundleItems(thisToken)
-        savedItems = savedItemsResponse.currentItems
-      } else {
-        savedItemsResponse = await getCustomerBundleItems(
-          state.tokens.userToken
+    if (subscriptionResponse.data.data) {
+      for (const sub of subscriptionResponse.data.data) {
+        const subscriptionOrders = await getSubscriptionOrders(token, sub.id)
+        const configData = await request(
+          `${process.env.PROXY_APP_URL}/bundle-api/bundles/${sub.bundle_id}/configurations`,
+          {
+            method: 'get',
+            data: '',
+            headers: { authorization: `Bearer ${token}` }
+          }
         )
-        savedItems = savedItemsResponse.currentItems
-      }
-
-      const bundleResponse = await getBundle(
-        state.tokens.userToken,
-        savedItems[0]?.bundleId || savedItemsResponse.bundleId
-      )
-
-      if (bundleResponse.data.data.length === 0) {
-        throw new Error('Bundle could not be found')
-      }
-
-      const currentApiBundle = bundleResponse.data.data
-
-      for (const configuration of currentApiBundle.configurations) {
-        const mappedProducts = []
-        const productsResponse = await getProducts(configuration, savedItems[0])
-
-        if (productsResponse) {
-          productsResponse.products.forEach((product) => {
-            let savedProduct = null
-            savedItems.forEach((item) => {
-              const foundItem = item.products.find(
-                (i) => Number(i.id) === Number(product.id)
+        if (configData.data.data.length > 0) {
+          for (const config of configData.data.data) {
+            for (const content of config.contents) {
+              // find delivery date between range
+              const deliveryDate = findWeekDayBetween(
+                sub.delivery_day,
+                content.deliver_after,
+                content.deliver_before
               )
-              if (foundItem) {
-                savedProduct = foundItem
+              const cutoffDate = getCutOffDate(deliveryDate)
+
+              if (
+                dayjs(content.deliver_before).utc().isSameOrAfter(todayDate)
+              ) {
+                const orderedItems = subscriptionOrders.data.data.filter(
+                  (ord) =>
+                    ord.bundle_configuration_content.deliver_after ===
+                    content.deliver_after
+                )
+                const subscriptionObjKey = content.deliver_after.split('T')[0]
+
+                if (
+                  !weeksMenu.includes(
+                    dayjs(content.deliver_after).format('YYYY-MM-DD')
+                  )
+                ) {
+                  weeksMenu.push(
+                    dayjs.utc(content.deliver_after).format('YYYY-MM-DD')
+                  )
+                  subscriptionArray[subscriptionObjKey] = {}
+                  subscriptionArray[subscriptionObjKey].items = []
+
+                  if (orderedItems.length > 0) {
+                    const orderFound = orderedItems[0]
+                    if (subscriptionArray[subscriptionObjKey]) {
+                      let thisItemsArray = []
+                      for (const order of orderedItems) {
+                        const prodArr = await buildProductArrayFromVariant(
+                          order.items,
+                          sub.subscription_sub_type,
+                          shopProducts
+                        )
+                        thisItemsArray = thisItemsArray.concat(prodArr)
+                      }
+
+                      subscriptionArray[subscriptionObjKey].subId = sub.id
+                      subscriptionArray[subscriptionObjKey].deliveryDay =
+                        sub.delivery_day
+                      subscriptionArray[subscriptionObjKey].items =
+                        thisItemsArray
+                      subscriptionArray[subscriptionObjKey].status =
+                        orderFound.platform_order_id !== null
+                          ? STATUS_SENT
+                          : todayDate.isSameOrAfter(cutoffDate)
+                          ? STATUS_LOCKED
+                          : STATUS_PENDING
+                      subscriptionArray[subscriptionObjKey].subscriptionDate =
+                        dayjs(subscriptionObjKey).format('YYYY-MM-DD')
+                      subscriptionArray[subscriptionObjKey].queryDate =
+                        content.deliver_after
+                      if (orderFound.platform_order_id !== null) {
+                        subscriptionArray[subscriptionObjKey].trackingUrl =
+                          await getOrderTrackingUrl(
+                            orderFound.platform_order_id,
+                            shopCustomer
+                          )
+                      }
+                    }
+                  } else {
+                    const configContentsData = await request(
+                      `${process.env.PROXY_APP_URL}/bundle-api/bundles/${config.bundle_id}/configurations/${config.id}/contents/${content.id}/products?is_default=1`,
+                      {
+                        method: 'get',
+                        data: '',
+                        headers: { authorization: `Bearer ${token}` }
+                      },
+                      3
+                    )
+                    const thisProductsArray = await buildProductArrayFromId(
+                      configContentsData.data.data,
+                      sub.subscription_sub_type,
+                      shopProducts
+                    )
+
+                    subscriptionArray[subscriptionObjKey].subId = sub.id
+                    subscriptionArray[subscriptionObjKey].items =
+                      subscriptionArray[subscriptionObjKey].items.concat(
+                        thisProductsArray
+                      )
+                    subscriptionArray[subscriptionObjKey].status =
+                      todayDate.isSameOrAfter(cutoffDate)
+                        ? STATUS_LOCKED
+                        : STATUS_PENDING
+                    subscriptionArray[subscriptionObjKey].subscriptionDate =
+                      dayjs(subscriptionObjKey).format('YYYY-MM-DD')
+                    subscriptionArray[subscriptionObjKey].queryDate =
+                      content.deliver_after
+                  }
+                }
               }
-            })
-
-            let quantity = 0
-            if (savedProduct && savedProduct.quantity > 0) {
-              quantity = savedProduct.quantity
-
-              mappedProducts.push({
-                ...product,
-                quantity
-              })
             }
-          })
-
-          newItems.push({
-            id: configuration.id,
-            title: configuration.title,
-            products: [...mappedProducts]
-          })
-        }
-      }
-
-      const productsToCart = []
-      newItems.forEach((i) => {
-        i.products.forEach((p) => {
-          if (p.quantity > 0) {
-            productsToCart.push(p)
-          }
-        })
-      })
-
-      dispatch(cartUpdate([...productsToCart]))
-
-      setMenuItems(newItems)
-      setIsLoading(false)
-    } catch (error) {
-      setError({
-        open: true,
-        status: 'Danger',
-        message: 'Failed to retrieve products'
-      })
-    }
-  }
-
-  const getProducts = async (configuration, savedItems) => {
-    const nextWeekDate = currentDate
-
-    const response = await getContents(
-      state.tokens.userToken,
-      configuration.bundleId,
-      configuration.id,
-      `is_enabled=1&deliver_after=${nextWeekDate}`
-    )
-
-    if (response.data?.data && response.data?.data.length > 0) {
-      setWeekDate(
-        dayjs.utc(response.data.data[0].deliver_after).format('MMM DD')
-      )
-      const filteredProducts = await filterShopifyProducts(
-        response.data.data[0].products,
-        shopProducts
-      )
-
-      const subscriptionOrder = await getSubscriptionOrders(
-        state.tokens.userToken,
-        orderId
-      )
-
-      let hasPlatformId = false
-      subscriptionOrder.data.data.forEach((subscription) => {
-        if (
-          subscription.bundle_configuration_content?.deliver_after ===
-            currentDate &&
-          subscription.platform_order_id
-        ) {
-          if (!hasPlatformId) {
-            hasPlatformId = true
           }
         }
-      })
-
-      const filteredVariants = await filterShopifyVariants(
-        state,
-        filteredProducts,
-        subscriptionOrder.data.data[0].subscription.subscription_type,
-        subscriptionOrder.data.data[0].subscription.subscription_sub_type,
-        configuration
-      )
-
-      let subTotal = 0
-      const quantity = response.data.data[0].configuration.quantity || 0
-      if (savedItems) {
-        const mappedProducts = filteredVariants.map((product) => {
-          const savedProduct = savedItems.products.find(
-            (i) => Number(i.id) === Number(product.id)
-          )
-
-          let quantity = 0
-          if (savedProduct) {
-            quantity = savedProduct.quantity
-          }
-
-          return {
-            ...product,
-            quantity
-          }
-        })
-
-        subTotal = mappedProducts
-          .map((value) => value.quantity)
-          .reduce((sum, number) => sum + number, 0)
-      }
-      return {
-        products: filteredVariants,
-        quantity: quantity,
-        quantityCountdown: quantity - subTotal,
-        contents: response.data?.data
       }
     }
+
+    let count = 0
+    for (const [key, value] of Object.entries(subscriptionArray)) {
+      activeWeeksLimit.push(5)
+      if (query.get('date') !== null) {
+        if (key === query.get('date')) {
+          activeWeeksArr.push(value)
+        }
+      } else {
+        if (count < 2) {
+          count++
+          activeWeeksArr.push(value)
+        }
+      }
+    }
+
+    setActive(activeWeeksArr)
+    setLoading(false)
   }
 
-  const handleBackButton = () => {
-    return history.push(`/account`)
+  if (loading) {
+    return <Spinner label="Loading..." />
   }
 
-  if (isLoading) {
-    return <Loading />
-  }
+  const CurrentWeek = () => (
+    <div>
+      {active.map((subscription, index) => (
+        <div key={index} className={styles.subscriptionRow}>
+          <div className={styles.menuRow}>
+            <div className={styles.headerWthLink}>
+              {subscription.status === 'sent' ? (
+                <a
+                  href={subscription.trackingUrl}
+                  className={styles.primaryLink}
+                >
+                  Track Package
+                </a>
+              ) : (
+                ''
+              )}
+            </div>
+          </div>
+          {subscription.items.length > 0 ? (
+            <div key={index} className={styles.contentCardWrapper}>
+              <div className={styles.contentCardNavigation}>
+                <h3>
+                  Order Delivering Week of{' '}
+                  {dayjs(subscription.subscriptionDate).format('MMM DD')}
+                </h3>
+                <WeekActions
+                  status={subscription.status}
+                  date={subscription.queryDate}
+                  orderId={subscription.subId}
+                  displaySummary
+                />
+              </div>
+              {subscription.items ? (
+                <div className={styles.currentOrderMenu}>
+                  {subscription.items.map((item, index) =>
+                    index < 3 ? (
+                      <MenuItemCard
+                        key={index}
+                        title={item.title}
+                        image={item.platform_img}
+                        quantity={item.quantity}
+                        type={item.type}
+                      />
+                    ) : (
+                      ''
+                    )
+                  )}
+                  <Link
+                    to={`/account?date=${dayjs(subscription.queryDate)
+                      .utc()
+                      .format('YYYY-MM-DD')}`}
+                    className={styles.seeAllMenu}
+                  >
+                    See All <ChevronRightMinor />
+                  </Link>
+                </div>
+              ) : (
+                ''
+              )}
+            </div>
+          ) : (
+            ''
+          )}
+        </div>
+      ))}
+    </div>
+  )
 
   return (
-    <div>
-      <div className="contentWrapper">
-        <div className={menuItemStyles.wrapper}>
-          <div className={`${menuItemStyles.title} mb-7`}>
-            Order Summary Week of {weekDate}
+    <div className="contentWrapper">
+      <div className="bundleRow alignCenter">
+        <div className="bundleOneThird">
+          <p>
+            <Link to="/account" className="primaryButton">
+              Go back to Meals
+            </Link>
+          </p>
+        </div>
+        <div className="bundleTwoThirds">
+          <div className="headerOffset">
+            <h2>Order History</h2>
           </div>
-
-          {menuItems.map((content) => (
-            <div key={content.id}>
-              <div className={menuItemStyles.listHeader}>
-                <div className={menuItemStyles.title}>{content.title}</div>
+        </div>
+      </div>
+      <div className="bundleRow">
+        <div className="bundleOneThird">
+          <SideMenu active="order-history" />
+        </div>
+        <div className="bundleTwoThirds">
+          <div className="bundleBuilderCard">
+            <CurrentWeek />
+          </div>
+          <div className="bundleBuilderCard">
+            <div className={styles.contentCardWrapper}>
+              <div className={styles.contentCardNavigation}>
+                <h3>Past Orders</h3>
+                <p></p>
               </div>
-              <div className={`${menuItemStyles.cards} mb-10`}>
-                {content.products.map((item) => (
-                  <CardQuantities
-                    key={item.id}
-                    title={item.name}
-                    image={
-                      item.feature_image
-                        ? item.feature_image.src
-                        : item.images.length > 0
-                        ? item.images[0]
-                        : process.env.EMPTY_STATE_IMAGE
-                    }
-                    metafields={item.metafields}
-                    isChecked={cartUtility.isItemSelected(state.cart, item)}
-                    quantity={cartUtility.getItemQuantity(state.cart, item)}
-                    onClick={() => {}}
-                    onAdd={() => {}}
-                    onRemove={() => {}}
-                    disableAdd
-                    disableRemove
-                  />
-                ))}
-              </div>
+              <table className={styles.orderHistoryTable}>
+                <thead className={styles.orderHistoryTableHeaders}>
+                  <tr>
+                    <th>Order Date</th>
+                    <th>Order Total</th>
+                    <th>Meals Names</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {shopCustomer.orders.map((order, index) =>
+                    index < 5 ? (
+                      <tr key={index}>
+                        <td>{dayjs(order.orderDate).format('MM/DD/YYYY')}</td>
+                        <td>{order.orderTotal}</td>
+                        <td className={styles.orderMealNames}>
+                          <p className={styles.orderMealNamesText}>
+                            {order.lineItems.map(
+                              (item) => `${decodeURI(item.title)},`
+                            )}
+                          </p>
+                          <a
+                            href={order.orderLink}
+                            className={styles.orderMealNamesLink}
+                          >
+                            See All Meals
+                          </a>
+                        </td>
+                      </tr>
+                    ) : (
+                      <tr key={index}>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                    )
+                  )}
+                </tbody>
+              </table>
+              <a href={`/account`} className={styles.orderHistoryMoreLink}>
+                See More{' '}
+              </a>
             </div>
-          ))}
-        </div>
-        {error.open ? (
-          <Toast
-            open={error.open}
-            status={error.status}
-            message={error.message}
-            autoDelete
-            handleClose={closeAlert}
-          />
-        ) : (
-          ''
-        )}
-      </div>
-      <div className="bundleBuilderCard">
-        <div className={styles.contentCardWrapper}>
-          <div className={styles.contentCardNavigation}>
-            <h3>Past Orders</h3>
-            <p></p>
-          </div>
-          <table className={styles.orderHistoryTable}>
-            <thead className={styles.orderHistoryTableHeaders}>
-              <tr>
-                <th>Order Date</th>
-                <th>Order Total</th>
-                <th>Meals</th>
-              </tr>
-            </thead>
-            <tbody>
-              {shopCustomer.orders.map((order, index) =>
-                index < 5 ? (
-                  <tr key={index}>
-                    <td>{dayjs(order.orderDate).format('MM/DD/YYYY')}</td>
-                    <td>{order.orderTotal}</td>
-                    <td className={styles.orderMealNames}>
-                      <p className={styles.orderMealNamesText}>
-                        {order.lineItems.map((item) => `${item.title},`)}
-                      </p>
-                      <a
-                        href={order.orderLink}
-                        className={styles.orderMealNamesLink}
-                      >
-                        See Order Details
-                      </a>
-                    </td>
-                  </tr>
-                ) : (
-                  <tr key={index}>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                  </tr>
-                )
-              )}
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <div className={`${menuItemStyles.buttonsRow} mt-5`}>
-        <div className="buttons">
-          <div
-            className="button lightButton"
-            onClick={() => handleBackButton()}
-          >
-            Back to Dashboard
           </div>
         </div>
       </div>
+      {error.open ? (
+        <Toast
+          open={error.open}
+          status={error.status}
+          message={error.message}
+          autoDelete
+          handleClose={closeAlert}
+        />
+      ) : (
+        ''
+      )}
     </div>
   )
 }
 
-export default EditOrder
+export default OrderHistory
