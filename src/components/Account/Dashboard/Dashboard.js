@@ -146,9 +146,16 @@ const Dashboard = () => {
               console.log('Cut off date:', cutoffDate)
               console.log('content:', content)
 
+              const firstOrder = shopCustomer.orders[0] || null
+              const firstOrderDate =
+                (firstOrder && dayjs(firstOrder.orderDate).utc()) ||
+                dayjs().utc()
+
+              // validates the first order to avoid displaying the week where the order was placed (always show next week)
               if (
                 subCount < TOTAL_WEEKS_DISPLAY &&
-                dayjs(content.deliver_before).utc().isSameOrAfter(todayDate)
+                dayjs(content.deliver_before).utc().isSameOrAfter(todayDate) &&
+                firstOrderDate.isSameOrBefore(content.deliver_after)
               ) {
                 const orderedItems = subscriptionOrders.data.data.filter(
                   (ord) =>
