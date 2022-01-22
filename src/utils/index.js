@@ -15,7 +15,14 @@ import {
   buildProductArrayFromId
 } from './products'
 import cart from './cart'
-import { findWeekDayBetween, getCutOffDate } from './dates'
+import {
+  findWeekDayBetween,
+  getCutOffDate,
+  getTodayDate,
+  sortDatesArray,
+  getNextWeekDay
+} from './dates'
+import uniqueArray from './uniqueArray'
 
 export {
   availableDeliveryDays,
@@ -32,5 +39,9 @@ export {
   buildProductArrayFromVariant,
   buildProductArrayFromId,
   findWeekDayBetween,
-  getCutOffDate
+  getCutOffDate,
+  getTodayDate,
+  sortDatesArray,
+  getNextWeekDay,
+  uniqueArray
 }

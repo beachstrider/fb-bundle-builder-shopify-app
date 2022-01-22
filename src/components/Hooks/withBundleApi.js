@@ -151,6 +151,23 @@ const updateBundle = async (token, id) => {
   }
 }
 
+const getActiveSubscriptions = async (token) => {
+  try {
+    return await request(
+      `${process.env.PROXY_APP_URL}/bundle-api/subscriptions?is_active=1`,
+      {
+        method: 'get',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        }
+      }
+    )
+  } catch (error) {
+    return error
+  }
+}
+
 const getSubscriptionOrders = async (token, orderId) => {
   try {
     return await request(
@@ -283,6 +300,7 @@ export {
   getBundleConfiguration,
   getBundleByPlatformId,
   getContent,
+  getActiveSubscriptions,
   getSubscriptionOrders,
   saveCart,
   saveBundle,

@@ -1,8 +1,10 @@
+import React from 'react'
 import minMax from 'dayjs/plugin/minMax'
 import timezone from 'dayjs/plugin/timezone'
 import utc from 'dayjs/plugin/utc'
 import isBetween from 'dayjs/plugin/isBetween'
 import * as dayjs from 'dayjs'
+import { useLocation } from 'react-router-dom'
 
 dayjs.extend(utc)
 dayjs.extend(timezone)
@@ -39,4 +41,40 @@ const getCutOffDate = (
   return dayjs.tz(newDate, timezone).format(format)
 }
 
-export { findWeekDayBetween, getCutOffDate }
+const getNextWeekDay = (weekDay, todayDate = dayjs()) =>
+  dayjs(todayDate).weekday(weekDay).add(1, 'week')
+
+const getTodayDate = () => {
+  const useQuery = () => {
+    const { search } = useLocation()
+    return React.useMemo(() => new URLSearchParams(search), [search])
+  }
+  const query = useQuery()
+
+  // format: 2022-01-15T23:00:00.000-08:00
+  const forcedDate = query.get('forced_date') && dayjs(query.get('forced_date'))
+  const todayDate =
+    process.env.ENVIRONMENT !== 'production' && forcedDate
+      ? forcedDate
+      : dayjs()
+
+  return todayDate
+}
+
+
+const sortDatesArray = (dates, sort = 'asc') =>
+  dates.sort((a, b) => {
+    const dateA = dayjs(a).unix()
+    const dateB = dayjs(b).unix()
+
+    return sort === 'asc' ? dateA - dateB : dateA + dateB
+  })
+
+export {
+  findWeekDayBetween,
+  getCutOffDate,
+  getNextWeekDay,
+  getTodayDate,
+  sortDatesArray
+}
+

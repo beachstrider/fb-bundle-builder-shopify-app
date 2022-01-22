@@ -15,6 +15,7 @@ import { InputEmail, InputText } from '../Components/Inputs'
 import {
   availableDeliveryDays,
   findZipCode,
+  getTodayDate,
   isValidEmail,
   mapDeliveryDays,
   request
@@ -23,12 +24,10 @@ import styles from './Location.module.scss'
 import { withActiveStep } from '../../Hooks'
 import SpinnerIcon from '../../Global/SpinnerIcon'
 import DeliveryDates from '../Components/DeliveryDates'
-import dayjs from 'dayjs'
 import Toast from '../../Global/Toast'
 
 const FAQ_TYPE = 'location'
 const STEP_ID = 2
-const TODAY_DATE = dayjs()
 
 const Location = () => {
   const dispatch = useDispatch()
@@ -45,15 +44,20 @@ const Location = () => {
     message: ''
   })
 
+  const todayDate = getTodayDate()
+
   useEffect(() => {
     dispatch(displayHeader(true))
 
-    if (state.email && state.location.zipCode) {
+    if (
+      state.email &&
+      state.location.zipCode &&
+      shopCustomer.email === state.email
+    ) {
       setZipCode(state.location.zipCode)
       setEmail(state.email)
 
       const zone = findZipCode(state.deliveryZones, state.location.zipCode)
-      console.log('zone: ', zone)
       if (!zone) {
         dispatch(displayFooter(false))
         return setZipCodeError('Delivery is not available to your zip code')
@@ -73,6 +77,9 @@ const Location = () => {
       dispatch(selectFaqType(FAQ_TYPE))
       dispatch(displayFooter(true))
     } else {
+      setCurrentZone({})
+      setEmail('')
+      setZipCode('')
       dispatch(selectFaqType(null))
       dispatch(displayFooter(false))
     }
@@ -93,8 +100,7 @@ const Location = () => {
   }, [state.location.deliveryDate])
 
   const getMappedZones = (zone) => {
-    const availableDays = availableDeliveryDays(zone, TODAY_DATE.day())
-
+    const availableDays = availableDeliveryDays(zone, todayDate)
     const mappedDays = mapDeliveryDays(availableDays, zone.deliveryDates)
     const newZone = {
       ...zone,
@@ -260,7 +266,7 @@ const Location = () => {
             onClick={handleDeliveryDate}
             title="Choose Delivery Date"
             dates={currentZone.deliveryDates}
-            todayDate={TODAY_DATE}
+            todayDate={todayDate}
           />
         )}
       </div>

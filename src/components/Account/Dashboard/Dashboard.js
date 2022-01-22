@@ -11,7 +11,11 @@ import {
 import { Link, Redirect, useLocation, useHistory } from 'react-router-dom'
 import styles from './Dashboard.module.scss'
 import { MenuItemCard } from '../Components/MenuItemCard'
-import { useUserToken } from '../../Hooks'
+import {
+  getActiveSubscriptions,
+  getSubscriptionOrders,
+  useUserToken
+} from '../../Hooks'
 import { ChevronRightMinor, ChevronLeftMinor } from '@shopify/polaris-icons'
 import isSameOrAfter from 'dayjs/plugin/isSameOrAfter'
 import utc from 'dayjs/plugin/utc'
@@ -22,20 +26,26 @@ import {
   buildProductArrayFromVariant,
   buildProductArrayFromId,
   findWeekDayBetween,
-  getCutOffDate
+  getCutOffDate,
+  getTodayDate,
+  sortDatesArray,
+  uniqueArray
 } from '../../../utils'
-import { clearLocalStorage } from '../../../store/store'
 import { Spinner } from '../../Global'
+import { clearLocalStorage } from '../../../store/store'
+import {
+  STATUS_LOCKED,
+  STATUS_PENDING,
+  STATUS_SENT
+} from '../../../constants/order'
 
 import Toast from '../../Global/Toast'
+import WeekActions from '../Components/WeekActions'
 
 dayjs.extend(isSameOrAfter)
 dayjs.extend(utc)
 
-const TOTAL_WEEKS_DISPLAY = 3
-const STATUS_PENDING = 'pending'
-const STATUS_LOCKED = 'locked'
-const STATUS_SENT = 'sent'
+const TOTAL_WEEKS_DISPLAY = 4
 
 function useQuery() {
   const { search } = useLocation()
@@ -56,6 +66,9 @@ const Dashboard = () => {
   const [subscriptions, setSubscriptions] = React.useState([])
   const [weeksMenu, setWeeksMenu] = React.useState([])
   const [loading, setLoading] = React.useState(true)
+
+  const todayDate = getTodayDate()
+  console.log('todayDate:', todayDate)
 
   React.useEffect(() => {
     dispatch(displayHeader(false))
@@ -104,39 +117,11 @@ const Dashboard = () => {
     const weeksMenu = []
     const subscriptionArray = {}
 
-    const subApi = await request(
-      `${process.env.PROXY_APP_URL}/bundle-api/subscriptions`,
-      {
-        method: 'get',
-        data: '',
-        headers: { authorization: `Bearer ${token}` }
-      },
-      3
-    )
+    const subApi = await getActiveSubscriptions(token)
 
     if (subApi.data.data) {
-      // format: 2022-01-15T23:00:00.000-08:00
-      const forcedDate =
-        query.get('forced_date') && dayjs(query.get('forced_date'))
-      const todayDate =
-        process.env.ENVIRONMENT !== 'production' && forcedDate
-          ? forcedDate
-          : dayjs()
-      // const todayDate = process.env.ENVIRONMENT !== 'production' && query.get('forced_date') ? dayjs(query.get('forced_date')) : dayjs()
-
-      console.log('query string:', query.get('forced_date'))
-      console.log('todayDate:', todayDate)
-
       for (const sub of subApi.data.data) {
-        const subscriptionOrders = await request(
-          `${process.env.PROXY_APP_URL}/bundle-api/subscriptions/${sub.id}/orders`,
-          {
-            method: 'get',
-            data: '',
-            headers: { authorization: `Bearer ${token}` }
-          },
-          3
-        )
+        const subscriptionOrders = await getSubscriptionOrders(token, sub.id)
         const configData = await request(
           `${process.env.PROXY_APP_URL}/bundle-api/bundles/${sub.bundle_id}/configurations`,
           {
@@ -150,14 +135,6 @@ const Dashboard = () => {
           for (const config of configData.data.data) {
             let subCount = 0
             for (const content of config.contents) {
-              const dayOfTheWeek = dayjs(
-                content.deliver_after.split('T')[0]
-              ).day()
-              const today = dayjs().day(dayOfTheWeek).format('YYYY-MM-DD')
-              const displayDate = dayjs(
-                content.deliver_after.split('T')[0]
-              ).format('YYYY-MM-DD')
-
               // find delivery date between range
               const deliveryDate = findWeekDayBetween(
                 sub.delivery_day,
@@ -167,10 +144,11 @@ const Dashboard = () => {
               const cutoffDate = getCutOffDate(deliveryDate)
               console.log('deliveryDate:', deliveryDate)
               console.log('Cut off date:', cutoffDate)
+              console.log('content:', content)
 
               if (
                 subCount < TOTAL_WEEKS_DISPLAY &&
-                dayjs(displayDate).isSameOrAfter(dayjs(today))
+                dayjs(content.deliver_before).utc().isSameOrAfter(todayDate)
               ) {
                 const orderedItems = subscriptionOrders.data.data.filter(
                   (ord) =>
@@ -179,20 +157,16 @@ const Dashboard = () => {
                 )
                 const subscriptionObjKey = content.deliver_after.split('T')[0]
 
-                if (orderedItems.length !== 0 || subCount !== 0) {
-                  if (
-                    !weeksMenu.includes(
-                      dayjs(content.deliver_after.split('T')[0]).format(
-                        'YYYY-MM-DD'
-                      )
-                    )
-                  ) {
-                    weeksMenu.push(
-                      dayjs(content.deliver_after).utc().format('YYYY-MM-DD')
-                    )
-                    subscriptionArray[subscriptionObjKey] = {}
-                    subscriptionArray[subscriptionObjKey].items = []
-                  }
+                if (
+                  !weeksMenu.includes(
+                    dayjs(content.deliver_after).format('YYYY-MM-DD')
+                  )
+                ) {
+                  weeksMenu.push(
+                    dayjs.utc(content.deliver_after).format('YYYY-MM-DD')
+                  )
+                  subscriptionArray[subscriptionObjKey] = {}
+                  subscriptionArray[subscriptionObjKey].items = []
 
                   if (orderedItems.length > 0) {
                     const orderFound = orderedItems[0]
@@ -290,10 +264,16 @@ const Dashboard = () => {
         }
       }
     }
+
+    // TODO: debugging dates
     console.log('subscriptionArray: ', subscriptionArray)
-    console.log('activeWeeksArr >>>', activeWeeksArr)
+    console.log('activeWeeksArr:', activeWeeksArr)
+    console.log('weeksMenu:', weeksMenu)
+
+    const uniqueValues = uniqueArray([...weeksMenu])
+    const sortedDates = sortDatesArray(uniqueValues)
     setSubscriptions(subscriptionArray)
-    setWeeksMenu(weeksMenu)
+    setWeeksMenu(sortedDates)
     setActive(activeWeeksArr)
     setLimit(activeWeeksLimit)
     setLoading(false)
@@ -348,24 +328,29 @@ const Dashboard = () => {
           <h1 className={styles.userName}>Hi {shopCustomer.firstName}!</h1>
         </div>
         <div className={styles.weekMenu}>
-          <p className={styles.weekMenuLabel}>Select Week</p>
-          <div className={`buttons ${styles.weekMenuItems}`}>
-            {weeksMenu.map((date, index) => {
-              return (
-                <button
-                  key={index}
-                  onClick={() => handleChange(date)}
-                  className={
-                    active.filter((a) => a.subscriptionDate === date).length > 0
-                      ? 'primaryButton largeButton'
-                      : 'secondaryButton largeButton'
-                  }
-                >
-                  {dayjs(date).format('MMM DD')}
-                </button>
-              )
-            })}
-          </div>
+          {weeksMenu.length > 0 && (
+            <>
+              <p className={styles.weekMenuLabel}>Select Week</p>
+              <div className={`buttons ${styles.weekMenuItems}`}>
+                {weeksMenu.map((date, index) => {
+                  return (
+                    <button
+                      key={index}
+                      onClick={() => handleChange(date)}
+                      className={
+                        active.filter((a) => a.subscriptionDate === date)
+                          .length > 0
+                          ? 'primaryButton largeButton'
+                          : 'secondaryButton largeButton'
+                      }
+                    >
+                      {dayjs.utc(date).format('MMM DD')}
+                    </button>
+                  )
+                })}
+              </div>
+            </>
+          )}
         </div>
       </div>
 
@@ -387,21 +372,11 @@ const Dashboard = () => {
                     ''
                   )}
                 </div>
-                {sub.status === 'sent' || sub.status === 'locked' ? (
-                  <Link
-                    to={`/order-history?date=${sub.queryDate}`}
-                    className="secondaryButton"
-                  >
-                    Order Summary
-                  </Link>
-                ) : (
-                  <Link
-                    to={`/edit-order/${sub.subId}?date=${sub.queryDate}`}
-                    className="secondaryButton"
-                  >
-                    Edit Order
-                  </Link>
-                )}
+                <WeekActions
+                  orderId={sub.subId}
+                  date={sub.queryDate}
+                  status={sub.status}
+                />
               </div>
               {sub.items.length > 0 ? (
                 <div className={styles.accountMenuRow}>
