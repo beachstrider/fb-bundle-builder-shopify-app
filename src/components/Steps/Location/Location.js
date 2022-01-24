@@ -25,6 +25,7 @@ import { withActiveStep } from '../../Hooks'
 import SpinnerIcon from '../../Global/SpinnerIcon'
 import DeliveryDates from '../Components/DeliveryDates'
 import Toast from '../../Global/Toast'
+import { useErrorHandler } from 'react-error-boundary'
 
 const FAQ_TYPE = 'location'
 const STEP_ID = 2
@@ -43,6 +44,7 @@ const Location = () => {
     status: 'Success',
     message: ''
   })
+  const handleError = useErrorHandler()
 
   const todayDate = getTodayDate()
 
@@ -140,43 +142,47 @@ const Location = () => {
     deliveryDates.find((date) => date.isSelected)
 
   const handleSubmit = async () => {
-    if (!email || !isValidEmail(email)) {
-      return setEmailError('Please type a valid email')
-    }
+    try {
+      if (!email || !isValidEmail(email)) {
+        return setEmailError('Please type a valid email')
+      }
 
-    if (zipCode.length < 4) {
-      return setZipCodeError('Please type a valid zip code')
-    }
-    setIsLoading(true)
+      if (zipCode.length < 4) {
+        return setZipCodeError('Please type a valid zip code')
+      }
+      setIsLoading(true)
 
-    dispatch(setStoreEmail(email))
-    dispatch(
-      setLocation({
-        zipCode: zipCode,
-        deliveryDate: state.location.deliveryDate
-      })
-    )
+      dispatch(setStoreEmail(email))
+      dispatch(
+        setLocation({
+          zipCode: zipCode,
+          deliveryDate: state.location.deliveryDate
+        })
+      )
 
-    const shopifyMultipass = await request(
-      `${process.env.PROXY_APP_URL}/shopify/multipass-url?shop=${shopDomain}`,
-      {
-        method: 'post',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        data: {
-          email,
-          created_at: new Date().toISOString(),
-          return_to: window.location.href,
-          addresses: {
-            zip: zipCode
+      const shopifyMultipass = await request(
+        `${process.env.PROXY_APP_URL}/shopify/multipass-url?shop=${shopDomain}`,
+        {
+          method: 'post',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          data: {
+            email,
+            created_at: new Date().toISOString(),
+            return_to: window.location.href,
+            addresses: {
+              zip: zipCode
+            }
           }
         }
-      }
-    )
+      )
 
-    if (shopifyMultipass?.data?.url) {
-      window.location.href = shopifyMultipass.data.url
+      if (shopifyMultipass?.data?.url) {
+        window.location.href = shopifyMultipass.data.url
+      }
+    } catch (error) {
+      handleError(error)
     }
   }
 
