@@ -24,9 +24,9 @@ import {
   PlanSettings,
   EditOrder
 } from './components/Account'
-import Faq from './components/Faq/Faq'
 import { getSelectedBundle } from './components/Hooks'
 import { OrderSummary } from './components/Account/OrderSummary'
+import ErrorHandler from './components/ErrorHandler'
 
 function App() {
   const state = useSelector((state) => state)
@@ -61,32 +61,38 @@ function App() {
   return (
     <AppProvider i18n={enTranslations}>
       <Router>
-        <div className="defaultWrapper flexColumnDirection">
-          {state.displayHeader && <Header />}
-          <div className="content mb-9">
-            <Switch>
-              <Route exact path="/account" component={Dashboard} />
-              <Route exact path="/order-history" component={OrderHistory} />
-              <Route
-                exact
-                path="/order-summary/:orderId"
-                component={OrderSummary}
-              />
-              <Route exact path="/account-info" component={AccountInfo} />
-              <Route exact path="/payment-method" component={PaymentMethod} />
-              <Route exact path="/plan-settings" component={PlanSettings} />
-              <Route exact path="/edit-order/:orderId" component={EditOrder} />
+        <ErrorHandler>
+          <div className="defaultWrapper flexColumnDirection">
+            {state.displayHeader && <Header />}
+            <div className="content mb-9">
+              <Switch>
+                <Route exact path="/account" component={Dashboard} />
+                <Route exact path="/order-history" component={OrderHistory} />
+                <Route
+                  exact
+                  path="/order-summary/:orderId"
+                  component={OrderSummary}
+                />
+                <Route exact path="/account-info" component={AccountInfo} />
+                <Route exact path="/payment-method" component={PaymentMethod} />
+                <Route exact path="/plan-settings" component={PlanSettings} />
+                <Route
+                  exact
+                  path="/edit-order/:orderId"
+                  component={EditOrder}
+                />
 
-              <Route path="/steps/2" component={Location} />
-              <Route path="/steps/3" component={EntreeType} />
-              <Route path="/steps/4" component={Entrees} />
-              <Route path="/steps/5" component={Review} />
-              <Route path="*" component={Frequency} />
-            </Switch>
+                <Route path="/steps/2" component={Location} />
+                <Route path="/steps/3" component={EntreeType} />
+                <Route path="/steps/4" component={Entrees} />
+                <Route path="/steps/5" component={Review} />
+                <Route path="*" component={Frequency} />
+              </Switch>
+            </div>
+            {state.displayFooter && <Footer />}
+            {/* {state.faqType && <Faq type={state.faqType} />} */}
           </div>
-          {state.displayFooter && <Footer />}
-          {/* {state.faqType && <Faq type={state.faqType} />} */}
-        </div>
+        </ErrorHandler>
       </Router>
     </AppProvider>
   )

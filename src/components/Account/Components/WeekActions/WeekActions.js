@@ -13,7 +13,7 @@ const WeekActions = ({ status, date, orderId, displaySummary = false }) => {
       </Link>
     ) : (
       <Link
-        to={`/order-history?date=${dayjs(date).format('YYYY-MM-DD')}`}
+        to={`/order-history?date=${dayjs.utc(date).format('YYYY-MM-DD')}`}
         className="secondaryButton"
       >
         Order Summary
