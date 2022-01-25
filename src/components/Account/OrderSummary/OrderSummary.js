@@ -168,23 +168,18 @@ const OrderSummary = () => {
     setIsLoading(true)
 
     try {
+      const currentToken = !state.tokens.userToken
+        ? await getToken()
+        : state.tokens.userToken
       const newItems = []
 
       let savedItems = []
       let savedItemsResponse = null
-      if (!state.tokens.userToken) {
-        const thisToken = getToken()
-        savedItemsResponse = await getCustomerBundleItems(thisToken)
-        savedItems = savedItemsResponse.currentItems
-      } else {
-        savedItemsResponse = await getCustomerBundleItems(
-          state.tokens.userToken
-        )
-        savedItems = savedItemsResponse.currentItems
-      }
+      savedItemsResponse = await getCustomerBundleItems(currentToken)
+      savedItems = savedItemsResponse.currentItems
 
       const bundleResponse = await getBundle(
-        state.tokens.userToken,
+        currentToken,
         savedItems[0]?.bundleId || savedItemsResponse.bundleId
       )
 
@@ -196,7 +191,11 @@ const OrderSummary = () => {
 
       for (const configuration of currentApiBundle.configurations) {
         const mappedProducts = []
-        const productsResponse = await getProducts(configuration, savedItems[0])
+        const productsResponse = await getProducts(
+          currentToken,
+          configuration,
+          savedItems[0]
+        )
 
         if (productsResponse) {
           productsResponse.products.forEach((product) => {
@@ -251,11 +250,11 @@ const OrderSummary = () => {
     }
   }
 
-  const getProducts = async (configuration, savedItems) => {
+  const getProducts = async (userToken, configuration, savedItems) => {
     const nextWeekDate = currentDate
 
     const response = await getContents(
-      state.tokens.userToken,
+      userToken,
       configuration.bundleId,
       configuration.id,
       `is_enabled=1&deliver_after=${nextWeekDate}`
@@ -270,10 +269,7 @@ const OrderSummary = () => {
         shopProducts
       )
 
-      const subscriptionOrder = await getSubscriptionOrders(
-        state.tokens.userToken,
-        orderId
-      )
+      const subscriptionOrder = await getSubscriptionOrders(userToken, orderId)
 
       let hasPlatformId = false
       subscriptionOrder.data.data.forEach((subscription) => {
