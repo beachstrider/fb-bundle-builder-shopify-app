@@ -4,6 +4,7 @@ import isBetween from 'dayjs/plugin/isBetween'
 import isSameOrAfter from 'dayjs/plugin/isSameOrAfter'
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore'
 import { getNextWeekDay } from '.'
+import { ZIPCODE_CHARACTERS } from '../constants/zones'
 
 dayjs.extend(weekday)
 dayjs.extend(isBetween)
@@ -23,6 +24,8 @@ const findZipCode = (zones, zipCode) => {
 
   return result
 }
+
+const isValidZipCode = (zipCode) => zipCode.length === ZIPCODE_CHARACTERS
 
 const availableDeliveryDays = (zone, todayDate) => {
   const deliveryDays = zone.deliveryDates.map((d) => d.day)
@@ -82,6 +85,7 @@ const getConfigurationContent = async (
 export {
   availableDeliveryDays,
   findZipCode,
+  isValidZipCode,
   getConfigurationContent,
   mapDeliveryDays
 }
