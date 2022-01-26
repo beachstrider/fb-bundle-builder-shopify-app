@@ -338,19 +338,14 @@ const EditOrder = () => {
       const newItems = []
       const newQuantities = []
       const newQuantitiesCountdown = []
+      const userToken = !state.tokens.userToken
+        ? await getToken()
+        : state.tokens.userToken
 
       let savedItems = []
       let savedItemsResponse = null
-      if (!state.tokens.userToken) {
-        const thisToken = getToken()
-        savedItemsResponse = await getCustomerBundleItems(thisToken)
-        savedItems = savedItemsResponse.currentItems
-      } else {
-        savedItemsResponse = await getCustomerBundleItems(
-          state.tokens.userToken
-        )
-        savedItems = savedItemsResponse.currentItems
-      }
+      savedItemsResponse = await getCustomerBundleItems(userToken)
+      savedItems = savedItemsResponse.currentItems
 
       let savedItemsExist = true
       const totalItems = savedItems.length
@@ -367,7 +362,7 @@ const EditOrder = () => {
       setHasSavedItems(savedItemsExist && savedItems.length > 0)
 
       const bundleResponse = await getBundle(
-        state.tokens.userToken,
+        userToken,
         savedItems[0]?.bundleId || savedItemsResponse.bundleId
       )
 
@@ -379,7 +374,11 @@ const EditOrder = () => {
 
       for (const configuration of currentApiBundle.configurations) {
         const mappedProducts = []
-        const productsResponse = await getProducts(configuration, savedItems[0])
+        const productsResponse = await getProducts(
+          userToken,
+          configuration,
+          savedItems[0]
+        )
 
         if (productsResponse) {
           productsResponse.products.forEach((product) => {
@@ -468,11 +467,11 @@ const EditOrder = () => {
     }
   }
 
-  const getProducts = async (configuration, savedItems) => {
+  const getProducts = async (userToken, configuration, savedItems) => {
     const nextWeekDate = currentDate
 
     const response = await getContents(
-      state.tokens.userToken,
+      userToken,
       configuration.bundleId,
       configuration.id,
       `is_enabled=1&deliver_after=${nextWeekDate}`
@@ -486,10 +485,7 @@ const EditOrder = () => {
       )
 
       const subscriptionBundle = response.data?.data[0]
-      const subscriptionOrder = await getSubscriptionOrders(
-        state.tokens.userToken,
-        orderId
-      )
+      const subscriptionOrder = await getSubscriptionOrders(userToken, orderId)
       let currentSubscriptionData = null
       let hasPlatformId = false
       subscriptionOrder.data.data.forEach((subscription) => {
