@@ -17,6 +17,7 @@ import {
   findZipCode,
   getTodayDate,
   isValidEmail,
+  isValidZipCode,
   mapDeliveryDays,
   request
 } from '../../../utils'
@@ -147,7 +148,7 @@ const Location = () => {
         return setEmailError('Please type a valid email')
       }
 
-      if (zipCode.length < 4) {
+      if (!isValidZipCode(zipCode)) {
         return setZipCodeError('Please type a valid zip code')
       }
       setIsLoading(true)

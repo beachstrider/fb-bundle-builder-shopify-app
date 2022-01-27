@@ -4,6 +4,7 @@ import smoothScrollingToId from './smoothScrollingToId'
 import {
   availableDeliveryDays,
   findZipCode,
+  isValidZipCode,
   getConfigurationContent,
   mapDeliveryDays
 } from './zones'
@@ -32,6 +33,7 @@ export {
   filterShopifyVariants,
   getConfigurationContent,
   isValidEmail,
+  isValidZipCode,
   mapDeliveryDays,
   request,
   smoothScrollingToId,
