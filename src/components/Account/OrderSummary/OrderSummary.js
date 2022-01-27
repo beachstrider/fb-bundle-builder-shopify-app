@@ -16,7 +16,6 @@ import {
   setTokens,
   cartUpdate
 } from '../../../store/slices/rootSlice'
-import styles from './OrderSummary.module.scss'
 import menuItemStyles from '../MenuItems.module.scss'
 import weekday from 'dayjs/plugin/weekday'
 import utc from 'dayjs/plugin/utc'

@@ -24,7 +24,7 @@ import {
   setTokens,
   cartUpdate
 } from '../../../store/slices/rootSlice'
-import styles from './EditOrder.module.scss'
+import menuItemStyles from '../MenuItems.module.scss'
 import weekday from 'dayjs/plugin/weekday'
 import utc from 'dayjs/plugin/utc'
 import dayjs from 'dayjs'
@@ -659,13 +659,13 @@ const EditOrder = () => {
   return (
     <div>
       <div className="contentWrapper">
-        <div className={styles.wrapper}>
-          <div className={`${styles.title} mb-7`}>Edit Order</div>
-          <div className={`${styles.quantitiesWrapper} mb-8`}>
-            <div className={styles.topBarQuantities}>
+        <div className={menuItemStyles.wrapper}>
+          <div className={`${menuItemStyles.title} mb-7`}>Edit Order</div>
+          <div className={`${menuItemStyles.quantitiesWrapper} mb-8`}>
+            <div className={menuItemStyles.topBarQuantities}>
               {menuItems.map((product) => (
                 <div key={product.id} className="px-3">
-                  <span className={styles.number}>
+                  <span className={menuItemStyles.number}>
                     {getQuantityCountdown(product.id).quantity}
                   </span>{' '}
                   {product.title} Left
@@ -676,16 +676,16 @@ const EditOrder = () => {
 
           {menuItems.map((content) => (
             <div key={content.id}>
-              <div className={styles.listHeader}>
-                <div className={styles.title}>{content.title}</div>
-                <div className={`px-10 ${styles.quantities}`}>
-                  <span className={styles.number}>
+              <div className={menuItemStyles.listHeader}>
+                <div className={menuItemStyles.title}>{content.title}</div>
+                <div className={`px-10 ${menuItemStyles.quantities}`}>
+                  <span className={menuItemStyles.number}>
                     {getQuantityCountdown(content.id).quantity}
                   </span>{' '}
                   {content.title} Left
                 </div>
               </div>
-              <div className={`${styles.cards} mb-10`}>
+              <div className={`${menuItemStyles.cards} mb-10`}>
                 {content.products.map((item) => (
                   <CardQuantities
                     key={item.id}
@@ -725,7 +725,7 @@ const EditOrder = () => {
           ''
         )}
       </div>
-      <div className={styles.buttonsRow}>
+      <div className={menuItemStyles.buttonsRow}>
         <div className="buttons">
           <div
             className="button lightButton"
