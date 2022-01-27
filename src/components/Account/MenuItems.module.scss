@@ -11,6 +11,7 @@ $subTitleFontSize: 2.7rem;
   bottom: 0;
   background: $white;
   padding: 1.5rem;
+  font-family: $fontFamilyMedium;
 }
 
 .wrapper {
@@ -34,6 +35,9 @@ $subTitleFontSize: 2.7rem;
     margin: 0;
     position: -webkit-sticky;
     position: sticky;
+    font-size: $subTitleFontSize;
+    font-family: $fontFamilyLight;
+
     & .topBarQuantities {
       display: flex;
       justify-content: center;
@@ -48,25 +52,29 @@ $subTitleFontSize: 2.7rem;
     & .number {
       color: $primaryColor;
       font-weight: 700;
+      font-family: $fontFamilyBold;
     }
-    font-size: $subTitleFontSize;
   }
 
   & .quantities {
+    font-size: $subTitleFontSize;
+    font-family: $fontFamilyLight;
+
     & div {
       margin: 0.5rem;
     }
     & .number {
       color: $primaryColor;
       font-weight: 700;
+      font-family: $fontFamilyBold;
     }
-    font-size: $subTitleFontSize;
   }
 
   & .title {
     font-size: $fontLarge;
     font-weight: 700;
     text-align: center;
+    font-family: $fontFamilyBold;
   }
 
   & .listHeader {

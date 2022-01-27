@@ -17,8 +17,9 @@
     grid-template-columns: repeat(4, 1fr);
     font-size: $fontXSmall;
     column-gap: 1.4rem;
+    font-family: $fontFamilyMedium;
 
-    & div{
+    & div {
       margin-bottom: 12px;
     }
 
@@ -44,6 +45,7 @@
   & .actions {
     display: flex;
     justify-content: flex-start;
+    font-family: $fontFamilyBold;
 
     @media only screen and (max-width: $breakpointTablet) {
       justify-content: center;
@@ -69,6 +71,8 @@
     font-size: $fontMediumLarge;
     font-weight: 700;
     text-align: left;
+    font-family: $fontFamilyBold;
+
     @media only screen and (max-width: $breakpointTablet) {
       text-align: center;
     }
