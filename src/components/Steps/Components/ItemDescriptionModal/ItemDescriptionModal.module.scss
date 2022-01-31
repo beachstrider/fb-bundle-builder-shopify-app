@@ -23,14 +23,14 @@
       margin-bottom: 12px;
     }
 
-    & .subTitle {
+    & .metafieldValue {
       text-align: center;
       font-size: $fontMediumLarge;
       font-weight: 700;
     }
-    & .subTitleDescription {
+    & .metafieldName {
       text-align: center;
-      font-size: $fontMedium;
+      font-size: calc($fontMedium - 0.2em);
     }
 
     @media only screen and (max-width: $breakpointTablet) {
@@ -72,7 +72,6 @@
     font-weight: 700;
     text-align: left;
     font-family: $fontFamilyBold;
-
     @media only screen and (max-width: $breakpointTablet) {
       text-align: center;
     }

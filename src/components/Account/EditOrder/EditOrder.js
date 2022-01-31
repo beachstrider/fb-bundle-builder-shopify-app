@@ -678,12 +678,6 @@ const EditOrder = () => {
             <div key={content.id}>
               <div className={menuItemStyles.listHeader}>
                 <div className={menuItemStyles.title}>{content.title}</div>
-                <div className={`px-10 ${menuItemStyles.quantities}`}>
-                  <span className={menuItemStyles.number}>
-                    {getQuantityCountdown(content.id).quantity}
-                  </span>{' '}
-                  {content.title} Left
-                </div>
               </div>
               <div className={`${menuItemStyles.cards} mb-10`}>
                 {content.products.map((item) => (
