@@ -16,14 +16,14 @@ const FrequencyEntree = ({ data, quantity, isSelected, onClick }) => {
             <div className={`${styles.title} ${styles.fontBold}`}>
               {data.name}
             </div>
-            <div className={styles.xSmallFont}>Entrees</div>
+            <div className={styles.xSmallFont}>Meals</div>
           </div>
         </div>
         <div className={styles.centerRow}>
           <div className={`${styles.smallFont} ${styles.fontBold}`}>
             ${data.price}
           </div>
-          <div className={`${styles.xSmallFont} mb-1`}>Per Entree</div>
+          <div className={`${styles.xSmallFont} mb-1`}>Per Meal</div>
           <div className={styles.xSmallFont}>Total Per Week</div>
           <FrequencyWeeklyPrice price={data.price * quantity} />
         </div>

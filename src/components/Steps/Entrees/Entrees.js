@@ -253,7 +253,7 @@ const Entrees = () => {
         <Loading />
       ) : (
         <div className={styles.wrapper}>
-          <div className={`${styles.title} mb-7`}>Choose Entrees</div>
+          <div className={`${styles.title} mb-7`}>Choose Meals</div>
           <div className={`${styles.quantitiesWrapper} mb-8`}>
             <div className={styles.topBarQuantities}>
               {menuItems.map((product) => (
