@@ -271,12 +271,6 @@ const Entrees = () => {
             <div key={content.id}>
               <div className={styles.listHeader}>
                 <div className={styles.title}>{content.title}</div>
-                <div className={`px-10 ${styles.quantities}`}>
-                  <span className={styles.number}>
-                    {getQuantityCountdown(content.id).quantity}
-                  </span>{' '}
-                  {content.title} Left
-                </div>
               </div>
               <div className={`${styles.cards} mb-10`}>
                 {content.products.map((item) => (

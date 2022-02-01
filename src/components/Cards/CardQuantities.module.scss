@@ -14,14 +14,23 @@
     text-align: center;
     grid-template-columns: repeat(4, 1fr);
     font-size: $fontXSmall;
-    column-gap: 1.4rem;
     padding: 1rem;
     font-family: $fontFamilyLight;
+    min-height: 2em;
+    @media only screen and (max-width: $breakpointTablet) {
+      column-gap: 1.4rem;
+    }
+    @media only screen and (min-width: $breakpointTablet) {
+      column-gap: 0.1rem;
+    }
 
-    & .subTitle {
+    & .metafieldValue {
       font-size: 1.8rem;
       font-weight: 700;
       font-family: $fontFamilyBold;
+    }
+    & .metafieldName {
+      font-size: 1.3rem;
     }
   }
 
@@ -47,6 +56,9 @@
     font-weight: 700;
     text-align: center;
     font-family: $fontFamilyBold;
+    @media only screen and (min-width: $breakpointTablet) {
+      min-height: 2.8em;
+    }
   }
 
   & .descriptionWrapper {

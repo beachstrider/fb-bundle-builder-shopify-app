@@ -84,7 +84,7 @@ const Footer = () => {
             return state.isNextButtonActive && handleNextButtonClick()
           }}
         >
-          {isLoading ? <SpinnerIcon /> : nextStep.description}
+          {isLoading ? <SpinnerIcon /> : 'Next'}
         </div>
       </div>
     </div>

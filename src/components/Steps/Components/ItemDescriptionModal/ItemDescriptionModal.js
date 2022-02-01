@@ -32,10 +32,8 @@ const ItemDescriptionModal = ({
           <div className={styles.description}>
             {metafields.map((metafield) => (
               <div key={metafield.key}>
-                <div className={styles.subTitle}>{metafield.value}</div>
-                <div className={styles.subTitleDescription}>
-                  {metafield.name}
-                </div>
+                <div className={styles.metafieldValue}>{metafield.value}</div>
+                <div className={styles.metafieldName}>{metafield.name}</div>
               </div>
             ))}
           </div>
