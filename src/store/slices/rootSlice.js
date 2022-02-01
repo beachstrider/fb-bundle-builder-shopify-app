@@ -116,7 +116,8 @@ export const initialState = {
     guestToken: '',
     userToken: ''
   },
-  triggerLastStep: false
+  triggerLastStep: false,
+  returnToStep: ''
 }
 
 const rootSlice = createSlice({
@@ -208,6 +209,9 @@ const rootSlice = createSlice({
     },
     clearBundle: (state) => {
       state.bundle = { ...initialState.bundle }
+    },
+    setReturnToStep: (state, action) => {
+      state.returnToStep = action.payload
     }
   }
 })
@@ -232,5 +236,6 @@ export const {
   setLocation,
   setTokens,
   setIsNextButtonActive,
-  triggerLastStep
+  triggerLastStep,
+  setReturnToStep
 } = rootSlice.actions

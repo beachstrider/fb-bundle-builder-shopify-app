@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { useHistory } from 'react-router'
 import {
   setBundle,
   selectFaqType,
@@ -89,6 +90,7 @@ const bundles = [
 
 const Frequency = () => {
   const dispatch = useDispatch()
+  const history = useHistory()
   const state = useSelector((state) => state)
   const [selectedBundle, setSelectedBundle] = useState({})
   const [isLoading, setIsLoading] = useState(false)
@@ -122,6 +124,13 @@ const Frequency = () => {
 
   const initializeApp = async () => {
     setIsLoading(true)
+
+    // if the customer is returning from Shopify login page
+    if (state.returnToStep) {
+      history.push(`/steps/${state.returnToStep}`)
+      return
+    }
+
     await clearState()
     setSelectedBundle(bundles[0])
 
