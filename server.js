@@ -5,9 +5,10 @@ const compression = require('compression')
 const express = require('express')
 const helmet = require('helmet')
 const verifyHmac = require('./src/server/middleware/verifyHmac')
-const { replaceString } = require('./src/server/utils')
+const { replaceString, generateRequestToken } = require('./src/server/utils')
 const cors = require('cors')
 const morgan = require('morgan')
+
 const bundleApiRouters = require('./src/server/routers/bundleApiRouters')
 const shopifyRouters = require('./src/server/routers/shopifyRouters')
 const rechargeRouters = require('./src/server/routers/rechargeRouters')
@@ -20,6 +21,8 @@ console.log('shopifyMultipass', process.env.SHOPIFY_MULTIPASS_SECRET)
 // Sentry
 const Sentry = require('@sentry/node')
 const Tracing = require('@sentry/tracing')
+const dayjs = require('dayjs')
+
 Sentry.init({
   environment: process.env.SENTRY_ENVIRONMENT,
   dsn: process.env.SENTRY_DSN,
@@ -62,6 +65,17 @@ app.disable('x-powered-by')
 app.use(helmet())
 app.use(compression())
 
+app.post('/request-token', (req, res) => {
+  if (!req.body.value) {
+    return res.status(422).send({
+      message: 'Unprocessable Entity'
+    })
+  }
+
+  const token = generateRequestToken(req.body.value)
+  res.json({ token: token })
+})
+
 app.use('/images', express.static('images'))
 
 app.get('/bundle.js', (req, res) => {
@@ -75,8 +89,8 @@ app.get('/public/index.html', (req, res) => {
 })
 
 app.use(bundleApiRouters)
-app.use(shopifyRouters)
 app.use(rechargeRouters)
+app.use('/shopify', shopifyRouters)
 
 app.get('/', verifyHmac, (req, res) => {
   fs.readFile(

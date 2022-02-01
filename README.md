@@ -4,27 +4,44 @@
 
 - Copy .env.example to .env and set the variables
 
+## Create a private app
+
+- In your Shopify admin, go to Apps
+- Manage private apps
+- Create an app with permission to `read` `customers`
+- Copy the api key and secret to use on your .env file
+
 ## Configuring the .env file
 
-`NODE_ENV` Your environment. It can be 'development' or 'production'
-`PROXY_APP_URL` Example: https://your-app.ngrok.io
+`NODE_ENV` Your environment. It can be 'development' or 'production' <br>
+`PROXY_APP_URL` Example: https://your-app.ngrok.io <br><br>
 
-`BUNDLE_API_URL` Example "http://localhost:8080" this is the url for the API
-`BUNDLE_API_SECRET` Secret used for the API app
-`LOGO_URL` Https url for the company's logo
-`SHOPIFY_API_SECRET` Shopify API secret
-`SHOPIFY_MULTIPASS_SECRET` Please enable multipass in Shopify and paste the secret here
-`SHOPIFY_BUNDLES_COLLECTION` Will be the bundles' collection
-`SHOPIFY_PRODUCTS_COLLECTION` Menu items
-`ACCESS_TOKEN_ALGORITHM` It has to be equal to HS256
-`PUBLIC_ACCESS_TOKEN_DURATION` Define the accepted hours. Example: 24h
-`LOCAL_STORAGE_KEY` Local storage key. Example: bundleApp
+`REQUEST_TOKEN_SECRET` Used to make sure that a request is coming from the app <br>
+`REQUEST_TOKEN_DURATION` How long the token should be valid (in seconds) <br> <br>
 
-`LOGO_URL` Company's logo url starting with https://
-`PAGE_TITLE` Example: QuickFresh
-`PAGE_DESCRIPTION` Description for Shopify liquid (string)
+`LOCAL_STORAGE_KEY` Local storage key. Example: bundleApp <br>
+`EMPTY_STATE_IMAGE` Use an public image example https://..... <br><br>
 
-`EMPTY_STATE_IMAGE` Use an public image example https://.....
+`BUNDLE_API_URL` Example "http://localhost:8080" this is the url for the API <br>
+`BUNDLE_API_SECRET` Secret used for the API app <br><br>
+
+`SHOPIFY_API_SECRET` Shopify API secret <br>
+`SHOPIFY_API_VERSION` Example: 2022-01 <br>
+`SHOPIFY_PRIVATE_APP_API_SECRET` Create a private Shopify app and copy and past the secret here <br>
+`SHOPIFY_MULTIPASS_SECRET` Please enable multipass in Shopify and paste the secret here <br>
+`SHOPIFY_MULTIPASS_SHOP` Default shop in case of this value have not being defined in the query string <br>
+`SHOPIFY_BUNDLES_COLLECTION` Will be the bundles' collection<br>
+`SHOPIFY_PRODUCTS_COLLECTION` Menu items<br><br>
+
+`LOGO_URL` Company's logo url starting with https://<br>
+`PAGE_TITLE` Example: QuickFresh <br>
+`PAGE_DESCRIPTION` Description for Shopify liquid (string) <br>
+
+`SENTRY_DSN` Sentry DSN <br>
+`SENTRY_SAMPLE_RATE` Sentry sample rate (example: 0) <br>
+`SENTRY_ENVIRONMENT` Sentry environment (example: local) <br> <br>
+
+`RECHARGE_API_TOKEN` Token from Recharge platform <br>
 
 ## Configuring Shopify Products Collection
 
@@ -54,19 +71,19 @@ Env variable: SHOPIFY_BUNDLES_COLLECTION
 
 In one terminal, run:
 
-#### `yarn dev`
+#### `yarn dev` / `npm run dev`
 
 It generates and watch the `bundle.js` file
 
 In a second terminal run:
 
-#### `yarn server`
+#### `yarn server` / `npm run server`
 
 ### Using Only React
 
 To start the react application with hot reloading run:
 
-#### `yarn start`
+#### `yarn start` / `npm run start`
 
 Runs the app in the development mode.\
 Open [http://localhost:8080](http://localhost:8080) to view it in the browser.
@@ -76,7 +93,7 @@ You will also see any lint errors in the console.
 
 ## Building the app
 
-#### `yarn build`
+#### `yarn build` / `npm run build`
 
 Builds the app for production to the `public` folder.\
 It generates a `bundle.js` file

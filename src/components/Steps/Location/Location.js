@@ -9,7 +9,8 @@ import {
   setLocation,
   setEmail as setStoreEmail,
   setIsNextButtonActive,
-  initialState
+  initialState,
+  setReturnToStep
 } from '../../../store/slices/rootSlice'
 import { InputEmail, InputText } from '../Components/Inputs'
 import {
@@ -22,7 +23,11 @@ import {
   request
 } from '../../../utils'
 import styles from './Location.module.scss'
-import { withActiveStep } from '../../Hooks'
+import {
+  generateRequestToken,
+  getShopifyCustomerByEmail,
+  withActiveStep
+} from '../../Hooks'
 import SpinnerIcon from '../../Global/SpinnerIcon'
 import DeliveryDates from '../Components/DeliveryDates'
 import Toast from '../../Global/Toast'
@@ -40,6 +45,7 @@ const Location = () => {
   const [zipCodeError, setZipCodeError] = useState('')
   const [emailError, setEmailError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
+  const [isRedirecting, setIsRedirecting] = useState(false)
   const [error, setError] = useState({
     open: false,
     status: 'Success',
@@ -66,8 +72,7 @@ const Location = () => {
         return setZipCodeError('Delivery is not available to your zip code')
       }
 
-      const newZone = getMappedZones(zone)
-      setCurrentZone(newZone)
+      defineCurrentZone(zone)
 
       if (
         state.location?.deliveryDate &&
@@ -79,6 +84,7 @@ const Location = () => {
       }
       dispatch(selectFaqType(FAQ_TYPE))
       dispatch(displayFooter(true))
+      dispatch(setReturnToStep(''))
     } else {
       setCurrentZone({})
       setEmail('')
@@ -93,7 +99,7 @@ const Location = () => {
       checkCurrentSelectedDate(currentZone)
     }
 
-    if (state.location.deliveryDate.id === -1) {
+    if (state.location.deliveryDate && state.location.deliveryDate.id === -1) {
       dispatch(setIsNextButtonActive(false))
     } else {
       if (!state.isNextButtonActive) {
@@ -101,6 +107,11 @@ const Location = () => {
       }
     }
   }, [state.location.deliveryDate])
+
+  const defineCurrentZone = (zone) => {
+    const newZone = getMappedZones(zone)
+    setCurrentZone(newZone)
+  }
 
   const getMappedZones = (zone) => {
     const availableDays = availableDeliveryDays(zone, todayDate)
@@ -142,6 +153,12 @@ const Location = () => {
   const findDefaultSelectedDate = (deliveryDates) =>
     deliveryDates.find((date) => date.isSelected)
 
+  const setStepToReturn = async (step) =>
+    new Promise((resolve) => {
+      dispatch(setReturnToStep(step))
+      resolve()
+    })
+
   const handleSubmit = async () => {
     try {
       if (!email || !isValidEmail(email)) {
@@ -152,6 +169,7 @@ const Location = () => {
         return setZipCodeError('Please type a valid zip code')
       }
       setIsLoading(true)
+      setIsRedirecting(true)
 
       dispatch(setStoreEmail(email))
       dispatch(
@@ -161,27 +179,66 @@ const Location = () => {
         })
       )
 
-      const shopifyMultipass = await request(
-        `${process.env.PROXY_APP_URL}/shopify/multipass-url?shop=${shopDomain}`,
-        {
-          method: 'post',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          data: {
-            email,
-            created_at: new Date().toISOString(),
-            return_to: window.location.href,
-            addresses: {
-              zip: zipCode
-            }
-          }
-        }
+      const zone = findZipCode(state.deliveryZones, zipCode)
+      defineCurrentZone(zone)
+
+      dispatch(setStoreEmail(email))
+      dispatch(
+        setLocation({
+          zipCode: zipCode,
+          deliveryDate: state.location.deliveryDate
+        })
       )
 
-      if (shopifyMultipass?.data?.url) {
-        window.location.href = shopifyMultipass.data.url
+      const requestToken = await generateRequestToken(email)
+      const shopifyCustomer = await getShopifyCustomerByEmail(
+        requestToken.data?.token,
+        email
+      )
+
+      const currentUrl = window.location.href
+
+      // validates current user and input email
+      if (
+        shopifyCustomer.data &&
+        shopifyCustomer.data?.data?.customers?.edges?.length > 0 &&
+        shopCustomer.email !== email
+      ) {
+        await setStepToReturn('2')
+        window.location.href = `https://${shopDomain}/account/login?return_url=${currentUrl}`
+        return
       }
+
+      // if user isn't signed-in
+      if (shopifyCustomer.data?.data?.customers?.edges?.length === 0) {
+        const shopifyMultipass = await request(
+          `${process.env.PROXY_APP_URL}/shopify/multipass-url?shop=${shopDomain}`,
+          {
+            method: 'post',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            data: {
+              email,
+              created_at: new Date().toISOString(),
+              return_to: window.location.href,
+              addresses: {
+                zip: zipCode
+              }
+            }
+          }
+        )
+
+        if (shopifyMultipass?.data?.url) {
+          window.location.href = shopifyMultipass.data.url
+          return
+        }
+      }
+
+      dispatch(selectFaqType(FAQ_TYPE))
+      dispatch(displayFooter(true))
+
+      setIsLoading(false)
     } catch (error) {
       handleError(error)
     }
@@ -268,14 +325,16 @@ const Location = () => {
             </div>
           </div>
         </div>
-        {Object.keys(currentZone).length > 0 && currentZone.deliveryDates && (
-          <DeliveryDates
-            onClick={handleDeliveryDate}
-            title="Choose Delivery Date"
-            dates={currentZone.deliveryDates}
-            todayDate={todayDate}
-          />
-        )}
+        {Object.keys(currentZone).length > 0 &&
+          !isRedirecting &&
+          currentZone.deliveryDates && (
+            <DeliveryDates
+              onClick={handleDeliveryDate}
+              title="Choose Delivery Date"
+              dates={currentZone.deliveryDates}
+              todayDate={todayDate}
+            />
+          )}
       </div>
       {error.open ? (
         <Toast
