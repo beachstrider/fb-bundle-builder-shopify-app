@@ -26,8 +26,8 @@ const STEP_ID = 1
 const bundles = [
   {
     id: 1,
-    name: '14 Entrees',
-    description: '7-Days All inclusive - (14 Entrees + 7 Breakfast)',
+    name: '14 Meals',
+    description: '7-Days All inclusive - (14 Meals + 7 Breakfasts)',
     price: 9.95,
     entreesQuantity: 14,
     breakfastsQuantity: 7,
@@ -169,7 +169,7 @@ const Frequency = () => {
         <div className={styles.row}>
           <div className={styles.column}>
             <div className={styles.section}>
-              <div className={styles.title}>Entrees</div>
+              <div className={styles.title}>Meals</div>
               <div>Every Meal is ready in 2 Mins</div>
             </div>
           </div>

@@ -21,7 +21,7 @@ const FrequencyMainEntree = ({ data, quantity, isSelected, onClick }) => {
           <div className={`${styles.semiMediumFont} ${styles.fontBold}`}>
             ${Number.parseFloat(data.price).toFixed(2)}
           </div>
-          <div className={styles.xSmallFont}>Per Entree</div>
+          <div className={styles.xSmallFont}>Per Meal</div>
         </div>
         <div className={styles.centerRow}>
           <div className={styles.xSmallFont}>Total Per Week</div>

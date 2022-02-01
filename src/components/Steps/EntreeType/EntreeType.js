@@ -179,7 +179,7 @@ const EntreeType = () => {
   return (
     <div className='defaultWrapper'>
       <div className={styles.wrapper}>
-        <div className={`${styles.title} mb-7`}>Choose Entree Type</div>
+        <div className={`${styles.title} mb-7`}>Choose Meal Type</div>
         <div className={`${styles.entrees} mb-10`}>
           {entreeTypes.map((entree) => (
             <CardEntreeType
@@ -196,7 +196,7 @@ const EntreeType = () => {
         <div id='entreeType'>
           {state.entreeType.id !== 0 && (
             <>
-              <div className={`${styles.title} mb-7`}>Choose Entree Sub Type</div>
+              <div className={`${styles.title} mb-7`}>Choose Meal Sub Type</div>
               <div className={`${state.entreeType.id === 1 ? styles.subTypesWrapper_2_Columns : styles.subTypesWrapper_3_Columns} mb-10`}>
                 {subTypes[state.entreeType.subType].map((subType) => (
                   <EntreeTypeSubType

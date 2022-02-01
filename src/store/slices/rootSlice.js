@@ -23,14 +23,14 @@ export const initialState = {
     {
       id: 3,
       name: 'Step 3',
-      description: 'Entree Type',
+      description: 'Meal Type',
       path: '/steps/3',
       isActive: false
     },
     {
       id: 4,
       name: 'Step 4',
-      description: 'Entrees',
+      description: 'Meals',
       path: '/steps/4',
       isActive: false
     },
