@@ -15,12 +15,12 @@
       {% for order in customer.orders %}
         {
           id: '{{ order.id }}',
-          orderDate: '{{ order.created_at }}',
+          orderDate: '{{ order.created_at | date: "%FT%H:%M%z" }}',
           orderTotal: '{{ order.total_price | money_with_currency }}',
           lineItems: [
             {% for item in order.line_items %}
             {
-              productId: '{{ item..product_id }}',
+              productId: '{{ item.product_id }}',
               title: '{{ item.title }}',
               quantity: '{{ item.quantity }}'
             },
