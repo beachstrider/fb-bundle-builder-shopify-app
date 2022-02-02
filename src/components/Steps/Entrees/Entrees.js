@@ -29,6 +29,7 @@ import {
 } from '../../../utils'
 import Toast from '../../Global/Toast'
 import { DEFAULT_ERROR_MESSAGE } from '../../../constants/errors'
+import MostPopularBar from './MostPopularBar'
 dayjs.extend(weekday)
 dayjs.extend(utc)
 
@@ -249,69 +250,75 @@ const Entrees = () => {
   }
 
   return (
-    <div className="defaultWrapper" id="entreesTop">
-      {isLoading ? (
-        <Loading />
-      ) : (
-        <div className={styles.wrapper}>
-          <div className={`${styles.title} mb-7`}>Choose Meals</div>
-          <div className={`${styles.quantitiesWrapper} mb-8`}>
-            <div className={styles.topBarQuantities}>
-              {menuItems.map((product) => (
-                <div key={product.id} className="px-3">
-                  <span className={styles.number}>
-                    {getQuantityCountdown(product.id).quantity}
-                  </span>{' '}
-                  {product.title} Left
-                </div>
-              ))}
-            </div>
-          </div>
+    <>
+      <MostPopularBar />
 
-          {menuItems.map((content) => (
-            <div key={content.id}>
-              <div className={styles.listHeader}>
-                <div className={styles.title}>{content.title}</div>
-              </div>
-              <div className={`${styles.cards} mb-10`}>
-                {content.products.map((item) => (
-                  <CardQuantities
-                    key={item.id}
-                    title={item.name}
-                    description={item.description}
-                    image={
-                      item.feature_image
-                        ? item.feature_image.src
-                        : item.images.length > 0
-                        ? item.images[0]
-                        : process.env.EMPTY_STATE_IMAGE
-                    }
-                    metafields={item.metafields}
-                    isChecked={cartUtility.isItemSelected(state.cart, item)}
-                    quantity={cartUtility.getItemQuantity(state.cart, item)}
-                    onClick={() => handleAddItem(item, content.id)}
-                    onAdd={() => handleAddItem(item, content.id)}
-                    onRemove={() => handleRemoveItem(item, content.id)}
-                    disableAdd={getQuantityCountdown(content.id).quantity === 0}
-                  />
+      <div className="defaultWrapper mt-10" id="entreesTop">
+        {isLoading ? (
+          <Loading />
+        ) : (
+          <div className={styles.wrapper}>
+            <div className={`${styles.title} mb-7`}>Choose Meals</div>
+            <div className={`${styles.quantitiesWrapper} mb-8`}>
+              <div className={styles.topBarQuantities}>
+                {menuItems.map((product) => (
+                  <div key={product.id} className="px-3">
+                    <span className={styles.number}>
+                      {getQuantityCountdown(product.id).quantity}
+                    </span>{' '}
+                    {product.title} Left
+                  </div>
                 ))}
               </div>
             </div>
-          ))}
-        </div>
-      )}
-      {error.open ? (
-        <Toast
-          open={error.open}
-          status={error.status}
-          message={error.message}
-          displayTitle={false}
-          handleClose={closeAlert}
-        />
-      ) : (
-        ''
-      )}
-    </div>
+
+            {menuItems.map((content) => (
+              <div key={content.id}>
+                <div className={styles.listHeader}>
+                  <div className={styles.title}>{content.title}</div>
+                </div>
+                <div className={`${styles.cards} mb-10`}>
+                  {content.products.map((item) => (
+                    <CardQuantities
+                      key={item.id}
+                      title={item.name}
+                      description={item.description}
+                      image={
+                        item.feature_image
+                          ? item.feature_image.src
+                          : item.images.length > 0
+                          ? item.images[0]
+                          : process.env.EMPTY_STATE_IMAGE
+                      }
+                      metafields={item.metafields}
+                      isChecked={cartUtility.isItemSelected(state.cart, item)}
+                      quantity={cartUtility.getItemQuantity(state.cart, item)}
+                      onClick={() => handleAddItem(item, content.id)}
+                      onAdd={() => handleAddItem(item, content.id)}
+                      onRemove={() => handleRemoveItem(item, content.id)}
+                      disableAdd={
+                        getQuantityCountdown(content.id).quantity === 0
+                      }
+                    />
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+        {error.open ? (
+          <Toast
+            open={error.open}
+            status={error.status}
+            message={error.message}
+            displayTitle={false}
+            handleClose={closeAlert}
+          />
+        ) : (
+          ''
+        )}
+      </div>
+    </>
   )
 }
 

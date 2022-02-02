@@ -1,0 +1,36 @@
+@import '../../variables';
+
+.wrapper {
+  & .button {
+    width: 12rem;
+    padding: 0.2rem 1.5rem;
+    border-radius: 1.5rem;
+    cursor: pointer;
+    font-size: $fontXSmall;
+    align-items: center;
+  }
+
+  & .lightButton {
+    background: $white;
+    border: 1px solid $primaryColor;
+    color: $primaryColor;
+    box-shadow: unset !important;
+    &:hover {
+      color: $white;
+      background: darken($primaryColor, 10%);
+    }
+  }
+
+  & .primaryButton {
+    background: $primaryColor;
+    box-shadow: unset !important;
+    &:hover {
+      background: darken($primaryColor, 10%);
+    }
+  }
+
+  & .activeWrapper {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
