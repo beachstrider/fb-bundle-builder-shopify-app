@@ -32,6 +32,7 @@ import SpinnerIcon from '../../Global/SpinnerIcon'
 import DeliveryDates from '../Components/DeliveryDates'
 import Toast from '../../Global/Toast'
 import { useErrorHandler } from 'react-error-boundary'
+import { DEFAULT_ERROR_MESSAGE } from '../../../constants/errors'
 
 const FAQ_TYPE = 'location'
 const STEP_ID = 2
@@ -195,6 +196,14 @@ const Location = () => {
         requestToken.data?.token,
         email
       )
+
+      if (shopifyCustomer.status >= 400) {
+        setError({
+          open: true,
+          status: 'Danger',
+          message: DEFAULT_ERROR_MESSAGE
+        })
+      }
 
       const currentUrl = window.location.href
 

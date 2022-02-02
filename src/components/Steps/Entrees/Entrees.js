@@ -28,6 +28,7 @@ import {
   getConfigurationContent
 } from '../../../utils'
 import Toast from '../../Global/Toast'
+import { DEFAULT_ERROR_MESSAGE } from '../../../constants/errors'
 dayjs.extend(weekday)
 dayjs.extend(utc)
 
@@ -136,7 +137,7 @@ const Entrees = () => {
       setError({
         open: true,
         status: 'Danger',
-        message: 'Failed to retrieve products'
+        message: DEFAULT_ERROR_MESSAGE
       })
       dispatch(displayFooter(false))
     }

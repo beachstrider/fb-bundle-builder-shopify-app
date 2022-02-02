@@ -27,6 +27,7 @@ import {
   filterShopifyVariants
 } from '../../../utils'
 import Toast from '../../Global/Toast'
+import { DEFAULT_ERROR_MESSAGE } from '../../../constants/errors'
 
 dayjs.extend(utc)
 dayjs.extend(weekday)
@@ -244,7 +245,7 @@ const OrderSummary = () => {
       setError({
         open: true,
         status: 'Danger',
-        message: 'Failed to retrieve menu items'
+        message: DEFAULT_ERROR_MESSAGE
       })
     }
   }

@@ -462,7 +462,7 @@ const EditOrder = () => {
       setError({
         open: true,
         status: 'Danger',
-        message: 'Failed to retrieve products'
+        message: DEFAULT_ERROR_MESSAGE
       })
     }
   }
