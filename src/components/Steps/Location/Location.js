@@ -47,6 +47,7 @@ const Location = () => {
   const [emailError, setEmailError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [isRedirecting, setIsRedirecting] = useState(false)
+  const [displayDates, setDisplayDates] = useState(false)
   const [error, setError] = useState({
     open: false,
     status: 'Success',
@@ -108,6 +109,14 @@ const Location = () => {
       }
     }
   }, [state.location.deliveryDate])
+
+  useEffect(() => {
+    setDisplayDates(
+      Object.keys(currentZone).length > 0 &&
+        !isRedirecting &&
+        currentZone.deliveryDates
+    )
+  }, [currentZone, isRedirecting])
 
   const defineCurrentZone = (zone) => {
     const newZone = getMappedZones(zone)
@@ -247,6 +256,7 @@ const Location = () => {
       dispatch(selectFaqType(FAQ_TYPE))
       dispatch(displayFooter(true))
 
+      setIsRedirecting(false)
       setIsLoading(false)
     } catch (error) {
       handleError(error)
@@ -334,16 +344,14 @@ const Location = () => {
             </div>
           </div>
         </div>
-        {Object.keys(currentZone).length > 0 &&
-          !isRedirecting &&
-          currentZone.deliveryDates && (
-            <DeliveryDates
-              onClick={handleDeliveryDate}
-              title="Choose Delivery Date"
-              dates={currentZone.deliveryDates}
-              todayDate={todayDate}
-            />
-          )}
+        {displayDates && (
+          <DeliveryDates
+            onClick={handleDeliveryDate}
+            title="Choose Delivery Date"
+            dates={currentZone.deliveryDates}
+            todayDate={todayDate}
+          />
+        )}
       </div>
       {error.open ? (
         <Toast
