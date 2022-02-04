@@ -1,10 +1,8 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { ButtonSmall } from '../../Buttons'
 import styles from './MostPopularBar.module.scss'
 
-const MostPopularBar = () => {
-  const [isLoading, setIsLoading] = useState(false)
-
+const MostPopularBar = ({ isLoading, onClick }) => {
   return (
     <div className={styles.wrapper}>
       <div className={styles.text}>
@@ -12,7 +10,7 @@ const MostPopularBar = () => {
       </div>
       <div className="px-5">
         <ButtonSmall
-          onClick={() => console.log('clicked...')}
+          onClick={onClick}
           usePrimaryColor
           label="Most Popular"
           isLoading={isLoading}

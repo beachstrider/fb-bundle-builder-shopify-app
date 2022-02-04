@@ -13,7 +13,8 @@ import {
   cartRemoveItem,
   cartAddItem,
   setIsNextButtonActive,
-  displayFooter
+  displayFooter,
+  cartClear
 } from '../../../store/slices/rootSlice'
 import styles from './Entrees.module.scss'
 import dayjs from 'dayjs'
@@ -42,7 +43,9 @@ const Entrees = () => {
   const cartUtility = cart(state)
 
   const [isLoading, setIsLoading] = useState(false)
+  const [isLoadingDefaults, setIsLoadingDefaults] = useState(false)
   const [menuItems, setMenuItems] = useState([])
+  const [defaultMenuItems, setDefaultMenuItems] = useState([])
   const [error, setError] = useState({
     open: false,
     status: 'Success',
@@ -108,7 +111,9 @@ const Entrees = () => {
       if (data.data.length === 0) {
         throw new Error('Bundle could not be found')
       }
+
       const currentBundle = data.data[0]
+      let defaultItems = []
       for (const configuration of currentBundle.configurations) {
         const addItem = (items) => menuItems.concat(items)
         const response = await getProducts(configuration, addItem)
@@ -127,8 +132,10 @@ const Entrees = () => {
           id: configuration.id,
           quantity: response.quantityCountdown
         })
+        defaultItems = [...response.defaultItems]
       }
 
+      setDefaultMenuItems(defaultItems)
       dispatch(displayFooter(true))
       setQuantitiesCountdown(newQuantitiesCountdown)
       setQuantities(newQuantities)
@@ -145,25 +152,29 @@ const Entrees = () => {
   }
 
   const getProducts = async (configuration) => {
-    const getContentByDate = await getConfigurationContent(
+    const contentByDate = await getConfigurationContent(
       dayjs.utc().toISOString(),
       getBundleConfiguration,
       state,
       configuration.bundleId,
       configuration.id
     )
-    console.log('getContentByDate', getContentByDate)
+
     const contentResponse = await getContent(
       state.tokens.guestToken,
       configuration.bundleId,
       configuration.id,
-      getContentByDate.id
+      contentByDate.id
     )
-    console.log('contentResponse', contentResponse)
+
     if (
       contentResponse.data?.data &&
       contentResponse.data?.data.products.length > 0
     ) {
+      const defaultProducts = contentResponse.data.data.products.filter(
+        (item) => item.is_default
+      )
+
       const filteredProducts = await filterShopifyProducts(
         contentResponse.data.data.products,
         shopProducts
@@ -176,6 +187,7 @@ const Entrees = () => {
         state.entreeSubType.title,
         configuration
       )
+
       let subTotal = 0
       if (state.cart.length > 0) {
         subTotal = cartUtility.sumQuantity(state, configuration.id)
@@ -186,7 +198,8 @@ const Entrees = () => {
       return {
         products: filteredVariants,
         quantity: quantity,
-        quantityCountdown: quantity - subTotal
+        quantityCountdown: quantity - subTotal,
+        defaultProducts
       }
     }
   }
@@ -227,6 +240,16 @@ const Entrees = () => {
     )
   }
 
+  const handlePopularButton = () => {
+    setIsLoadingDefaults(true)
+    dispatch(cartClear())
+
+    console.log('menu items >>', menuItems)
+    console.log('default items >>', defaultMenuItems)
+    console.log('Done')
+    // setIsLoadingDefaults(false)
+  }
+
   const getQuantity = (id) => {
     return quantities.find((q) => q.id === id) || { id: 0, quantity: 0 }
   }
@@ -251,7 +274,10 @@ const Entrees = () => {
 
   return (
     <>
-      <MostPopularBar />
+      <MostPopularBar
+        isLoading={isLoadingDefaults}
+        onClick={handlePopularButton}
+      />
 
       <div className="defaultWrapper mt-10" id="entreesTop">
         {isLoading ? (
@@ -272,38 +298,42 @@ const Entrees = () => {
               </div>
             </div>
 
-            {menuItems.map((content) => (
-              <div key={content.id}>
-                <div className={styles.listHeader}>
-                  <div className={styles.title}>{content.title}</div>
+            {isLoadingDefaults ? (
+              <Loading />
+            ) : (
+              menuItems.map((content) => (
+                <div key={content.id}>
+                  <div className={styles.listHeader}>
+                    <div className={styles.title}>{content.title}</div>
+                  </div>
+                  <div className={`${styles.cards} mb-10`}>
+                    {content.products.map((item) => (
+                      <CardQuantities
+                        key={item.id}
+                        title={item.name}
+                        description={item.description}
+                        image={
+                          item.feature_image
+                            ? item.feature_image.src
+                            : item.images.length > 0
+                            ? item.images[0]
+                            : process.env.EMPTY_STATE_IMAGE
+                        }
+                        metafields={item.metafields}
+                        isChecked={cartUtility.isItemSelected(state.cart, item)}
+                        quantity={cartUtility.getItemQuantity(state.cart, item)}
+                        onClick={() => handleAddItem(item, content.id)}
+                        onAdd={() => handleAddItem(item, content.id)}
+                        onRemove={() => handleRemoveItem(item, content.id)}
+                        disableAdd={
+                          getQuantityCountdown(content.id).quantity === 0
+                        }
+                      />
+                    ))}
+                  </div>
                 </div>
-                <div className={`${styles.cards} mb-10`}>
-                  {content.products.map((item) => (
-                    <CardQuantities
-                      key={item.id}
-                      title={item.name}
-                      description={item.description}
-                      image={
-                        item.feature_image
-                          ? item.feature_image.src
-                          : item.images.length > 0
-                          ? item.images[0]
-                          : process.env.EMPTY_STATE_IMAGE
-                      }
-                      metafields={item.metafields}
-                      isChecked={cartUtility.isItemSelected(state.cart, item)}
-                      quantity={cartUtility.getItemQuantity(state.cart, item)}
-                      onClick={() => handleAddItem(item, content.id)}
-                      onAdd={() => handleAddItem(item, content.id)}
-                      onRemove={() => handleRemoveItem(item, content.id)}
-                      disableAdd={
-                        getQuantityCountdown(content.id).quantity === 0
-                      }
-                    />
-                  ))}
-                </div>
-              </div>
-            ))}
+              ))
+            )}
           </div>
         )}
         {error.open ? (
