@@ -23,7 +23,7 @@
 `EMPTY_STATE_IMAGE` Use an public image example https://... <br><br>
 
 `BUNDLE_API_URL` Example "http://localhost:8080" this is the url for the API <br>
-`BUNDLE_API_SECRET` Secret used for the API app (this is the API Password in Shopify Admin) <br><br>
+`BUNDLE_API_SECRET` Secret used for the API app <br><br>
 
 `SHOPIFY_API_SECRET` Shopify API secret (this is the API Password in Shopify Admin) <br>
 `SHOPIFY_API_VERSION` Example: 2022-01 <br>
