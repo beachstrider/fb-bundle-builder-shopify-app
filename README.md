@@ -20,15 +20,16 @@
 `REQUEST_TOKEN_DURATION` How long the token should be valid (in seconds) <br> <br>
 
 `LOCAL_STORAGE_KEY` Local storage key. Example: bundleApp <br>
-`EMPTY_STATE_IMAGE` Use an public image example https://..... <br><br>
+`EMPTY_STATE_IMAGE` Use an public image example https://... <br><br>
 
 `BUNDLE_API_URL` Example "http://localhost:8080" this is the url for the API <br>
 `BUNDLE_API_SECRET` Secret used for the API app <br><br>
 
-`SHOPIFY_API_SECRET` Shopify API secret <br>
+`SHOPIFY_API_SECRET` Shopify API secret (this is the API Password in Shopify Admin) <br>
 `SHOPIFY_API_VERSION` Example: 2022-01 <br>
-`SHOPIFY_PRIVATE_APP_API_SECRET` Create a private Shopify app and copy and past the secret here <br>
-`SHOPIFY_MULTIPASS_SECRET` Please enable multipass in Shopify and paste the secret here <br>
+`SHOPIFY_PRIVATE_APP_API_SECRET` Create a private Shopify app and copy the password <br>
+<br>
+`SHOPIFY_MULTIPASS_SECRET` Please enable multipass in Shopify and paste the secret <br>
 `SHOPIFY_MULTIPASS_SHOP` Default shop in case of this value have not being defined in the query string <br>
 `SHOPIFY_BUNDLES_COLLECTION` Will be the bundles' collection<br>
 `SHOPIFY_PRODUCTS_COLLECTION` Menu items<br><br>
