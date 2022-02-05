@@ -132,7 +132,8 @@ const Entrees = () => {
           id: configuration.id,
           quantity: response.quantityCountdown
         })
-        defaultItems = [...response.defaultItems]
+
+        defaultItems = [...defaultItems, ...response.defaultItems]
       }
 
       setDefaultMenuItems(defaultItems)
@@ -171,7 +172,7 @@ const Entrees = () => {
       contentResponse.data?.data &&
       contentResponse.data?.data.products.length > 0
     ) {
-      const defaultProducts = contentResponse.data.data.products.filter(
+      const defaultItems = contentResponse.data.data.products.filter(
         (item) => item.is_default
       )
 
@@ -199,17 +200,18 @@ const Entrees = () => {
         products: filteredVariants,
         quantity: quantity,
         quantityCountdown: quantity - subTotal,
-        defaultProducts
+        defaultItems
       }
     }
   }
 
-  const handleAddItem = (item, bundleContentId) => {
+  const handleAddItem = (item, bundleContentId, currentQuantities = null) => {
     const currentItem = cartUtility.addItem(
       item,
       bundleContentId,
-      quantitiesCountdown
+      currentQuantities || quantitiesCountdown
     )
+
     if (!currentItem) {
       return
     }
@@ -240,14 +242,39 @@ const Entrees = () => {
     )
   }
 
-  const handlePopularButton = () => {
+  const handlePopularButton = async () => {
     setIsLoadingDefaults(true)
     dispatch(cartClear())
 
-    console.log('menu items >>', menuItems)
-    console.log('default items >>', defaultMenuItems)
-    console.log('Done')
-    // setIsLoadingDefaults(false)
+    const findDefaultItem = (productPlatformId) =>
+      defaultMenuItems.find(
+        (item) => Number(item.platform_product_id) === Number(productPlatformId)
+      )
+
+    menuItems.forEach((content) => {
+      content.products.forEach((product) => {
+        const defaultItem = findDefaultItem(product.productPlatformId)
+        if (
+          defaultItem &&
+          defaultItem.is_default &&
+          defaultItem.default_quantity > 0
+        ) {
+          handleAddItem(
+            { ...product, quantity: defaultItem.default_quantity },
+            content.id,
+            quantities
+          )
+        }
+      })
+    })
+
+    setQuantitiesCountdown(() => {
+      return quantitiesCountdown.map((section) => {
+        return { ...section, quantity: 0 }
+      })
+    })
+    setIsLoadingDefaults(false)
+    smoothScrollingToId('mealsSection')
   }
 
   const getQuantity = (id) => {
@@ -298,6 +325,7 @@ const Entrees = () => {
               </div>
             </div>
 
+            <div id="mealsSection"></div>
             {isLoadingDefaults ? (
               <Loading />
             ) : (
