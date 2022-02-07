@@ -48,6 +48,15 @@ module.exports = {
       ),
       'process.env.SHOPIFY_API_VERSION': JSON.stringify(
         process.env.SHOPIFY_API_VERSION
+      ),
+      'process.env.SENTRY_DSN': JSON.stringify(
+        process.env.SENTRY_DSN
+      ),
+      'process.env.SENTRY_SAMPLE_RATE': JSON.stringify(
+        process.env.SENTRY_SAMPLE_RATE
+      ),
+      'process.env.SENTRY_ENVIRONMENT': JSON.stringify(
+        process.env.SENTRY_ENVIRONMENT
       )
     })
   ],

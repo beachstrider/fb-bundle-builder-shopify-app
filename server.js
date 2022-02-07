@@ -39,15 +39,6 @@ Sentry.init({
 app.use(Sentry.Handlers.requestHandler())
 // TracingHandler creates a trace for every incoming request
 app.use(Sentry.Handlers.tracingHandler())
-// The error handler must be before any other error middleware and after all controllers
-app.use(Sentry.Handlers.errorHandler())
-// Optional fallthrough error handler
-app.use((err, req, res, next) => {
-  // The error id is attached to `res.sentry` to be returned
-  // and optionally displayed to the user for support.
-  res.statusCode = 500
-  res.end(res.sentry + '\n')
-})
 // END Sentry
 
 const morganFormat =
@@ -136,6 +127,18 @@ app.get('/', verifyHmac, (req, res) => {
     }
   )
 })
+
+// Sentry
+// The error handler must be before any other error middleware and after all controllers
+app.use(Sentry.Handlers.errorHandler())
+// Optional fallthrough error handler
+app.use((err, req, res, next) => {
+  // The error id is attached to `res.sentry` to be returned
+  // and optionally displayed to the user for support.
+  res.statusCode = 500
+  res.end(res.sentry + '\n')
+})
+// END Sentry
 
 app.listen(SERVER_PORT, () => {
   console.log(`Server is running on port ${SERVER_PORT}`)
