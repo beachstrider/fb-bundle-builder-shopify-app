@@ -174,6 +174,7 @@ const rootSlice = createSlice({
       state.cart = action.payload
     },
     cartAddItem: (state, action) => {
+      const quantity = action.payload.quantity || 1
       const existingItem = state.cart.find(
         (i) => Number(i.id) === Number(action.payload.id)
       )
@@ -183,11 +184,11 @@ const rootSlice = createSlice({
           ...state.cart,
           {
             ...action.payload,
-            quantity: 1
+            quantity: quantity
           }
         ]
       } else {
-        existingItem.quantity += 1
+        existingItem.quantity += quantity
       }
     },
     cartRemoveItem: (state, action) => {
