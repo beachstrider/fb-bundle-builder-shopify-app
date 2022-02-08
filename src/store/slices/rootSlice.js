@@ -10,6 +10,7 @@ export const initialState = {
       id: 1,
       name: 'Step 1',
       description: 'Frequency',
+      labelFooter: 'Enter Zip Code',
       path: '/',
       isActive: true
     },
