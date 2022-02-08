@@ -12,7 +12,6 @@ const Footer = () => {
   const state = useSelector((state) => state)
   const [currentStep, setCurrentStep] = useState({ id: 0 })
   const [nextStep, setNextStep] = useState({ path: '', description: '' })
-  const [previousStep, setPreviousStep] = useState({ path: '' })
   const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
@@ -27,27 +26,12 @@ const Footer = () => {
 
     if (step) {
       const followingStep = state.steps.find((item) => item.id === step.id + 1)
-      const priorStep = state.steps.find((item) => item.id === step.id - 1)
 
       if (followingStep) {
         setNextStep(followingStep)
       }
-      if (priorStep) {
-        setPreviousStep(priorStep)
-      }
     }
   }, [state.steps])
-
-  const handleBackButtonClick = (useBrowserHistory = false) => {
-    if (useBrowserHistory) {
-      return history.goBack()
-    }
-
-    dispatch(setActiveStep(currentStep.id - 1))
-    if (nextStep) {
-      history.push(previousStep.path)
-    }
-  }
 
   const handleNextButtonClick = () => {
     dispatch(setActiveStep(currentStep.id + 1))
@@ -64,15 +48,6 @@ const Footer = () => {
   return (
     <div className={`${styles.wrapper} defaultWrapper`}>
       <div className="buttons">
-        <div
-          className="button lightButton"
-          onClick={() =>
-            handleBackButtonClick(currentStep.id === state.steps[0].id)
-          }
-        >
-          Back
-        </div>
-
         <div
           className={`button ${
             state.isNextButtonActive ? 'primaryButton' : 'disabledButton'
