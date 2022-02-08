@@ -2,18 +2,23 @@ import React, { useState, useEffect } from 'react'
 import { useHistory } from 'react-router'
 import { useDispatch, useSelector } from 'react-redux'
 import { setActiveStep, triggerLastStep } from '../../store/slices/rootSlice'
+import { cart } from '../../../src/utils'
 import SpinnerIcon from '../Global/SpinnerIcon'
 import styles from './Footer.module.scss'
 
 const Footer = () => {
   const dispatch = useDispatch()
   const history = useHistory()
-
   const state = useSelector((state) => state)
+
   const [currentStep, setCurrentStep] = useState({ id: 0 })
   const [nextStep, setNextStep] = useState({ path: '', description: '' })
   const [previousStep, setPreviousStep] = useState({ path: '' })
   const [isLoading, setIsLoading] = useState(false)
+  const [total, setTotal] = useState(0)
+  const [frequency, setFrequency] = useState(0)
+
+  const cartUtility = cart(state)
 
   useEffect(() => {
     if (currentStep.id !== state.steps[state.steps.length - 1].id) {
@@ -61,6 +66,20 @@ const Footer = () => {
     setIsLoading(true)
   }
 
+  useEffect(() => {
+    const subTotal = cartUtility.calculateSubTotal(
+      state.bundle?.price,
+      state.bundle?.breakfast?.price,
+      state.bundle?.entreesQuantity,
+      state.bundle?.breakfastsQuantity
+    )
+
+    setTotal(subTotal)
+    setFrequency(
+      state.bundle?.entreesQuantity + state.bundle?.breakfastsQuantity
+    )
+  }, [state.bundle])
+
   return (
     <div className={`${styles.wrapper} defaultWrapper`}>
       <div className="buttons">
@@ -71,6 +90,15 @@ const Footer = () => {
           }
         >
           Back
+        </div>
+
+        <div className={`${styles.info}`}>
+          <span className={`${styles.infoCost}`}>
+            ${Number.parseFloat(total).toFixed(2)}/week for
+          </span>
+          <span className={`${styles.infoFrequency}`}>
+            {`${frequency} ${frequency !== 1 ? 'Meals' : 'Meal'}`}{' '}
+          </span>
         </div>
 
         <div
