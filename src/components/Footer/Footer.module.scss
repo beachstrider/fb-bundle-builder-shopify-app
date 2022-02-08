@@ -33,3 +33,21 @@
     font-family: $fontFamilyBold;
   }
 }
+
+.info {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+
+  &Cost {
+    color: $black;
+    font-size: $fontSmall;
+    font-family: $fontFamilyMedium;
+  }
+
+  &Frequency {
+    color: $primaryColor;
+    font-size: $fontMedium;
+    font-family: $fontFamilyBold;
+  }
+}
