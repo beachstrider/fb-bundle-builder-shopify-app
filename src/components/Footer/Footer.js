@@ -72,7 +72,7 @@ const Footer = () => {
 
   return (
     <div className={`${styles.wrapper} defaultWrapper`}>
-      <div className="buttons">
+      <div className={`${styles.buttons}`}>
         <div
           className="button lightButton"
           onClick={() =>
