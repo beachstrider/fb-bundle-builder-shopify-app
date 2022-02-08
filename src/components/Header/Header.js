@@ -14,16 +14,14 @@ const Header = () => {
         {steps.map((step, index) => (
           <div className={styles.column} key={step.id}>
             <div className={step.isActive ? styles.isSelected : ''}>
-              <div className={styles.name}>{step.name}</div>
-              <div className={styles.description}>{step.description}</div>
-            </div>
-            {steps.length - 1 !== index && (
-              <div className={styles.dividerWrapper}>
-                <div>
-                  <hr className={styles.divider} />
-                </div>
+              <div
+                className={`${styles.description} ${
+                  index === 2 && styles.breakWord
+                }`}
+              >
+                {step.description}
               </div>
-            )}
+            </div>
           </div>
         ))}
       </div>

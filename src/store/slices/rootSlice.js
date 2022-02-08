@@ -9,35 +9,35 @@ export const initialState = {
     {
       id: 1,
       name: 'Step 1',
-      description: 'Frequency',
+      description: 'Meals Per Week',
       path: '/',
       isActive: true
     },
     {
       id: 2,
       name: 'Step 2',
-      description: 'Location',
+      description: 'Location & Delivery',
       path: '/steps/2',
       isActive: false
     },
     {
       id: 3,
       name: 'Step 3',
-      description: 'Meal Type',
+      description: 'Meal plans',
       path: '/steps/3',
       isActive: false
     },
     {
       id: 4,
       name: 'Step 4',
-      description: 'Meals',
+      description: 'Select Your Meals',
       path: '/steps/4',
       isActive: false
     },
     {
       id: 5,
       name: 'Step 5',
-      description: 'Next',
+      description: 'Review Order',
       path: '/steps/5',
       isActive: false
     }
