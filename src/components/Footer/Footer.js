@@ -17,7 +17,6 @@ const Footer = () => {
 
   const [currentStep, setCurrentStep] = useState({ id: 0 })
   const [nextStep, setNextStep] = useState({ path: '', description: '' })
-  const [previousStep, setPreviousStep] = useState({ path: '' })
   const [isLoading, setIsLoading] = useState(false)
   const [total, setTotal] = useState(0)
   const [frequency, setFrequency] = useState(0)
@@ -36,27 +35,12 @@ const Footer = () => {
 
     if (step) {
       const followingStep = state.steps.find((item) => item.id === step.id + 1)
-      const priorStep = state.steps.find((item) => item.id === step.id - 1)
 
       if (followingStep) {
         setNextStep(followingStep)
       }
-      if (priorStep) {
-        setPreviousStep(priorStep)
-      }
     }
   }, [state.steps])
-
-  const handleBackButtonClick = (useBrowserHistory = false) => {
-    if (useBrowserHistory) {
-      return history.goBack()
-    }
-
-    dispatch(setActiveStep(currentStep.id - 1))
-    if (nextStep) {
-      history.push(previousStep.path)
-    }
-  }
 
   const handleNextButtonClick = () => {
     dispatch(setActiveStep(currentStep.id + 1))
