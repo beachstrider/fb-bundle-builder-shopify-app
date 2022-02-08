@@ -3,7 +3,7 @@
 .unselected {
   color: $grayMedium;
   background: $white;
-  border: 0.2rem solid $borderColor;
+  border: $cardBorderWidth solid $borderColor;
   & :hover {
     border-radius: 0.5rem;
     background: darken($grayLight, 10%);
@@ -11,7 +11,7 @@
 }
 .isSelected {
   color: $white;
-  border: 0.3rem solid $secondaryColor !important;
+  border: $cardBorderWidth solid $secondaryColor !important;
   background: $primaryColor;
   & :hover {
     border-radius: 0.5rem;
@@ -23,7 +23,7 @@
   position: relative;
   border-radius: 1rem;
   cursor: pointer;
-  border: 0.3rem solid $borderColor;
+  border: $cardBorderWidth solid $borderColor;
   @media only screen and (max-width: $breakpointTablet) {
     margin-bottom: 2rem;
   }
@@ -38,7 +38,7 @@
 
     & .checkMark {
       position: absolute;
-      border: 0.3rem solid $white;
+      border: $cardBorderWidth solid $white;
       border-radius: 50%;
       font-size: 1rem;
       background: $secondaryColor;

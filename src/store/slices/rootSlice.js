@@ -97,6 +97,7 @@ export const initialState = {
     id: 0,
     price: 0,
     weeklyPrice: '',
+    shippingPrice: 0,
     breakfast: {
       id: 0,
       tag: ''
