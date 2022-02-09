@@ -1,31 +1,47 @@
 import React from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { useHistory } from 'react-router'
+import {
+  setActiveStep,
+  setVisitedStep,
+  MEAL_PLANS_ITEM
+} from '../../store/slices/rootSlice'
 import styles from './Header.module.scss'
 
 const Header = () => {
+  const dispatch = useDispatch()
+  const history = useHistory()
   const steps = useSelector((state) => state.steps)
+
+  const handleGoToStep = ({ id, path }) => {
+    dispatch(setActiveStep(id))
+    dispatch(setVisitedStep(id))
+
+    history.push(path)
+  }
+
+  const getClassnameByStatusStep = ({ isVisited, isActive }) => {
+    return isActive ? styles.isSelected : isVisited ? styles.isVisited : ''
+  }
+
+  const getClassnameDescription = ({ id, isVisited, isActive }) => {
+    const breakLineMealPlans = id === MEAL_PLANS_ITEM && styles.breakWord
+    const setDisabledItemMenu = !isVisited && !isActive && styles.isNotVisited
+
+    return `${styles.description} ${breakLineMealPlans} ${setDisabledItemMenu}`
+  }
 
   return (
     <div className={`${styles.wrapper} defaultWrapper flexColumnDirection`}>
-      {/* <div className={styles.logoWrapper}>
-        <img className={styles.logo} src={process.env.LOGO_URL} />
-      </div> */}
       <div className={styles.stepsWrapper}>
-        {steps.map((step, index) => (
+        {steps.map((step) => (
           <div className={styles.column} key={step.id}>
-            <div
-              className={
-                step.isActive
-                  ? styles.isSelected
-                  : step.isVisited
-                  ? styles.isVisited
-                  : ''
-              }
-            >
+            <div className={getClassnameByStatusStep(step)}>
               <div
-                className={`${styles.description} ${
-                  index === 2 && styles.breakWord
-                }`}
+                className={getClassnameDescription(step)}
+                onClick={() => {
+                  step.isVisited && handleGoToStep(step)
+                }}
               >
                 {step.description}
               </div>

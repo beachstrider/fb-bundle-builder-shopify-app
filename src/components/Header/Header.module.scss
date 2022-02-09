@@ -32,6 +32,7 @@
       font-family: $fontFamilyMedium;
       text-align: center;
       width: 120px;
+      cursor: pointer;
 
       @media only screen and (max-width: $breakpointDesktop) {
         font-size: 0.8rem;
@@ -75,4 +76,8 @@
 .isSelected,
 .isVisited {
   color: $primaryColor;
+}
+
+.isNotVisited {
+  cursor: not-allowed !important;
 }
