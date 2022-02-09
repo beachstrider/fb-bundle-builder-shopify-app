@@ -66,7 +66,7 @@ const Footer = () => {
 
   return (
     <div className={`${styles.wrapper} defaultWrapper`}>
-      <div className="buttons">
+      <div className={`${styles.buttons}`}>
         <div
           className="button lightButton"
           onClick={() =>
@@ -96,7 +96,7 @@ const Footer = () => {
             return state.isNextButtonActive && handleNextButtonClick()
           }}
         >
-          {isLoading ? <SpinnerIcon /> : 'Next'}
+          {isLoading ? <SpinnerIcon /> : currentStep.labelFooter || 'Next'}
         </div>
       </div>
     </div>
