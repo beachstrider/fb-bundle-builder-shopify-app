@@ -139,6 +139,15 @@ const rootSlice = createSlice({
       )
       state.steps = currentSteps
     },
+    setVisitedStep: (state, action) => {
+      const currentStepId = action.payload
+      const currentSteps = state.steps.map((step) =>
+        step.id < Number(currentStepId)
+          ? { ...step, isVisited: true }
+          : { ...step, isVisited: false }
+      )
+      state.steps = currentSteps
+    },
     setBundle: (state, action) => {
       state.bundle = action.payload
     },
@@ -230,6 +239,7 @@ export const {
   reset,
   selectFaqType,
   setActiveStep,
+  setVisitedStep,
   setEmail,
   setBundle,
   setEntreeType,
