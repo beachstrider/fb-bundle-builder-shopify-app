@@ -13,7 +13,15 @@ const Header = () => {
       <div className={styles.stepsWrapper}>
         {steps.map((step, index) => (
           <div className={styles.column} key={step.id}>
-            <div className={step.isActive ? styles.isSelected : ''}>
+            <div
+              className={
+                step.isActive
+                  ? styles.isSelected
+                  : step.isVisited
+                  ? styles.isVisited
+                  : ''
+              }
+            >
               <div className={styles.name}>{step.name}</div>
               <div className={styles.description}>{step.description}</div>
             </div>
