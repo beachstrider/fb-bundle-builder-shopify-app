@@ -1,4 +1,6 @@
 $primaryColor: #0a8d47;
+$primaryColorLight: #068d47;
+$secondaryColor: #fec12d;
 $gray: #4c4c4c;
 $grayLight: #e7eaec;
 $grayMedium: #737678;
@@ -9,6 +11,7 @@ $border: #707070;
 $red: #c8432d;
 $orange: #ec6120;
 $butterMilk: #f5f7b6;
+$borderColor: #ebebec;
 
 $faqBackgroundColor: #e8e8e8;
 
@@ -19,12 +22,12 @@ $breakpointDesktop: 1024px;
 /* fonts */
 $fontLarge: 4.7rem;
 $fontMediumLarge: 3rem;
-$semiMediumFont: 2.5rem;
+$semiMediumFont: 2.4rem;
 $fontMedium: 2rem;
 $fontMediumRegular: 1.8rem;
 $fontMediumSmall: 1.6rem;
 $fontSmall: 1.5rem;
-$fontXSmall: 1.4rem;
+$fontXSmall: 1.6rem;
 
 /* font family */
 $fontFamilyBook: 'Gotham-Book';
@@ -42,6 +45,7 @@ $rowWidthMobile: 100%;
 /* Cards */
 $cardDateWidth: 223px;
 $cardDateHeight: 160px;
+$cardBorderWidth: 0.2rem;
 
 /* Mixins */
 @mixin responsive-wrapper {
