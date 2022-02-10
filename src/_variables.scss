@@ -21,6 +21,8 @@ $fontLarge: 4.7rem;
 $fontMediumLarge: 3rem;
 $semiMediumFont: 2.5rem;
 $fontMedium: 2rem;
+$fontMediumRegular: 1.8rem;
+$fontMediumSmall: 1.6rem;
 $fontSmall: 1.5rem;
 $fontXSmall: 1.4rem;
 
@@ -40,3 +42,17 @@ $rowWidthMobile: 100%;
 /* Cards */
 $cardDateWidth: 223px;
 $cardDateHeight: 160px;
+
+/* Mixins */
+@mixin responsive-wrapper {
+  @media only screen and (max-width: $breakpointDesktop) {
+    width: $rowWidthTable;
+    grid-template-columns: 50% 50%;
+    column-gap: 5rem;
+  }
+  @media only screen and (max-width: $breakpointTablet) {
+    width: $rowWidthMobile;
+    grid-template-columns: 100%;
+    column-gap: 0;
+  }
+}
