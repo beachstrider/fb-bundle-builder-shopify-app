@@ -1,0 +1,63 @@
+@import '../../../../variables';
+
+.wrapper {
+  border-radius: 1rem;
+  border: $cardBorderWidth solid $borderColor;
+  background-color: $white;
+  @media only screen and (min-width: $breakpointTablet) {
+    width: 29vw;
+  }
+  @media only screen and (max-width: $breakpointTablet) {
+    padding: 1rem 0;
+    width: 90vw;
+  }
+
+  & .divider {
+    border-bottom: $cardBorderWidth solid $borderColor;
+  }
+
+  & .image {
+    width: 100%;
+    min-height: 25.4rem;
+    background-size: cover;
+    border-radius: 0.5rem;
+    margin-bottom: 3rem;
+  }
+
+  & .lineItem {
+    display: grid;
+    column-gap: 1rem;
+    align-items: center;
+    color: $grayMediumSecondary;
+    text-align: end;
+    font-family: $fontFamilyBook;
+    font-size: $fontXSmall;
+    padding: 0.25rem 1rem;
+    @media only screen and (max-width: $breakpointTablet) {
+      padding: 0.25rem 1.9rem;
+      grid-template-columns: 75% 20%;
+    }
+    @media only screen and (min-width: $breakpointDesktop) {
+      grid-template-columns: 1fr 1fr;
+      &:last-of-type {
+        padding: 1rem 1rem;
+      }
+    }
+
+    & .label {
+      text-align: left;
+    }
+
+    & .price {
+      font-family: $fontFamilyBold;
+    }
+
+    & .totalPrice {
+      font-family: $fontFamilyBold;
+      color: $primaryColor;
+      font-size: $fontMedium;
+      font-weight: 700;
+      margin-left: -1rem;
+    }
+  }
+}
