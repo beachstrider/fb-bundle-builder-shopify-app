@@ -10,6 +10,7 @@ export const initialState = {
       id: 1,
       name: 'Step 1',
       description: 'Frequency',
+      labelFooter: 'Enter Zip Code',
       path: '/',
       isActive: true
     },
@@ -96,6 +97,7 @@ export const initialState = {
     id: 0,
     price: 0,
     weeklyPrice: '',
+    shippingPrice: 0,
     breakfast: {
       id: 0,
       tag: ''

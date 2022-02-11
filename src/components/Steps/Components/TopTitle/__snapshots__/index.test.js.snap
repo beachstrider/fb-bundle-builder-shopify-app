@@ -1,0 +1,24 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TopTitle component test regression test basic render 1`] = `
+<DocumentFragment>
+  <div
+    class="top undefined"
+  >
+    <h2
+      class="topTitle"
+    >
+      Title test
+    </h2>
+    <p
+      class="topSubtitle"
+    >
+      Subtitle test
+    </p>
+    <div
+      class="topSeparator"
+      data-testid="separator"
+    />
+  </div>
+</DocumentFragment>
+`;
