@@ -5,6 +5,7 @@ import { getBundleMetafield } from '../../../utils'
 import styles from './EntreeSubType.module.scss'
 
 const EntreeTypeSubType = ({ title, metafields, isSelected, onClick }) => {
+  console.log('metafields >>', metafields)
   return (
     <CardSelectionMark isSelected={isSelected} onClick={onClick}>
       <div className={styles.wrapper}>

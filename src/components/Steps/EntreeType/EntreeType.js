@@ -123,7 +123,6 @@ const EntreeType = () => {
               title={entree.name}
               image={entree.featuredImage}
               metafields={entree.options[0]?.metafields}
-              primaryColor={'#3DAE2B'}
               isSelected={state.entreeType.id === entree.id}
               onClick={() => handleEntreeTypeSelection(entree)}
             />
@@ -140,15 +139,17 @@ const EntreeType = () => {
                     : styles.subTypesWrapper_3_Columns
                 } mb-10`}
               >
-                {state.entreeType.options.map((subType) => (
+                {/* TODO: Add layout */}
+                {JSON.stringify(state.entreeType?.options)}
+                {/* {state.entreeType?.options.map((subType, index) => (
                   <EntreeTypeSubType
-                    key={subType.id}
+                    key={index}
                     title={subType.name}
                     metafields={subType.metafields}
                     isSelected={subType.id === state.entreeSubType.id}
                     onClick={() => dispatch(setEntreeSubType(subType))}
                   />
-                ))}
+                ))} */}
               </div>
             </>
           )}
