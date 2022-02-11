@@ -10,12 +10,13 @@ import {
   reset
 } from '../../../store/slices/rootSlice'
 import { FrequencyBreakfast, FrequencyEntree } from '.'
-import styles from './Frequency.module.scss'
 import { withActiveStep } from '../../Hooks'
-import Loading from '../Components/Loading'
 import { clearLocalStorage } from '../../../store/store'
 import { smoothScrollingToId } from '../../../utils'
+import Loading from '../Components/Loading'
+import TopTitle from '../Components/TopTitle'
 import SubTotal from '../Components/SubTotal'
+import styles from './Frequency.module.scss'
 
 const FAQ_TYPE = 'frequency'
 const STEP_ID = 1
@@ -173,6 +174,10 @@ const Frequency = () => {
 
   return (
     <div className="mb-10">
+      <TopTitle
+        title="Select Meals Per Week"
+        subTitle="Healthy, fresh and ready to eat in 2 minutes"
+      />
       <div className={styles.mainWrapper}>
         <div>
           <div className={styles.wrapper}>

@@ -1,7 +1,7 @@
 import React from 'react'
 import { render, act, screen } from '@testing-library/react'
 import { axe } from 'jest-axe'
-import TopTitle from './TopTitle'
+import TopTitle from '../../../../../../src/components/Steps/Components/TopTitle/TopTitle'
 
 const renderComponent = (props) => {
   return render(<TopTitle {...props} />)

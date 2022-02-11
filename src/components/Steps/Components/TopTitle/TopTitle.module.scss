@@ -9,6 +9,7 @@ $rowTopTitle: 494px;
   align-items: center;
   text-align: center;
   padding-bottom: 2rem;
+  margin: auto;
   @include responsive-wrapper;
 
   &Title {
@@ -26,7 +27,7 @@ $rowTopTitle: 494px;
     font-size: $fontMediumRegular;
     font-family: $fontFamilyBook !important;
     width: $rowTopTitle;
-    margin-top: 1rem;
+    margin-top: 0.5rem;
     margin-bottom: 0.5rem;
 
     @media only screen and (max-width: $rowTopTitle) {
