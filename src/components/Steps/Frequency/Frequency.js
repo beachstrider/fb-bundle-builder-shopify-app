@@ -183,7 +183,7 @@ const Frequency = () => {
           <div className={styles.wrapper}>
             <div className={styles.row}>
               <div className={styles.column}>
-                <div className={styles.subRow}>
+                <div className={styles.subRow3Columns}>
                   {bundles.map((bundle) => (
                     <FrequencyEntree
                       key={bundle.id}

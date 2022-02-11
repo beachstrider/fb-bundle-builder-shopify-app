@@ -4,8 +4,11 @@
   border-radius: 1rem;
   border: $cardBorderWidth solid $borderColor;
   background-color: $white;
-  @media only screen and (min-width: $breakpointTablet) {
+  @media only screen and (min-width: $breakpointDesktop) {
     width: 29vw;
+  }
+  @media only screen and (max-width: $breakpointTablet) {
+    width: 33vw;
   }
   @media only screen and (max-width: $breakpointTablet) {
     padding: 1rem 0;
@@ -33,7 +36,7 @@
     font-family: $fontFamilyBook;
     font-size: $fontXSmall;
     padding: 0.25rem 1rem;
-    @media only screen and (max-width: $breakpointTablet) {
+    @media only screen and (max-width: $breakpointDesktop) {
       padding: 0.25rem 1.9rem;
       grid-template-columns: 75% 20%;
     }
