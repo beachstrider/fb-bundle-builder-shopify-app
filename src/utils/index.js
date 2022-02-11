@@ -24,6 +24,7 @@ import {
   getNextWeekDay
 } from './dates'
 import uniqueArray from './uniqueArray'
+import { mapBundleTypeSubtype, getBundleMetafield } from './bundles'
 
 export {
   availableDeliveryDays,
@@ -45,5 +46,7 @@ export {
   getTodayDate,
   sortDatesArray,
   getNextWeekDay,
-  uniqueArray
+  uniqueArray,
+  mapBundleTypeSubtype,
+  getBundleMetafield
 }
