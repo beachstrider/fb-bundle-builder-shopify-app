@@ -18,6 +18,7 @@ export const initialState = {
       id: 2,
       name: 'Step 2',
       description: 'Location',
+      labelFooter: 'Select a Delivery Date',
       path: '/steps/2',
       isActive: false
     },
