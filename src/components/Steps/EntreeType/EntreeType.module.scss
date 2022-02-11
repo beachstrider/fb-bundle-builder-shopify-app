@@ -5,16 +5,7 @@
   display: grid;
   grid-template-columns: 100%;
   column-gap: 10rem;
-  @media only screen and (max-width: $breakpointDesktop) {
-    width: $rowWidthTable;
-    grid-template-columns: 50% 50%;
-    column-gap: 5rem;
-  }
-  @media only screen and (max-width: $breakpointTablet) {
-    width: $rowWidthMobile;
-    grid-template-columns: 100%;
-    column-gap: 0;
-  }
+  @include responsive-wrapper;
 
   & .title {
     font-size: $fontLarge;
