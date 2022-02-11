@@ -31,6 +31,7 @@ import {
 import SpinnerIcon from '../../Global/SpinnerIcon'
 import DeliveryDates from '../Components/DeliveryDates'
 import Toast from '../../Global/Toast'
+import TopTitle from '../Components/TopTitle'
 import { useErrorHandler } from 'react-error-boundary'
 import { DEFAULT_ERROR_MESSAGE } from '../../../constants/errors'
 
@@ -305,9 +306,11 @@ const Location = () => {
   return (
     <div className="defaultWrapper">
       <div className={styles.wrapper}>
-        <div className={`${styles.title} mb-7`}>
-          Enter Your Zip Code And Email To Continue
-        </div>
+        <TopTitle
+          className="mb-5"
+          title="Enter Your Zip Code & Email"
+          subTitle="Meals are delivered fresh every week. You can pause, cancel, or update your meal plan at anytime!"
+        />
         <div className={styles.rows}>
           <div>
             <div className="mb-3">
