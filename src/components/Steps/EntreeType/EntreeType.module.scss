@@ -46,9 +46,7 @@
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     column-gap: 2rem;
-    padding: 0;
-    //TODO: use this value for new design
-    // padding: 0 15vw;
+    padding: 0 15vw;
 
     @media only screen and (max-width: $breakpointDesktop) {
       column-gap: 1rem;
@@ -60,9 +58,7 @@
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     column-gap: 10rem;
-    padding: 0;
-    //TODO: use this value for new design
-    // padding: 0 15vw;
+    padding: 0 15vw;
 
     @media only screen and (max-width: $breakpointDesktop) {
       column-gap: 1rem;

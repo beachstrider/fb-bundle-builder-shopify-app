@@ -7,6 +7,24 @@ import {
 describe('Test bundles utility functions', () => {
   it('Maps bundle type and subtype', () => {
     const bundle = {
+      id: 6788061888565,
+      title: '14 Meal Plan + 7 Breakfasts',
+      handle: '14-meal-plan-7-breakfasts',
+      description: '<p></p>',
+      published_at: '2022-02-09T17:26:44-08:00',
+      created_at: '2022-02-09T17:26:46-08:00',
+      vendor: 'QuickFresh',
+      type: 'Custom Bundle',
+      tags: ['7 Day with breakfast'],
+      price: 17395,
+      price_min: 17395,
+      price_max: 17395,
+      available: true,
+      price_varies: false,
+      compare_at_price: null,
+      compare_at_price_min: 0,
+      compare_at_price_max: 0,
+      compare_at_price_varies: false,
       variants: [
         {
           id: 40558468169781,
@@ -53,26 +71,6 @@ describe('Test bundles utility functions', () => {
           selling_plan_allocations: [],
           metafields: [
             {
-              key: 'bundle_key_points',
-              name: 'Bundle Key Points',
-              value: 'Health macro-balanced meals that fuel your body right.'
-            },
-            {
-              key: 'net_carbs',
-              name: 'Net Carbs',
-              value: '25-30%'
-            },
-            {
-              key: 'protein',
-              name: 'Protein',
-              value: '40-50%'
-            },
-            {
-              key: 'fat',
-              name: 'Fat',
-              value: '20-25%'
-            },
-            {
               key: 'calorie_range',
               name: 'Calorie Range',
               value: '350-490'
@@ -97,29 +95,14 @@ describe('Test bundles utility functions', () => {
           weight: 0,
           compare_at_price: null,
           inventory_management: null,
-          barcode: null,
+          barcode: '',
           requires_selling_plan: false,
           selling_plan_allocations: [],
           metafields: [
             {
-              key: 'bundle_key_points',
-              name: 'Bundle Key Points',
-              value: 'Health macro-balanced meals that fuel your body right.'
-            },
-            {
-              key: 'net_carbs',
-              name: 'Net Carbs',
-              value: '25-30%'
-            },
-            {
-              key: 'protein',
-              name: 'Protein',
-              value: '40-50%'
-            },
-            {
-              key: 'fat',
-              name: 'Fat',
-              value: '20-25%'
+              key: 'calorie_range',
+              name: 'Calorie Range',
+              value: '222-333'
             }
           ]
         },
@@ -168,24 +151,9 @@ describe('Test bundles utility functions', () => {
           selling_plan_allocations: [],
           metafields: [
             {
-              key: 'bundle_key_points',
-              name: 'Bundle Key Points',
-              value: 'Health macro-balanced meals that fuel your body right.'
-            },
-            {
-              key: 'net_carbs',
-              name: 'Net Carbs',
-              value: '25-30%'
-            },
-            {
-              key: 'protein',
-              name: 'Protein',
-              value: '40-50%'
-            },
-            {
-              key: 'fat',
-              name: 'Fat',
-              value: '20-25%'
+              key: 'calorie_range',
+              name: 'Calorie Range',
+              value: '100-200'
             }
           ]
         },
@@ -207,29 +175,14 @@ describe('Test bundles utility functions', () => {
           weight: 0,
           compare_at_price: null,
           inventory_management: null,
-          barcode: null,
+          barcode: '',
           requires_selling_plan: false,
           selling_plan_allocations: [],
           metafields: [
             {
-              key: 'bundle_key_points',
-              name: 'Bundle Key Points',
-              value: 'Health macro-balanced meals that fuel your body right.'
-            },
-            {
-              key: 'net_carbs',
-              name: 'Net Carbs',
-              value: '25-30%'
-            },
-            {
-              key: 'protein',
-              name: 'Protein',
-              value: '40-50%'
-            },
-            {
-              key: 'fat',
-              name: 'Fat',
-              value: '20-25%'
+              key: 'calorie_range',
+              name: 'Calorie Range',
+              value: '333-444'
             }
           ]
         },
@@ -251,40 +204,107 @@ describe('Test bundles utility functions', () => {
           weight: 0,
           compare_at_price: null,
           inventory_management: null,
-          barcode: null,
+          barcode: '',
           requires_selling_plan: false,
           selling_plan_allocations: [],
           metafields: [
             {
-              key: 'bundle_key_points',
-              name: 'Bundle Key Points',
-              value: 'Health macro-balanced meals that fuel your body right.'
-            },
-            {
-              key: 'net_carbs',
-              name: 'Net Carbs',
-              value: '25-30%'
-            },
-            {
-              key: 'protein',
-              name: 'Protein',
-              value: '40-50%'
-            },
-            {
-              key: 'fat',
-              name: 'Fat',
-              value: '20-25%'
+              key: 'calorie_range',
+              name: 'Calorie Range',
+              value: '555-666'
             }
           ]
         }
+      ],
+      images: [
+        '//cdn.shopify.com/s/files/1/0267/5825/0549/products/14_7.jpg?v=1644456406',
+        '//cdn.shopify.com/s/files/1/0267/5825/0549/products/keto-meal-plan.jpg?v=1644517068',
+        '//cdn.shopify.com/s/files/1/0267/5825/0549/products/lowcal-meal-plan.jpg?v=1644517155'
+      ],
+      featured_image:
+        '//cdn.shopify.com/s/files/1/0267/5825/0549/products/14_7.jpg?v=1644456406',
+      options: ['Type', 'Sub Type'],
+      media: [
+        {
+          alt: null,
+          id: 23315193954357,
+          position: 1,
+          preview_image: {
+            aspect_ratio: 1,
+            height: 2049,
+            width: 2048,
+            src: 'https://cdn.shopify.com/s/files/1/0267/5825/0549/products/14_7.jpg?v=1644456406'
+          },
+          aspect_ratio: 1,
+          height: 2049,
+          media_type: 'image',
+          src: 'https://cdn.shopify.com/s/files/1/0267/5825/0549/products/14_7.jpg?v=1644456406',
+          width: 2048
+        },
+        {
+          alt: null,
+          id: 23322903806005,
+          position: 2,
+          preview_image: {
+            aspect_ratio: 1.25,
+            height: 720,
+            width: 900,
+            src: 'https://cdn.shopify.com/s/files/1/0267/5825/0549/products/keto-meal-plan.jpg?v=1644517068'
+          },
+          aspect_ratio: 1.25,
+          height: 720,
+          media_type: 'image',
+          src: 'https://cdn.shopify.com/s/files/1/0267/5825/0549/products/keto-meal-plan.jpg?v=1644517068',
+          width: 900
+        },
+        {
+          alt: null,
+          id: 23322919436341,
+          position: 3,
+          preview_image: {
+            aspect_ratio: 1.25,
+            height: 720,
+            width: 900,
+            src: 'https://cdn.shopify.com/s/files/1/0267/5825/0549/products/lowcal-meal-plan.jpg?v=1644517155'
+          },
+          aspect_ratio: 1.25,
+          height: 720,
+          media_type: 'image',
+          src: 'https://cdn.shopify.com/s/files/1/0267/5825/0549/products/lowcal-meal-plan.jpg?v=1644517155',
+          width: 900
+        }
+      ],
+      requires_selling_plan: false,
+      selling_plan_groups: [],
+      content: '<p></p>',
+      metafields: [
+        {
+          key: 'net_carbs',
+          name: 'Net Carbs',
+          value: '25-30%'
+        },
+        {
+          key: 'protein',
+          name: 'Protein',
+          value: '40-50%'
+        },
+        {
+          key: 'fat',
+          name: 'Fat',
+          value: '20-25%'
+        },
+        {
+          key: 'bundle_key_points',
+          name: 'Bundle Key Points',
+          value: 'Health macro-balanced meals that fuel your body right.'
+        }
       ]
     }
+
     const mappedProducts = mapBundleTypeSubtype(bundle)
 
     expect(mappedProducts[0].name).toBe('keto')
-    expect(mappedProducts[0].options[0].metafields[0].key).toBe(
-      'bundle_key_points'
-    )
+    expect(mappedProducts[0].options[0].metafields[1].key).toBe('net_carbs')
     expect(mappedProducts[1].options[2].name).toBe('savory')
     expect(mappedProducts[0].featuredImage).toBe(
       'https://cdn.shopify.com/s/files/1/0267/5825/0549/products/keto-meal-plan.jpg?v=1644517068'

@@ -45,11 +45,10 @@ const mapBundleTypeSubtype = (bundle) => {
           currentOptionId++
 
           parentValue.options.push(
-            createSubtype(
-              currentOptionId,
-              option.toLowerCase(),
-              variant.metafields
-            )
+            createSubtype(currentOptionId, option.toLowerCase(), [
+              ...variant.metafields,
+              ...bundle.metafields
+            ])
           )
         }
       }

@@ -18,6 +18,7 @@ import EntreeTypeSubType from './EntreeTypeSubType'
 import { Redirect } from 'react-router'
 import Toast from '../../Global/Toast'
 import TopTitle from '../Components/TopTitle'
+import CardSelectionMark from '../../Cards/CardSelectionMark'
 
 const FAQ_TYPE = 'entreeType'
 const STEP_ID = 3
@@ -65,8 +66,6 @@ const EntreeType = () => {
 
     const shopifyBundleProduct = getSelectedBundle(state.bundle.breakfast.tag)
     const mappedBundle = mapBundleTypeSubtype(shopifyBundleProduct)
-
-    console.log('mappedBundle >>', mappedBundle)
     setBundleTypes(mappedBundle)
     setIsLoading(false)
   }
@@ -113,46 +112,54 @@ const EntreeType = () => {
   }
 
   return (
-    <div className="defaultWrapper">
-      <div className={styles.wrapper}>
-        <div className={`${styles.title} mb-7`}>Choose Meal Type</div>
-        <div className={`${styles.entrees} mb-10`}>
-          {bundleTypes.map((entree, index) => (
-            <CardEntreeType
-              key={index}
-              title={entree.name}
-              image={entree.featuredImage}
-              metafields={entree.options[0]?.metafields}
-              isSelected={state.entreeType.id === entree.id}
-              onClick={() => handleEntreeTypeSelection(entree)}
-            />
-          ))}
-        </div>
-        <div id="entreeType">
-          {state.entreeType.id !== 0 && (
-            <>
-              <div className={`${styles.title} mb-7`}>Choose Meal Sub Type</div>
-              <div
-                className={`${
-                  state.entreeType.id === 1
-                    ? styles.subTypesWrapper_2_Columns
-                    : styles.subTypesWrapper_3_Columns
-                } mb-10`}
+    <div>
+      <TopTitle
+        title="Choose Your Meal Plan"
+        subTitle="Chef-curated, nutritious options to fit your lifestyle."
+      />
+      <div className="defaultWrapper">
+        <div className={styles.wrapper}>
+          <div className={`${styles.entrees} mb-10`}>
+            {bundleTypes.map((entree, index) => (
+              <CardSelectionMark
+                key={index}
+                isSelected={state.entreeType.id === entree.id}
+                onClick={() => handleEntreeTypeSelection(entree)}
               >
-                {/* TODO: Add layout */}
-                {JSON.stringify(state.entreeType?.options)}
-                {/* {state.entreeType?.options.map((subType, index) => (
-                  <EntreeTypeSubType
-                    key={index}
-                    title={subType.name}
-                    metafields={subType.metafields}
-                    isSelected={subType.id === state.entreeSubType.id}
-                    onClick={() => dispatch(setEntreeSubType(subType))}
-                  />
-                ))} */}
-              </div>
-            </>
-          )}
+                <CardEntreeType
+                  title={entree.name}
+                  image={entree.featuredImage}
+                  metafields={entree.options[0]?.metafields}
+                />
+              </CardSelectionMark>
+            ))}
+          </div>
+          <div id="entreeType">
+            {state.entreeType.id !== 0 && (
+              <>
+                <div className={`${styles.title} mb-7`}>
+                  Choose Meal Sub Type
+                </div>
+                <div
+                  className={`${
+                    state.entreeType.id === 1
+                      ? styles.subTypesWrapper_2_Columns
+                      : styles.subTypesWrapper_3_Columns
+                  } mb-10`}
+                >
+                  {state.entreeType?.options.map((subType, index) => (
+                    <EntreeTypeSubType
+                      key={index}
+                      title={subType.name}
+                      metafields={subType.metafields}
+                      isSelected={subType.id === state.entreeSubType.id}
+                      onClick={() => dispatch(setEntreeSubType(subType))}
+                    />
+                  ))}
+                </div>
+              </>
+            )}
+          </div>
         </div>
         {error.open ? (
           <Toast
@@ -172,23 +179,6 @@ const EntreeType = () => {
           ''
         )}
       </div>
-      {error.open ? (
-        <Toast
-          open={error.open}
-          status={error.status}
-          message={error.message}
-          displayTitle={false}
-          handleClose={() => {
-            setError({
-              open: false,
-              status: 'Success',
-              message: ''
-            })
-          }}
-        />
-      ) : (
-        ''
-      )}
     </div>
   )
 }
