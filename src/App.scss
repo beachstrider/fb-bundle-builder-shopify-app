@@ -25,13 +25,20 @@
   font-family: Gotham-Thin;
   src: url('https://cdn.shopify.com/s/files/1/0552/6549/3185/files/Gotham-Thin.otf?v=1627982628');
 }
-h1 ,h2, h3, h4, h5{
+h1,
+h2,
+h3,
+h4,
+h5 {
   font-family: Gotham-Black !important;
 }
-h2, h3, h4, h5{
+h2,
+h3,
+h4,
+h5 {
   font-family: Gotham-Medium !important;
 }
-p{
+p {
   font-family: Gotham-Book !important;
 }
 /* custom font end */
@@ -71,8 +78,8 @@ p{
     transform: rotate(360deg);
   }
 }
-.headerOffset{
-  margin-left:12px
+.headerOffset {
+  margin-left: 12px;
 }
 .customSpinner {
   width: 100px;
@@ -284,13 +291,16 @@ $multiplier: 0.5rem;
   }
 }
 .primaryButton {
-  background: $primaryColor;
+  font-family: $fontFamilyMedium;
+  font-size: $fontMedium;
+  text-decoration: none;
   color: $white;
+  line-height: 16px;
+  background: $primaryColor;
   border: 1px solid $primaryColor;
   border-radius: 2em;
   padding: 5px 40px;
-  text-decoration: none;
-  line-height: 16px;
+
   &:hover {
     background: darken($primaryColor, 10%);
     cursor: pointer;
