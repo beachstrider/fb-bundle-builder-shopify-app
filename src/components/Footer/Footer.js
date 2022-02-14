@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import { useHistory } from 'react-router'
 import { useDispatch, useSelector } from 'react-redux'
-import { setActiveStep, triggerLastStep } from '../../store/slices/rootSlice'
+import {
+  setActiveStep,
+  setVisitedStep,
+  triggerLastStep
+} from '../../store/slices/rootSlice'
 import { cart } from '../../../src/utils'
 import SpinnerIcon from '../Global/SpinnerIcon'
 import styles from './Footer.module.scss'
@@ -40,6 +44,8 @@ const Footer = () => {
 
   const handleNextButtonClick = () => {
     dispatch(setActiveStep(currentStep.id + 1))
+    dispatch(setVisitedStep(currentStep.id + 1))
+
     if (nextStep) {
       history.push(nextStep.path)
     }
