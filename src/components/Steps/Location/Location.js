@@ -275,6 +275,7 @@ const Location = () => {
   const handleZipCodeChange = (value) => {
     if (Number.isInteger(Number(value))) {
       if (Object.keys(currentZone).length > 0) {
+        setDisplayDates(false)
         setCurrentZone({})
         dispatch(setLocation(initialState.location))
       }
@@ -284,6 +285,7 @@ const Location = () => {
 
   const handleEmailChange = (value) => {
     if (Object.keys(currentZone).length > 0) {
+      setDisplayDates(false)
       setCurrentZone({})
       dispatch(
         setLocation({

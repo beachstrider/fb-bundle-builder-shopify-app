@@ -1,39 +1,52 @@
 import React from 'react'
-import { FrequencyWeeklyPrice } from '.'
-import { CardCheckMark } from '../../Cards'
+import { CardSelectionMark } from '../../Cards'
 import { Icon } from '@shopify/polaris'
 import { CircleDisabledMajor } from '@shopify/polaris-icons'
 import styles from './Frequency.module.scss'
 
-const FrequencyBreakfast = ({ data, quantity, isSelected, onClick }) => {
+const FrequencyBreakfast = ({ data, isSelected, onClick }) => {
   const isNone = data.name === 'none'
 
-  return (
-    <CardCheckMark isSelected={isSelected} onClick={onClick}>
-      <div className={`defaultWrapper ${styles.breakfast}`}>
-        <div className={`${styles.centerRow} textCenter`}>
-          <div className={`${styles.title} ${styles.fontBold}`}>
-            {isNone ? (
-              <div
-                className={`${styles.noneIcon} ${
-                  isSelected && styles.selectedIcon
-                }`}
-              >
-                <Icon source={CircleDisabledMajor} color="base" />
-              </div>
-            ) : (
-              data.name
-            )}
-          </div>
-          <div className={styles.subtitle}>
-            {isNone ? <div>&nbsp;</div> : 'Breakfasts'}
-          </div>
-          <FrequencyWeeklyPrice
-            price={isNaN(data.price) ? data.price : data.price * quantity}
-          />
+  const NoneCard = () => (
+    <div
+      className={`${
+        isSelected ? styles.isSelected : styles.isUnselected
+      } textCenter`}
+    >
+      <div className={`${styles.title} ${styles.fontBold}`}>
+        <div
+          className={`${styles.noneIcon} ${isSelected && styles.selectedIcon}`}
+        >
+          <Icon source={CircleDisabledMajor} color="base" />
         </div>
       </div>
-    </CardCheckMark>
+      <div className={styles.noneSubTitle}>
+        <div>Skip</div>
+        <div>Breakfast</div>
+      </div>
+    </div>
+  )
+
+  const PricingCard = () => (
+    <div
+      className={`${
+        isSelected ? styles.isSelected : styles.isUnselected
+      } textCenter`}
+    >
+      <div className={`${styles.title} ${styles.fontBold}`}>{data.name}</div>
+      <div className={styles.subTitle}>Breakfast</div>
+      <div className={styles.price}>${data.price}/Meal</div>
+    </div>
+  )
+
+  return (
+    <CardSelectionMark isSelected={isSelected} onClick={onClick}>
+      <div className={styles.mealsWrapper}>
+        <div className={styles.meal}>
+          {isNone ? <NoneCard /> : <PricingCard />}
+        </div>
+      </div>
+    </CardSelectionMark>
   )
 }
 
