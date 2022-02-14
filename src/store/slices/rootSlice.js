@@ -32,6 +32,7 @@ export const initialState = {
       id: 4,
       name: 'Step 4',
       description: 'Meals',
+      labelFooter: 'Review My Order',
       path: '/steps/4',
       isActive: false
     },
