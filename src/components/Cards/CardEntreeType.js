@@ -1,25 +1,9 @@
 import React from 'react'
 import styles from './CardEntreeType.module.scss'
 
-const CardEntreeType = ({
-  title,
-  image,
-  options,
-  primaryColor,
-  onClick,
-  isSelected
-}) => {
+const CardEntreeType = ({ title, image, options, onClick }) => {
   return (
-    <div
-      className={styles.card}
-      style={{
-        border: isSelected
-          ? `4px solid ${primaryColor}`
-          : `1px solid ${primaryColor}`,
-        borderRadius: isSelected ? '1.5rem' : '1rem'
-      }}
-      onClick={onClick}
-    >
+    <div className={styles.card} onClick={onClick}>
       <div
         className={styles.image}
         style={{ backgroundImage: `url('${image}')` }}
@@ -27,9 +11,7 @@ const CardEntreeType = ({
         &nbsp;
       </div>
       <div className={`${styles.descriptionWrapper} py-5`}>
-        <div className={styles.title} style={{ color: primaryColor }}>
-          {title}
-        </div>
+        <div className={styles.title}>{title}</div>
         <div className={styles.options}>
           <ul>
             {options.map((option, index) => (
