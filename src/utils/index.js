@@ -21,7 +21,8 @@ import {
   getCutOffDate,
   getTodayDate,
   sortDatesArray,
-  getNextWeekDay
+  getNextWeekDay,
+  getShortDate
 } from './dates'
 import uniqueArray from './uniqueArray'
 
@@ -45,5 +46,6 @@ export {
   getTodayDate,
   sortDatesArray,
   getNextWeekDay,
-  uniqueArray
+  uniqueArray,
+  getShortDate
 }
