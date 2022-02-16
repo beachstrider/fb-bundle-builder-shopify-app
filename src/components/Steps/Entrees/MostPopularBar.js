@@ -5,14 +5,17 @@ import styles from './MostPopularBar.module.scss'
 const MostPopularBar = ({ isLoading, onClick }) => {
   return (
     <div className={styles.wrapper}>
+      <div className={styles.title}>Can’t Decide What to Order?</div>
       <div className={styles.text}>
-        Can't decide? Click here and we'll send you our most popular meals.
+        Simply click the button below and we’ll select our most popular meals
+        for you!
       </div>
       <div className="px-5">
         <ButtonSmall
+          className={styles.bannerButton}
           onClick={onClick}
           usePrimaryColor
-          label="Most Popular"
+          label="Select For Me"
           isLoading={isLoading}
         />
       </div>

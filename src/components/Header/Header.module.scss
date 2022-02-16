@@ -34,13 +34,18 @@
       width: 120px;
       cursor: pointer;
 
-      @media only screen and (max-width: $breakpointDesktop) {
+      @media only screen and (max-width: $breakpointTablet) {
         font-size: 0.8rem;
+        width: 100%;
       }
     }
 
     & .description.breakWord {
       width: 75px;
+
+      @media only screen and (max-width: $breakpointTablet) {
+        width: 100%;
+      }
     }
 
     & .name {
