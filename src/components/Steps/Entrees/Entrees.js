@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useHistory, Redirect } from 'react-router'
+import { Redirect } from 'react-router'
 import CardQuantities from '../../Cards/CardQuantities'
 import {
   getContent,
@@ -26,11 +26,13 @@ import {
   filterShopifyProducts,
   filterShopifyVariants,
   smoothScrollingToId,
-  getConfigurationContent
+  getConfigurationContent,
+  getShortDate
 } from '../../../utils'
 import Toast from '../../Global/Toast'
 import { DEFAULT_ERROR_MESSAGE } from '../../../constants/errors'
 import MostPopularBar from './MostPopularBar'
+import TopTitle from '../Components/TopTitle'
 dayjs.extend(weekday)
 dayjs.extend(utc)
 
@@ -46,6 +48,8 @@ const Entrees = () => {
   const [isLoadingDefaults, setIsLoadingDefaults] = useState(false)
   const [menuItems, setMenuItems] = useState([])
   const [defaultMenuItems, setDefaultMenuItems] = useState([])
+  const [deliverBefore, setDeliverBefore] = useState('')
+  const [deliverAfter, setDeliverAfter] = useState('')
   const [error, setError] = useState({
     open: false,
     status: 'Success',
@@ -172,6 +176,11 @@ const Entrees = () => {
       contentResponse.data?.data &&
       contentResponse.data?.data.products.length > 0
     ) {
+      setDeliverBefore(
+        getShortDate(new Date(contentByDate.deliver_before), { withYear: true })
+      )
+      setDeliverAfter(getShortDate(new Date(contentByDate.deliver_after)))
+
       const defaultItems = contentResponse.data.data.products.filter(
         (item) => item.is_default
       )
@@ -311,7 +320,10 @@ const Entrees = () => {
           <Loading />
         ) : (
           <div className={styles.wrapper}>
-            <div className={`${styles.title} mb-7`}>Choose Meals</div>
+            <TopTitle
+              title="Select Your Meals"
+              subTitle={`Menu for ${deliverAfter} - ${deliverBefore}`}
+            />
             <div className={`${styles.quantitiesWrapper} mb-8`}>
               <div className={styles.topBarQuantities}>
                 {menuItems.map((product) => (
