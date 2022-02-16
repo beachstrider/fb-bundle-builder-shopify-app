@@ -8,37 +8,16 @@
   background-color: $butter;
   margin-top: -3rem;
   padding: 2.5rem;
-  text-align: center;
+  @include responsive-wrapper;
 
   .title {
     font-family: $fontFamilyBlack;
     font-size: $semiMediumFont + 0.4rem;
-
-    @media only screen and (max-width: $breakpointTablet) {
-      font-size: $fontMedium;
-    }
   }
 
   .text {
     font-family: $fontFamilyBook;
     font-size: $fontMediumSmall;
     margin-bottom: 1rem;
-
-    @media only screen and (max-width: $breakpointTablet) {
-      font-size: $fontSmall;
-    }
-  }
-
-  .bannerButton {
-    font-family: $fontFamilyMedium;
-    font-size: $fontMedium;
-    width: auto;
-    background-color: $primaryColorLight;
-    padding: 1rem 4rem;
-    border-radius: 3rem;
-
-    @media only screen and (max-width: $breakpointTablet) {
-      font-size: $fontMediumSmall;
-    }
   }
 }
