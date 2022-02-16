@@ -201,37 +201,6 @@ const Review = () => {
       <div className="defaultWrapper" id="reviewTop">
         <div className={styles.wrapper}>
           <div className={`${styles.title} mb-7`}>Review Order</div>
-          <div className={`${styles.topBarWrapper} mb-7`}>
-            <div className={`${styles.card} ${styles.columns}`}>
-              <div className={styles.title}>
-                Delivery Day:{' '}
-                <span className={styles.day}>
-                  {getDay(state.location.deliveryDate.day).format('dddd')}{' '}
-                </span>
-                <span
-                  className={styles.edit}
-                  onClick={() => setOpenEditDateModal(true)}
-                >
-                  Edit
-                </span>
-              </div>
-              <div className={styles.startingDate}>
-                Starting {getDay(state.location.deliveryDate.day).format('MMM')}{' '}
-                {getDay(state.location.deliveryDate.day).format('DD')}
-                <span className={styles.ordinal}>
-                  {getDay(state.location.deliveryDate.day)
-                    .format('Do')
-                    .match(/[a-zA-Z]+/g)}
-                </span>
-              </div>
-            </div>
-            <div className={styles.card}>
-              <div className={styles.title}>
-                Total:
-                <span className={styles.price}>${getTotal().toFixed(2)}</span>
-              </div>
-            </div>
-          </div>
           <div className={styles.menuItemsWrapper}>
             {state.cart.map((item) => (
               <MenuItemCard
