@@ -8,6 +8,10 @@ $subTitleFontSize: 2.7rem;
   column-gap: 10rem;
   @include responsive-wrapper;
 
+  & .deliveryDate {
+    font-family: $fontFamilyBold;
+  }
+
   & .title {
     font-size: $fontLarge;
     font-family: $fontFamilyBold;

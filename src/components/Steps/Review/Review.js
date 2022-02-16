@@ -12,12 +12,14 @@ import weekday from 'dayjs/plugin/weekday'
 import advancedFormat from 'dayjs/plugin/advancedFormat'
 import styles from './Review.module.scss'
 import Loading from '../Components/Loading'
+import TopTitle from '../Components/TopTitle'
 import MenuItemCard from '../../Account/Components/MenuItemCard/MenuItemCard'
 import DeliveryDateModal from '../Components/DeliveryDatesModal/DeliveryDateModal'
 import { getBundleByPlatformId } from '../../Hooks/withBundleApi'
 import { clearLocalStorage } from '../../../store/store'
-import { cart, smoothScrollingToId } from '../../../utils'
+import { cart, getNextWeekDay, smoothScrollingToId } from '../../../utils'
 import Toast from '../../Global/Toast'
+import { ReviewDeliveryDay, ReviewStartingDay } from '.'
 
 dayjs.extend(advancedFormat)
 dayjs.extend(weekday)
@@ -48,8 +50,6 @@ const Review = () => {
   useEffect(() => {
     smoothScrollingToId('reviewTop')
   })
-
-  const getDay = (weekDay) => dayjs().add(1, 'week').weekday(weekDay)
 
   const getShopifyCartToken = async () => {
     const token = await shopifyCart.getToken()
@@ -100,9 +100,9 @@ const Review = () => {
               .day(state.location.deliveryDate.day)
               .add(1, 'week')
               .format('YYYY-MM-DD'),
-            'delivery-day': getDay(state.location.deliveryDate.day).format(
-              'dddd'
-            )
+            'delivery-day': getNextWeekDay(
+              state.location.deliveryDate.day
+            ).format('dddd')
           },
           items: [
             {
@@ -200,7 +200,14 @@ const Review = () => {
     <>
       <div className="defaultWrapper" id="reviewTop">
         <div className={styles.wrapper}>
-          <div className={`${styles.title} mb-7`}>Review Order</div>
+          <TopTitle
+            title="Review Your Order"
+            subTitle={
+              <ReviewDeliveryDay date={state.location.deliveryDate.day} />
+            }
+          >
+            <ReviewStartingDay day={state.location.deliveryDate.day} />
+          </TopTitle>
           <div className={styles.menuItemsWrapper}>
             {state.cart.map((item) => (
               <MenuItemCard
