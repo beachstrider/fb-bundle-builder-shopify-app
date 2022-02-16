@@ -1,21 +1,23 @@
 @import '../../../variables';
 
 .wrapper {
-  display: grid;
+  display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   background-color: $butterMilk;
   margin-top: -3rem;
-  padding: 3rem;
+  padding: 2.5rem;
+  @include responsive-wrapper;
 
-  @media (max-width: $breakpointTablet) {
-    grid-template-columns: 100%;
-    & .text {
-      margin-bottom: 2rem;
-    }
+  .title {
+    font-family: $fontFamilyBlack;
+    font-size: $semiMediumFont + 0.4rem;
   }
 
-  @media (min-width: $breakpointTablet) {
-    grid-auto-flow: column;
+  .text {
+    font-family: $fontFamilyBook;
+    font-size: $fontMediumSmall;
+    margin-bottom: 1rem;
   }
 }
