@@ -20,4 +20,13 @@
     font-size: $fontMediumSmall;
     margin-bottom: 1rem;
   }
+
+  .bannerButton {
+    font-family: $fontFamilyMedium;
+    font-size: $fontMedium;
+    width: auto;
+    background-color: $primaryColorLight;
+    padding: 1rem 4rem;
+    border-radius: 3rem;
+  }
 }
