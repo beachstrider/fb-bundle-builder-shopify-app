@@ -61,4 +61,78 @@ const mapBundleTypeSubtype = (bundle) => {
 const getBundleMetafield = (metafields, key) =>
   metafields.find((m) => m.key === key)
 
-export { mapBundleTypeSubtype, getBundleMetafield }
+const createVariantObject = (variant, product, configuration) => {
+  variant.images = product.images
+  variant.configurationBundleId = configuration.bundleId
+  variant.configurationContentId = product.bundle_configuration_content_id
+  variant.description = product.description
+  variant.bundleContentId = configuration.id
+  variant.quantity = 0
+  variant.type = configuration.title
+  variant.productPlatformId = product.id
+  if (variant.name.includes('-')) {
+    variant.name = variant.name.split('-')[0]
+  }
+  return variant
+}
+
+const mapBundleItems = (
+  shopifyProducts,
+  bundles,
+  subscription,
+  configuration
+) => {
+  const bundle = bundles.find((b) => b.id === subscription.platform_product_id)
+  const variant = bundle.variants.find(
+    (v) => v.id === subscription.platform_variant_id
+  )
+
+  return shopifyProducts.map((product) => {
+    const subtype = product.variants.find(
+      (v) => v.option1 === variant.option1 && v.option2 === variant.option2
+    )
+    return createVariantObject(subtype, product, configuration)
+  })
+}
+
+const mapBundleItemsByOption = (
+  shopifyProducts,
+  type,
+  subType,
+  configuration
+) => {
+  const filteredVariants = []
+  const formattedString = (value) => {
+    return value.toLowerCase().split(' ').join('')
+  }
+
+  for (const product of shopifyProducts) {
+    const variants = product.variants.filter((variant) => {
+      const formattedOptions = variant.options.map((option) =>
+        formattedString(option)
+      )
+
+      return (
+        formattedOptions.includes(formattedString(type)) &&
+        formattedOptions.includes(formattedString(subType))
+      )
+    })
+
+    variants.map((variant) => {
+      return createVariantObject(variant, product, configuration)
+    })
+
+    if (variants.length > 0) {
+      filteredVariants.push(...variants)
+    }
+  }
+
+  return filteredVariants
+}
+
+export {
+  mapBundleTypeSubtype,
+  getBundleMetafield,
+  mapBundleItems,
+  mapBundleItemsByOption
+}

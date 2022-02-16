@@ -16,11 +16,7 @@ import MenuItemCard from '../../Account/Components/MenuItemCard/MenuItemCard'
 import DeliveryDateModal from '../Components/DeliveryDatesModal/DeliveryDateModal'
 import { getBundleByPlatformId } from '../../Hooks/withBundleApi'
 import { clearLocalStorage } from '../../../store/store'
-import {
-  cart,
-  filterShopifyVariants,
-  smoothScrollingToId
-} from '../../../utils'
+import { cart, smoothScrollingToId } from '../../../utils'
 import Toast from '../../Global/Toast'
 
 dayjs.extend(advancedFormat)

@@ -7,7 +7,8 @@ import {
   getSelectedBundle,
   getBundleByPlatformId,
   withActiveStep,
-  getBundleConfiguration
+  getBundleConfiguration,
+  mapItemsByOption
 } from '../../Hooks'
 import {
   cartRemoveItem,
@@ -24,9 +25,9 @@ import Loading from '../Components/Loading'
 import {
   cart,
   filterShopifyProducts,
-  filterShopifyVariants,
   smoothScrollingToId,
-  getConfigurationContent
+  getConfigurationContent,
+  mapBundleItemsByOption
 } from '../../../utils'
 import Toast from '../../Global/Toast'
 import { DEFAULT_ERROR_MESSAGE } from '../../../constants/errors'
@@ -102,7 +103,6 @@ const Entrees = () => {
 
       // uses selected tag in the first step
       const shopifyProduct = getSelectedBundle(state.bundle.breakfast.tag)
-      console.log('shopifyProduct', shopifyProduct)
       const { data } = await getBundleByPlatformId(
         state.tokens.guestToken,
         shopifyProduct.id
@@ -181,11 +181,10 @@ const Entrees = () => {
         shopProducts
       )
 
-      const filteredVariants = await filterShopifyVariants(
-        state,
+      const filteredVariants = await mapItemsByOption(
         filteredProducts,
-        state.entreeType.title,
-        state.entreeSubType.title,
+        state.entreeType.name,
+        state.entreeSubType.name,
         configuration
       )
 
