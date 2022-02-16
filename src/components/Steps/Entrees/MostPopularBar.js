@@ -12,9 +12,10 @@ const MostPopularBar = ({ isLoading, onClick }) => {
       </div>
       <div className="px-5">
         <ButtonSmall
+          className={styles.bannerButton}
           onClick={onClick}
           usePrimaryColor
-          label="Most Popular"
+          label="Select For Me"
           isLoading={isLoading}
         />
       </div>
