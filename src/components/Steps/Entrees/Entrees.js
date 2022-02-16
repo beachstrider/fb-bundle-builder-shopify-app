@@ -315,7 +315,7 @@ const Entrees = () => {
         onClick={handlePopularButton}
       />
 
-      <div className="defaultWrapper mt-10" id="entreesTop">
+      <div className="defaultWrapper" id="entreesTop">
         {isLoading ? (
           <Loading />
         ) : (
