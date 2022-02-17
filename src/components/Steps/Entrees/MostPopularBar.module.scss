@@ -5,20 +5,28 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-color: $butterMilk;
+  background-color: $butter;
   margin-top: -3rem;
   padding: 2.5rem;
-  @include responsive-wrapper;
+  text-align: center;
 
   .title {
     font-family: $fontFamilyBlack;
     font-size: $semiMediumFont + 0.4rem;
+
+    @media only screen and (max-width: $breakpointTablet) {
+      font-size: $fontMedium;
+    }
   }
 
   .text {
     font-family: $fontFamilyBook;
     font-size: $fontMediumSmall;
     margin-bottom: 1rem;
+
+    @media only screen and (max-width: $breakpointTablet) {
+      font-size: $fontSmall;
+    }
   }
 
   .bannerButton {
@@ -28,5 +36,9 @@
     background-color: $primaryColorLight;
     padding: 1rem 4rem;
     border-radius: 3rem;
+
+    @media only screen and (max-width: $breakpointTablet) {
+      font-size: $fontMediumSmall;
+    }
   }
 }
