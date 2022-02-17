@@ -324,18 +324,6 @@ const Entrees = () => {
               title="Select Your Meals"
               subTitle={`Menu for ${deliverAfter} - ${deliverBefore}`}
             />
-            <div className={`${styles.quantitiesWrapper} mb-8`}>
-              <div className={styles.topBarQuantities}>
-                {menuItems.map((product) => (
-                  <div key={product.id} className="px-3">
-                    <span className={styles.number}>
-                      {getQuantityCountdown(product.id).quantity}
-                    </span>{' '}
-                    {product.title} Left
-                  </div>
-                ))}
-              </div>
-            </div>
 
             <div id="mealsSection"></div>
             {isLoadingDefaults ? (
