@@ -13,13 +13,13 @@ import advancedFormat from 'dayjs/plugin/advancedFormat'
 import styles from './Review.module.scss'
 import Loading from '../Components/Loading'
 import TopTitle from '../Components/TopTitle'
-import MenuItemCard from '../../Account/Components/MenuItemCard/MenuItemCard'
 import DeliveryDateModal from '../Components/DeliveryDatesModal/DeliveryDateModal'
 import { getBundleByPlatformId } from '../../Hooks/withBundleApi'
 import { clearLocalStorage } from '../../../store/store'
 import { cart, getNextWeekDay, smoothScrollingToId } from '../../../utils'
 import Toast from '../../Global/Toast'
 import { ReviewDeliveryDay, ReviewStartingDay } from '.'
+import ReviewItems from './ReviewItems'
 
 dayjs.extend(advancedFormat)
 dayjs.extend(weekday)
@@ -35,10 +35,13 @@ const Review = () => {
   const shopifyCart = useShopifyCart()
   const [errorMessage, setErrorMessage] = useState(false)
   const [showError, setShowError] = useState(false)
+  const [mappedCart, setMappedCart] = useState({})
   const cartUtility = cart(state)
 
   useEffect(() => {
     getShopifyCartToken()
+    console.log('cartUtility.mapByTypes() >>>', cartUtility.mapByTypes())
+    setMappedCart(cartUtility.mapByTypes())
   }, [])
 
   useEffect(() => {
@@ -208,21 +211,8 @@ const Review = () => {
           >
             <ReviewStartingDay day={state.location.deliveryDate.day} />
           </TopTitle>
-          <div className={styles.menuItemsWrapper}>
-            {state.cart.map((item) => (
-              <MenuItemCard
-                key={item.id}
-                image={
-                  item.images.length > 0 && item.images[0]
-                    ? item.images[0]
-                    : process.env.EMPTY_STATE_IMAGE
-                }
-                title={item.name}
-                quantity={item.quantity}
-                type={item.title}
-                quantityLabel=""
-              />
-            ))}
+          <div className={`${styles.menuItemsWrapper} mb-8`}>
+            {mappedCart.types && <ReviewItems items={mappedCart} />}
           </div>
         </div>
       </div>
