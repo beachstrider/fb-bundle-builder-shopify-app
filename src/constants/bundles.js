@@ -1,0 +1,3 @@
+const BUNDLE_MEAL_SECTION_TITLE = 'Lunch + Dinner'
+
+export { BUNDLE_MEAL_SECTION_TITLE }

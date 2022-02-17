@@ -48,17 +48,18 @@ $subTitleFontSize: 2.7rem;
   }
 
   & .title {
-    font-size: $fontLarge;
-    font-weight: 700;
-    text-align: center;
+    font-family: $fontFamilyMedium;
+    font-size: $fontMedium;
+    color: $primaryColor;
+    margin-bottom: 1rem;
   }
 
   & .listHeader {
     display: flex;
-    align-items: center;
     flex-direction: row;
     @media only screen and (max-width: $breakpointDesktop) {
       flex-direction: column;
+      padding: 0 3%;
     }
   }
 
