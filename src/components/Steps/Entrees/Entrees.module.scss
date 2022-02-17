@@ -10,32 +10,6 @@ $subTitleFontSize: 2.7rem;
   column-gap: 10rem;
   @include responsive-wrapper;
 
-  & .quantitiesWrapper {
-    top: 0;
-    background-color: #f6f6f7;
-    margin: 0;
-    position: -webkit-sticky;
-    position: sticky;
-
-    & .topBarQuantities {
-      display: flex;
-      justify-content: center;
-      flex-direction: row;
-      text-align: center;
-      @media only screen and (max-width: $breakpointTablet) {
-        flex-direction: column;
-      }
-    }
-    & div {
-      margin: 0.5rem;
-    }
-    & .number {
-      color: $primaryColor;
-      font-weight: 700;
-    }
-    font-size: $subTitleFontSize;
-  }
-
   & .quantities {
     & div {
       margin: 0.5rem;
