@@ -31,6 +31,7 @@ import {
 } from '../../../utils'
 import Toast from '../../Global/Toast'
 import { DEFAULT_ERROR_MESSAGE } from '../../../constants/errors'
+import { BUNDLE_MEAL_SECTION_TITLE } from '../../../constants/bundles'
 import MostPopularBar from './MostPopularBar'
 import TopTitle from '../Components/TopTitle'
 dayjs.extend(weekday)
@@ -134,7 +135,9 @@ const Entrees = () => {
         })
         newQuantitiesCountdown.push({
           id: configuration.id,
-          quantity: response.quantityCountdown
+          quantity: response.quantityCountdown,
+          quantityTotal: response.quantity,
+          quantitySummary: response.quantity - response.quantityCountdown
         })
 
         defaultItems = [...defaultItems, ...response.defaultItems]
@@ -279,7 +282,11 @@ const Entrees = () => {
 
     setQuantitiesCountdown(() => {
       return quantitiesCountdown.map((section) => {
-        return { ...section, quantity: 0 }
+        return {
+          ...section,
+          quantity: 0,
+          quantitySummary: section.quantityTotal
+        }
       })
     })
     setIsLoadingDefaults(false)
@@ -325,43 +332,59 @@ const Entrees = () => {
               subTitle={`Menu for ${deliverAfter} - ${deliverBefore}`}
             />
 
-            <div id="mealsSection"></div>
-            {isLoadingDefaults ? (
-              <Loading />
-            ) : (
-              menuItems.map((content) => (
-                <div key={content.id}>
-                  <div className={styles.listHeader}>
-                    <div className={styles.title}>{content.title}</div>
-                  </div>
-                  <div className={`${styles.cards} mb-10`}>
-                    {content.products.map((item) => (
-                      <CardQuantities
-                        key={item.id}
-                        title={item.name}
-                        description={item.description}
-                        image={
-                          item.feature_image
-                            ? item.feature_image.src
-                            : item.images.length > 0
-                            ? item.images[0]
-                            : process.env.EMPTY_STATE_IMAGE
-                        }
-                        metafields={item.metafields}
-                        isChecked={cartUtility.isItemSelected(state.cart, item)}
-                        quantity={cartUtility.getItemQuantity(state.cart, item)}
-                        onClick={() => handleAddItem(item, content.id)}
-                        onAdd={() => handleAddItem(item, content.id)}
-                        onRemove={() => handleRemoveItem(item, content.id)}
-                        disableAdd={
-                          getQuantityCountdown(content.id).quantity === 0
-                        }
-                      />
-                    ))}
-                  </div>
-                </div>
-              ))
-            )}
+            <div className="mt-1">
+              <div id="mealsSection"></div>
+              {isLoadingDefaults ? (
+                <Loading />
+              ) : (
+                menuItems
+                  .map((content) => (
+                    <div key={content.id}>
+                      <div className={styles.listHeader}>
+                        <div className={styles.title}>
+                          {content.title === 'Meals'
+                            ? BUNDLE_MEAL_SECTION_TITLE
+                            : content.title}{' '}
+                          ({getQuantityCountdown(content.id).quantitySummary} of{' '}
+                          {getQuantityCountdown(content.id).quantityTotal})
+                        </div>
+                      </div>
+                      <div className={`${styles.cards} mb-10`}>
+                        {content.products.map((item) => (
+                          <CardQuantities
+                            key={item.id}
+                            title={item.name}
+                            description={item.description}
+                            image={
+                              item.feature_image
+                                ? item.feature_image.src
+                                : item.images.length > 0
+                                ? item.images[0]
+                                : process.env.EMPTY_STATE_IMAGE
+                            }
+                            metafields={item.metafields}
+                            isChecked={cartUtility.isItemSelected(
+                              state.cart,
+                              item
+                            )}
+                            quantity={cartUtility.getItemQuantity(
+                              state.cart,
+                              item
+                            )}
+                            onClick={() => handleAddItem(item, content.id)}
+                            onAdd={() => handleAddItem(item, content.id)}
+                            onRemove={() => handleRemoveItem(item, content.id)}
+                            disableAdd={
+                              getQuantityCountdown(content.id).quantity === 0
+                            }
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  ))
+                  .reverse()
+              )}
+            </div>
           </div>
         )}
         {error.open ? (
