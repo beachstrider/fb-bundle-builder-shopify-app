@@ -18,7 +18,6 @@ import EntreeTypeSubType from './EntreeTypeSubType'
 import { Redirect } from 'react-router'
 import Toast from '../../Global/Toast'
 import TopTitle from '../Components/TopTitle'
-import CardSelectionMark from '../../Cards/CardSelectionMark'
 
 const FAQ_TYPE = 'entreeType'
 const STEP_ID = 3
@@ -117,7 +116,7 @@ const EntreeType = () => {
         title="Choose Your Meal Plan"
         subTitle="Chef-curated, nutritious options to fit your lifestyle."
       />
-      <div className="defaultWrapper">
+      <div className="defaultWrapper mb-10">
         <div className={styles.wrapper}>
           <div className={`${styles.entrees} mb-10`}>
             {bundleTypes.map((entree, index) => (
