@@ -8,48 +8,66 @@ $subTitleFontSize: 2.7rem;
   column-gap: 10rem;
   @include responsive-wrapper;
 
-  & .deliveryDate {
-    font-family: $fontFamilyBold;
-  }
-
-  & .title {
-    font-size: $fontLarge;
-    font-family: $fontFamilyBold;
-    font-weight: 700;
-    text-align: center;
-    @media only screen and (max-width: $breakpointTablet) {
-      font-size: $semiMediumFont;
+  & .subTotalWrapper {
+    @media only screen and (min-width: $breakpointDesktop) {
+      margin: 3.5rem 0;
     }
-  }
-
-  & .menuItemsWrapper {
-    display: grid;
-    grid-template-columns: 1fr;
-
     @media only screen and (max-width: $breakpointTablet) {
+      align-items: center;
       justify-content: center;
     }
-
-    & .section {
-      & .sectionTitle {
-        font-family: $fontFamilyMedium;
-        font-size: $fontMedium;
-        color: $primaryColor;
-        padding: 0 1rem;
-      }
-      & .sectionRow {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, 25%);
-        justify-content: flex-start;
+    & .subTotal {
+      @media only screen and (max-width: $breakpointTablet) {
+        width: 95%;
+        margin: 1rem 0;
       }
     }
+  }
 
-    & p {
-      align-items: center;
+  & .contentWrapper {
+    display: grid;
+    @media only screen and (min-width: $breakpointDesktop) {
+      grid-template-columns: 70% 30%;
+      column-gap: 3.1rem;
     }
-    & p:nth-child(even) {
-      & strong {
-        font-size: calc($fontMedium + 0.8rem);
+    @media only screen and (max-width: $breakpointDesktop) {
+      grid-template-columns: 60% 40%;
+      column-gap: 3.1rem;
+    }
+    @media only screen and (max-width: $breakpointTablet) {
+      grid-template-columns: 100%;
+    }
+
+    & .menuItemsWrapper {
+      display: grid;
+      grid-template-columns: 1fr;
+
+      @media only screen and (max-width: $breakpointTablet) {
+        justify-content: center;
+      }
+
+      & .section {
+        & .sectionTitle {
+          width: 100%;
+          font-family: $fontFamilyMedium;
+          font-size: $fontMedium;
+          color: $primaryColor;
+          padding: 0 1rem;
+        }
+        & .sectionRow {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, 25%);
+          justify-content: flex-start;
+        }
+      }
+
+      & p {
+        align-items: center;
+      }
+      & p:nth-child(even) {
+        & strong {
+          font-size: calc($fontMedium + 0.8rem);
+        }
       }
     }
   }

@@ -1,5 +1,7 @@
 @import '../../../../variables';
 
+$smallFont: 1.1rem;
+
 .cardWrapper {
   display: flex;
   flex-direction: column;
@@ -41,26 +43,44 @@
     flex-grow: 1;
     position: relative;
     align-items: center;
+    @media only screen and (max-width: $breakpointTablet) {
+      padding: 0;
+    }
 
     & .quantityWrapper {
-      font-size: $fontXSmall;
       margin: 0;
       position: absolute;
       right: 0.5rem;
       & .number {
+        font-size: $fontXSmall;
         font-family: $fontFamilyMedium;
         background: $gray100;
         border-radius: 50%;
-        padding: 0.5rem 1rem;
+        padding: 0 0.5rem;
+        @media only screen and (max-width: $breakpointTablet) {
+          font-size: 1.1rem;
+        }
       }
     }
 
     & .itemTitle {
-      font-size: 1.1rem;
+      font-size: $fontXSmall;
       font-family: $fontFamilyMedium;
       margin: 0 0 0.12rem;
       line-height: 2.4rem;
       flex: 1;
+      display: block;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      @media only screen and (max-width: $breakpointDesktop) {
+        font-size: $smallFont;
+        width: 50%;
+      }
+      @media only screen and (max-width: $breakpointTablet) {
+        font-size: $smallFont;
+        width: 40%;
+      }
     }
   }
 }

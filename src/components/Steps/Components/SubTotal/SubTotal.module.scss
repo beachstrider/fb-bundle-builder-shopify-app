@@ -4,14 +4,7 @@
   border-radius: 1rem;
   border: $cardBorderWidth solid $borderColor;
   background-color: $white;
-
-  @media only screen and (min-width: $breakpointTablet) {
-    width: 29vw;
-  }
-  @media only screen and (max-width: $breakpointTablet) {
-    padding: 1rem 0;
-    width: 90vw;
-  }
+  width: 100%;
 
   & .divider {
     border-bottom: $cardBorderWidth solid $borderColor;

@@ -20,6 +20,7 @@ import { cart, getNextWeekDay, smoothScrollingToId } from '../../../utils'
 import Toast from '../../Global/Toast'
 import { ReviewDeliveryDay, ReviewStartingDay } from '.'
 import ReviewItems from './ReviewItems'
+import SubTotal from '../Components/SubTotal'
 
 dayjs.extend(advancedFormat)
 dayjs.extend(weekday)
@@ -208,11 +209,37 @@ const Review = () => {
             subTitle={
               <ReviewDeliveryDay date={state.location.deliveryDate.day} />
             }
+            showSeparator={false}
           >
             <ReviewStartingDay day={state.location.deliveryDate.day} />
           </TopTitle>
-          <div className={`${styles.menuItemsWrapper} mb-8`}>
-            {mappedCart.types && <ReviewItems items={mappedCart} />}
+          <div className={`displayMobile mb-10 ${styles.subTotalWrapper}`}>
+            <div className={styles.subTotal}>
+              <SubTotal
+                entreesQuantity={state.bundle?.entreesQuantity}
+                breakfastsQuantity={state.bundle?.breakfastsQuantity}
+                entreePrice={state.bundle?.price}
+                breakfastPrice={state.bundle?.breakfast?.price}
+                shippingPrice={state.bundle?.shippingPrice}
+              />
+            </div>
+          </div>
+          <div className={styles.contentWrapper}>
+            <div className={`${styles.menuItemsWrapper} mb-8`}>
+              {mappedCart.types && <ReviewItems items={mappedCart} />}
+            </div>
+            <div className={`displayTablet ${styles.subTotalWrapper}`}>
+              <div className={styles.subTotal}>
+                <SubTotal
+                  entreesQuantity={state.bundle?.entreesQuantity}
+                  breakfastsQuantity={state.bundle?.breakfastsQuantity}
+                  entreePrice={state.bundle?.price}
+                  breakfastPrice={state.bundle?.breakfast?.price}
+                  shippingPrice={state.bundle?.shippingPrice}
+                  backgroundImage={`${process.env.PROXY_APP_URL}/images/order-package.jpg`}
+                />
+              </div>
+            </div>
           </div>
         </div>
       </div>
