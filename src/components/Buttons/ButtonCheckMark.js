@@ -7,20 +7,24 @@ const ButtonCheckMark = ({
   onClick,
   isChecked,
   label = 'Add',
-  labelOnClick = 'Added'
+  labelOnClick = 'Added',
+  isFromModal = false
 }) => {
+  const getClassnameWrapper = () => {
+    return `${styles.wrapper} ${isChecked && styles.activeWrapper} ${
+      isFromModal && styles.isFromModal
+    } buttons`
+  }
+
+  const getClassnameButton = () => {
+    return `${styles.button} ${
+      isChecked && !isFromModal ? styles.primaryButton : styles.bigPrimaryButton
+    } ${styles.buttonWrapper}`
+  }
+
   return (
-    <div
-      className={`${styles.wrapper} ${
-        isChecked && styles.activeWrapper
-      } buttons`}
-      onClick={onClick}
-    >
-      <div
-        className={`${styles.button} ${
-          isChecked ? styles.primaryButton : styles.lightButton
-        } ${styles.buttonWrapper}`}
-      >
+    <div className={getClassnameWrapper()} onClick={onClick}>
+      <div className={getClassnameButton()}>
         {isChecked ? (
           <div className={styles.addedButton}>
             <div>{labelOnClick}</div>

@@ -6,7 +6,9 @@
     padding: 0.2rem 1.5rem;
     border-radius: 1.5rem;
     cursor: pointer;
+    font-family: $fontFamilyMedium;
     font-size: $fontXSmall;
+    margin-top: 1rem !important;
   }
 
   & .lightButton {
@@ -21,6 +23,17 @@
   }
 
   & .primaryButton {
+    background: $primaryColor;
+    box-shadow: unset !important;
+    &:hover {
+      background: darken($primaryColor, 10%);
+    }
+  }
+
+  & .bigPrimaryButton {
+    width: 11rem !important;
+    border-radius: 2.5rem;
+    padding: 1.5rem 0;
     background: $primaryColor;
     box-shadow: unset !important;
     &:hover {
@@ -45,5 +58,13 @@
         fill: $white;
       }
     }
+  }
+}
+
+.wrapper.isFromModal {
+  & .button {
+    width: 16rem;
+    padding: 0.9rem 1rem;
+    border-radius: 2.5rem;
   }
 }
