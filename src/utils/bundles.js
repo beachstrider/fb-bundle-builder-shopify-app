@@ -62,6 +62,17 @@ const getBundleMetafield = (metafields, key) =>
   metafields.find((m) => m.key === key)
 
 const createVariantObject = (variant, product, configuration) => {
+  const variantMetafieldKeys = variant.metafields.map(
+    (metafield) => metafield.key
+  )
+  const newMetafields = []
+  product.metafields?.forEach((metafield) => {
+    if (!variantMetafieldKeys.includes(metafield.key)) {
+      newMetafields.push(metafield)
+    }
+  })
+  variant.productMetafields = newMetafields
+
   variant.images = product.images
   variant.configurationBundleId = configuration.bundleId
   variant.configurationContentId = product.bundle_configuration_content_id
@@ -70,6 +81,7 @@ const createVariantObject = (variant, product, configuration) => {
   variant.quantity = 0
   variant.type = configuration.title
   variant.productPlatformId = product.id
+
   if (variant.name.includes('-')) {
     variant.name = variant.name.split('-')[0]
   }

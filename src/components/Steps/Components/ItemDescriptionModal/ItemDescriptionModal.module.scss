@@ -38,10 +38,6 @@
     }
   }
 
-  & .descriptionHtml {
-    display: block;
-  }
-
   & .actions {
     display: flex;
     justify-content: flex-start;
@@ -87,6 +83,20 @@
 
     @media only screen and (max-width: $breakpointTablet) {
       padding: 2rem 1rem;
+    }
+
+    & .contains {
+      font-family: $fontFamilyBold;
+    }
+
+    & .ingredients {
+      h2 {
+        margin-bottom: 0;
+      }
+      & .ingredientsText {
+        font-size: calc($fontXSmall - 0.3rem);
+        font-family: $fontFamilyLight;
+      }
     }
   }
 }
