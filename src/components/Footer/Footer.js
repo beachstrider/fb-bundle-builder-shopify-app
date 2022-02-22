@@ -73,13 +73,13 @@ const Footer = () => {
   return (
     <div className={`${styles.wrapper} defaultWrapper`}>
       <div className={`${styles.buttons}`}>
-        <div
-          className="button lightButton"
-          onClick={() =>
-            handleBackButtonClick(currentStep.id === state.steps[0].id)
-          }
-        >
-          Back
+        <div className={`${styles.info}`}>
+          <span className={`${styles.infoCost}`}>
+            ${Number.parseFloat(total).toFixed(2)}/week for
+          </span>
+          <span className={`${styles.infoFrequency}`}>
+            {`${frequency} ${frequency !== 1 ? 'Meals' : 'Meal'}`}{' '}
+          </span>
         </div>
 
         <div className={`${styles.info}`}>

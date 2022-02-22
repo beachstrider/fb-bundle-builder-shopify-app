@@ -12,11 +12,12 @@ import {
 } from '../../../store/slices/rootSlice'
 import { smoothScrollingToId } from '../../../utils'
 import { useGuestToken, withActiveStep } from '../../Hooks'
-import { CardEntreeType } from '../../Cards'
+import { CardEntreeType, CardSelectionMark } from '../../Cards'
 import styles from './EntreeType.module.scss'
 import EntreeTypeSubType from './EntreeTypeSubType'
 import { Redirect } from 'react-router'
 import Toast from '../../Global/Toast'
+import TopTitle from '../Components/TopTitle'
 
 const FAQ_TYPE = 'entreeType'
 const STEP_ID = 3
@@ -28,26 +29,16 @@ const entreeTypes = [
     title: 'Keto',
     subType: 'keto',
     primaryColor: '#ec6120',
-    options: [
-      'Low carbohydrates',
-      'High fat content',
-      'High protein'
-    ],
-    image:
-      `${process.env.PROXY_APP_URL}/images/keto-meal-plan.jpg`
+    options: ['Low carbohydrates', 'High fat content', 'High protein'],
+    image: `${process.env.PROXY_APP_URL}/images/keto-meal-plan.jpg`
   },
   {
     id: 2,
     title: 'LowCal',
     subType: 'lowCal',
     primaryColor: '#3DAE2B',
-    options: [
-      'Low in calories',
-      'High in protein',
-      'Balanced macros'
-    ],
-    image:
-      `${process.env.PROXY_APP_URL}/images/lowcal-meal-plan.jpg`
+    options: ['Low in calories', 'High in protein', 'Balanced macros'],
+    image: `${process.env.PROXY_APP_URL}/images/lowcal-meal-plan.jpg`
   }
 ]
 
@@ -139,8 +130,7 @@ const EntreeType = () => {
   })
 
   const generateToken = async () => {
-    
-    const currentToken = await useGuestToken()    
+    const currentToken = await useGuestToken()
     if (currentToken) {
       dispatch(
         setTokens({
@@ -173,58 +163,76 @@ const EntreeType = () => {
   }
 
   if (!state.location.zipCode) {
-    return <Redirect push to='/steps/2' />
+    return <Redirect push to="/steps/2" />
   }
 
   return (
-    <div className='defaultWrapper'>
-      <div className={styles.wrapper}>
-        <div className={`${styles.title} mb-7`}>Choose Meal Type</div>
-        <div className={`${styles.entrees} mb-10`}>
-          {entreeTypes.map((entree) => (
-            <CardEntreeType
-              key={entree.id}
-              title={entree.title}
-              image={entree.image}
-              options={entree.options}
-              primaryColor={entree.primaryColor}
-              isSelected={state.entreeType.id === entree.id}
-              onClick={() => handleEntreeTypeSelection(entree)}
-            />
-          ))}
+    <div>
+      <TopTitle
+        title="Choose Your Meal Plan"
+        subTitle="Chef-curated, nutritious options to fit your lifestyle."
+      />
+      <div className="defaultWrapper">
+        <div className={styles.wrapper}>
+          <div className={`${styles.entrees} mb-10`}>
+            {entreeTypes.map((entree) => (
+              <CardSelectionMark
+                key={entree.id}
+                isSelected={state.entreeType.id === entree.id}
+                onClick={() => handleEntreeTypeSelection(entree)}
+              >
+                <CardEntreeType
+                  title={entree.title}
+                  image={entree.image}
+                  options={entree.options}
+                />
+              </CardSelectionMark>
+            ))}
+          </div>
+          <div id="entreeType">
+            {state.entreeType.id !== 0 && (
+              <>
+                <div className={`${styles.title} mb-7`}>
+                  Choose Meal Sub Type
+                </div>
+                <div
+                  className={`${
+                    state.entreeType.id === 1
+                      ? styles.subTypesWrapper_2_Columns
+                      : styles.subTypesWrapper_3_Columns
+                  } mb-10`}
+                >
+                  {subTypes[state.entreeType.subType].map((subType) => (
+                    <EntreeTypeSubType
+                      data={subType}
+                      isSelected={subType.id === state.entreeSubType.id}
+                      key={subType.id}
+                      onClick={() => dispatch(setEntreeSubType(subType))}
+                    />
+                  ))}
+                </div>
+              </>
+            )}
+          </div>
         </div>
-        <div id='entreeType'>
-          {state.entreeType.id !== 0 && (
-            <>
-              <div className={`${styles.title} mb-7`}>Choose Meal Sub Type</div>
-              <div className={`${state.entreeType.id === 1 ? styles.subTypesWrapper_2_Columns : styles.subTypesWrapper_3_Columns} mb-10`}>
-                {subTypes[state.entreeType.subType].map((subType) => (
-                  <EntreeTypeSubType
-                    data={subType}
-                    isSelected={subType.id === state.entreeSubType.id}
-                    key={subType.id}
-                    onClick={() => dispatch(setEntreeSubType(subType))}
-                  />
-                ))}
-              </div>
-            </>
-          )}
-        </div>
+        {error.open ? (
+          <Toast
+            open={error.open}
+            status={error.status}
+            message={error.message}
+            displayTitle={false}
+            handleClose={() => {
+              setError({
+                open: false,
+                status: 'Success',
+                message: ''
+              })
+            }}
+          />
+        ) : (
+          ''
+        )}
       </div>
-      {error.open ? 
-        <Toast 
-          open={error.open} 
-          status={error.status} 
-          message={error.message} 
-          displayTitle={false}          
-          handleClose={() => {
-          setError({
-            open: false,
-            status: 'Success',
-            message: ''
-          })
-         }} 
-        /> : ''}
     </div>
   )
 }
