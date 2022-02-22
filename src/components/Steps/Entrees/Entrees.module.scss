@@ -9,7 +9,6 @@ $subTitleFontSize: 2.7rem;
   grid-template-columns: 100%;
   column-gap: 10rem;
   margin-top: 1rem;
-  @include responsive-wrapper;
 
   & .quantities {
     & div {
