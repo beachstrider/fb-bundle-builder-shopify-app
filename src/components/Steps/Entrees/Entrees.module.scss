@@ -26,7 +26,7 @@ $subTitleFontSize: 2.7rem;
     font-family: $fontFamilyMedium;
     font-size: $fontMedium;
     color: $primaryColor;
-    margin-bottom: 1rem;
+    margin-bottom: 1.3rem;
   }
 
   & .listHeader {
@@ -40,8 +40,9 @@ $subTitleFontSize: 2.7rem;
 
   & .cards {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    column-gap: 3rem;
+    grid-template-columns: repeat(4, 265px);
+    column-gap: 1.6rem;
+    margin-bottom: 1.5rem;
 
     @media only screen and (max-width: $breakpointDesktop) {
       justify-content: center;
