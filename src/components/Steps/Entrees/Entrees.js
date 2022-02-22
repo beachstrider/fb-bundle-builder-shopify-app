@@ -337,52 +337,50 @@ const Entrees = () => {
               {isLoadingDefaults ? (
                 <Loading />
               ) : (
-                menuItems
-                  .map((content) => (
-                    <div key={content.id}>
-                      <div className={styles.listHeader}>
-                        <div className={styles.title}>
-                          {content.title === 'Meals'
-                            ? BUNDLE_MEAL_SECTION_TITLE
-                            : content.title}{' '}
-                          ({getQuantityCountdown(content.id).quantitySummary} of{' '}
-                          {getQuantityCountdown(content.id).quantityTotal})
-                        </div>
-                      </div>
-                      <div className={`${styles.cards} mb-10`}>
-                        {content.products.map((item) => (
-                          <CardQuantities
-                            key={item.id}
-                            title={item.name}
-                            description={item.description}
-                            image={
-                              item.feature_image
-                                ? item.feature_image.src
-                                : item.images.length > 0
-                                ? item.images[0]
-                                : process.env.EMPTY_STATE_IMAGE
-                            }
-                            metafields={item.metafields}
-                            isChecked={cartUtility.isItemSelected(
-                              state.cart,
-                              item
-                            )}
-                            quantity={cartUtility.getItemQuantity(
-                              state.cart,
-                              item
-                            )}
-                            onClick={() => handleAddItem(item, content.id)}
-                            onAdd={() => handleAddItem(item, content.id)}
-                            onRemove={() => handleRemoveItem(item, content.id)}
-                            disableAdd={
-                              getQuantityCountdown(content.id).quantity === 0
-                            }
-                          />
-                        ))}
+                menuItems.map((content) => (
+                  <div key={content.id}>
+                    <div className={styles.listHeader}>
+                      <div className={styles.title}>
+                        {content.title === 'Meals'
+                          ? BUNDLE_MEAL_SECTION_TITLE
+                          : content.title}{' '}
+                        ({getQuantityCountdown(content.id).quantitySummary} of{' '}
+                        {getQuantityCountdown(content.id).quantityTotal})
                       </div>
                     </div>
-                  ))
-                  .reverse()
+                    <div className={`${styles.cards}`}>
+                      {content.products.map((item) => (
+                        <CardQuantities
+                          key={item.id}
+                          title={item.name}
+                          description={item.description}
+                          image={
+                            item.feature_image
+                              ? item.feature_image.src
+                              : item.images.length > 0
+                              ? item.images[0]
+                              : process.env.EMPTY_STATE_IMAGE
+                          }
+                          metafields={item.metafields}
+                          isChecked={cartUtility.isItemSelected(
+                            state.cart,
+                            item
+                          )}
+                          quantity={cartUtility.getItemQuantity(
+                            state.cart,
+                            item
+                          )}
+                          onClick={() => handleAddItem(item, content.id)}
+                          onAdd={() => handleAddItem(item, content.id)}
+                          onRemove={() => handleRemoveItem(item, content.id)}
+                          disableAdd={
+                            getQuantityCountdown(content.id).quantity === 0
+                          }
+                        />
+                      ))}
+                    </div>
+                  </div>
+                ))
               )}
             </div>
           </div>
