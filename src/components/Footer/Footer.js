@@ -72,7 +72,7 @@ const Footer = () => {
 
   return (
     <div className={`${styles.wrapper} defaultWrapper`}>
-      <div className={`${styles.buttons}`}>
+      <div className={`${styles.buttons} buttons`}>
         <div className={`${styles.info}`}>
           <span className={`${styles.infoCost}`}>
             ${Number.parseFloat(total).toFixed(2)}/week for
