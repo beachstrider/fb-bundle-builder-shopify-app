@@ -39,18 +39,19 @@ $subTitleFontSize: 2.7rem;
 
   & .cards {
     display: grid;
-    grid-template-columns: repeat(4, 265px);
+    grid-template-columns: repeat(4, $cardWidth);
     column-gap: 1.6rem;
     margin-bottom: 1.5rem;
 
     @media only screen and (max-width: $breakpointDesktop) {
       flex-wrap: nowrap;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(auto-fill, minmax($cardWidth, $cardWidth));
     }
 
     @media only screen and (max-width: $breakpointTablet) {
       padding: 0 3%;
       overflow-x: auto;
+      display: flex;
     }
   }
 
