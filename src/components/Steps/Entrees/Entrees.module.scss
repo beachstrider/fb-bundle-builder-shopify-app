@@ -31,7 +31,7 @@ $subTitleFontSize: 2.7rem;
   & .listHeader {
     display: flex;
     flex-direction: row;
-    @media only screen and (max-width: $breakpointDesktop) {
+    @media only screen and (max-width: $breakpointTablet) {
       flex-direction: column;
       padding: 0 3%;
     }
