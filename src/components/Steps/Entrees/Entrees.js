@@ -347,6 +347,7 @@ const Entrees = () => {
                             : process.env.EMPTY_STATE_IMAGE
                         }
                         metafields={item.metafields}
+                        productMetafields={item.productMetafields}
                         isChecked={cartUtility.isItemSelected(state.cart, item)}
                         quantity={cartUtility.getItemQuantity(state.cart, item)}
                         onClick={() => handleAddItem(item, content.id)}
