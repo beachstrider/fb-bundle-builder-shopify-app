@@ -9,7 +9,6 @@ $subTitleFontSize: 2.7rem;
   grid-template-columns: 100%;
   column-gap: 10rem;
   margin-top: 1rem;
-  @include responsive-wrapper;
 
   & .quantities {
     & div {
@@ -44,13 +43,13 @@ $subTitleFontSize: 2.7rem;
     column-gap: 3rem;
 
     @media only screen and (max-width: $breakpointDesktop) {
-      justify-content: center;
-      align-items: center;
-      grid-template-columns: 1fr;
-      row-gap: 1rem;
+      flex-wrap: nowrap;
+      grid-template-columns: repeat(3, 1fr);
     }
+
     @media only screen and (max-width: $breakpointTablet) {
       padding: 0 3%;
+      overflow-x: auto;
     }
   }
 
@@ -63,5 +62,16 @@ $subTitleFontSize: 2.7rem;
       padding: 2rem;
       row-gap: 2rem;
     }
+  }
+
+  @media only screen and (max-width: $breakpointDesktop) {
+    width: $rowWidthTable;
+    grid-template-columns: 100%;
+    column-gap: 5rem;
+  }
+  @media only screen and (max-width: $breakpointTablet) {
+    width: $rowWidthMobile;
+    grid-template-columns: 100%;
+    column-gap: 0;
   }
 }
