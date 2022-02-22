@@ -314,7 +314,7 @@ const Location = () => {
           <div>
             <div className="mt-2 mb-1">
               <span className={styles.inputLabel}>
-                Your Zip Code<span className={styles.required}>*</span>
+                Zip Code<span className={styles.required}>*</span>
               </span>
             </div>
             <InputText
@@ -330,7 +330,7 @@ const Location = () => {
           <div>
             <div className="mt-5 mb-1">
               <span className={styles.inputLabel}>
-                Enter Your Email<span className={styles.required}>*</span>
+                Email Address<span className={styles.required}>*</span>
               </span>
             </div>
             <InputEmail
