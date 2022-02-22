@@ -73,6 +73,10 @@
     }
   }
 
+  & .subtitle {
+    margin-top: -1rem;
+  }
+
   & .descriptionWrapper {
     display: flex;
     flex-direction: column;
