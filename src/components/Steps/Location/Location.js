@@ -307,16 +307,18 @@ const Location = () => {
     <div className="defaultWrapper">
       <div className={styles.wrapper}>
         <TopTitle
-          className="mb-5"
           title="Enter Your Zip Code & Email"
           subTitle="Meals are delivered fresh every week. You can pause, cancel, or update your meal plan at anytime!"
         />
         <div className={styles.rows}>
           <div>
-            <div className="mb-3">
-              Your Zip Code <span className={styles.required}>(Required)</span>
+            <div className="mt-2 mb-1">
+              <span className={styles.inputLabel}>
+                Zip Code<span className={styles.required}>*</span>
+              </span>
             </div>
             <InputText
+              className={styles.input}
               onChange={(value) => handleZipCodeChange(value)}
               value={zipCode}
               required={true}
@@ -326,11 +328,13 @@ const Location = () => {
             </div>
           </div>
           <div>
-            <div className="mb-3">
-              Enter Your Email{' '}
-              <span className={styles.required}>(Required)</span>
+            <div className="mt-5 mb-1">
+              <span className={styles.inputLabel}>
+                Email Address<span className={styles.required}>*</span>
+              </span>
             </div>
             <InputEmail
+              className={styles.input}
               onChange={(value) => handleEmailChange(value)}
               value={email}
               required={true}

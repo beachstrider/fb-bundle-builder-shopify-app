@@ -17,21 +17,33 @@
   }
 
   & .rows {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    display: flex;
+    flex-direction: column;
     column-gap: 3rem;
+    align-items: center;
     padding: 0 20%;
+    text-align: center;
+
+    .inputLabel {
+      font-family: $fontFamilyMedium;
+      font-size: $fontMedium;
+    }
+    .input {
+      & input {
+        width: 37rem;
+        text-align: center;
+        font-family: $fontFamilyMedium;
+        font-size: $fontMedium;
+        color: $grayMedium;
+        padding-left: 0;
+      }
+    }
 
     @media only screen and (max-width: $breakpointDesktop) {
       justify-content: center;
       align-items: center;
       grid-template-columns: 1fr;
       row-gap: 1rem;
-    }
-
-    & .required {
-      font-size: 1rem;
-      color: $red;
     }
   }
 
