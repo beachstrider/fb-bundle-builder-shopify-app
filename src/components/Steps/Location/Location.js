@@ -216,15 +216,18 @@ const Location = () => {
 
       const currentUrl = window.location.href
 
-      // validates current user and input email
-      if (
-        shopifyCustomer.data &&
-        shopifyCustomer.data?.data?.customers?.edges?.length > 0 &&
-        shopCustomer.email !== email
-      ) {
-        await setStepToReturn('2')
-        window.location.href = `https://${shopDomain}/account/login?return_url=${currentUrl}`
-        return
+      const requireShopifyLogin = false;
+      if(requireShopifyLogin) {
+        // validates current user and input email
+        if (
+          shopifyCustomer.data &&
+          shopifyCustomer.data?.data?.customers?.edges?.length > 0 &&
+          shopCustomer.email !== email
+        ) {
+          await setStepToReturn('2')
+          window.location.href = `https://${shopDomain}/account/login?return_url=${currentUrl}`
+          return
+        }
       }
 
       // if user isn't signed-in
