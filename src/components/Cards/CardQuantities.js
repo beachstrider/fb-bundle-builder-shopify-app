@@ -8,6 +8,7 @@ const CardQuantities = ({
   description,
   image,
   metafields,
+  productMetafields,
   quantity,
   isChecked,
   onClick,
@@ -66,6 +67,7 @@ const CardQuantities = ({
         description={description}
         image={image}
         metafields={metafields}
+        productMetafields={productMetafields}
         quantity={quantity}
         isChecked={isChecked}
         onClick={onClick}
