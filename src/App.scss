@@ -192,7 +192,7 @@ $multiplier: 0.5rem;
   & .button {
     min-width: 6rem;
     padding: 1rem 3.5rem;
-    border-radius: 2rem;
+    border-radius: 2.5rem;
     cursor: pointer;
   }
 
@@ -240,13 +240,14 @@ $multiplier: 0.5rem;
   }
 
   & .disabledButton {
-    background: $grayMedium;
+    font-family: $fontFamilyMedium;
+    font-size: $fontMediumSmall;
     color: $white;
-    border: 1px solid $grayMedium;
-    border-radius: 2em;
-    padding: 5px 40px;
     text-decoration: none;
     line-height: 16px;
+    background: $gray200;
+    border-radius: 2.5rem;
+    padding: 5px 40px;
     box-shadow: unset !important;
     cursor: not-allowed;
   }
