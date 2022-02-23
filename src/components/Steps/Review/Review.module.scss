@@ -48,11 +48,17 @@ $subTitleFontSize: 2.7rem;
 
       & .section {
         & .sectionTitle {
+          display: flex;
+          justify-content: space-between;
           width: 100%;
           font-family: $fontFamilyMedium;
           font-size: $fontMedium;
           color: $primaryColor;
           padding: 0 1rem;
+          & .edit {
+            text-decoration: underline;
+            cursor: pointer;
+          }
         }
         & .sectionRow {
           display: grid;
