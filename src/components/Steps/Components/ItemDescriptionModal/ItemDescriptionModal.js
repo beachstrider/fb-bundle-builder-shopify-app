@@ -32,7 +32,12 @@ const ItemDescriptionModal = ({
           &nbsp;
         </div>
         <div className={styles.descriptionWrapper}>
-          <div className={`${styles.title} mb-3`}>{title}</div>
+          <div className={styles.title}>{title}</div>
+          {getMetafield(productMetafields, 'subtitle').value && (
+            <div className={styles.subtitle}>
+              {getMetafield(productMetafields, 'subtitle')?.value}
+            </div>
+          )}
           <div className={styles.description}>
             {metafields.map((metafield) => (
               <div key={metafield.key}>

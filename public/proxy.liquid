@@ -147,7 +147,7 @@ function createEmptyMetafields(currentObject) {
 function getMetafieldKey(string) {
   return string.split('.')[1]
 }
-{% assign productNutritionMetaKeys = 'net_carbs,protein,fat,contains,ingredients' | split: ',' %}
+{% assign productNutritionMetaKeys = 'net_carbs,protein,fat,contains,ingredients,subtitle' | split: ',' %}
 
 currentProduct = {}
 currentVariant = {}
