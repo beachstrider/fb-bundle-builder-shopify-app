@@ -81,16 +81,6 @@ const Footer = () => {
             {`${frequency} ${frequency !== 1 ? 'Meals' : 'Meal'}`}{' '}
           </span>
         </div>
-
-        <div className={`${styles.info}`}>
-          <span className={`${styles.infoCost}`}>
-            ${Number.parseFloat(total).toFixed(2)}/week for
-          </span>
-          <span className={`${styles.infoFrequency}`}>
-            {`${frequency} ${frequency !== 1 ? 'Meals' : 'Meal'}`}{' '}
-          </span>
-        </div>
-
         <div
           className={`button ${
             state.isNextButtonActive ? 'primaryButton' : 'disabledButton'
