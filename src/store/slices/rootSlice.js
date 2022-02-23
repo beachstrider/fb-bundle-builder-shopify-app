@@ -11,7 +11,7 @@ export const initialState = {
     {
       id: 1,
       name: 'Step 1',
-      description: 'Frequency',
+      description: 'Meals Per Week',
       labelFooter: 'Enter Zip Code',
       path: '/',
       isActive: true
@@ -34,6 +34,7 @@ export const initialState = {
       id: 4,
       name: 'Step 4',
       description: 'Select Your Meals',
+      labelFooter: 'Review My Order',
       path: '/steps/4',
       isActive: false
     },

@@ -81,7 +81,6 @@ const Footer = () => {
             {`${frequency} ${frequency !== 1 ? 'Meals' : 'Meal'}`}{' '}
           </span>
         </div>
-
         <div
           className={`button ${
             state.isNextButtonActive ? 'primaryButton' : 'disabledButton'

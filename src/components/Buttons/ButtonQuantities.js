@@ -8,10 +8,11 @@ const ButtonQuantities = ({
   onRemove,
   quantity = 0,
   disableAdd = false,
-  disableRemove = false
+  disableRemove = false,
+  isFromModal = false
 }) => {
   return (
-    <div className={styles.wrapper}>
+    <div className={`${styles.wrapper} ${isFromModal && styles.isFromModal}`}>
       <div
         className={`${styles.button} ${styles.leftButton} ${
           disableRemove && styles.disabled

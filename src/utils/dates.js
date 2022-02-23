@@ -61,7 +61,6 @@ const getTodayDate = () => {
   return todayDate
 }
 
-
 const sortDatesArray = (dates, sort = 'asc') =>
   dates.sort((a, b) => {
     const dateA = dayjs(a).unix()
@@ -70,11 +69,30 @@ const sortDatesArray = (dates, sort = 'asc') =>
     return sort === 'asc' ? dateA - dateB : dateA + dateB
   })
 
+const getShortDate = (date, config = { withYear: false }) => {
+  let options = {
+    month: 'short',
+    day: 'numeric'
+  }
+
+  if (config.withYear) {
+    options = { ...options, year: 'numeric' }
+  }
+
+  try {
+    const formattedDate = new Intl.DateTimeFormat('en-US', options).format(date)
+
+    return formattedDate
+  } catch (error) {
+    throw new Error("date param isn't a correct date format")
+  }
+}
+
 export {
   findWeekDayBetween,
   getCutOffDate,
   getNextWeekDay,
   getTodayDate,
-  sortDatesArray
+  sortDatesArray,
+  getShortDate
 }
-
