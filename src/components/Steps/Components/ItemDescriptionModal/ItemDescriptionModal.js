@@ -51,6 +51,12 @@ const ItemDescriptionModal = ({
               </div>
             </div>
           )}
+          {getMetafield(productMetafields, 'contains')?.value && (
+            <div className={styles.contains}>
+              {getMetafield(productMetafields, 'contains')?.name}:{' '}
+              {getMetafield(productMetafields, 'contains')?.value}
+            </div>
+          )}
           <div className={`${styles.actions} mt-5`}>
             <div>
               <ButtonCheckMark isChecked={isChecked} onClick={onClick} />
