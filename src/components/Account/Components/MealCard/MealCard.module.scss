@@ -52,11 +52,11 @@ $smallFont: 1.1rem;
       position: absolute;
       right: 0.5rem;
       & .number {
-        font-size: $fontXSmall;
+        font-size: $smallFont;
         font-family: $fontFamilyMedium;
         background: $gray100;
         border-radius: 50%;
-        padding: 0 0.5rem;
+        padding: 0.5rem 0.8rem;
         @media only screen and (max-width: $breakpointTablet) {
           font-size: 1.1rem;
         }
@@ -64,7 +64,6 @@ $smallFont: 1.1rem;
     }
 
     & .itemTitle {
-      font-size: $fontXSmall;
       font-family: $fontFamilyMedium;
       margin: 0 0 0.12rem;
       line-height: 2.4rem;
@@ -73,13 +72,17 @@ $smallFont: 1.1rem;
       overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
+      @media only screen and (min-width: $breakpointDesktop) {
+        max-width: 14rem;
+        font-size: $fontXSmall;
+      }
       @media only screen and (max-width: $breakpointDesktop) {
         font-size: $smallFont;
-        width: 50%;
+        width: 5rem;
       }
       @media only screen and (max-width: $breakpointTablet) {
         font-size: $smallFont;
-        width: 40%;
+        max-width: 11rem;
       }
     }
   }

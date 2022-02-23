@@ -42,7 +42,7 @@ export const initialState = {
     {
       id: 5,
       name: 'Step 5',
-      description: 'Next',
+      description: 'Review Order',
       labelFooter: 'Finalize Order',
       path: '/steps/5',
       isActive: false
