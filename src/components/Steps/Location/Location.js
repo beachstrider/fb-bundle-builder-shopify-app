@@ -356,7 +356,6 @@ const Location = () => {
         {displayDates && (
           <DeliveryDates
             onClick={handleDeliveryDate}
-            title="Choose Delivery Date"
             dates={currentZone.deliveryDates}
             todayDate={todayDate}
           />
