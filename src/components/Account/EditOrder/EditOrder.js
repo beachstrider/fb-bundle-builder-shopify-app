@@ -1,18 +1,13 @@
 import React, { useEffect, useState } from 'react'
-import {
-  Link,
-  Redirect,
-  useParams,
-  useLocation,
-  useHistory
-} from 'react-router-dom'
+import { Redirect, useParams, useLocation, useHistory } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import CardQuantities from '../../Cards/CardQuantities'
 import {
   getContents,
   getBundle,
   useUserToken,
-  getSubscriptionOrders
+  getSubscriptionOrders,
+  mapItems
 } from '../../Hooks'
 import {
   cartRemoveItem,
@@ -32,7 +27,6 @@ import Loading from '../../Steps/Components/Loading'
 import {
   cart,
   filterShopifyProducts,
-  filterShopifyVariants,
   findWeekDayBetween,
   getCutOffDate,
   getTodayDate
@@ -43,11 +37,10 @@ import {
 } from '../../Hooks/withBundleApi'
 import Toast from '../../Global/Toast'
 import SpinnerIcon from '../../Global/SpinnerIcon'
+import { DEFAULT_ERROR_MESSAGE } from '../../../constants/errors'
 
 dayjs.extend(utc)
 dayjs.extend(weekday)
-
-const DAYS_BEFORE_DISABLING = 5
 
 const useQuery = () => {
   const { search } = useLocation()
@@ -430,7 +423,6 @@ const EditOrder = () => {
             quantity: bundles.length > 0 ? productsResponse.quantity : 0
           })
 
-          console.log('productsResponse:', productsResponse)
           newQuantitiesCountdown.push({
             id: configuration.id,
             quantity:
@@ -476,7 +468,6 @@ const EditOrder = () => {
       configuration.id,
       `is_enabled=1&deliver_after=${nextWeekDate}`
     )
-    console.log('response', response)
 
     if (response.data?.data && response.data?.data.length > 0) {
       const filteredProducts = await filterShopifyProducts(
@@ -495,7 +486,6 @@ const EditOrder = () => {
           subscription.platform_order_id
         ) {
           if (!hasPlatformId) {
-            console.log('set to true: platform id', hasPlatformId)
             hasPlatformId = true
           }
         }
@@ -508,13 +498,8 @@ const EditOrder = () => {
         }
       })
 
-      // TODO: remove logs
-      console.log('subscriptionOrder', subscriptionOrder)
-      console.log('currentSubscriptionData', currentSubscriptionData)
-
       if (hasPlatformId) {
         setDisableEditing(true)
-        console.log('01 Disable edit', hasPlatformId)
       } else {
         const deliveryDay = currentSubscriptionData
           ? currentSubscriptionData.subscription.delivery_day
@@ -527,10 +512,6 @@ const EditOrder = () => {
         )
 
         const cuttingOffDate = getCutOffDate(deliveryDate)
-        // TODO: remove logs
-        console.log('cutting off date:', cuttingOffDate)
-        console.log('bundle deliver after', subscriptionBundle)
-        console.log('valid?', dayjs(today).isSameOrAfter(cuttingOffDate))
 
         if (dayjs(today).isSameOrAfter(cuttingOffDate)) {
           console.log('02 Disable edit')
@@ -543,11 +524,10 @@ const EditOrder = () => {
         return history.push(`/account`)
       }
 
-      const filteredVariants = await filterShopifyVariants(
-        state,
+      const filteredVariants = await mapItems(
         filteredProducts,
-        subscriptionOrder.data.data[0].subscription.subscription_type,
-        subscriptionOrder.data.data[0].subscription.subscription_sub_type,
+        shopBundles,
+        subscriptionOrder.data.data[0].subscription,
         configuration
       )
 
@@ -593,6 +573,7 @@ const EditOrder = () => {
       bundleContentId,
       quantitiesCountdown
     )
+
     if (!currentItem) {
       return
     }
@@ -606,7 +587,8 @@ const EditOrder = () => {
     const newItem = currentItem.item
     dispatch(
       cartAddItem({
-        ...newItem
+        ...newItem,
+        quantity: 1
       })
     )
   }

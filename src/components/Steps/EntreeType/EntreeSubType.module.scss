@@ -9,12 +9,38 @@
     padding: 2.5rem 0;
   }
 
-  // TODO: delete (old styling)
-  & .description {
-    display: grid;
+  & .title {
+    font-size: 1.4rem;
+    font-weight: 700;
     text-align: center;
-    grid-template-columns: repeat(4, 1fr);
-    font-size: $fontSmall;
+    text-transform: capitalize;
+    font-style: italic;
+    font-family: $fontFamilyMedium;
+    padding-bottom: 1rem;
+
+    @media only screen and (max-width: $breakpointTablet) {
+      font-size: calc($semiMediumFont - 1.2rem);
+    }
+  }
+
+  & .label {
+    font-family: $fontFamilyBook;
+    font-weight: 700;
+    text-align: center;
+    font-size: 1.4rem;
+
+    @media only screen and (max-width: $breakpointTablet) {
+      font-size: 1rem;
+    }
+  }
+
+  & .value {
+    font-family: $fontFamilyBold;
+    text-align: center;
+    font-size: 2.8rem;
+    @media only screen and (max-width: $breakpointTablet) {
+      font-size: $fontSmall;
+    }
   }
 
   & .title {

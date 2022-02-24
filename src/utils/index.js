@@ -10,7 +10,6 @@ import {
 } from './zones'
 import {
   filterShopifyProducts,
-  filterShopifyVariants,
   getOrderTrackingUrl,
   buildProductArrayFromVariant,
   buildProductArrayFromId
@@ -25,13 +24,18 @@ import {
   getShortDate
 } from './dates'
 import uniqueArray from './uniqueArray'
+import {
+  mapBundleTypeSubtype,
+  getBundleMetafield,
+  mapBundleItems,
+  mapBundleItemsByOption
+} from './bundles'
 
 export {
   availableDeliveryDays,
   cart,
   filterShopifyProducts,
   findZipCode,
-  filterShopifyVariants,
   getConfigurationContent,
   isValidEmail,
   isValidZipCode,
@@ -47,5 +51,9 @@ export {
   sortDatesArray,
   getNextWeekDay,
   uniqueArray,
+  mapBundleTypeSubtype,
+  getBundleMetafield,
+  mapBundleItems,
+  mapBundleItemsByOption,
   getShortDate
 }
