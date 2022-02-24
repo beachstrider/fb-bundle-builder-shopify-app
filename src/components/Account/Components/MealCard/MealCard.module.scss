@@ -11,6 +11,12 @@ $smallFont: 1.1rem;
   margin: 0.8rem;
   overflow: hidden;
 
+  @media only screen and (max-width: $breakpointTablet) {
+    width: 180px;
+    min-width: 180px;
+    max-width: 180px;
+  }
+
   & .imageWrapper {
     box-shadow: 0px 0px 30px #00000012;
     position: relative;
@@ -72,17 +78,13 @@ $smallFont: 1.1rem;
       overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
+      max-width: 80%;
+
       @media only screen and (min-width: $breakpointDesktop) {
-        max-width: 14rem;
         font-size: $fontXSmall;
       }
       @media only screen and (max-width: $breakpointDesktop) {
         font-size: $smallFont;
-        width: 5rem;
-      }
-      @media only screen and (max-width: $breakpointTablet) {
-        font-size: $smallFont;
-        max-width: 11rem;
       }
     }
   }

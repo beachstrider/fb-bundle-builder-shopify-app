@@ -8,9 +8,7 @@ const MealCard = ({ image, title, quantity }) => {
         <img className={styles.cardImage} src={image} alt={title} />
       </div>
       <div className={styles.content}>
-        <div className={styles.title}>
-          <h3 className={styles.itemTitle}>{title}</h3>
-        </div>
+        <h3 className={styles.itemTitle}>{title}</h3>
         <div className={styles.quantityWrapper}>
           <strong className={styles.number}>{quantity}</strong>
         </div>

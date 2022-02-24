@@ -44,6 +44,7 @@ $subTitleFontSize: 2.7rem;
 
       @media only screen and (max-width: $breakpointTablet) {
         justify-content: center;
+        grid-template-columns: 100%;
       }
 
       & .section {
@@ -54,7 +55,7 @@ $subTitleFontSize: 2.7rem;
           font-family: $fontFamilyMedium;
           font-size: $fontMedium;
           color: $primaryColor;
-          padding: 0 1rem;
+          padding: 0 2rem;
           & .edit {
             text-decoration: underline;
             cursor: pointer;
@@ -64,6 +65,12 @@ $subTitleFontSize: 2.7rem;
           display: grid;
           grid-template-columns: repeat(auto-fill, 25%);
           justify-content: flex-start;
+
+          @media only screen and (max-width: $breakpointTablet) {
+            display: flex;
+            overflow-x: auto;
+            padding: 0 1.3rem;
+          }
         }
       }
 
