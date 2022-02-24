@@ -35,8 +35,9 @@
     "server": "NODE_ENV=production node server.js",
     "build": "npx webpack --mode production",
     "build:start": "yarn build; yarn server",
-    "test": "jest",
-    "test:dev": "jest --coverage --watchAll"
+    "test": "npx jest",
+    "test:dev": "npx jest --coverage --watchAll",
+    "prepare": "husky install"
   },
   "eslintConfig": {
     "extends": [
@@ -72,6 +73,7 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^5.1.0",
     "eslint-plugin-react": "^7.26.1",
+    "husky": "^7.0.4",
     "jest": "^27.3.1",
     "jest-axe": "^5.0.1",
     "jest-css-modules": "^2.1.0",
