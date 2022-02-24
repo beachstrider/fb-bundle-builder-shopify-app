@@ -1,5 +1,26 @@
 @import '../../variables';
 
+.disabled {
+  color: $grayMedium;
+  background: $grayLight;
+  & div {
+    > :first-of-type::after {
+      content: '';
+      position: absolute;
+      border-top: 5px solid #4c4c4c;
+      width: 205px;
+      transform: rotate(138deg);
+      transform-origin: 0% 0%;
+      top: 4px;
+      left: 155px;
+    }
+  }
+  & :hover {
+    border-radius: 0.5rem;
+    background: darken($grayLight, 10%);
+  }
+}
+
 .unselected {
   color: $grayMedium;
   background: $white;

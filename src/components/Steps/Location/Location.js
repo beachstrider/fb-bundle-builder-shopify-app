@@ -288,13 +288,7 @@ const Location = () => {
     if (Object.keys(currentZone).length > 0) {
       setDisplayDates(false)
       setCurrentZone({})
-      dispatch(
-        setLocation({
-          deliveryDate: {
-            id: 0
-          }
-        })
-      )
+      dispatch(setLocation(initialState.location))
     }
     setEmail(value)
   }
