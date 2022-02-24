@@ -3,7 +3,7 @@ import minMax from 'dayjs/plugin/minMax'
 import timezone from 'dayjs/plugin/timezone'
 import utc from 'dayjs/plugin/utc'
 import isBetween from 'dayjs/plugin/isBetween'
-import * as dayjs from 'dayjs'
+import dayjs from 'dayjs'
 import { useLocation } from 'react-router-dom'
 
 dayjs.extend(utc)
@@ -70,21 +70,20 @@ const sortDatesArray = (dates, sort = 'asc') =>
   })
 
 const getShortDate = (date, config = { withYear: false }) => {
-  let options = {
-    month: 'short',
-    day: 'numeric'
-  }
-
-  if (config.withYear) {
-    options = { ...options, year: 'numeric' }
-  }
-
+  const errorMessage = "date param isn't a correct date format"
   try {
-    const formattedDate = new Intl.DateTimeFormat('en-US', options).format(date)
+    if (!dayjs(date).isValid()) {
+      throw new Error(errorMessage)
+    }
+    let format = 'MMM DD'
 
-    return formattedDate
+    if (config.withYear) {
+      format = format.concat(', YYYY')
+    }
+
+    return dayjs(date).utc().format(format)
   } catch (error) {
-    throw new Error("date param isn't a correct date format")
+    throw new Error(errorMessage)
   }
 }
 
