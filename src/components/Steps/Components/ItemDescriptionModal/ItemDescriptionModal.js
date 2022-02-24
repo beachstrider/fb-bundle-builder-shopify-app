@@ -64,7 +64,11 @@ const ItemDescriptionModal = ({
           )}
           <div className={`${styles.actions} mt-5`}>
             <div>
-              <ButtonCheckMark isChecked={isChecked} onClick={onClick} />
+              <ButtonCheckMark
+                isChecked={isChecked}
+                onClick={onClick}
+                isFromModal
+              />
             </div>
             {isChecked && (
               <div>
@@ -74,6 +78,7 @@ const ItemDescriptionModal = ({
                   onRemove={onRemove}
                   disableAdd={disableAdd}
                   disableRemove={disableRemove}
+                  isFromModal
                 />
               </div>
             )}

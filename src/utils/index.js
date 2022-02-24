@@ -20,7 +20,8 @@ import {
   getCutOffDate,
   getTodayDate,
   sortDatesArray,
-  getNextWeekDay
+  getNextWeekDay,
+  getShortDate
 } from './dates'
 import uniqueArray from './uniqueArray'
 import {
@@ -53,5 +54,6 @@ export {
   mapBundleTypeSubtype,
   getBundleMetafield,
   mapBundleItems,
-  mapBundleItemsByOption
+  mapBundleItemsByOption,
+  getShortDate
 }

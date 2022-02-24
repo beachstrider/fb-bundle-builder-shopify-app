@@ -6,7 +6,8 @@ const ButtonSmall = ({
   onClick,
   usePrimaryColor,
   isLoading = false,
-  label = 'Submit'
+  label = 'Submit',
+  className
 }) => {
   return (
     <div
@@ -16,7 +17,7 @@ const ButtonSmall = ({
       onClick={onClick}
     >
       <div
-        className={`${styles.button} ${
+        className={`${styles.button} ${className} ${
           usePrimaryColor ? styles.primaryButton : styles.lightButton
         } ${styles.buttonWrapper}`}
       >
