@@ -216,8 +216,8 @@ const Location = () => {
 
       const currentUrl = window.location.href
 
-      const requireShopifyLogin = false;
-      if(requireShopifyLogin) {
+      const requireShopifyLogin = false
+      if (requireShopifyLogin) {
         // validates current user and input email
         if (
           shopifyCustomer.data &&
@@ -231,7 +231,10 @@ const Location = () => {
       }
 
       // if user isn't signed-in
-      if (shopifyCustomer.data?.data?.customers?.edges?.length === 0) {
+      if (
+        requireShopifyLogin === false ||
+        shopifyCustomer.data?.data?.customers?.edges?.length === 0
+      ) {
         const shopifyMultipass = await request(
           `${process.env.PROXY_APP_URL}/shopify/multipass-url?shop=${shopDomain}`,
           {
