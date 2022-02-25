@@ -4,12 +4,7 @@
   display: grid;
   grid-template-columns: 100%;
   column-gap: 10rem;
-  @media only screen and (min-width: $breakpointTablet) {
-    width: $rowWidth;
-  }
-  @media only screen and (max-width: $breakpointTablet) {
-    width: $rowWidthMobile;
-  }
+  @include responsive-wrapper;
 
   & .title {
     font-size: $fontMedium;

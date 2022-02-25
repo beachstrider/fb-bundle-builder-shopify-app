@@ -3,12 +3,21 @@ import { MobileAcceptMajor } from '@shopify/polaris-icons'
 import React from 'react'
 import styles from './CardSelectionMark.module.scss'
 
-const CardSelectionMark = ({ children, isSelected, onClick }) => {
+const CardSelectionMark = ({
+  children,
+  isSelected,
+  onClick,
+  isDisabled = false
+}) => {
   return (
     <div
-      onClick={onClick}
+      onClick={() => (!isDisabled ? onClick() : {})}
       className={`${styles.card} ${
-        isSelected ? styles.isSelected : styles.unselected
+        isSelected
+          ? styles.isSelected
+          : isDisabled
+          ? styles.disabled
+          : styles.unselected
       }`}
     >
       <div>

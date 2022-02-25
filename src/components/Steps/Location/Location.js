@@ -31,6 +31,7 @@ import {
 import SpinnerIcon from '../../Global/SpinnerIcon'
 import DeliveryDates from '../Components/DeliveryDates'
 import Toast from '../../Global/Toast'
+import TopTitle from '../Components/TopTitle'
 import { useErrorHandler } from 'react-error-boundary'
 import { DEFAULT_ERROR_MESSAGE } from '../../../constants/errors'
 
@@ -293,13 +294,7 @@ const Location = () => {
     if (Object.keys(currentZone).length > 0) {
       setDisplayDates(false)
       setCurrentZone({})
-      dispatch(
-        setLocation({
-          deliveryDate: {
-            id: 0
-          }
-        })
-      )
+      dispatch(setLocation(initialState.location))
     }
     setEmail(value)
   }
@@ -311,15 +306,19 @@ const Location = () => {
   return (
     <div className="defaultWrapper">
       <div className={styles.wrapper}>
-        <div className={`${styles.title} mb-7`}>
-          Enter Your Zip Code And Email To Continue
-        </div>
+        <TopTitle
+          title="Enter Your Zip Code & Email"
+          subTitle="Meals are delivered fresh every week. You can pause, cancel, or update your meal plan at anytime!"
+        />
         <div className={styles.rows}>
           <div>
-            <div className="mb-3">
-              Your Zip Code <span className={styles.required}>(Required)</span>
+            <div className="mt-2 mb-1">
+              <span className={styles.inputLabel}>
+                Zip Code<span className={styles.required}>*</span>
+              </span>
             </div>
             <InputText
+              className={styles.input}
               onChange={(value) => handleZipCodeChange(value)}
               value={zipCode}
               required={true}
@@ -329,11 +328,13 @@ const Location = () => {
             </div>
           </div>
           <div>
-            <div className="mb-3">
-              Enter Your Email{' '}
-              <span className={styles.required}>(Required)</span>
+            <div className="mt-5 mb-1">
+              <span className={styles.inputLabel}>
+                Email Address<span className={styles.required}>*</span>
+              </span>
             </div>
             <InputEmail
+              className={styles.input}
               onChange={(value) => handleEmailChange(value)}
               value={email}
               required={true}
@@ -355,7 +356,6 @@ const Location = () => {
         {displayDates && (
           <DeliveryDates
             onClick={handleDeliveryDate}
-            title="Choose Delivery Date"
             dates={currentZone.deliveryDates}
             todayDate={todayDate}
           />

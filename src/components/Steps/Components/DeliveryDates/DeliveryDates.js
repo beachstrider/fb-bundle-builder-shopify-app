@@ -1,17 +1,16 @@
 import React from 'react'
 import { LocationDate } from '../../Location'
+import TopTitle from '../../Components/TopTitle'
 import styles from './DeliveryDates.module.scss'
 
-const DeliveryDates = ({
-  title,
-  dates,
-  onClick,
-  todayDate,
-  className = null
-}) => {
+const DeliveryDates = ({ dates, onClick, todayDate, className = null }) => {
   return (
     <div className={`${styles.wrapper} ${className && className}`}>
-      <div className={`${styles.title} mt-10 mb-5`}>{title}</div>
+      <TopTitle
+        className="mt-9 mb-2"
+        title="Select a Delivery Date"
+        subTitle="We can deliver fresh to you within one week!"
+      />
       <div className={styles.rows}>
         {dates.map((data) => (
           <div key={data.id}>

@@ -18,7 +18,7 @@
 
   & .rows {
     display: flex;
-    column-gap: 3rem;
+    column-gap: 0.5rem;
     justify-content: center;
     flex-direction: row;
     @media only screen and (max-width: $breakpointDesktop) {
