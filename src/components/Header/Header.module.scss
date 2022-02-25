@@ -2,12 +2,10 @@
 
 .wrapper {
   width: 100%;
-  -webkit-box-shadow: 0 2px 9px -7px $gray;
-  -moz-box-shadow: 0 2px 9px -7px $gray;
-  box-shadow: 0 2px 9px -7px $gray;
+  background-color: $headerBackgroundColor;
+  border-bottom: 1px solid $gray300;
   margin-bottom: 3rem;
   padding: 0.5rem 0;
-  background-color: $white;
 
   & .logoWrapper {
     padding: 1.5rem;
@@ -25,15 +23,31 @@
     align-items: center;
     font-size: 1rem;
     min-height: 5rem;
-    margin-bottom: 1.5rem;
-    margin-top: 1.5rem;
+    margin-bottom: 1rem;
+    margin-top: 1rem;
+    color: $gray300;
 
     & .description {
       font-size: 1.8rem;
-      @media only screen and (max-width: $breakpointDesktop) {
-        font-size: 0.8rem;
+      font-family: $fontFamilyMedium;
+      text-align: center;
+      width: 120px;
+      cursor: pointer;
+
+      @media only screen and (max-width: $breakpointTablet) {
+        font-size: 1rem;
+        width: 100%;
       }
     }
+
+    & .description.breakWord {
+      width: 75px;
+
+      @media only screen and (max-width: $breakpointTablet) {
+        width: 100%;
+      }
+    }
+
     & .name {
       font-size: 1.4rem;
       text-align: center;
@@ -64,6 +78,11 @@
   }
 }
 
-.isSelected {
+.isSelected,
+.isVisited {
   color: $primaryColor;
+}
+
+.isNotVisited {
+  cursor: not-allowed !important;
 }

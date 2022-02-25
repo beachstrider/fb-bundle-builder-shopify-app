@@ -2,22 +2,79 @@
 
 .wrapper {
   display: grid;
-  grid-template-rows: 2fr 1fr;
+  @media only screen and (min-width: $breakpointDesktop) {
+    padding: 3rem;
+  }
+  @media only screen and (max-width: $breakpointTablet) {
+    padding: 2.5rem 0;
+  }
 
   & .title {
-    font-size: $fontLarge;
+    font-size: 1.4rem;
     font-weight: 700;
     text-align: center;
-    @media only screen and (max-width: $breakpointDesktop) {
-      font-size: $semiMediumFont;
+    text-transform: capitalize;
+    font-style: italic;
+    font-family: $fontFamilyMedium;
+    padding-bottom: 1rem;
+
+    @media only screen and (max-width: $breakpointTablet) {
+      font-size: calc($semiMediumFont - 1.2rem);
     }
   }
 
-  & .description {
-    display: grid;
+  & .label {
+    font-family: $fontFamilyBook;
+    font-weight: 700;
     text-align: center;
-    grid-template-columns: repeat(4, 1fr);
-    font-size: $fontSmall;
+    font-size: 1.4rem;
+
+    @media only screen and (max-width: $breakpointTablet) {
+      font-size: 1rem;
+    }
+  }
+
+  & .value {
+    font-family: $fontFamilyBold;
+    text-align: center;
+    font-size: 2.8rem;
+    @media only screen and (max-width: $breakpointTablet) {
+      font-size: $fontSmall;
+    }
+  }
+
+  & .title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    text-align: center;
+    text-transform: capitalize;
+    font-style: italic;
+    font-family: $fontFamilyMedium;
+    padding-bottom: 1rem;
+
+    @media only screen and (max-width: $breakpointTablet) {
+      font-size: calc($semiMediumFont - 1.2rem);
+    }
+  }
+
+  & .label {
+    font-family: $fontFamilyBook;
+    font-weight: 700;
+    text-align: center;
+    font-size: 1.4rem;
+
+    @media only screen and (max-width: $breakpointTablet) {
+      font-size: 1rem;
+    }
+  }
+
+  & .value {
+    font-family: $fontFamilyBold;
+    text-align: center;
+    font-size: 2.8rem;
+    @media only screen and (max-width: $breakpointTablet) {
+      font-size: $fontSmall;
+    }
   }
 
   & .selectedLine {

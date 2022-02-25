@@ -8,6 +8,7 @@ const CardQuantities = ({
   description,
   image,
   metafields,
+  productMetafields,
   quantity,
   isChecked,
   onClick,
@@ -33,8 +34,8 @@ const CardQuantities = ({
         >
           &nbsp;
         </div>
-        <div className={`${styles.descriptionWrapper} py-5`}>
-          <div className={`${styles.title} mb-3`}>{title}</div>
+        <div className={`${styles.descriptionWrapper}`}>
+          <div className={`${styles.title}`}>{title}</div>
           <div className={styles.description}>
             {metafields.map((metafield) => (
               <div key={metafield.key}>
@@ -43,7 +44,7 @@ const CardQuantities = ({
               </div>
             ))}
           </div>
-          <div className={`${styles.actions} mt-5`}>
+          <div className={`${styles.actions}`}>
             <div>
               <ButtonCheckMark isChecked={isChecked} onClick={onClick} />
             </div>
@@ -66,6 +67,7 @@ const CardQuantities = ({
         description={description}
         image={image}
         metafields={metafields}
+        productMetafields={productMetafields}
         quantity={quantity}
         isChecked={isChecked}
         onClick={onClick}

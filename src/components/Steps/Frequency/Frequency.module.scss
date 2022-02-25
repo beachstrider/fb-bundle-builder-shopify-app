@@ -162,6 +162,14 @@
             justify-content: center;
           }
         }
+        .subRow3Columns {
+          @extend .subRow;
+          @media only screen and (max-width: $breakpointTablet) {
+            grid-template-columns: repeat(3, 1fr);
+            row-gap: 3rem;
+            justify-content: center;
+          }
+        }
         .subRow2Columns {
           @extend .subRow;
           @media only screen and (max-width: $breakpointTablet) {

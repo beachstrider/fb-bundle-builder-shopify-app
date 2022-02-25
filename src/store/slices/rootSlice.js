@@ -1,6 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { zone1, zone2 } from '../data/zipcodes'
 
+export const MEAL_PLANS_ITEM = 3
+
 export const initialState = {
   displayHeader: false,
   displayFooter: false,
@@ -9,7 +11,7 @@ export const initialState = {
     {
       id: 1,
       name: 'Step 1',
-      description: 'Frequency',
+      description: 'Meals Per Week',
       labelFooter: 'Enter Zip Code',
       path: '/',
       isActive: true
@@ -17,29 +19,30 @@ export const initialState = {
     {
       id: 2,
       name: 'Step 2',
-      description: 'Location',
+      description: 'Location & Delivery',
       labelFooter: 'Select a Delivery Date',
       path: '/steps/2',
       isActive: false
     },
     {
-      id: 3,
+      id: MEAL_PLANS_ITEM,
       name: 'Step 3',
-      description: 'Meal Type',
+      description: 'Meal plans',
       path: '/steps/3',
       isActive: false
     },
     {
       id: 4,
       name: 'Step 4',
-      description: 'Meals',
+      description: 'Select Your Meals',
+      labelFooter: 'Review My Order',
       path: '/steps/4',
       isActive: false
     },
     {
       id: 5,
       name: 'Step 5',
-      description: 'Next',
+      description: 'Review Order',
       path: '/steps/5',
       isActive: false
     }
@@ -142,6 +145,15 @@ const rootSlice = createSlice({
       )
       state.steps = currentSteps
     },
+    setVisitedStep: (state, action) => {
+      const currentStepId = action.payload
+      const currentSteps = state.steps.map((step) =>
+        step.id < Number(currentStepId)
+          ? { ...step, isVisited: true }
+          : { ...step, isVisited: false }
+      )
+      state.steps = currentSteps
+    },
     setBundle: (state, action) => {
       state.bundle = action.payload
     },
@@ -233,6 +245,7 @@ export const {
   reset,
   selectFaqType,
   setActiveStep,
+  setVisitedStep,
   setEmail,
   setBundle,
   setEntreeType,

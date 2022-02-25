@@ -33,10 +33,10 @@
 .isSelected {
   color: $white;
   border: $cardBorderWidth solid $secondaryColor !important;
-  background: $primaryColor;
+  background-color: $primaryColor;
   & :hover {
     border-radius: 0.5rem;
-    background: darken($primaryColor, 10%);
+    background-color: darken($primaryColor, 10%);
   }
 }
 

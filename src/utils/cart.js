@@ -45,7 +45,8 @@ const cart = (state) => {
     const newItemsCountdown = [...quantitiesCountdown]
     newItemsCountdown[countdownIndex] = {
       ...newItemsCountdown[countdownIndex],
-      quantity: countdown.quantity - 1
+      quantity: countdown.quantity - 1,
+      quantitySummary: countdown.quantitySummary + 1
     }
 
     return {
@@ -68,7 +69,8 @@ const cart = (state) => {
     const newItemsCountdown = [...quantitiesCountdown]
     newItemsCountdown[countdownIndex] = {
       ...newItemsCountdown[countdownIndex],
-      quantity: countdown.quantity + 1
+      quantity: countdown.quantity + 1,
+      quantitySummary: countdown.quantitySummary - 1
     }
 
     return {
