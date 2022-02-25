@@ -147,7 +147,9 @@ function createEmptyMetafields(currentObject) {
 function getMetafieldKey(string) {
   return string.split('.')[1]
 }
-{% assign productNutritionMetaKeys = 'net_carbs,protein,fat,contains,ingredients,subtitle' | split: ',' %}
+{% assign productNutritionMetaKeys = 'contains,ingredients,subtitle' | split: ',' %}
+{% assign productVariantMetaKeys = 'net_carbs,protein,fat' | split: ',' %}
+
 
 currentProduct = {}
 currentVariant = {}
@@ -181,12 +183,13 @@ currentVariant = {}
   {% endpaginate %}
 {% endif %}
 
+let currentProductKey = ''
 {% assign bundleBuilderMetaKeys = 'bundle_key_points' | split: ',' %}
 {% assign bundleVariantMetaKeys = 'calorie_range' | split: ',' %}
 {% if collections["SHOPIFY_BUNDLES_COLLECTION"] %}
   {% paginate collections["SHOPIFY_BUNDLES_COLLECTION"].products by 1000 %}
     {% for product in collections["SHOPIFY_BUNDLES_COLLECTION"].products %}      
-      currentProduct = createEmptyMetafields({{ product | json }}) 
+      currentProduct = createEmptyMetafields({{ product | json }})        
 
       {% for productNutritionMetaKey in productNutritionMetaKeys %}
         currentProduct.metafields.push({ 
@@ -194,19 +197,11 @@ currentVariant = {}
           name: convertToTitle('{{ productNutritionMetaKey }}'), 
           value: `{{ product.metafields.nutrition[productNutritionMetaKey] }}`
         })            
-      {% endfor %} 
-
-      {% for bundleBuilderMetaKey in bundleBuilderMetaKeys %}
-        currentProduct.metafields.push({ 
-          key: '{{ bundleBuilderMetaKey }}',
-          name: convertToTitle('{{ bundleBuilderMetaKey }}'), 
-          value: '{{ product.metafields.bundle-builder[bundleBuilderMetaKey] }}'
-        })            
-      {% endfor %}       
+      {% endfor %}        
                          
-      {% for variant in product.variants %} 
+      {% for variant in product.variants %}       
         currentVariant = createEmptyMetafields(currentProduct.variants.find((v) => Number(v.id) === Number('{{ variant.id }}')))
-
+        
         {% for bundleVariantMetaKey in bundleVariantMetaKeys %}
           currentVariant.metafields.push({ 
             key: '{{ bundleVariantMetaKey }}',
@@ -214,8 +209,35 @@ currentVariant = {}
             value: '{{ variant.metafields.nutrition[bundleVariantMetaKey] }}'
           })   
         {% endfor %}     
+
+        {% for bundleBuilderMetaKey in bundleBuilderMetaKeys %}
+          currentProductKey = '{{ variant.option1 }}'.toLowerCase() + '_' + '{{ bundleBuilderMetaKey }}'
+          if (!currentProduct.metafields.find((metafield) => metafield.key === currentProductKey)) {            
+            {% assign productMetafieldKey = variant.option1 | append: '_' | append: bundleBuilderMetaKey | downcase %}
+
+            currentProduct.metafields.push({ 
+              key: currentProductKey,
+              name: convertToTitle('{{ bundleBuilderMetaKey }}'), 
+              value: '{{ product.metafields.bundle-builder[productMetafieldKey] }}'
+            })            
+          }
+        {% endfor %}
+        
+        {% for productVariantMetaKey in productVariantMetaKeys %} 
+          currentProductKey = '{{ variant.option1 }}'.toLowerCase() + '_' + '{{ productVariantMetaKey }}'
+          if (!currentProduct.metafields.find((metafield) => metafield.key === currentProductKey)) {            
+            {% assign productMetafieldKey = variant.option1 | append: '_' | append: productVariantMetaKey | downcase %}
+
+            currentProduct.metafields.push({ 
+              key: currentProductKey,
+              name: convertToTitle('{{ productVariantMetaKey }}'), 
+              value: `{{ product.metafields.nutrition[productMetafieldKey] }}`
+            })            
+          }
+          
+        {% endfor %}
       {% endfor %}
-      
+            
       shopBundles.push(currentProduct)
     {% endfor %}
   {% endpaginate %}

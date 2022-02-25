@@ -1,23 +1,24 @@
+const _createType = (id, name, image, option1, options) => {
+  return {
+    id,
+    name: name.toLowerCase(),
+    featuredImage: image,
+    option1,
+    options
+  }
+}
+
+const _createSubtype = (id, name, metafields) => {
+  return {
+    id,
+    name,
+    metafields
+  }
+}
+
 const mapBundleTypeSubtype = (bundle) => {
   if (!bundle.variants) {
     throw new Error('Cannot find any variants to map')
-  }
-
-  const createType = (id, name, image, options) => {
-    return {
-      id,
-      name: name.toLowerCase(),
-      featuredImage: image,
-      options
-    }
-  }
-
-  const createSubtype = (id, name, metafields) => {
-    return {
-      id,
-      name,
-      metafields
-    }
   }
 
   const formattedValues = []
@@ -33,10 +34,11 @@ const mapBundleTypeSubtype = (bundle) => {
       if (!parentValue) {
         currentVariantId++
         formattedValues.push(
-          createType(
+          _createType(
             currentVariantId,
             option.toLowerCase(),
             variant.featured_image?.src,
+            variant.option1.toLowerCase(),
             []
           )
         )
@@ -45,7 +47,7 @@ const mapBundleTypeSubtype = (bundle) => {
           currentOptionId++
 
           parentValue.options.push(
-            createSubtype(currentOptionId, option.toLowerCase(), [
+            _createSubtype(currentOptionId, option.toLowerCase(), [
               ...variant.metafields,
               ...bundle.metafields
             ])

@@ -12,9 +12,9 @@ const CardEntreeType = ({
   title,
   image,
   metafields,
+  option1,
   primaryColor,
-  onClick,
-  isSelected
+  onClick
 }) => {
   return (
     <div className={styles.card} onClick={onClick}>
@@ -30,25 +30,41 @@ const CardEntreeType = ({
         </div>
         <div className={`${styles.keyPoints} mb-2`}>
           <div>
-            {getBundleMetafield(metafields, METAFIELD_KEY_POINTS)?.value}
+            {
+              getBundleMetafield(
+                metafields,
+                `${option1}_${METAFIELD_KEY_POINTS}`
+              )?.value
+            }
           </div>
         </div>
         <div className="defaultWrapper">
           <div className={styles.nutrition}>
             <div className={styles.value}>
-              {getBundleMetafield(metafields, METAFIELD_CARBS)?.value}
+              {
+                getBundleMetafield(metafields, `${option1}_${METAFIELD_CARBS}`)
+                  ?.value
+              }
             </div>
             <div className={styles.label}>Net Carbs</div>
           </div>
           <div className={styles.nutrition}>
             <div className={styles.value}>
-              {getBundleMetafield(metafields, METAFIELD_PROTEIN)?.value}
+              {
+                getBundleMetafield(
+                  metafields,
+                  `${option1}_${METAFIELD_PROTEIN}`
+                )?.value
+              }
             </div>
             <div className={styles.label}>Protein</div>
           </div>
           <div className={styles.nutrition}>
             <div className={styles.value}>
-              {getBundleMetafield(metafields, METAFIELD_FAT)?.value}
+              {
+                getBundleMetafield(metafields, `${option1}_${METAFIELD_FAT}`)
+                  ?.value
+              }
             </div>
             <div className={styles.label}>Fat</div>
           </div>
