@@ -129,6 +129,7 @@ const EntreeType = () => {
                   title={entree.name}
                   image={entree.featuredImage}
                   metafields={entree.options[0]?.metafields}
+                  option1={entree.option1}
                 />
               </CardSelectionMark>
             ))}
