@@ -311,47 +311,49 @@ const Location = () => {
           subTitle="Meals are delivered fresh every week. You can pause, cancel, or update your meal plan at anytime!"
         />
         <div className={styles.rows}>
-          <div>
-            <div className="mt-2 mb-1">
-              <span className={styles.inputLabel}>
-                Zip Code<span className={styles.required}>*</span>
-              </span>
+          <form onSubmit={handleSubmit}>
+            <div>
+              <div className="mt-2 mb-1">
+                <span className={styles.inputLabel}>
+                  Zip Code<span className={styles.required}>*</span>
+                </span>
+              </div>
+              <InputText
+                className={styles.input}
+                onChange={(value) => handleZipCodeChange(value)}
+                value={zipCode}
+                required={true}
+              />
+              <div className={styles.inLineError}>
+                {zipCodeError && <InlineError message={zipCodeError} />}
+              </div>
             </div>
-            <InputText
-              className={styles.input}
-              onChange={(value) => handleZipCodeChange(value)}
-              value={zipCode}
-              required={true}
-            />
-            <div className={styles.inLineError}>
-              {zipCodeError && <InlineError message={zipCodeError} />}
+            <div>
+              <div className="mt-5 mb-1">
+                <span className={styles.inputLabel}>
+                  Email Address<span className={styles.required}>*</span>
+                </span>
+              </div>
+              <InputEmail
+                className={styles.input}
+                onChange={(value) => handleEmailChange(value)}
+                value={email}
+                required={true}
+              />
+              <div className={styles.inLineError}>
+                {emailError && <InlineError message={emailError} />}
+              </div>
             </div>
-          </div>
-          <div>
-            <div className="mt-5 mb-1">
-              <span className={styles.inputLabel}>
-                Email Address<span className={styles.required}>*</span>
-              </span>
+            <div>
+              <div className="mb-3">&nbsp;</div>
+              <button
+                className={`button primaryButton ${styles.buttonWrapper}`}
+                onClick={handleSubmit}
+              >
+                {isLoading ? <SpinnerIcon /> : 'Submit'}
+              </button>
             </div>
-            <InputEmail
-              className={styles.input}
-              onChange={(value) => handleEmailChange(value)}
-              value={email}
-              required={true}
-            />
-            <div className={styles.inLineError}>
-              {emailError && <InlineError message={emailError} />}
-            </div>
-          </div>
-          <div>
-            <div className="mb-3">&nbsp;</div>
-            <div
-              className={`button primaryButton ${styles.buttonWrapper}`}
-              onClick={handleSubmit}
-            >
-              {isLoading ? <SpinnerIcon /> : 'Submit'}
-            </div>
-          </div>
+          </form>
         </div>
         {displayDates && (
           <DeliveryDates

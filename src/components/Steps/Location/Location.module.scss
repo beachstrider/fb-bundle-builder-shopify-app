@@ -6,7 +6,6 @@
   grid-template-columns: 100%;
   column-gap: 10rem;
   padding-bottom: 6rem;
-  @include responsive-wrapper;
 
   & .title {
     font-size: $fontLarge;

@@ -5,7 +5,7 @@
   display: grid;
   grid-template-columns: 100%;
   column-gap: 10rem;
-  @include responsive-wrapper;
+  margin-top: 5rem;
 
   & .title {
     font-size: $fontLarge;
@@ -25,6 +25,10 @@
       justify-content: center;
       align-items: center;
       grid-template-columns: 1fr;
+      row-gap: 2rem;
+    }
+
+    @media only screen and (max-width: $breakpointTablet) {
       row-gap: 1rem;
       flex-direction: column;
     }
