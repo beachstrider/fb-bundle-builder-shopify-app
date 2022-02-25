@@ -3,13 +3,12 @@
 $rowTopTitle: 494px;
 
 .top {
-  width: $rowWidth;
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
   padding-bottom: 2rem;
-  @include responsive-wrapper;
+  margin: auto;
 
   &Title {
     font-size: $fontLarge;
