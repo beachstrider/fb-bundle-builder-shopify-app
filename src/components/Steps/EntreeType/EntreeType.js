@@ -94,6 +94,7 @@ const EntreeType = () => {
     const saveEntreeType = async (entree) =>
       new Promise((resolve) => {
         dispatch(setEntreeType(entree))
+        dispatch(setEntreeSubType({ id: 0 }))
         dispatch(displayFooter(true))
         dispatch(selectFaqType(FAQ_TYPE))
         resolve()

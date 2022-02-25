@@ -64,11 +64,16 @@ const Footer = () => {
       state.bundle?.breakfastsQuantity
     )
 
-    setTotal(subTotal)
+    const extraSubTypePrice = cartUtility.getExtraSubTypePrice(
+      state.entreeType,
+      state.entreeSubType
+    )
+
+    setTotal(subTotal + extraSubTypePrice)
     setFrequency(
       state.bundle?.entreesQuantity + state.bundle?.breakfastsQuantity
     )
-  }, [state.bundle])
+  }, [state.bundle, state.entreeType, state.entreeSubType])
 
   return (
     <div className={`${styles.wrapper} defaultWrapper`}>

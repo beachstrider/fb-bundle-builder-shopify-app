@@ -1,3 +1,5 @@
+import { ENTREE_TYPES_CONDITIONS } from '../constants/bundles'
+
 const cart = (state) => {
   const isItemSelected = (cart, item) => {
     return !!cart.find((c) => c.id === item.id)
@@ -121,6 +123,23 @@ const cart = (state) => {
     return result
   }
 
+  const getExtraSubTypePrice = (entreeType, entreeSubType) => {
+    let extraSubTypePrice = 0
+
+    const entreeTypeName = entreeType?.name
+    const entreeSubTypeName = entreeSubType?.name
+
+    if (entreeTypeName && entreeSubTypeName) {
+      ENTREE_TYPES_CONDITIONS.forEach(({ type, subType, price }) => {
+        if (entreeTypeName === type && entreeSubTypeName === subType) {
+          extraSubTypePrice = price * state.bundle?.entreesQuantity
+        }
+      })
+    }
+
+    return extraSubTypePrice
+  }
+
   return {
     addItem,
     calculateSubTotal,
@@ -129,7 +148,8 @@ const cart = (state) => {
     isItemSelected,
     removeItem,
     sumQuantity,
-    mapByTypes
+    mapByTypes,
+    getExtraSubTypePrice
   }
 }
 
