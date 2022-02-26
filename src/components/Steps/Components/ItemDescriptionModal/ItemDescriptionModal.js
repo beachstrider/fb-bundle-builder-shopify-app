@@ -1,4 +1,10 @@
 import React from 'react'
+import {
+  METAFIELD_CALORIES,
+  METAFIELD_CARBS,
+  METAFIELD_PROTEIN,
+  METAFIELD_TOTAL_FAT
+} from '../../../../constants/bundles'
 import { ButtonCheckMark, ButtonQuantities } from '../../../Buttons'
 import Modal from '../../../Global/Modal'
 import styles from './ItemDescriptionModal.module.scss'
@@ -18,9 +24,16 @@ const ItemDescriptionModal = ({
   disableAdd = false,
   disableRemove = false
 }) => {
-  const removeMeasurement = (value, needle = 'oz') => value.split(needle)[0]
+  const replaceMeasurement = (value) => value.replace(/oz|g/g, '')
   const getMetafield = (metafields, key) =>
     metafields.find((m) => m.key === key)
+
+  const nutritionValues = [
+    METAFIELD_CARBS,
+    METAFIELD_PROTEIN,
+    METAFIELD_TOTAL_FAT,
+    METAFIELD_CALORIES
+  ]
 
   return (
     <Modal open={open} close={close}>
@@ -33,33 +46,36 @@ const ItemDescriptionModal = ({
         </div>
         <div className={styles.descriptionWrapper}>
           <div className={styles.title}>{title}</div>
-          {getMetafield(productMetafields, 'subtitle').value && (
+          {getMetafield(metafields, 'subtitle')?.value && (
             <div className={styles.subtitle}>
-              {getMetafield(productMetafields, 'subtitle')?.value}
+              {getMetafield(metafields, 'subtitle')?.value}
             </div>
           )}
           <div className={styles.description}>
-            {metafields.map((metafield) => (
-              <div key={metafield.key}>
-                <div className={styles.metafieldValue}>
-                  {removeMeasurement(metafield.value)}
-                </div>
-                <div className={styles.metafieldName}>{metafield.name}</div>
-              </div>
-            ))}
+            {metafields.map(
+              (metafield) =>
+                nutritionValues.includes(metafield.key) && (
+                  <div key={metafield.key}>
+                    <div className={styles.metafieldValue}>
+                      {replaceMeasurement(metafield.value)}
+                    </div>
+                    <div className={styles.metafieldName}>{metafield.name}</div>
+                  </div>
+                )
+            )}
           </div>
-          {getMetafield(productMetafields, 'ingredients').value && (
+          {getMetafield(metafields, 'ingredients')?.value && (
             <div className={styles.ingredients}>
-              <h2>{getMetafield(productMetafields, 'ingredients')?.name}:</h2>
+              <h3>{getMetafield(metafields, 'ingredients')?.name}:</h3>
               <div className={styles.ingredientsText}>
-                {getMetafield(productMetafields, 'ingredients')?.value}
+                {getMetafield(metafields, 'ingredients')?.value}
               </div>
             </div>
           )}
-          {getMetafield(productMetafields, 'contains')?.value && (
+          {getMetafield(metafields, 'contains')?.value && (
             <div className={styles.contains}>
-              {getMetafield(productMetafields, 'contains')?.name}:{' '}
-              {getMetafield(productMetafields, 'contains')?.value}
+              {getMetafield(metafields, 'contains')?.name}:{' '}
+              {getMetafield(metafields, 'contains')?.value}
             </div>
           )}
           <div className={`${styles.actions} mt-5`}>

@@ -25,12 +25,17 @@
 
     & .metafieldValue {
       text-align: center;
-      font-size: $fontMediumLarge;
+      font-size: $fontLarge;
       font-weight: 700;
+      margin-bottom: -1rem;
+      @media only screen and (max-width: $breakpointDesktop) {
+        font-size: $semiMediumFont;
+      }
     }
     & .metafieldName {
       text-align: center;
-      font-size: calc($fontMedium - 0.2em);
+      font-size: $fontMediumLarge;
+      font-family: $fontFamilyThin;
     }
 
     @media only screen and (max-width: $breakpointTablet) {
@@ -94,7 +99,7 @@
     }
 
     & .ingredients {
-      h2 {
+      h3 {
         margin-bottom: 0;
       }
       & .ingredientsText {

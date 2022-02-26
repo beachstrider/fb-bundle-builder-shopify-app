@@ -1,4 +1,10 @@
 import React, { useState } from 'react'
+import {
+  METAFIELD_CALORIES,
+  METAFIELD_CARBS,
+  METAFIELD_PROTEIN,
+  METAFIELD_TOTAL_FAT
+} from '../../constants/bundles'
 import { ButtonCheckMark, ButtonQuantities } from '../Buttons'
 import ItemDescriptionModal from '../Steps/Components/ItemDescriptionModal/ItemDescriptionModal'
 import styles from './CardQuantities.module.scss'
@@ -19,6 +25,13 @@ const CardQuantities = ({
 }) => {
   const [openModal, setOpenModal] = useState(false)
 
+  const nutritionValues = [
+    METAFIELD_CARBS,
+    METAFIELD_PROTEIN,
+    METAFIELD_TOTAL_FAT,
+    METAFIELD_CALORIES
+  ]
+
   return (
     <>
       <div
@@ -37,12 +50,17 @@ const CardQuantities = ({
         <div className={`${styles.descriptionWrapper}`}>
           <div className={`${styles.title}`}>{title}</div>
           <div className={styles.description}>
-            {metafields.map((metafield) => (
-              <div key={metafield.key}>
-                <div className={styles.metafieldValue}>{metafield.value}</div>
-                <div className={styles.metafieldName}>{metafield.name}</div>
-              </div>
-            ))}
+            {metafields.map(
+              (metafield) =>
+                nutritionValues.includes(metafield.key) && (
+                  <div key={metafield.key}>
+                    <div className={styles.metafieldValue}>
+                      {metafield.value}
+                    </div>
+                    <div className={styles.metafieldName}>{metafield.name}</div>
+                  </div>
+                )
+            )}
           </div>
           <div className={`${styles.actions}`}>
             <div>

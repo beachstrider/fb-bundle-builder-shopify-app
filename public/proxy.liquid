@@ -147,7 +147,7 @@ function createEmptyMetafields(currentObject) {
 function getMetafieldKey(string) {
   return string.split('.')[1]
 }
-{% assign productNutritionMetaKeys = 'contains,ingredients,subtitle' | split: ',' %}
+{% assign variantNutritionMetaKeys = 'contains,ingredients,subtitle,calorie_range' | split: ',' %}
 {% assign productVariantMetaKeys = 'net_carbs,protein,fat' | split: ',' %}
 
 
@@ -159,16 +159,15 @@ currentVariant = {}
     {% for product in collections["SHOPIFY_PRODUCTS_COLLECTION"].products %}
       currentProduct = createEmptyMetafields({{ product | json }})
 
-      {% for productNutritionMetaKey in productNutritionMetaKeys %}
-        currentProduct.metafields.push({ 
-          key: '{{ productNutritionMetaKey }}',
-          name: convertToTitle('{{ productNutritionMetaKey }}'), 
-          value: `{{ product.metafields.nutrition[productNutritionMetaKey] }}`
-        })            
-      {% endfor %} 
-
       {% for variant in product.variants %}
-        currentVariant = createEmptyMetafields(currentProduct.variants.find((v) => Number(v.id) === Number('{{ variant.id }}')))    
+        currentVariant = createEmptyMetafields(currentProduct.variants.find((v) => Number(v.id) === Number('{{ variant.id }}'))) 
+        {% for variantNutritionMetaKey in variantNutritionMetaKeys %}
+          currentVariant.metafields.push({
+            key: '{{ variantNutritionMetaKey }}',
+            name: convertToTitle('{{ variantNutritionMetaKey }}'), 
+            value: `{{ variant.metafields.nutrition[variantNutritionMetaKey] }}`
+          })            
+        {% endfor %}    
         {% for variantMetaKey in variantMetaKeys %}
           currentVariant.metafields.push({ 
             key: '{{ variantMetaKey }}',
@@ -185,30 +184,22 @@ currentVariant = {}
 
 let currentProductKey = ''
 {% assign bundleBuilderMetaKeys = 'bundle_key_points' | split: ',' %}
-{% assign bundleVariantMetaKeys = 'calorie_range' | split: ',' %}
 {% if collections["SHOPIFY_BUNDLES_COLLECTION"] %}
   {% paginate collections["SHOPIFY_BUNDLES_COLLECTION"].products by 1000 %}
     {% for product in collections["SHOPIFY_BUNDLES_COLLECTION"].products %}      
       currentProduct = createEmptyMetafields({{ product | json }})        
-
-      {% for productNutritionMetaKey in productNutritionMetaKeys %}
-        currentProduct.metafields.push({ 
-          key: '{{ productNutritionMetaKey }}',
-          name: convertToTitle('{{ productNutritionMetaKey }}'), 
-          value: `{{ product.metafields.nutrition[productNutritionMetaKey] }}`
-        })            
-      {% endfor %}        
+    
                          
       {% for variant in product.variants %}       
         currentVariant = createEmptyMetafields(currentProduct.variants.find((v) => Number(v.id) === Number('{{ variant.id }}')))
         
-        {% for bundleVariantMetaKey in bundleVariantMetaKeys %}
-          currentVariant.metafields.push({ 
-            key: '{{ bundleVariantMetaKey }}',
-            name: convertToTitle('{{ bundleVariantMetaKey }}'),
-            value: '{{ variant.metafields.nutrition[bundleVariantMetaKey] }}'
-          })   
-        {% endfor %}     
+        {% for variantNutritionMetaKey in variantNutritionMetaKeys %}
+          currentVariant.metafields.push({
+            key: '{{ variantNutritionMetaKey }}',
+            name: convertToTitle('{{ variantNutritionMetaKey }}'), 
+            value: `{{ variant.metafields.nutrition[variantNutritionMetaKey] }}`
+          })            
+        {% endfor %}   
 
         {% for bundleBuilderMetaKey in bundleBuilderMetaKeys %}
           currentProductKey = '{{ variant.option1 }}'.toLowerCase() + '_' + '{{ bundleBuilderMetaKey }}'
