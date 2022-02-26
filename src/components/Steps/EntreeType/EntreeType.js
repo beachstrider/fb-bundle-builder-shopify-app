@@ -10,102 +10,23 @@ import {
   setIsNextButtonActive,
   cartClear
 } from '../../../store/slices/rootSlice'
-import { smoothScrollingToId } from '../../../utils'
-import { useGuestToken, withActiveStep } from '../../Hooks'
-import { CardEntreeType } from '../../Cards'
+import { CardEntreeType, CardSelectionMark } from '../../Cards'
+import { mapBundleTypeSubtype, smoothScrollingToId } from '../../../utils'
+import { getSelectedBundle, useGuestToken, withActiveStep } from '../../Hooks'
 import styles from './EntreeType.module.scss'
 import EntreeTypeSubType from './EntreeTypeSubType'
 import { Redirect } from 'react-router'
 import Toast from '../../Global/Toast'
+import TopTitle from '../Components/TopTitle'
 
 const FAQ_TYPE = 'entreeType'
 const STEP_ID = 3
 
-// TODO: double check from where this data is coming from
-const entreeTypes = [
-  {
-    id: 1,
-    title: 'Keto',
-    subType: 'keto',
-    primaryColor: '#ec6120',
-    options: [
-      'Low carbohydrates',
-      'High fat content',
-      'High protein'
-    ],
-    image:
-      `${process.env.PROXY_APP_URL}/images/keto-meal-plan.jpg`
-  },
-  {
-    id: 2,
-    title: 'LowCal',
-    subType: 'lowCal',
-    primaryColor: '#3DAE2B',
-    options: [
-      'Low in calories',
-      'High in protein',
-      'Balanced macros'
-    ],
-    image:
-      `${process.env.PROXY_APP_URL}/images/lowcal-meal-plan.jpg`
-  }
-]
-
-const subTypes = {
-  lowCal: [
-    {
-      id: 1,
-      title: 'Regular',
-      netCarbs: '24g',
-      protein: '54g',
-      fat: '25g',
-      calories: '560',
-      isSelected: true
-    },
-    {
-      id: 2,
-      title: 'Lite',
-      netCarbs: '19g',
-      protein: '38g',
-      fat: '20g',
-      calories: '420',
-      isSelected: false
-    },
-    {
-      id: 3,
-      title: 'Savory',
-      netCarbs: '40g',
-      protein: '66g',
-      fat: '33g',
-      calories: '760',
-      isSelected: false
-    }
-  ],
-  keto: [
-    {
-      id: 1,
-      title: 'Regular',
-      netCarbs: '8g',
-      protein: '37g',
-      fat: '46g',
-      calories: '570',
-      isSelected: true
-    },
-    {
-      id: 2,
-      title: 'High Protein',
-      netCarbs: '8g',
-      protein: '52g',
-      fat: '50g',
-      calories: '670',
-      isSelected: false
-    }
-  ]
-}
-
 const EntreeType = () => {
   const dispatch = useDispatch()
   const state = useSelector((state) => state)
+  const [isLoading, setIsLoading] = useState(false)
+  const [bundleTypes, setBundleTypes] = useState([])
   const [error, setError] = useState({
     open: false,
     status: 'Success',
@@ -115,6 +36,7 @@ const EntreeType = () => {
   useEffect(() => {
     generateToken()
     dispatch(displayHeader(true))
+    mapBundleTypes()
 
     if (state.entreeSubType && state.entreeSubType.id !== 0) {
       dispatch(selectFaqType(FAQ_TYPE))
@@ -138,9 +60,18 @@ const EntreeType = () => {
     }
   })
 
+
+  const mapBundleTypes = () => {
+    setIsLoading(true)
+
+    const shopifyBundleProduct = getSelectedBundle(state.bundle.breakfast.tag)
+    const mappedBundle = mapBundleTypeSubtype(shopifyBundleProduct)
+    setBundleTypes(mappedBundle)
+    setIsLoading(false)
+  }
+
   const generateToken = async () => {
-    
-    const currentToken = await useGuestToken()    
+    const currentToken = await useGuestToken()
     if (currentToken) {
       dispatch(
         setTokens({
@@ -160,7 +91,7 @@ const EntreeType = () => {
 
   const handleEntreeTypeSelection = async (entree) => {
     // Added a promise here in order to scroll the page only when the dispatch is done
-    const saveEntreeType = async () =>
+    const saveEntreeType = async (entree) =>
       new Promise((resolve) => {
         dispatch(setEntreeType(entree))
         dispatch(displayFooter(true))
@@ -168,63 +99,87 @@ const EntreeType = () => {
         resolve()
       })
 
-    await saveEntreeType()
+    await saveEntreeType(entree)
     smoothScrollingToId('entreeType')
   }
 
   if (!state.location.zipCode) {
-    return <Redirect push to='/steps/2' />
+    return <Redirect push to="/steps/2" />
+  }
+
+  if (isLoading) {
+    return <Loading />
   }
 
   return (
-    <div className='defaultWrapper'>
-      <div className={styles.wrapper}>
-        <div className={`${styles.title} mb-7`}>Choose Entree Type</div>
-        <div className={`${styles.entrees} mb-10`}>
-          {entreeTypes.map((entree) => (
-            <CardEntreeType
-              key={entree.id}
-              title={entree.title}
-              image={entree.image}
-              options={entree.options}
-              primaryColor={entree.primaryColor}
-              isSelected={state.entreeType.id === entree.id}
-              onClick={() => handleEntreeTypeSelection(entree)}
-            />
-          ))}
+    <div>
+      <TopTitle
+        title="Choose Your Meal Plan"
+        subTitle="Chef-curated, nutritious options to fit your lifestyle."
+      />
+      <div className="defaultWrapper mb-10">
+        <div className={styles.wrapper}>
+          <div className={`${styles.entrees} mb-10`}>
+            {bundleTypes.map((entree, index) => (
+              <CardSelectionMark
+                key={index}
+                isSelected={state.entreeType.id === entree.id}
+                onClick={() => handleEntreeTypeSelection(entree)}
+              >
+                <CardEntreeType
+                  title={entree.name}
+                  image={entree.featuredImage}
+                  metafields={entree.options[0]?.metafields}
+                  option1={entree.option1}
+                />
+              </CardSelectionMark>
+            ))}
+          </div>
+          <div id="entreeType">
+            {state.entreeType.id !== 0 && (
+              <>
+                <div className={`${styles.title} mb-7`}>
+                  Choose Meal Sub Type
+                </div>
+                <div
+                  className={`${
+                    state.entreeType.id === 1
+                      ? styles.subTypesWrapper_2_Columns
+                      : styles.subTypesWrapper_3_Columns
+                  } mb-10`}
+                >
+                  {state.entreeType?.options.map((subType, index) => (
+                    <EntreeTypeSubType
+                      key={index}
+                      title={subType.name}
+                      metafields={subType.metafields}
+                      isSelected={subType.id === state.entreeSubType.id}
+                      onClick={() => dispatch(setEntreeSubType(subType))}
+                    />
+                  ))}
+                </div>
+              </>
+            )}
+          </div>
         </div>
-        <div id='entreeType'>
-          {state.entreeType.id !== 0 && (
-            <>
-              <div className={`${styles.title} mb-7`}>Choose Entree Sub Type</div>
-              <div className={`${state.entreeType.id === 1 ? styles.subTypesWrapper_2_Columns : styles.subTypesWrapper_3_Columns} mb-10`}>
-                {subTypes[state.entreeType.subType].map((subType) => (
-                  <EntreeTypeSubType
-                    data={subType}
-                    isSelected={subType.id === state.entreeSubType.id}
-                    key={subType.id}
-                    onClick={() => dispatch(setEntreeSubType(subType))}
-                  />
-                ))}
-              </div>
-            </>
-          )}
-        </div>
+        {error.open ? (
+          <Toast
+            open={error.open}
+            status={error.status}
+            message={error.message}
+            displayTitle={false}
+            handleClose={() => {
+              setError({
+                open: false,
+                status: 'Success',
+                message: ''
+              })
+            }}
+          />
+        ) : (
+          ''
+        )}
       </div>
-      {error.open ? 
-        <Toast 
-          open={error.open} 
-          status={error.status} 
-          message={error.message} 
-          displayTitle={false}          
-          handleClose={() => {
-          setError({
-            open: false,
-            status: 'Success',
-            message: ''
-          })
-         }} 
-        /> : ''}
     </div>
   )
 }

@@ -45,7 +45,8 @@ const cart = (state) => {
     const newItemsCountdown = [...quantitiesCountdown]
     newItemsCountdown[countdownIndex] = {
       ...newItemsCountdown[countdownIndex],
-      quantity: countdown.quantity - 1
+      quantity: countdown.quantity - 1,
+      quantitySummary: countdown.quantitySummary + 1
     }
 
     return {
@@ -68,7 +69,8 @@ const cart = (state) => {
     const newItemsCountdown = [...quantitiesCountdown]
     newItemsCountdown[countdownIndex] = {
       ...newItemsCountdown[countdownIndex],
-      quantity: countdown.quantity + 1
+      quantity: countdown.quantity + 1,
+      quantitySummary: countdown.quantitySummary - 1
     }
 
     return {
@@ -93,6 +95,32 @@ const cart = (state) => {
       : entreesTotal + breakfastsTotal
   }
 
+  const mapByTypes = () => {
+    const result = {
+      types: {},
+      totals: {},
+      labels: {}
+    }
+
+    state.cart.forEach((item) => {
+      const keyName = item.type.split(' ').join().toLowerCase()
+      if (!Object.keys(result.types).includes(keyName)) {
+        result.types[keyName] = []
+        result.totals[keyName] = 0
+        result.labels[keyName] = ''
+      }
+
+      result.types[keyName] = result.types[keyName].concat([{ ...item }])
+      result.totals[keyName] += item.quantity
+
+      if (!result.labels[keyName]) {
+        result.labels[keyName] = item.type
+      }
+    })
+
+    return result
+  }
+
   return {
     addItem,
     calculateSubTotal,
@@ -100,7 +128,8 @@ const cart = (state) => {
     getQuantityCountdown,
     isItemSelected,
     removeItem,
-    sumQuantity
+    sumQuantity,
+    mapByTypes
   }
 }
 

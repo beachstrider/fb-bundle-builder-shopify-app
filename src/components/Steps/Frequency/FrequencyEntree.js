@@ -1,34 +1,22 @@
 import React from 'react'
-import { FrequencyWeeklyPrice } from '.'
-import { CardCheckMark } from '../../Cards'
+import { CardSelectionMark } from '../../Cards'
 import styles from './Frequency.module.scss'
 
-const FrequencyEntree = ({ data, quantity, isSelected, onClick }) => {
+const FrequencyEntree = ({ data, isSelected, onClick }) => {
   return (
-    <CardCheckMark isSelected={isSelected} onClick={onClick}>
-      <div className={styles.entreeWrapper}>
-        <div className={styles.entree}>
-          <div
-            className={`${
-              isSelected ? styles.isSelected : styles.isUnselected
-            } textCenter`}
-          >
+    <CardSelectionMark isSelected={isSelected} onClick={onClick}>
+      <div className={styles.mealsWrapper}>
+        <div className={styles.meal}>
+          <div className={`${isSelected && styles.isSelected} textCenter`}>
             <div className={`${styles.title} ${styles.fontBold}`}>
               {data.name}
             </div>
-            <div className={styles.xSmallFont}>Entrees</div>
+            <div className={styles.subTitle}>Lunch/Dinner</div>
+            <div className={styles.price}>${data.price}/Meal</div>
           </div>
-        </div>
-        <div className={styles.centerRow}>
-          <div className={`${styles.smallFont} ${styles.fontBold}`}>
-            ${data.price}
-          </div>
-          <div className={`${styles.xSmallFont} mb-1`}>Per Entree</div>
-          <div className={styles.xSmallFont}>Total Per Week</div>
-          <FrequencyWeeklyPrice price={data.price * quantity} />
         </div>
       </div>
-    </CardCheckMark>
+    </CardSelectionMark>
   )
 }
 

@@ -1,0 +1,53 @@
+@import '../../../../variables';
+
+$rowTopTitle: 494px;
+
+.top {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding-bottom: 2rem;
+  margin: auto;
+
+  &Title {
+    font-size: $fontLarge;
+    font-family: $fontFamilyBlack !important;
+    margin-top: 1.5rem;
+    margin-bottom: 0;
+
+    @media only screen and (max-width: $breakpointTablet) {
+      font-size: $semiMediumFont;
+    }
+  }
+
+  &Subtitle {
+    font-size: $fontMediumRegular;
+    font-family: $fontFamilyBook !important;
+    width: $rowTopTitle;
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+
+    @media only screen and (max-width: $rowTopTitle) {
+      width: $rowWidthMobile;
+      padding: 0 2rem;
+    }
+  }
+
+  &Extra {
+    font-size: $fontMediumSmall;
+    font-family: $fontFamilyBook;
+    margin: 0;
+  }
+
+  &Separator {
+    display: none;
+    margin-top: 1rem;
+    width: 60px;
+    border: 1px solid $border;
+
+    @media only screen and (max-width: $breakpointTablet) {
+      display: block !important;
+    }
+  }
+}

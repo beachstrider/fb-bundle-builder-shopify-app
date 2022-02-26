@@ -19,56 +19,6 @@ const filterShopifyProducts = async (items, shopifyProducts) =>
     resolve(mappedProducts)
   })
 
-const filterShopifyVariants = async (
-  state,
-  shopifyProducts,
-  type,
-  subType,
-  configuration
-) =>
-  new Promise((resolve) => {
-    const filteredVariants = []
-    const formattedString = (value) => {
-      return value.toLowerCase().split(' ').join('')
-    }
-
-    for (const product of shopifyProducts) {
-      const filtered = product.variants.filter((variant) => {
-        const formattedOptions = variant.options.map((option) =>
-          formattedString(option)
-        )
-
-        return (
-          formattedOptions.includes(formattedString(type)) &&
-          formattedOptions.includes(formattedString(subType))
-        )
-      })
-
-      filtered.map((f) => {
-        f.images = product.images
-        f.configurationBundleId = configuration.bundleId
-        f.configurationContentId = product.bundle_configuration_content_id
-        f.description = product.description
-        f.bundleContentId = configuration.id
-        f.quantity = 0
-        f.type = configuration.title
-        f.productPlatformId = product.id
-
-        if (f.name.includes('-')) {
-          f.name = f.name.split('-')[0]
-        }
-
-        return f
-      })
-
-      if (filtered.length > 0) {
-        filteredVariants.push(...filtered)
-      }
-    }
-
-    resolve(filteredVariants)
-  })
-
 const getOrderTrackingUrl = async (orderId, shopCustomer) =>
   new Promise((resolve) => {
     let orderLink = ''
@@ -142,7 +92,6 @@ const buildProductArrayFromId = async (items, subType, shopProducts) =>
 
 export {
   filterShopifyProducts,
-  filterShopifyVariants,
   getOrderTrackingUrl,
   buildProductArrayFromVariant,
   buildProductArrayFromId

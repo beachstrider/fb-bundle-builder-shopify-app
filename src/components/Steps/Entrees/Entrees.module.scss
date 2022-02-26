@@ -8,46 +8,12 @@ $subTitleFontSize: 2.7rem;
   display: grid;
   grid-template-columns: 100%;
   column-gap: 10rem;
-  @media only screen and (max-width: $breakpointDesktop) {
-    width: $rowWidthTable;
-    grid-template-columns: 50% 50%;
-    column-gap: 5rem;
-  }
-  @media only screen and (max-width: $breakpointTablet) {
-    width: $rowWidthMobile;
-    grid-template-columns: 100%;
-    column-gap: 0;
-  }
-
-  & .quantitiesWrapper {
-    top: 0;
-    background-color: #F6F6F7;
-    margin: 0;
-    position: -webkit-sticky;
-    position: sticky;
-
-    & .topBarQuantities {
-      display: flex;
-      justify-content: center;
-      flex-direction:row;
-      text-align: center;
-      @media only screen and (max-width: $breakpointTablet) {
-        flex-direction:column;
-      }
-    }
-    & div {
-      margin: 0.5rem;
-    }
-    & .number {
-      color: $primaryColor;
-      font-weight: 700;
-    }
-    font-size: $subTitleFontSize;
-  }
+  margin-top: 1rem;
+  padding-bottom: 3rem;
 
   & .quantities {
     & div {
-      margin: 0.5rem;
+      margin: 0;
     }
     & .number {
       color: $primaryColor;
@@ -57,33 +23,36 @@ $subTitleFontSize: 2.7rem;
   }
 
   & .title {
-    font-size: $fontLarge;
-    font-weight: 700;
-    text-align: center;
+    font-family: $fontFamilyMedium;
+    font-size: $fontMedium;
+    color: $primaryColor;
+    margin-bottom: 1.3rem;
   }
 
   & .listHeader {
     display: flex;
-    align-items: center;
     flex-direction: row;
-    @media only screen and (max-width: $breakpointDesktop) {
+    @media only screen and (max-width: $breakpointTablet) {
       flex-direction: column;
+      padding: 0 3%;
     }
   }
 
   & .cards {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    column-gap: 3rem;
+    grid-template-columns: repeat(4, $cardWidth);
+    column-gap: 1.6rem;
+    margin-bottom: 1.5rem;
 
     @media only screen and (max-width: $breakpointDesktop) {
-      justify-content: center;
-      align-items: center;
-      grid-template-columns: 1fr;
-      row-gap: 1rem;
+      flex-wrap: nowrap;
+      grid-template-columns: repeat(auto-fill, minmax($cardWidth, $cardWidth));
     }
+
     @media only screen and (max-width: $breakpointTablet) {
       padding: 0 3%;
+      overflow-x: auto;
+      display: flex;
     }
   }
 
@@ -96,5 +65,16 @@ $subTitleFontSize: 2.7rem;
       padding: 2rem;
       row-gap: 2rem;
     }
+  }
+
+  @media only screen and (max-width: $breakpointDesktop) {
+    width: $rowWidthTable;
+    grid-template-columns: 100%;
+    column-gap: 5rem;
+  }
+  @media only screen and (max-width: $breakpointTablet) {
+    width: $rowWidthMobile;
+    grid-template-columns: 100%;
+    column-gap: 0;
   }
 }

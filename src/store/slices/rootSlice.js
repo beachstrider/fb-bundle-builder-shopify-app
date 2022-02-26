@@ -1,5 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { zone1, zone2 } from '../data/zipcodes'
+import { zone1, zone2, zone3 } from '../data/zipcodes'
+
+export const MEAL_PLANS_ITEM = 3
 
 export const initialState = {
   displayHeader: false,
@@ -9,35 +11,39 @@ export const initialState = {
     {
       id: 1,
       name: 'Step 1',
-      description: 'Frequency',
+      description: 'Meals Per Week',
+      labelFooter: 'Enter Zip Code',
       path: '/',
       isActive: true
     },
     {
       id: 2,
       name: 'Step 2',
-      description: 'Location',
+      description: 'Location & Delivery',
+      labelFooter: 'Select a Delivery Date',
       path: '/steps/2',
       isActive: false
     },
     {
-      id: 3,
+      id: MEAL_PLANS_ITEM,
       name: 'Step 3',
-      description: 'Entree Type',
+      description: 'Meal plans',
       path: '/steps/3',
       isActive: false
     },
     {
       id: 4,
       name: 'Step 4',
-      description: 'Entrees',
+      description: 'Select Your Meals',
+      labelFooter: 'Review My Order',
       path: '/steps/4',
       isActive: false
     },
     {
       id: 5,
       name: 'Step 5',
-      description: 'Next',
+      description: 'Review Order',
+      labelFooter: 'Finalize Order',
       path: '/steps/5',
       isActive: false
     }
@@ -46,22 +52,10 @@ export const initialState = {
     {
       id: 1,
       name: 'Zone 1',
-      earliestAvailableDay: 2,
+      earliestAvailableDay: 5,
       leadTime: 5,
       zipCodes: zone1,
       deliveryDates: [
-        {
-          id: 1,
-          day: 3,
-          disabled: false,
-          isSelected: false
-        },
-        {
-          id: 2,
-          day: 4,
-          disabled: false,
-          isSelected: false
-        },
         {
           id: 3,
           day: 5,
@@ -73,16 +67,25 @@ export const initialState = {
     {
       id: 2,
       name: 'Zone 2',
-      earliestAvailableDay: 3,
+      earliestAvailableDay: 5,
       leadTime: 6,
       zipCodes: zone2,
       deliveryDates: [
         {
-          id: 2,
-          day: 4,
+          id: 3,
+          day: 5,
           disabled: false,
           isSelected: false
-        },
+        }
+      ]
+    },
+    {
+      id: 2,
+      name: 'Zone 3',
+      earliestAvailableDay: 5,
+      leadTime: 6,
+      zipCodes: zone3,
+      deliveryDates: [
         {
           id: 3,
           day: 5,
@@ -96,6 +99,7 @@ export const initialState = {
     id: 0,
     price: 0,
     weeklyPrice: '',
+    shippingPrice: 0,
     breakfast: {
       id: 0,
       tag: ''
@@ -116,7 +120,8 @@ export const initialState = {
     guestToken: '',
     userToken: ''
   },
-  triggerLastStep: false
+  triggerLastStep: false,
+  returnToStep: ''
 }
 
 const rootSlice = createSlice({
@@ -135,6 +140,15 @@ const rootSlice = createSlice({
         step.id === Number(currentStepId)
           ? { ...step, isActive: true }
           : { ...step, isActive: false }
+      )
+      state.steps = currentSteps
+    },
+    setVisitedStep: (state, action) => {
+      const currentStepId = action.payload
+      const currentSteps = state.steps.map((step) =>
+        step.id < Number(currentStepId)
+          ? { ...step, isVisited: true }
+          : { ...step, isVisited: false }
       )
       state.steps = currentSteps
     },
@@ -173,6 +187,7 @@ const rootSlice = createSlice({
       state.cart = action.payload
     },
     cartAddItem: (state, action) => {
+      const quantity = action.payload.quantity || 1
       const existingItem = state.cart.find(
         (i) => Number(i.id) === Number(action.payload.id)
       )
@@ -182,11 +197,11 @@ const rootSlice = createSlice({
           ...state.cart,
           {
             ...action.payload,
-            quantity: 1
+            quantity: quantity
           }
         ]
       } else {
-        existingItem.quantity += 1
+        existingItem.quantity += quantity
       }
     },
     cartRemoveItem: (state, action) => {
@@ -208,6 +223,9 @@ const rootSlice = createSlice({
     },
     clearBundle: (state) => {
       state.bundle = { ...initialState.bundle }
+    },
+    setReturnToStep: (state, action) => {
+      state.returnToStep = action.payload
     }
   }
 })
@@ -225,6 +243,7 @@ export const {
   reset,
   selectFaqType,
   setActiveStep,
+  setVisitedStep,
   setEmail,
   setBundle,
   setEntreeType,
@@ -232,5 +251,6 @@ export const {
   setLocation,
   setTokens,
   setIsNextButtonActive,
-  triggerLastStep
+  triggerLastStep,
+  setReturnToStep
 } = rootSlice.actions

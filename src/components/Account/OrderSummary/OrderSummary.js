@@ -6,7 +6,8 @@ import {
   getContents,
   getBundle,
   useUserToken,
-  getSubscriptionOrders
+  getSubscriptionOrders,
+  mapItems
 } from '../../Hooks'
 import {
   displayHeader,
@@ -16,18 +17,14 @@ import {
   setTokens,
   cartUpdate
 } from '../../../store/slices/rootSlice'
-import styles from './OrderSummary.module.scss'
 import menuItemStyles from '../MenuItems.module.scss'
 import weekday from 'dayjs/plugin/weekday'
 import utc from 'dayjs/plugin/utc'
 import dayjs from 'dayjs'
 import Loading from '../../Steps/Components/Loading'
-import {
-  cart,
-  filterShopifyProducts,
-  filterShopifyVariants
-} from '../../../utils'
+import { cart, filterShopifyProducts } from '../../../utils'
 import Toast from '../../Global/Toast'
+import { DEFAULT_ERROR_MESSAGE } from '../../../constants/errors'
 
 dayjs.extend(utc)
 dayjs.extend(weekday)
@@ -245,7 +242,7 @@ const OrderSummary = () => {
       setError({
         open: true,
         status: 'Danger',
-        message: 'Failed to retrieve menu items'
+        message: DEFAULT_ERROR_MESSAGE
       })
     }
   }
@@ -284,11 +281,10 @@ const OrderSummary = () => {
         }
       })
 
-      const filteredVariants = await filterShopifyVariants(
-        state,
+      const filteredVariants = await mapItems(
         filteredProducts,
-        subscriptionOrder.data.data[0].subscription.subscription_type,
-        subscriptionOrder.data.data[0].subscription.subscription_sub_type,
+        shopBundles,
+        subscriptionOrder.data.data[0].subscription,
         configuration
       )
 

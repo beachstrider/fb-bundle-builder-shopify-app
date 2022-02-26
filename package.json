@@ -3,9 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@babel/runtime-corejs3": "^7.17.2",
     "@reduxjs/toolkit": "^1.6.2",
     "@sentry/node": "^6.16.1",
-    "@sentry/tracing": "^6.16.1",
+    "@sentry/react": "^6.17.4",
+    "@sentry/tracing": "^6.17.4",
     "@shopify/polaris": "^7.2.0",
     "@shopify/polaris-icons": "^4.9.0",
     "axios": "^0.24.0",
@@ -18,6 +20,7 @@
     "jsonwebtoken": "^8.5.1",
     "morgan": "^1.10.0",
     "nodemon": "^2.0.14",
+    "prop-types": "^15.8.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-error-boundary": "^3.1.4",
@@ -32,7 +35,9 @@
     "server": "NODE_ENV=production node server.js",
     "build": "npx webpack --mode production",
     "build:start": "yarn build; yarn server",
-    "test": "jest"
+    "test": "npx jest",
+    "test:dev": "npx jest --coverage --watchAll",
+    "prepare": "husky install"
   },
   "eslintConfig": {
     "extends": [
@@ -54,8 +59,11 @@
   },
   "devDependencies": {
     "@babel/core": "^7.15.8",
+    "@babel/plugin-transform-runtime": "^7.17.0",
     "@babel/preset-env": "^7.15.8",
     "@babel/preset-react": "^7.14.5",
+    "@testing-library/jest-dom": "^5.16.2",
+    "@testing-library/react": "^12.1.2",
     "babel-loader": "^8.2.3",
     "css-loader": "^6.4.0",
     "eslint": "^7.32.0",
@@ -65,7 +73,10 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^5.1.0",
     "eslint-plugin-react": "^7.26.1",
+    "husky": "^7.0.4",
     "jest": "^27.3.1",
+    "jest-axe": "^5.0.1",
+    "jest-css-modules": "^2.1.0",
     "prettier": "2.4.1",
     "sass": "^1.43.3",
     "sass-loader": "^12.2.0",
@@ -74,5 +85,22 @@
     "webpack": "^5.59.1",
     "webpack-cli": "^4.9.1",
     "webpack-dev-server": "^4.3.1"
+  },
+  "jest": {
+    "collectCoverageFrom": [
+      "src/**/*.{js,jsx,ts,tsx}",
+      "!<rootDir>/node_modules/"
+    ],
+    "coverageReporters": [
+      "html",
+      "text"
+    ],
+    "testEnvironment": "jsdom",
+    "setupFilesAfterEnv": [
+      "<rootDir>src/setupTests.js"
+    ],
+    "moduleNameMapper": {
+      "\\.(css|scss)$": "<rootDir>/node_modules/jest-css-modules"
+    }
   }
 }
