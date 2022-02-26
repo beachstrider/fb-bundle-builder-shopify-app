@@ -41,7 +41,6 @@ const Review = () => {
 
   useEffect(() => {
     getShopifyCartToken()
-    console.log('cartUtility.mapByTypes() >>>', cartUtility.mapByTypes())
     setMappedCart(cartUtility.mapByTypes())
   }, [])
 
@@ -78,10 +77,11 @@ const Review = () => {
       }
 
       const shopifyBundleProduct = getSelectedBundle(state.bundle.breakfast.tag)
+      console.log('debug: shopifyBundleProduct', shopifyBundleProduct)
       const selectedVariant = shopifyBundleProduct.variants.filter(
         (v) =>
-          v.title.includes(state.entreeType.title) &&
-          v.title.includes(state.entreeSubType.title)
+          v.title.includes(state.entreeType.name) &&
+          v.title.includes(state.entreeSubType.name)
       )
       console.log('shopifyBundleProduct', shopifyBundleProduct)
       console.log('selectedVariant', selectedVariant)
@@ -169,8 +169,8 @@ const Review = () => {
         platformCartToken,
         currentBundle.data.data[0].id,
         state.location.deliveryDate.day,
-        state.entreeType.title.toLowerCase(),
-        state.entreeSubType.title.toLowerCase(),
+        state.entreeType.name.toLowerCase(),
+        state.entreeSubType.name.toLowerCase(),
         mappedItems
       )
 
