@@ -294,23 +294,6 @@ const getDefaultProducts = async (
   }
 }
 
-const generateRequestToken = async (value) => {
-  try {
-    return await request(`${process.env.PROXY_APP_URL}/request-token`, {
-      method: 'post',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json'
-      },
-      data: {
-        value
-      }
-    })
-  } catch (error) {
-    return error
-  }
-}
-
 export {
   getContents,
   getBundle,
@@ -325,6 +308,5 @@ export {
   saveSubscriptionOrder,
   updateSubscriptionOrder,
   createSubscriptionOrder,
-  getDefaultProducts,
-  generateRequestToken
+  getDefaultProducts
 }

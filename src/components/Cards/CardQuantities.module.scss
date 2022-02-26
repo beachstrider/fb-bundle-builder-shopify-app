@@ -1,14 +1,12 @@
 @import '../../variables';
 
 .card {
-  border-radius: 3px;
-  box-shadow: 0px 0px 30px #0000001c;
+  border-radius: 1rem;
   display: grid;
   grid-template-rows: 16rem;
   cursor: pointer;
   overflow: hidden;
-  min-width: $cardWidth;
-  width: $cardWidth;
+  min-width: 285px;
   margin-bottom: 16px;
 
   & .description {
@@ -16,34 +14,19 @@
     text-align: center;
     grid-template-columns: repeat(4, 1fr);
     font-size: $fontXSmall;
-    padding: 0 1rem;
-    font-family: $fontFamilyLight;
-    min-height: 2em;
-    @media only screen and (max-width: $breakpointTablet) {
-      column-gap: 1.4rem;
-    }
-    @media only screen and (min-width: $breakpointTablet) {
-      column-gap: 0.1rem;
-    }
+    column-gap: 1.4rem;
+    padding: 1rem;
 
-    & .metafieldValue {
-      font-size: $fontSmall;
-      font-family: $fontFamilyBold;
-    }
-    & .metafieldName {
-      font-family: $fontFamilyLight;
-      font-size: 1rem;
-      line-height: 0.4rem;
+    & .subTitle {
+      font-size: 1.8rem;
+      font-weight: 700;
     }
   }
 
   & .actions {
     display: flex;
-    margin-top: auto;
-    font-family: $fontFamilyBold;
-
     & div {
-      margin: 0 0.2rem;
+      margin: 0 0.5rem;
     }
   }
 
@@ -59,15 +42,13 @@
     font-size: 2.2rem;
     font-weight: 700;
     text-align: center;
-    font-family: $fontFamilyBlack;
-    margin-top: 0.3rem;
   }
 
   & .descriptionWrapper {
     display: flex;
     flex-direction: column;
+    justify-content: center;
     align-items: center;
     background-color: $white;
-    padding-bottom: 1rem;
   }
 }

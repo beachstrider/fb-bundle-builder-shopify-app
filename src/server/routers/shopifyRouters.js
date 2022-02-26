@@ -1,12 +1,10 @@
-const app = require('express').Router({ mergeParams: true })
+const app = require('express').Router()
 const path = require('path')
 require('dotenv').config({ path: path.resolve(__dirname, '.env') })
-const { shopifyConnector } = require('../domains/shopify/api')
-const verifyRequest = require('../middleware/verifyRequest')
 const { shopifyMultipass } = require('../utils')
 
 // Sign-in into Shopify multipass
-app.post('/multipass-url', (req, res) => {
+app.post('/shopify/multipass-url', (req, res) => {
   if (!req.query.shop) {
     return res.status(400).send({
       message: 'Can not find shop'
@@ -27,15 +25,6 @@ app.post('/multipass-url', (req, res) => {
   res.status(200).send({
     url: url
   })
-})
-
-app.post('/customers/email', verifyRequest, async (req, res) => {
-  const connector = await shopifyConnector(
-    process.env.SHOPIFY_PRIVATE_APP_API_SECRET,
-    req.body.shop
-  )
-  const response = await connector.getCustomerByEmail(req.body.email)
-  return res.status(response.status).send(response.data)
 })
 
 module.exports = app

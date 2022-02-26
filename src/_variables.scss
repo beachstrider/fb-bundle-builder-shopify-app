@@ -1,12 +1,6 @@
 $primaryColor: #0a8d47;
-$primaryColorLight: #068d47;
-$secondaryColor: #fec12d;
 $gray: #4c4c4c;
 $grayLight: #e7eaec;
-$gray200: #dbdbdb;
-$gray100: #e2e2e2;
-$gray200: #dbdbdb;
-$gray300: #bababa;
 $grayMedium: #737678;
 $grayMediumSecondary: #242424;
 $white: #ffffff;
@@ -14,11 +8,6 @@ $black: #000000;
 $border: #707070;
 $red: #c8432d;
 $orange: #ec6120;
-$butter: #fedc5c;
-$headerBackgroundColor: #f6f6f7;
-$butter: #fedc5c;
-$borderColor: #ebebec;
-$headerBackgroundColor: #f6f6f7;
 
 $faqBackgroundColor: #e8e8e8;
 
@@ -29,16 +18,14 @@ $breakpointDesktop: 1024px;
 /* fonts */
 $fontLarge: 4.7rem;
 $fontMediumLarge: 3rem;
-$semiMediumFont: 2.4rem;
+$semiMediumFont: 2.5rem;
 $fontMedium: 2rem;
-$fontMediumRegular: 1.8rem;
-$fontMediumSmall: 1.6rem;
-$fontSmall: 1.6rem;
-$fontXSmall: 1.5rem;
+$fontSmall: 1.5rem;
+$fontXSmall: 1.4rem;
 
 /* font family */
-$fontFamilyBook: 'Gotham-Book';
-$fontFamilyBold: 'Gotham-Bold';
+$fontFamilyBook:'Gotham-Book';
+$fontFamilyBold:'Gotham-Bold';
 $fontFamilyBlack: 'Gotham-Black';
 $fontFamilyLight: 'Gotham-Light';
 $fontFamilyThin: 'Gotham-Thin';
@@ -50,21 +37,5 @@ $rowWidthTable: 90vw;
 $rowWidthMobile: 100%;
 
 /* Cards */
-$cardWidth: 265px;
 $cardDateWidth: 223px;
 $cardDateHeight: 160px;
-$cardBorderWidth: 0.2rem;
-
-/* Mixins */
-@mixin responsive-wrapper {
-  @media only screen and (max-width: $breakpointDesktop) {
-    width: $rowWidthTable;
-    grid-template-columns: 50% 50%;
-    column-gap: 5rem;
-  }
-  @media only screen and (max-width: $breakpointTablet) {
-    width: $rowWidthMobile;
-    grid-template-columns: 100%;
-    column-gap: 0;
-  }
-}

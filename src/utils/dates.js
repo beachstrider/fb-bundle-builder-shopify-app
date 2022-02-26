@@ -3,7 +3,7 @@ import minMax from 'dayjs/plugin/minMax'
 import timezone from 'dayjs/plugin/timezone'
 import utc from 'dayjs/plugin/utc'
 import isBetween from 'dayjs/plugin/isBetween'
-import dayjs from 'dayjs'
+import * as dayjs from 'dayjs'
 import { useLocation } from 'react-router-dom'
 
 dayjs.extend(utc)
@@ -61,6 +61,7 @@ const getTodayDate = () => {
   return todayDate
 }
 
+
 const sortDatesArray = (dates, sort = 'asc') =>
   dates.sort((a, b) => {
     const dateA = dayjs(a).unix()
@@ -69,29 +70,11 @@ const sortDatesArray = (dates, sort = 'asc') =>
     return sort === 'asc' ? dateA - dateB : dateA + dateB
   })
 
-const getShortDate = (date, config = { withYear: false }) => {
-  const errorMessage = "date param isn't a correct date format"
-  try {
-    if (!dayjs(date).isValid()) {
-      throw new Error(errorMessage)
-    }
-    let format = 'MMM DD'
-
-    if (config.withYear) {
-      format = format.concat(', YYYY')
-    }
-
-    return dayjs(date).utc().format(format)
-  } catch (error) {
-    throw new Error(errorMessage)
-  }
-}
-
 export {
   findWeekDayBetween,
   getCutOffDate,
   getNextWeekDay,
   getTodayDate,
-  sortDatesArray,
-  getShortDate
+  sortDatesArray
 }
+

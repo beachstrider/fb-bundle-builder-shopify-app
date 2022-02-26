@@ -42,7 +42,6 @@ import {
   STATUS_PENDING,
   STATUS_SENT
 } from '../../../constants/order'
-import { DEFAULT_ERROR_MESSAGE } from '../../../constants/errors'
 
 dayjs.extend(isSameOrAfter)
 dayjs.extend(utc)
@@ -101,7 +100,7 @@ const OrderHistory = () => {
       setError({
         open: true,
         status: 'Danger',
-        message: DEFAULT_ERROR_MESSAGE
+        message: 'Failed to retrieve products'
       })
     }
     dispatch(setEmail(shopCustomer?.email || ''))

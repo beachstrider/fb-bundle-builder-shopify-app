@@ -45,18 +45,6 @@ module.exports = {
       'process.env.BUNDLE_API_URL': JSON.stringify(process.env.BUNDLE_API_URL),
       'process.env.EMPTY_STATE_IMAGE': JSON.stringify(
         process.env.EMPTY_STATE_IMAGE
-      ),
-      'process.env.SHOPIFY_API_VERSION': JSON.stringify(
-        process.env.SHOPIFY_API_VERSION
-      ),
-      'process.env.SENTRY_DSN': JSON.stringify(
-        process.env.SENTRY_DSN
-      ),
-      'process.env.SENTRY_SAMPLE_RATE': JSON.stringify(
-        process.env.SENTRY_SAMPLE_RATE
-      ),
-      'process.env.SENTRY_ENVIRONMENT': JSON.stringify(
-        process.env.SENTRY_ENVIRONMENT
       )
     })
   ],

@@ -4,7 +4,6 @@
   display: flex;
   align-items: center;
   color: $primaryColor;
-  margin: 1rem 0 0 0 !important;
 
   & .disabled {
     background: $grayMedium !important;
@@ -13,6 +12,7 @@
   & .button {
     padding: 0.2rem 1rem;
     cursor: pointer;
+    font-size: $fontXSmall;
     background: $primaryColor;
     box-shadow: unset !important;
 
@@ -52,40 +52,5 @@
       color: $white;
       background: darken($primaryColor, 10%);
     }
-  }
-}
-
-.wrapper.isFromModal {
-  display: flex;
-  align-items: center;
-  color: $primaryColor;
-
-  & .disabled {
-    background: $grayMedium !important;
-  }
-
-  & .button {
-    padding: 0.9rem 1rem;
-
-    & svg {
-      width: 2rem;
-      fill: $white;
-    }
-  }
-
-  & .quantity {
-    font-size: $semiMediumFont;
-  }
-
-  & .leftButton {
-    border-top-left-radius: 2.5rem;
-    border-bottom-left-radius: 2.5rem;
-    padding: 10px 7px 4px 9px;
-  }
-
-  & .rightButton {
-    border-top-right-radius: 2.5rem;
-    border-bottom-right-radius: 2.5rem;
-    padding: 10px 10px 4px 7px;
   }
 }

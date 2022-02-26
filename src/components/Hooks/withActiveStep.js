@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { setActiveStep, setVisitedStep } from '../../store/slices/rootSlice'
+import { setActiveStep } from '../../store/slices/rootSlice'
 
 const withActiveStep = (WrappedComponent, stepId, dispath) => {
   const VerifyCurrentStep = (props) => {
@@ -12,7 +12,6 @@ const withActiveStep = (WrappedComponent, stepId, dispath) => {
         const currentStep = state.steps.find((step) => step.id === stepId)
         if (!currentStep.isActive) {
           dispatch(setActiveStep(stepId))
-          dispatch(setVisitedStep(stepId))
         }
       }
     }, [stepId])
