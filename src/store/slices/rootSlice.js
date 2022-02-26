@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { zone1, zone2 } from '../data/zipcodes'
+import { zone1, zone2, zone3 } from '../data/zipcodes'
 
 export const MEAL_PLANS_ITEM = 3
 
@@ -52,22 +52,10 @@ export const initialState = {
     {
       id: 1,
       name: 'Zone 1',
-      earliestAvailableDay: 2,
+      earliestAvailableDay: 5,
       leadTime: 5,
       zipCodes: zone1,
       deliveryDates: [
-        {
-          id: 1,
-          day: 3,
-          disabled: false,
-          isSelected: false
-        },
-        {
-          id: 2,
-          day: 4,
-          disabled: false,
-          isSelected: false
-        },
         {
           id: 3,
           day: 5,
@@ -79,16 +67,25 @@ export const initialState = {
     {
       id: 2,
       name: 'Zone 2',
-      earliestAvailableDay: 3,
+      earliestAvailableDay: 5,
       leadTime: 6,
       zipCodes: zone2,
       deliveryDates: [
         {
-          id: 2,
-          day: 4,
+          id: 3,
+          day: 5,
           disabled: false,
           isSelected: false
-        },
+        }
+      ]
+    },
+    {
+      id: 2,
+      name: 'Zone 3',
+      earliestAvailableDay: 5,
+      leadTime: 6,
+      zipCodes: zone3,
+      deliveryDates: [
         {
           id: 3,
           day: 5,
