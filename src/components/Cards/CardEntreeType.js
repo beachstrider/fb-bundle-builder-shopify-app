@@ -20,7 +20,7 @@ const CardEntreeType = ({
     <div className={styles.card} onClick={onClick}>
       <div
         className={styles.image}
-        style={{ backgroundImage: `url('${image}')` }}
+        style={{ background: `url('${image}')`, backgroundSize: 'cover' }}
       >
         &nbsp;
       </div>
