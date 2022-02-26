@@ -12,12 +12,15 @@ import weekday from 'dayjs/plugin/weekday'
 import advancedFormat from 'dayjs/plugin/advancedFormat'
 import styles from './Review.module.scss'
 import Loading from '../Components/Loading'
-import MenuItemCard from '../../Account/Components/MenuItemCard/MenuItemCard'
+import TopTitle from '../Components/TopTitle'
 import DeliveryDateModal from '../Components/DeliveryDatesModal/DeliveryDateModal'
 import { getBundleByPlatformId } from '../../Hooks/withBundleApi'
 import { clearLocalStorage } from '../../../store/store'
-import { cart, smoothScrollingToId } from '../../../utils'
+import { cart, getNextWeekDay, smoothScrollingToId } from '../../../utils'
 import Toast from '../../Global/Toast'
+import { ReviewDeliveryDay, ReviewStartingDay } from '.'
+import ReviewItems from './ReviewItems'
+import SubTotal from '../Components/SubTotal'
 
 dayjs.extend(advancedFormat)
 dayjs.extend(weekday)
@@ -33,10 +36,13 @@ const Review = () => {
   const shopifyCart = useShopifyCart()
   const [errorMessage, setErrorMessage] = useState(false)
   const [showError, setShowError] = useState(false)
+  const [mappedCart, setMappedCart] = useState({})
   const cartUtility = cart(state)
 
   useEffect(() => {
     getShopifyCartToken()
+    console.log('cartUtility.mapByTypes() >>>', cartUtility.mapByTypes())
+    setMappedCart(cartUtility.mapByTypes())
   }, [])
 
   useEffect(() => {
@@ -48,8 +54,6 @@ const Review = () => {
   useEffect(() => {
     smoothScrollingToId('reviewTop')
   })
-
-  const getDay = (weekDay) => dayjs().add(1, 'week').weekday(weekDay)
 
   const getShopifyCartToken = async () => {
     const token = await shopifyCart.getToken()
@@ -100,9 +104,9 @@ const Review = () => {
               .day(state.location.deliveryDate.day)
               .add(1, 'week')
               .format('YYYY-MM-DD'),
-            'delivery-day': getDay(state.location.deliveryDate.day).format(
-              'dddd'
-            )
+            'delivery-day': getNextWeekDay(
+              state.location.deliveryDate.day
+            ).format('dddd')
           },
           items: [
             {
@@ -200,53 +204,42 @@ const Review = () => {
     <>
       <div className="defaultWrapper" id="reviewTop">
         <div className={styles.wrapper}>
-          <div className={`${styles.title} mb-7`}>Review Order</div>
-          <div className={`${styles.topBarWrapper} mb-7`}>
-            <div className={`${styles.card} ${styles.columns}`}>
-              <div className={styles.title}>
-                Delivery Day:{' '}
-                <span className={styles.day}>
-                  {getDay(state.location.deliveryDate.day).format('dddd')}{' '}
-                </span>
-                <span
-                  className={styles.edit}
-                  onClick={() => setOpenEditDateModal(true)}
-                >
-                  Edit
-                </span>
-              </div>
-              <div className={styles.startingDate}>
-                Starting {getDay(state.location.deliveryDate.day).format('MMM')}{' '}
-                {getDay(state.location.deliveryDate.day).format('DD')}
-                <span className={styles.ordinal}>
-                  {getDay(state.location.deliveryDate.day)
-                    .format('Do')
-                    .match(/[a-zA-Z]+/g)}
-                </span>
-              </div>
-            </div>
-            <div className={styles.card}>
-              <div className={styles.title}>
-                Total:
-                <span className={styles.price}>${getTotal().toFixed(2)}</span>
-              </div>
+          <TopTitle
+            title="Review Your Order"
+            subTitle={
+              <ReviewDeliveryDay date={state.location.deliveryDate.day} />
+            }
+            showSeparator={false}
+          >
+            <ReviewStartingDay day={state.location.deliveryDate.day} />
+          </TopTitle>
+          <div className={`displayMobile mb-10 ${styles.subTotalWrapper}`}>
+            <div className={styles.subTotal}>
+              <SubTotal
+                entreesQuantity={state.bundle?.entreesQuantity}
+                breakfastsQuantity={state.bundle?.breakfastsQuantity}
+                entreePrice={state.bundle?.price}
+                breakfastPrice={state.bundle?.breakfast?.price}
+                shippingPrice={state.bundle?.shippingPrice}
+              />
             </div>
           </div>
-          <div className={styles.menuItemsWrapper}>
-            {state.cart.map((item) => (
-              <MenuItemCard
-                key={item.id}
-                image={
-                  item.images.length > 0 && item.images[0]
-                    ? item.images[0]
-                    : process.env.EMPTY_STATE_IMAGE
-                }
-                title={item.name}
-                quantity={item.quantity}
-                type={item.title}
-                quantityLabel=""
-              />
-            ))}
+          <div className={styles.contentWrapper}>
+            <div className={`${styles.menuItemsWrapper} mb-8`}>
+              {mappedCart.types && <ReviewItems items={mappedCart} />}
+            </div>
+            <div className={`displayTablet ${styles.subTotalWrapper}`}>
+              <div className={styles.subTotal}>
+                <SubTotal
+                  entreesQuantity={state.bundle?.entreesQuantity}
+                  breakfastsQuantity={state.bundle?.breakfastsQuantity}
+                  entreePrice={state.bundle?.price}
+                  breakfastPrice={state.bundle?.breakfast?.price}
+                  shippingPrice={state.bundle?.shippingPrice}
+                  backgroundImage={`${process.env.PROXY_APP_URL}/images/order-package.jpg`}
+                />
+              </div>
+            </div>
           </div>
         </div>
       </div>

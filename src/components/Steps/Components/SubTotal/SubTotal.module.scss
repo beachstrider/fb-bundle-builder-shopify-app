@@ -4,14 +4,7 @@
   border-radius: 1rem;
   border: $cardBorderWidth solid $borderColor;
   background-color: $white;
-
-  @media only screen and (min-width: $breakpointTablet) {
-    width: 29vw;
-  }
-  @media only screen and (max-width: $breakpointTablet) {
-    padding: 1rem 0;
-    width: 90vw;
-  }
+  width: 100%;
 
   & .divider {
     border-bottom: $cardBorderWidth solid $borderColor;
@@ -21,7 +14,8 @@
     width: 100%;
     min-height: 25.4rem;
     background-size: cover;
-    border-radius: 0.5rem;
+    border-top-left-radius: 0.5rem;
+    border-top-right-radius: 0.5rem;
     margin-bottom: 3rem;
   }
 
@@ -40,7 +34,7 @@
       grid-template-columns: 75% 20%;
     }
     @media only screen and (min-width: $breakpointDesktop) {
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: 1fr 0.6fr;
       &:last-of-type {
         padding: 1rem 1rem;
       }
