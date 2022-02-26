@@ -59,15 +59,6 @@ const Review = () => {
     setPlatformCartToken(token)
   }
 
-  const getTotal = () => {
-    return cartUtility.calculateSubTotal(
-      state.bundle.price,
-      state.bundle.breakfast.price,
-      state.bundle.entreesQuantity,
-      state.bundle.breakfastsQuantity
-    )
-  }
-
   const addShopifyCartItems = async () => {
     try {
       const clearCart = await shopifyCart.clearCart()
@@ -77,11 +68,11 @@ const Review = () => {
       }
 
       const shopifyBundleProduct = getSelectedBundle(state.bundle.breakfast.tag)
-      console.log('debug: shopifyBundleProduct', shopifyBundleProduct)
+
       const selectedVariant = shopifyBundleProduct.variants.filter(
         (v) =>
-          v.title.includes(state.entreeType.name) &&
-          v.title.includes(state.entreeSubType.name)
+          v.title.toLowerCase().includes(state.entreeType.name) &&
+          v.title.toLowerCase().includes(state.entreeSubType.name)
       )
       console.log('shopifyBundleProduct', shopifyBundleProduct)
       console.log('selectedVariant', selectedVariant)
