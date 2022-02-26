@@ -249,7 +249,7 @@ const Frequency = () => {
           </div>
         </div>
         <div>
-          <div className="displayTablet">
+          <div className={`displayTablet ${styles.subTotalWrapper}`}>
             <SubTotal
               entreesQuantity={state.bundle?.entreesQuantity}
               breakfastsQuantity={state.bundle?.breakfastsQuantity}
