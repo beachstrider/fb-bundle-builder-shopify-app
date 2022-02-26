@@ -2,9 +2,9 @@ import React from 'react'
 import { TextField } from '@shopify/polaris'
 import styles from './Input.module.scss'
 
-const InputText = ({ value, onChange, className }) => {
+const InputText = ({ value, onChange }) => {
   return (
-    <div className={`${styles.inputText} ${className}`}>
+    <div className={styles.inputText}>
       <TextField
         className={styles.inputText}
         type="email"

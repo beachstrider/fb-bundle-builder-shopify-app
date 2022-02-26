@@ -10,8 +10,7 @@ import {
   saveBundle,
   updateBundle,
   getDefaultProducts,
-  getActiveSubscriptions,
-  generateRequestToken
+  getActiveSubscriptions
 } from './withBundleApi'
 import useGuestToken from './useGuestToken'
 import getSelectedBundle from './getSelectedBundle'
@@ -21,8 +20,6 @@ import {
   isUserAuthenticated
 } from './isUserAuthenticated'
 import useShopifyCart from './useShopifyCart'
-import { getShopifyCustomerByEmail } from './withShopifyApi'
-import { mapItems, mapItemsByOption } from './useBundle'
 
 export {
   useGuestToken,
@@ -42,9 +39,5 @@ export {
   saveCart,
   saveBundle,
   updateBundle,
-  getDefaultProducts,
-  getShopifyCustomerByEmail,
-  generateRequestToken,
-  mapItems,
-  mapItemsByOption
+  getDefaultProducts
 }

@@ -5,10 +5,9 @@ const compression = require('compression')
 const express = require('express')
 const helmet = require('helmet')
 const verifyHmac = require('./src/server/middleware/verifyHmac')
-const { replaceString, generateRequestToken } = require('./src/server/utils')
+const { replaceString } = require('./src/server/utils')
 const cors = require('cors')
 const morgan = require('morgan')
-
 const bundleApiRouters = require('./src/server/routers/bundleApiRouters')
 const shopifyRouters = require('./src/server/routers/shopifyRouters')
 const rechargeRouters = require('./src/server/routers/rechargeRouters')
@@ -21,8 +20,6 @@ console.log('shopifyMultipass', process.env.SHOPIFY_MULTIPASS_SECRET)
 // Sentry
 const Sentry = require('@sentry/node')
 const Tracing = require('@sentry/tracing')
-const dayjs = require('dayjs')
-
 Sentry.init({
   environment: process.env.SENTRY_ENVIRONMENT,
   dsn: process.env.SENTRY_DSN,
@@ -39,6 +36,15 @@ Sentry.init({
 app.use(Sentry.Handlers.requestHandler())
 // TracingHandler creates a trace for every incoming request
 app.use(Sentry.Handlers.tracingHandler())
+// The error handler must be before any other error middleware and after all controllers
+app.use(Sentry.Handlers.errorHandler())
+// Optional fallthrough error handler
+app.use((err, req, res, next) => {
+  // The error id is attached to `res.sentry` to be returned
+  // and optionally displayed to the user for support.
+  res.statusCode = 500
+  res.end(res.sentry + '\n')
+})
 // END Sentry
 
 const morganFormat =
@@ -56,17 +62,6 @@ app.disable('x-powered-by')
 app.use(helmet())
 app.use(compression())
 
-app.post('/request-token', (req, res) => {
-  if (!req.body.value) {
-    return res.status(422).send({
-      message: 'Unprocessable Entity'
-    })
-  }
-
-  const token = generateRequestToken(req.body.value)
-  res.json({ token: token })
-})
-
 app.use('/images', express.static('images'))
 
 app.get('/bundle.js', (req, res) => {
@@ -80,8 +75,8 @@ app.get('/public/index.html', (req, res) => {
 })
 
 app.use(bundleApiRouters)
+app.use(shopifyRouters)
 app.use(rechargeRouters)
-app.use('/shopify', shopifyRouters)
 
 app.get('/', verifyHmac, (req, res) => {
   fs.readFile(
@@ -127,18 +122,6 @@ app.get('/', verifyHmac, (req, res) => {
     }
   )
 })
-
-// Sentry
-// The error handler must be before any other error middleware and after all controllers
-app.use(Sentry.Handlers.errorHandler())
-// Optional fallthrough error handler
-app.use((err, req, res, next) => {
-  // The error id is attached to `res.sentry` to be returned
-  // and optionally displayed to the user for support.
-  res.statusCode = 500
-  res.end(res.sentry + '\n')
-})
-// END Sentry
 
 app.listen(SERVER_PORT, () => {
   console.log(`Server is running on port ${SERVER_PORT}`)

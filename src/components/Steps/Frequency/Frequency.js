@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useHistory } from 'react-router'
 import {
   setBundle,
   selectFaqType,
@@ -9,14 +8,17 @@ import {
   setIsNextButtonActive,
   reset
 } from '../../../store/slices/rootSlice'
-import { FrequencyBreakfast, FrequencyEntree } from '.'
+import {
+  FrequencyBreakfast,
+  FrequencyEntree,
+  FrequencyMainEntree,
+  FrequencySubTotal
+} from '.'
+import styles from './Frequency.module.scss'
 import { withActiveStep } from '../../Hooks'
+import Loading from '../Components/Loading'
 import { clearLocalStorage } from '../../../store/store'
 import { smoothScrollingToId } from '../../../utils'
-import Loading from '../Components/Loading'
-import TopTitle from '../Components/TopTitle'
-import SubTotal from '../Components/SubTotal'
-import styles from './Frequency.module.scss'
 
 const FAQ_TYPE = 'frequency'
 const STEP_ID = 1
@@ -24,15 +26,14 @@ const STEP_ID = 1
 const bundles = [
   {
     id: 1,
-    name: '14 Meals',
-    description: '7-Days All inclusive - (14 Meals + 7 Breakfasts)',
+    name: '14 Entrees',
+    description: '7-Days All inclusive - (14 Entrees + 7 Breakfast)',
     price: 9.95,
-    shippingPrice: 8.95,
     entreesQuantity: 14,
     breakfastsQuantity: 7,
     breakfasts: [
       {
-        name: '7 Meals',
+        name: '7',
         price: 4.95,
         tag: '7 Day with breakfast'
       },
@@ -45,15 +46,14 @@ const bundles = [
   },
   {
     id: 2,
-    name: '10 Meals',
+    name: '10',
     description: '',
     price: 11.95,
-    shippingPrice: 8.95,
     entreesQuantity: 10,
     breakfastsQuantity: 5,
     breakfasts: [
       {
-        name: '5 Meals',
+        name: '5',
         price: 5.95,
         tag: '5 Day with breakfast'
       },
@@ -66,16 +66,15 @@ const bundles = [
   },
   {
     id: 3,
-    name: '6 Meals',
+    name: '6',
     description: '',
     price: 12.95,
-    shippingPrice: 8.95,
     entreesQuantity: 6,
     breakfastsQuantity: 3,
 
     breakfasts: [
       {
-        name: '3 Meals',
+        name: '3',
         price: 5.95,
         tag: '3 Day with breakfast'
       },
@@ -90,7 +89,6 @@ const bundles = [
 
 const Frequency = () => {
   const dispatch = useDispatch()
-  const history = useHistory()
   const state = useSelector((state) => state)
   const [selectedBundle, setSelectedBundle] = useState({})
   const [isLoading, setIsLoading] = useState(false)
@@ -124,13 +122,6 @@ const Frequency = () => {
 
   const initializeApp = async () => {
     setIsLoading(true)
-
-    // if the customer is returning from Shopify login page
-    if (state.returnToStep) {
-      history.push(`/steps/${state.returnToStep}`)
-      return
-    }
-
     await clearState()
     setSelectedBundle(bundles[0])
 
@@ -174,91 +165,84 @@ const Frequency = () => {
 
   return (
     <div className="mb-10">
-      <TopTitle
-        title="Select Meals Per Week"
-        subTitle="Healthy, fresh and ready to eat in 2 minutes"
-      />
-      <div className={styles.mainWrapper}>
-        <div>
-          <div className={styles.wrapper}>
-            <div className={styles.row}>
-              <div className={styles.column}>
-                <div className={styles.subRow3Columns}>
-                  {bundles.map((bundle) => (
-                    <FrequencyEntree
-                      key={bundle.id}
-                      data={bundle}
-                      isSelected={bundle.id === state.bundle.id}
-                      onClick={() => handleSelectBundle(bundle)}
-                    />
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-          <div id="breakfasts" />
-          <div className={`${styles.wrapper} mt-8`}>
-            <div className={styles.row}>
-              <div className={styles.column}>
-                <div className={styles.section}>
-                  <div className={styles.subSection}>
-                    <div className={styles.title}>Add Breakfast?</div>
-                    <div className={styles.subTitle}>
-                      Start your day off the right way
-                    </div>
-                  </div>
-                  <div className="displayTablet">
-                    <img
-                      className={styles.image}
-                      src={`${process.env.PROXY_APP_URL}/images/breakfast-sample.jpg`}
-                      alt="Breakfast"
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className={styles.row}>
-              <div className={styles.column}>
-                {selectedBundle.id && (
-                  <div className={styles.subRow2Columns}>
-                    {selectedBundle.breakfasts.map((breakfast, index) => (
-                      <FrequencyBreakfast
-                        key={index}
-                        data={breakfast}
-                        isSelected={
-                          breakfast.name === state.bundle.breakfast.name
-                        }
-                        onClick={() => handleSelectBreakfast(breakfast)}
-                      />
-                    ))}
-                  </div>
-                )}
-              </div>
-            </div>
-            <div className="displayMobile mt-5">
-              <div className="mt-10 px-4" style={{ width: '100%' }}>
-                <SubTotal
-                  entreesQuantity={state.bundle?.entreesQuantity}
-                  breakfastsQuantity={state.bundle?.breakfastsQuantity}
-                  entreePrice={state.bundle?.price}
-                  breakfastPrice={state.bundle?.breakfast?.price}
-                  shippingPrice={state.bundle?.shippingPrice}
-                />
-              </div>
+      <div className={styles.wrapper}>
+        <div className={styles.row}>
+          <div className={styles.column}>
+            <div className={styles.section}>
+              <div className={styles.title}>Entrees</div>
+              <div>Every Meal is ready in 2 Mins</div>
             </div>
           </div>
         </div>
-        <div>
+        <div className={styles.row}>
+          <div className={styles.column}>
+            <div className={`${styles.subRow} ${styles.subRowFullWidth}`}>
+              <FrequencyMainEntree
+                data={bundles[0]}
+                quantity={bundles[0].entreesQuantity}
+                isSelected={bundles[0].id === state.bundle.id}
+                onClick={() => handleSelectBundle(bundles[0])}
+              />
+            </div>
+            <div className={styles.subRow}>
+              {bundles.map(
+                (bundle, index) =>
+                  index !== 0 && (
+                    <FrequencyEntree
+                      key={bundle.id}
+                      data={bundle}
+                      quantity={bundle.entreesQuantity}
+                      isSelected={bundle.id === state.bundle.id}
+                      onClick={() => handleSelectBundle(bundle)}
+                    />
+                  )
+              )}
+            </div>
+          </div>
           <div className="displayTablet">
-            <SubTotal
+            <FrequencySubTotal
               entreesQuantity={state.bundle?.entreesQuantity}
               breakfastsQuantity={state.bundle?.breakfastsQuantity}
               entreePrice={state.bundle?.price}
               breakfastPrice={state.bundle?.breakfast?.price}
-              shippingPrice={state.bundle?.shippingPrice}
-              backgroundImage={`${process.env.PROXY_APP_URL}/images/frequency.jpg`}
             />
           </div>
+        </div>
+      </div>
+      <div id="breakfasts" />
+      <div className={`${styles.wrapper} mt-8`}>
+        <div className={styles.row}>
+          <div className={styles.column}>
+            <div className={styles.section}>
+              <div className={styles.title}>Breakfasts</div>
+              <div>Every Meal is ready in 2 Mins</div>
+            </div>
+          </div>
+        </div>
+        <div className={styles.row}>
+          <div className={styles.column}>
+            {selectedBundle.id && (
+              <div className={`${styles.subRow} ${styles.subRowFourColumns}`}>
+                {selectedBundle.breakfasts.map((breakfast, index) => (
+                  <FrequencyBreakfast
+                    key={index}
+                    data={breakfast}
+                    quantity={state.bundle?.breakfastsQuantity}
+                    isSelected={breakfast.name === state.bundle.breakfast.name}
+                    onClick={() => handleSelectBreakfast(breakfast)}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+        <div className="displayMobile">
+          <FrequencySubTotal
+            entreesQuantity={state.bundle?.entreesQuantity}
+            breakfastsQuantity={state.bundle?.breakfastsQuantity}
+            entreePrice={state.bundle?.price}
+            breakfastPrice={state.bundle?.breakfast?.price}
+          />
         </div>
       </div>
     </div>

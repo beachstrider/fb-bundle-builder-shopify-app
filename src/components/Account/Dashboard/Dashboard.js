@@ -13,7 +13,6 @@ import styles from './Dashboard.module.scss'
 import { MenuItemCard } from '../Components/MenuItemCard'
 import {
   getActiveSubscriptions,
-  getDefaultProducts,
   getSubscriptionOrders,
   useUserToken
 } from '../../Hooks'
@@ -216,14 +215,17 @@ const Dashboard = () => {
                       }
                     }
                   } else {
-                    const defaultProducts = await getDefaultProducts(
-                      token,
-                      config.bundle_id,
-                      config.id,
-                      content.id
+                    const configContentsData = await request(
+                      `${process.env.PROXY_APP_URL}/bundle-api/bundles/${config.bundle_id}/configurations/${config.id}/contents/${content.id}/products?is_default=1`,
+                      {
+                        method: 'get',
+                        data: '',
+                        headers: { authorization: `Bearer ${token}` }
+                      },
+                      3
                     )
                     const thisProductsArray = await buildProductArrayFromId(
-                      defaultProducts.data.data,
+                      configContentsData.data.data,
                       sub.subscription_sub_type,
                       shopProducts
                     )

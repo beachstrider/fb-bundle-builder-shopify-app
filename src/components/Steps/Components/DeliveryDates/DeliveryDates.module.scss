@@ -5,30 +5,35 @@
   display: grid;
   grid-template-columns: 100%;
   column-gap: 10rem;
-  margin-top: 5rem;
+  @media only screen and (max-width: $breakpointDesktop) {
+    width: $rowWidthTable;
+    grid-template-columns: 50% 50%;
+    column-gap: 5rem;
+  }
+  @media only screen and (max-width: $breakpointTablet) {
+    width: $rowWidthMobile;
+    grid-template-columns: 100%;
+    column-gap: 0;
+  }
 
   & .title {
     font-size: $fontLarge;
     font-weight: 700;
     text-align: center;
     @media only screen and (max-width: $breakpointDesktop) {
-      font-size: $semiMediumFont;
+      font-size: $semiMediumFont
     }
   }
 
   & .rows {
     display: flex;
-    column-gap: 0.5rem;
+    column-gap: 3rem;
     justify-content: center;
     flex-direction: row;
     @media only screen and (max-width: $breakpointDesktop) {
       justify-content: center;
       align-items: center;
       grid-template-columns: 1fr;
-      row-gap: 2rem;
-    }
-
-    @media only screen and (max-width: $breakpointTablet) {
       row-gap: 1rem;
       flex-direction: column;
     }

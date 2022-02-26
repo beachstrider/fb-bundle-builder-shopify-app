@@ -17,20 +17,19 @@
     grid-template-columns: repeat(4, 1fr);
     font-size: $fontXSmall;
     column-gap: 1.4rem;
-    font-family: $fontFamilyMedium;
 
-    & div {
+    & div{
       margin-bottom: 12px;
     }
 
-    & .metafieldValue {
+    & .subTitle {
       text-align: center;
       font-size: $fontMediumLarge;
       font-weight: 700;
     }
-    & .metafieldName {
+    & .subTitleDescription {
       text-align: center;
-      font-size: calc($fontMedium - 0.2em);
+      font-size: $fontMedium;
     }
 
     @media only screen and (max-width: $breakpointTablet) {
@@ -38,10 +37,13 @@
     }
   }
 
+  & .descriptionHtml {
+    display: block;
+  }
+
   & .actions {
     display: flex;
     justify-content: flex-start;
-    font-family: $fontFamilyBold;
 
     @media only screen and (max-width: $breakpointTablet) {
       justify-content: center;
@@ -67,14 +69,9 @@
     font-size: $fontMediumLarge;
     font-weight: 700;
     text-align: left;
-    font-family: $fontFamilyBold;
     @media only screen and (max-width: $breakpointTablet) {
       text-align: center;
     }
-  }
-
-  & .subtitle {
-    margin-top: -1rem;
   }
 
   & .descriptionWrapper {
@@ -87,20 +84,6 @@
 
     @media only screen and (max-width: $breakpointTablet) {
       padding: 2rem 1rem;
-    }
-
-    & .contains {
-      font-family: $fontFamilyBold;
-    }
-
-    & .ingredients {
-      h2 {
-        margin-bottom: 0;
-      }
-      & .ingredientsText {
-        font-size: calc($fontXSmall - 0.3rem);
-        font-family: $fontFamilyLight;
-      }
     }
   }
 }

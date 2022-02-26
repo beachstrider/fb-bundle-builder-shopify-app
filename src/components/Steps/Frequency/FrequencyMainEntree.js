@@ -3,27 +3,27 @@ import { FrequencyWeeklyPrice } from '.'
 import { CardCheckMark } from '../../Cards'
 import styles from './Frequency.module.scss'
 
-const FrequencyEntree = ({ data, quantity, isSelected, onClick }) => {
+const FrequencyMainEntree = ({ data, quantity, isSelected, onClick }) => {
   return (
     <CardCheckMark isSelected={isSelected} onClick={onClick}>
-      <div className={styles.entreeWrapper}>
+      <div className={styles.mainEntreeWrapper}>
         <div className={styles.entree}>
           <div
-            className={`${
+            className={`${styles.title} ${styles.fontBold} ${
               isSelected ? styles.isSelected : styles.isUnselected
-            } textCenter`}
+            }`}
           >
-            <div className={`${styles.title} ${styles.fontBold}`}>
-              {data.name}
-            </div>
-            <div className={styles.xSmallFont}>Entrees</div>
+            {data.name}
           </div>
+          <div className={styles.xSmallFont}>{data.description}</div>
         </div>
         <div className={styles.centerRow}>
-          <div className={`${styles.smallFont} ${styles.fontBold}`}>
-            ${data.price}
+          <div className={`${styles.semiMediumFont} ${styles.fontBold}`}>
+            ${Number.parseFloat(data.price).toFixed(2)}
           </div>
-          <div className={`${styles.xSmallFont} mb-1`}>Per Entree</div>
+          <div className={styles.xSmallFont}>Per Entree</div>
+        </div>
+        <div className={styles.centerRow}>
           <div className={styles.xSmallFont}>Total Per Week</div>
           <FrequencyWeeklyPrice price={data.price * quantity} />
         </div>
@@ -32,4 +32,4 @@ const FrequencyEntree = ({ data, quantity, isSelected, onClick }) => {
   )
 }
 
-export default FrequencyEntree
+export default FrequencyMainEntree
