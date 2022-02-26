@@ -60,6 +60,7 @@ const EntreeType = () => {
     }
   })
 
+
   const mapBundleTypes = () => {
     setIsLoading(true)
 
