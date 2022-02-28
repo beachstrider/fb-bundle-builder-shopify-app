@@ -3,6 +3,7 @@ import { useHistory } from 'react-router'
 import { useDispatch, useSelector } from 'react-redux'
 import {
   setActiveStep,
+  setBundleMealPrice,
   setVisitedStep,
   triggerLastStep
 } from '../../store/slices/rootSlice'
@@ -64,12 +65,16 @@ const Footer = () => {
       state.bundle?.breakfastsQuantity
     )
 
-    const extraSubTypePrice = cartUtility.getExtraSubTypePrice(
+    const { extraSubTypePrice, mealPrice } = cartUtility.getExtraSubTypePrice(
       state.entreeType,
       state.entreeSubType
     )
 
     setTotal(subTotal + extraSubTypePrice)
+    //TODO: update bundle price
+    console.log('debug: mealPrice', mealPrice)
+    console.log('debug: state.bundle?.price', state.bundle?.price)
+    //dispatch(setBundleMealPrice(mealPrice))
     setFrequency(
       state.bundle?.entreesQuantity + state.bundle?.breakfastsQuantity
     )

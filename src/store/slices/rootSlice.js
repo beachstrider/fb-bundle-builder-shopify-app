@@ -155,6 +155,9 @@ const rootSlice = createSlice({
     setBundle: (state, action) => {
       state.bundle = action.payload
     },
+    setBundleMealPrice: (state, action) => {
+      state.bundle.price = action.payload
+    },
     selectFaqType: (state, action) => {
       state.faqType = action.payload
     },
@@ -246,6 +249,7 @@ export const {
   setVisitedStep,
   setEmail,
   setBundle,
+  setBundleMealPrice,
   setEntreeType,
   setEntreeSubType,
   setLocation,

@@ -123,8 +123,10 @@ const cart = (state) => {
     return result
   }
 
+  //TODO: working here
   const getExtraSubTypePrice = (entreeType, entreeSubType) => {
     let extraSubTypePrice = 0
+    let mealPrice = 0
 
     const entreeTypeName = entreeType?.name
     const entreeSubTypeName = entreeSubType?.name
@@ -133,11 +135,15 @@ const cart = (state) => {
       ENTREE_TYPES_CONDITIONS.forEach(({ type, subType, price }) => {
         if (entreeTypeName === type && entreeSubTypeName === subType) {
           extraSubTypePrice = price * state.bundle?.entreesQuantity
+          mealPrice =
+            state.bundle?.price !== Number(price) + Number(state.bundle?.price)
+              ? Number(price) + Number(state.bundle?.price)
+              : state.bundle?.price
         }
       })
     }
 
-    return extraSubTypePrice
+    return { mealPrice, extraSubTypePrice }
   }
 
   return {
