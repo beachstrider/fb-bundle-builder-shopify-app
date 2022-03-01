@@ -4,6 +4,7 @@
   {% capture page_description %} PAGE_DESCRIPTION {% endcapture %} 
 {% endcapture %}
 <script>
+console.log('Liquid: starting')
 {% if customer %}
   const shopCustomer = {
     id: `{{ customer.id}}`,
@@ -219,6 +220,7 @@ let currentProductKey = ''
           if (!currentProduct.metafields.find((metafield) => metafield.key === currentProductKey)) {            
             {% assign productMetafieldKey = variant.option1 | append: '_' | append: productVariantMetaKey | downcase %}
 
+            console.log('liquid: currentProduct', currentProduct)
             currentProduct.metafields.push({ 
               key: currentProductKey,
               name: convertToTitle('{{ productVariantMetaKey }}'), 
@@ -235,6 +237,7 @@ let currentProductKey = ''
 {% endif %}
 
 const shopDomain = '{{ shop.permanent_domain }}';
+console.log('Liquid: ending')
 </script>
 
 <div id="root"></div>

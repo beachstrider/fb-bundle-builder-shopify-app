@@ -46,6 +46,7 @@ function App() {
     ]
 
     console.log('Searching for Shopify tags in products', expectedTags)
+    console.log('shopBundles', shopBundles)
     const missingTags = []
     for (const findTag of expectedTags) {
       const currentTag = await getSelectedBundle(findTag)
