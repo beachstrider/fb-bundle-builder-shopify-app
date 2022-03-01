@@ -4,26 +4,23 @@ import weekday from 'dayjs/plugin/weekday'
 import advancedFormat from 'dayjs/plugin/advancedFormat'
 import { CardSelectionMark } from '../../Cards'
 import styles from './LocationDate.module.scss'
-import { getNextWeekDay } from '../../../utils'
 
 dayjs.extend(advancedFormat)
 dayjs.extend(weekday)
 
-const LocationDate = ({ data, onClick, todayDate = dayjs() }) => {
-  const getDay = (weekday) => getNextWeekDay(weekday, todayDate)
-
+const LocationDate = ({ date, onClick, selectedDate }) => {
   return (
     <CardSelectionMark
-      isSelected={data.isSelected}
-      onClick={onClick}
-      isDisabled={data.disabled}
+      isSelected={date.isSelected || selectedDate.id === date.id}
+      onClick={() => onClick(date)}
+      isDisabled={date.disabled}
     >
       <div className={styles.wrapper}>
-        <div className={styles.weekDay}>{getDay(data.day).format('dddd')}</div>
-        <div className={styles.month}>{getDay(data.day).format('MMMM')}</div>
+        <div className={styles.weekDay}>{dayjs(date.date).format('dddd')}</div>
+        <div className={styles.month}>{dayjs(date.date).format('MMMM')}</div>
         <div className={styles.dateNumber}>
-          {getDay(data.day).format('DD')}
-          {getDay(data.day)
+          {dayjs(date.date).format('DD')}
+          {dayjs(date.day)
             .format('Do')
             .match(/[a-zA-Z]+/g)}
         </div>

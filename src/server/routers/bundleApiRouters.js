@@ -285,4 +285,21 @@ app.post('/bundle-api/carts', async (req, res) => {
   return res.status(response.status).send(response.data)
 })
 
+app.get('/bundle-api/delivery-dates', async (req, res) => {
+  console.log('GET', `${process.env.BUNDLE_API_URL}/api/delivery-dates`, req.headers)
+  try {
+    const response = await request(`${process.env.BUNDLE_API_URL}/api/delivery-dates`, {
+      method: 'get',
+      headers: {
+        Accept: 'application/json',
+        authorization: req.headers.authorization
+      }
+    })
+    console.log(response)
+    return res.status(response.status).send(response.data)
+  }catch (error){
+    console.log(error)
+  }
+})
+
 module.exports = app

@@ -26,3 +26,5 @@ yarn-error.log*
 public/bundle*
 node_modules
 .idea
+
+/db-exports
