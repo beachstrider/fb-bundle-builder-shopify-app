@@ -132,7 +132,10 @@ const cart = (state) => {
 
     if (entreeTypeName && entreeSubTypeName) {
       ENTREE_TYPES_CONDITIONS.forEach(({ type, subType, price }) => {
-        if (entreeTypeName === type && entreeSubTypeName === subType) {
+        if (
+          entreeTypeName.toLowerCase() === type.toLowerCase() &&
+          entreeSubTypeName.toLowerCase() === subType.toLowerCase()
+        ) {
           extraSubTypePrice = price * state.bundle?.entreesQuantity
           extraPricePerMeal = price
         }

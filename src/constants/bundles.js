@@ -8,8 +8,8 @@ const METAFIELD_CALORIES = 'calories'
 const BUNDLE_MEAL_SECTION_TITLE = 'Lunch + Dinner'
 const ENTREE_TYPES_CONDITIONS = [
   { type: 'keto', subType: 'large', price: 1 },
-  { type: 'lowcal', subType: 'medium', price: 1 },
-  { type: 'lowcal', subType: 'large', price: 2 }
+  { type: 'balanced', subType: 'medium', price: 1 },
+  { type: 'balanced', subType: 'large', price: 2 }
 ]
 
 export {

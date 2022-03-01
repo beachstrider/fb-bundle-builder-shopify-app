@@ -233,7 +233,9 @@ const Review = () => {
                 <SubTotal
                   entreesQuantity={state.bundle?.entreesQuantity}
                   breakfastsQuantity={state.bundle?.breakfastsQuantity}
-                  entreePrice={state.bundle?.price}
+                  entreePrice={
+                    state.bundle?.price + state.bundle?.extraPricePerMeal
+                  }
                   breakfastPrice={state.bundle?.breakfast?.price}
                   shippingPrice={state.bundle?.shippingPrice}
                   backgroundImage={`${process.env.PROXY_APP_URL}/images/order-package.jpg`}
