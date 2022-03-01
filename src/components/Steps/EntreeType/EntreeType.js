@@ -18,6 +18,7 @@ import EntreeTypeSubType from './EntreeTypeSubType'
 import { Redirect } from 'react-router'
 import Toast from '../../Global/Toast'
 import TopTitle from '../Components/TopTitle'
+import { ENTREE_TYPES_CONDITIONS } from '../../../constants/bundles'
 
 const FAQ_TYPE = 'entreeType'
 const STEP_ID = 3
@@ -59,7 +60,6 @@ const EntreeType = () => {
       dispatch(cartClear())
     }
   })
-
 
   const mapBundleTypes = () => {
     setIsLoading(true)
@@ -103,6 +103,12 @@ const EntreeType = () => {
     await saveEntreeType(entree)
     smoothScrollingToId('entreeType')
   }
+
+  const getExtraPricePerMealBundle = (entreeTypeName, entreeSubTypeName) =>
+    ENTREE_TYPES_CONDITIONS.filter(
+      ({ type, subType }) =>
+        type === entreeTypeName && subType === entreeSubTypeName
+    )
 
   if (!state.location.zipCode) {
     return <Redirect push to="/steps/2" />
@@ -149,15 +155,22 @@ const EntreeType = () => {
                       : styles.subTypesWrapper_3_Columns
                   } mb-10`}
                 >
-                  {state.entreeType?.options.map((subType, index) => (
-                    <EntreeTypeSubType
-                      key={index}
-                      title={subType.name}
-                      metafields={subType.metafields}
-                      isSelected={subType.id === state.entreeSubType.id}
-                      onClick={() => dispatch(setEntreeSubType(subType))}
-                    />
-                  ))}
+                  {state.entreeType?.options.map((subType, index) => {
+                    const [entryTypeCondition] = getExtraPricePerMealBundle(
+                      state.entreeType.name,
+                      subType.name
+                    )
+                    return (
+                      <EntreeTypeSubType
+                        key={index}
+                        title={subType.name}
+                        metafields={subType.metafields}
+                        isSelected={subType.id === state.entreeSubType.id}
+                        onClick={() => dispatch(setEntreeSubType(subType))}
+                        extraPricePerMeal={entryTypeCondition?.price}
+                      />
+                    )
+                  })}
                 </div>
               </>
             )}
