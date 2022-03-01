@@ -166,14 +166,14 @@ currentVariant = {}
           currentVariant.metafields.push({
             key: '{{ variantNutritionMetaKey }}',
             name: convertToTitle('{{ variantNutritionMetaKey }}'), 
-            value: `{{ variant.metafields.nutrition[variantNutritionMetaKey] }}`
+            value: `{{ variant.metafields.nutrition[variantNutritionMetaKey] | escape }}`
           })            
         {% endfor %}    
         {% for variantMetaKey in variantMetaKeys %}
           currentVariant.metafields.push({ 
             key: '{{ variantMetaKey }}',
             name: convertToTitle('{{ variantMetaKey }}'), 
-            value: '{{ variant.metafields.my_fields[variantMetaKey].value }}'
+            value: '{{ variant.metafields.my_fields[variantMetaKey].value | escape }}'
           })            
         {% endfor %}      
       {% endfor %}
@@ -198,7 +198,7 @@ let currentProductKey = ''
           currentVariant.metafields.push({
             key: '{{ variantNutritionMetaKey }}',
             name: convertToTitle('{{ variantNutritionMetaKey }}'), 
-            value: `{{ variant.metafields.nutrition[variantNutritionMetaKey] }}`
+            value: `{{ variant.metafields.nutrition[variantNutritionMetaKey] | escape}}`
           })            
         {% endfor %}   
 
@@ -210,7 +210,7 @@ let currentProductKey = ''
             currentProduct.metafields.push({ 
               key: currentProductKey,
               name: convertToTitle('{{ bundleBuilderMetaKey }}'), 
-              value: '{{ product.metafields.bundle-builder[productMetafieldKey] }}'
+              value: '{{ product.metafields.bundle-builder[productMetafieldKey] | escape }}'
             })            
           }
         {% endfor %}
@@ -224,7 +224,7 @@ let currentProductKey = ''
             currentProduct.metafields.push({ 
               key: currentProductKey,
               name: convertToTitle('{{ productVariantMetaKey }}'), 
-              value: `{{ product.metafields.nutrition[productMetafieldKey] }}`
+              value: `{{ product.metafields.nutrition[productMetafieldKey] | escape }}`
             })            
           }
           
