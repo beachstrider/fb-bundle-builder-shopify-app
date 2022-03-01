@@ -112,6 +112,7 @@ const EditOrder = () => {
 
   const getCustomerBundleItems = async (token) => {
     const subscriptionResponse = await getSubscriptionOrders(token, orderId)
+    console.log('debug: subscriptionResponse', subscriptionResponse)
 
     let currentBundleId = null
     const currentItems = []
@@ -121,6 +122,14 @@ const EditOrder = () => {
 
       for (const order of subscriptionResponse.data?.data) {
         const editItemsConfigArr = []
+
+        // TODO: remove logs
+        console.log(
+          'debug: deliver after',
+          order.bundle_configuration_content?.deliver_after
+        )
+        console.log('debug: currentDate', currentDate)
+
         if (
           order.bundle_configuration_content?.deliver_after &&
           order.bundle_configuration_content?.deliver_after === currentDate
@@ -450,6 +459,8 @@ const EditOrder = () => {
       setQuantities(newQuantities)
       setMenuItems(newItems)
       setIsLoading(false)
+      // TODO: delete logs
+      console.log('debug: newItems', newItems)
     } catch (error) {
       setError({
         open: true,
