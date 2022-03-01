@@ -62,7 +62,8 @@ const Footer = () => {
       state.bundle?.price,
       state.bundle?.breakfast?.price,
       state.bundle?.entreesQuantity,
-      state.bundle?.breakfastsQuantity
+      state.bundle?.breakfastsQuantity,
+      state.bundle?.shippingPrice
     )
   }
 

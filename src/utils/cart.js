@@ -85,7 +85,8 @@ const cart = (state) => {
     entreePrice,
     breakfastPrice,
     entreesQuantity,
-    breakfastsQuantity
+    breakfastsQuantity,
+    shippingPrice
   ) => {
     const entreesTotal = Number.parseFloat(entreePrice * entreesQuantity)
     const breakfastsTotal = isNaN(breakfastPrice)
@@ -93,8 +94,8 @@ const cart = (state) => {
       : Number.parseFloat(breakfastPrice) * breakfastsQuantity
 
     return isNaN(breakfastsTotal)
-      ? entreesTotal
-      : entreesTotal + breakfastsTotal
+      ? entreesTotal + shippingPrice
+      : entreesTotal + breakfastsTotal + shippingPrice
   }
 
   const mapByTypes = () => {

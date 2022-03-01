@@ -59,15 +59,6 @@ const Review = () => {
     setPlatformCartToken(token)
   }
 
-  const getTotal = () => {
-    return cartUtility.calculateSubTotal(
-      state.bundle.price,
-      state.bundle.breakfast.price,
-      state.bundle.entreesQuantity,
-      state.bundle.breakfastsQuantity
-    )
-  }
-
   const addShopifyCartItems = async () => {
     try {
       const clearCart = await shopifyCart.clearCart()

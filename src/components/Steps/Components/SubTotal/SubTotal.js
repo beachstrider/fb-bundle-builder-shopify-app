@@ -20,7 +20,8 @@ const SubTotal = ({
       entreePrice,
       breakfastPrice,
       entreesQuantity,
-      breakfastsQuantity
+      breakfastsQuantity,
+      shippingPrice
     )
 
     setTotal(subTotal)
