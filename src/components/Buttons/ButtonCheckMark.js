@@ -8,7 +8,8 @@ const ButtonCheckMark = ({
   isChecked,
   label = 'Add',
   labelOnClick = 'Added',
-  isFromModal = false
+  isFromModal = false,
+  disableAdd = false
 }) => {
   const getClassNameWrapper = () => {
     return `${styles.wrapper} ${isChecked && styles.activeWrapper} ${
@@ -17,9 +18,12 @@ const ButtonCheckMark = ({
   }
 
   const getClassNameButton = () => {
-    return `${styles.button} ${
+    const showPrimaryButton =
       isChecked && !isFromModal ? styles.primaryButton : styles.bigPrimaryButton
-    } ${styles.buttonWrapper}`
+    const showDisabledButton =
+      !isChecked && disableAdd ? styles.bigPrimaryButtonDisabled : ''
+
+    return `${styles.button} ${showPrimaryButton} ${showDisabledButton} ${styles.buttonWrapper}`
   }
 
   return (
