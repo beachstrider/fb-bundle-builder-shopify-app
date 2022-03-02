@@ -1,11 +1,27 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { LocationDate } from '../../Location'
 import TopTitle from '../../Components/TopTitle'
 import styles from './DeliveryDates.module.scss'
+import { smoothScrollingToId } from '../../../../utils'
 
-const DeliveryDates = ({ dates, onClick, todayDate, className = null }) => {
+const DeliveryDates = ({
+  dates,
+  onClick,
+  todayDate,
+  className = null,
+  autoScrollDown = false
+}) => {
+  useEffect(() => {
+    if (autoScrollDown) {
+      smoothScrollingToId('deliveryDateSection')
+    }
+  }, [])
+
   return (
-    <div className={`${styles.wrapper} ${className && className}`}>
+    <div
+      id="deliveryDateSection"
+      className={`${styles.wrapper} ${className && className}`}
+    >
       <TopTitle
         className="mt-9 mb-2"
         title="Select a Delivery Date"

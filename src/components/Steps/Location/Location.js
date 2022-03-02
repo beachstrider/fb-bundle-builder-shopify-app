@@ -360,6 +360,7 @@ const Location = () => {
             onClick={handleDeliveryDate}
             dates={currentZone.deliveryDates}
             todayDate={todayDate}
+            autoScrollDown
           />
         )}
       </div>
