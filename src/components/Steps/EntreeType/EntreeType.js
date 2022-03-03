@@ -60,7 +60,6 @@ const EntreeType = () => {
     }
   })
 
-
   const mapBundleTypes = () => {
     setIsLoading(true)
 
@@ -139,7 +138,7 @@ const EntreeType = () => {
             {state.entreeType.id !== 0 && (
               <>
                 <div className={`${styles.title} mb-7`}>
-                  Choose Meal Sub Type
+                  Choose Your Portion Size
                 </div>
                 <div
                   className={`${
