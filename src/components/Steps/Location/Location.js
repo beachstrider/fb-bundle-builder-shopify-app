@@ -381,6 +381,7 @@ const Location = () => {
             onClick={handleDeliveryDate}
             dates={displayDates}
             selectedDate={state.location.deliveryDate}
+            autoScrollDown
           />
         )}
       </div>
