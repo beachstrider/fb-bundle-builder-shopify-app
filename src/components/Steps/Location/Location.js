@@ -182,8 +182,7 @@ const Location = () => {
     })
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-return;
+    e.preventDefault()
     try {
       if (!email || !isValidEmail(email)) {
         return setEmailError('Please type a valid email')
@@ -239,7 +238,8 @@ return;
       // if user isn't signed-in
       if (
         requireShopifyLogin === false ||
-        shopifyCustomer.data?.data?.customers?.edges?.length === 0
+        (shopifyCustomer.data?.data?.customers?.edges &&
+          shopifyCustomer.data?.data?.customers?.edges?.length === 0)
       ) {
         const shopifyMultipass = await request(
           `${process.env.PROXY_APP_URL}/shopify/multipass-url?shop=${shopDomain}`,
@@ -263,14 +263,23 @@ return;
           window.location.href = shopifyMultipass.data.url
           return
         }
+        dispatch(displayFooter(true))
+
+        setIsRedirecting(false)
+        setIsLoading(false)
+      } else {
+        setError({
+          open: true,
+          status: 'Danger',
+          message: DEFAULT_ERROR_MESSAGE
+        })
       }
-
-      dispatch(selectFaqType(FAQ_TYPE))
-      dispatch(displayFooter(true))
-
-      setIsRedirecting(false)
-      setIsLoading(false)
     } catch (error) {
+      setError({
+        open: true,
+        status: 'Danger',
+        message: DEFAULT_ERROR_MESSAGE
+      })
       handleError(error)
     }
   }
@@ -360,7 +369,7 @@ return;
               <div className="mb-3">&nbsp;</div>
               <button
                 className={`button primaryButton ${styles.buttonWrapper}`}
-                onClick={handleSubmit}
+                type="submit"
               >
                 {isLoading ? <SpinnerIcon /> : 'Submit'}
               </button>
