@@ -33,13 +33,13 @@ const CardQuantities = ({
   ]
 
   return (
-    <>
-      <div
-        className={styles.card}
-        style={{
-          border: isChecked ? '4px solid #3DAE2B' : '1px solid #e5e5e5'
-        }}
-      >
+    <div
+      style={{
+        border: isChecked ? '4px solid #3DAE2B' : '4px solid transparent',
+        borderRadius: isChecked ? '0.9rem' : '0'
+      }}
+    >
+      <div className={styles.card}>
         <div
           className={styles.image}
           style={{ backgroundImage: `url('${image}')` }}
@@ -64,7 +64,11 @@ const CardQuantities = ({
           </div>
           <div className={`${styles.actions}`}>
             <div>
-              <ButtonCheckMark isChecked={isChecked} onClick={onClick} />
+              <ButtonCheckMark
+                isChecked={isChecked}
+                onClick={onClick}
+                disableAdd={disableAdd}
+              />
             </div>
             {isChecked && (
               <div>
@@ -96,7 +100,7 @@ const CardQuantities = ({
         open={openModal}
         close={() => setOpenModal(false)}
       />
-    </>
+    </div>
   )
 }
 

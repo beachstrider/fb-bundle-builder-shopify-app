@@ -112,6 +112,7 @@ const EditOrder = () => {
 
   const getCustomerBundleItems = async (token) => {
     const subscriptionResponse = await getSubscriptionOrders(token, orderId)
+    console.log('debug: subscriptionResponse', subscriptionResponse)
 
     let currentBundleId = null
     const currentItems = []
@@ -121,6 +122,7 @@ const EditOrder = () => {
 
       for (const order of subscriptionResponse.data?.data) {
         const editItemsConfigArr = []
+
         if (
           order.bundle_configuration_content?.deliver_after &&
           order.bundle_configuration_content?.deliver_after === currentDate

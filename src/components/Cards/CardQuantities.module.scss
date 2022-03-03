@@ -7,8 +7,9 @@
   grid-template-rows: 16rem;
   cursor: pointer;
   overflow: hidden;
-  min-width: $cardWidth;
-  width: $cardWidth;
+  min-width: $cardWidthWithoutBorder;
+  width: $cardWidthWithoutBorder;
+  height: 100%;
   margin-bottom: 16px;
 
   & .description {

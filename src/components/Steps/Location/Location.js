@@ -10,7 +10,9 @@ import {
   setEmail as setStoreEmail,
   setIsNextButtonActive,
   initialState,
-  setReturnToStep
+  setReturnToStep,
+  setDeliveryDates,
+  setTokens
 } from '../../../store/slices/rootSlice'
 import { InputEmail, InputText } from '../Components/Inputs'
 import {
@@ -26,6 +28,7 @@ import styles from './Location.module.scss'
 import {
   generateRequestToken,
   getShopifyCustomerByEmail,
+  useGuestToken,
   withActiveStep
 } from '../../Hooks'
 import SpinnerIcon from '../../Global/SpinnerIcon'
@@ -34,6 +37,11 @@ import Toast from '../../Global/Toast'
 import TopTitle from '../Components/TopTitle'
 import { useErrorHandler } from 'react-error-boundary'
 import { DEFAULT_ERROR_MESSAGE } from '../../../constants/errors'
+import { getDeliveryDates } from '../../Hooks/withBundleApi'
+
+import dayjs from 'dayjs'
+const isSameOrBefore = require('dayjs/plugin/isSameOrBefore')
+dayjs.extend(isSameOrBefore)
 
 const FAQ_TYPE = 'location'
 const STEP_ID = 2
@@ -48,7 +56,7 @@ const Location = () => {
   const [emailError, setEmailError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [isRedirecting, setIsRedirecting] = useState(false)
-  const [displayDates, setDisplayDates] = useState(false)
+  const [displayDates, setDisplayDates] = useState([])
   const [error, setError] = useState({
     open: false,
     status: 'Success',
@@ -56,7 +64,55 @@ const Location = () => {
   })
   const handleError = useErrorHandler()
 
-  const todayDate = getTodayDate()
+  const generateToken = async () => {
+    const currentToken = await useGuestToken()
+    if (currentToken) {
+      dispatch(
+        setTokens({
+          ...state.tokens,
+          guestToken: currentToken
+        })
+      )
+      return currentToken
+    } else {
+      setError({
+        open: true,
+        status: 'Danger',
+        message: 'There was an error. Please try again'
+      })
+      dispatch(displayFooter(false))
+    }
+  }
+
+  useEffect(() => {
+    generateToken().then(currentToken => {
+      getDeliveryDates(currentToken)
+      .then(res => {
+        const deliveryDates = res.data.data
+
+        const today = new Date()
+        today.setHours(0)
+        today.setMinutes(0)
+        today.setSeconds(0)
+
+        const filteredDates = deliveryDates.filter(deliveryDate => {
+          const date = new Date(deliveryDate.date)
+          return date > today.getTime() && deliveryDate.quantity > deliveryDate.used
+        }).map((deliveryDate, index) => {
+          deliveryDate.isSelected = false
+          deliveryDate.isDisabled = false
+          deliveryDate.day = new Date(deliveryDate.date).getDay() + 1 // Add day since midnight is counting as previous day
+          return deliveryDate
+        }).sort((a, b) => new Date(a.date) < new Date(b.date) ? -1 : 1)
+
+        dispatch(setDeliveryDates(filteredDates))
+      })
+      .catch(e => {
+        // TODO: Alert user of error
+        console.error(e)
+      })
+    })
+  }, [])
 
   useEffect(() => {
     dispatch(displayHeader(true))
@@ -75,16 +131,8 @@ const Location = () => {
         return setZipCodeError('Delivery is not available to your zip code')
       }
 
-      defineCurrentZone(zone)
+      setCurrentZone(zone)
 
-      if (
-        state.location?.deliveryDate &&
-        state.location.deliveryDate.id === 0
-      ) {
-        handleDeliveryDate(findDefaultSelectedDate(zone.deliveryDates))
-      } else {
-        checkCurrentSelectedDate(zone)
-      }
       dispatch(selectFaqType(FAQ_TYPE))
       dispatch(displayFooter(true))
       dispatch(setReturnToStep(''))
@@ -98,10 +146,6 @@ const Location = () => {
   }, [])
 
   useEffect(() => {
-    if (Object.keys(currentZone).length > 0) {
-      checkCurrentSelectedDate(currentZone)
-    }
-
     if (state.location.deliveryDate && state.location.deliveryDate.id === -1) {
       dispatch(setIsNextButtonActive(false))
     } else {
@@ -112,57 +156,24 @@ const Location = () => {
   }, [state.location.deliveryDate])
 
   useEffect(() => {
-    setDisplayDates(
-      Object.keys(currentZone).length > 0 &&
-        !isRedirecting &&
-        currentZone.deliveryDates
-    )
-  }, [currentZone, isRedirecting])
+    if(currentZone.deliveryDates) {
+      const allowedDays = currentZone.deliveryDates.map(date => {
+        return date.day
+      })
 
-  const defineCurrentZone = (zone) => {
-    const newZone = getMappedZones(zone)
-    setCurrentZone(newZone)
-  }
+      const today =  dayjs();
+      const earliestAvilableDate = today.add(currentZone.leadTime,'day');
 
-  const getMappedZones = (zone) => {
-    const availableDays = availableDeliveryDays(zone, todayDate)
-    const mappedDays = mapDeliveryDays(availableDays, zone.deliveryDates)
-    const newZone = {
-      ...zone,
-      deliveryDates: [...mappedDays]
+      console.log('currentZone.deliveryDates', currentZone.deliveryDates, earliestAvilableDate)
+      const filteredDates = state.deliveryDates.filter(deliveryDate => {
+        console.log('earliestAvilableDate', earliestAvilableDate, dayjs(deliveryDate.date), earliestAvilableDate.isSameOrBefore(dayjs(deliveryDate)));
+        return allowedDays.includes(deliveryDate.day) && earliestAvilableDate.isSameOrBefore(dayjs(deliveryDate.date))
+      })
+      console.log('filteredDates',filteredDates)
+      setDisplayDates(filteredDates);
+      setLocation()
     }
-
-    return newZone
-  }
-
-  const checkCurrentSelectedDate = (zone) => {
-    let deliveryDates = JSON.parse(JSON.stringify([...zone.deliveryDates]))
-    const selectedDateIndex = deliveryDates.find((date) => date.isSelected)
-
-    deliveryDates = deliveryDates.map((date) => {
-      if (selectedDateIndex && date.id === selectedDateIndex.id) {
-        date.isSelected = false
-      }
-
-      if (
-        state.location.deliveryDate &&
-        date.id === state.location.deliveryDate.id
-      ) {
-        date.isSelected = true
-      }
-      return date
-    })
-
-    const newZone = getMappedZones({
-      ...zone,
-      deliveryDates: [...deliveryDates]
-    })
-
-    setCurrentZone(newZone)
-  }
-
-  const findDefaultSelectedDate = (deliveryDates) =>
-    deliveryDates.find((date) => date.isSelected)
+  }, [currentZone, isRedirecting])
 
   const setStepToReturn = async (step) =>
     new Promise((resolve) => {
@@ -170,7 +181,8 @@ const Location = () => {
       resolve()
     })
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault()
     try {
       if (!email || !isValidEmail(email)) {
         return setEmailError('Please type a valid email')
@@ -191,15 +203,7 @@ const Location = () => {
       )
 
       const zone = findZipCode(state.deliveryZones, zipCode)
-      defineCurrentZone(zone)
-
-      dispatch(setStoreEmail(email))
-      dispatch(
-        setLocation({
-          zipCode: zipCode,
-          deliveryDate: state.location.deliveryDate
-        })
-      )
+      setCurrentZone(zone)
 
       const requestToken = await generateRequestToken(email)
       const shopifyCustomer = await getShopifyCustomerByEmail(
@@ -234,7 +238,8 @@ const Location = () => {
       // if user isn't signed-in
       if (
         requireShopifyLogin === false ||
-        shopifyCustomer.data?.data?.customers?.edges?.length === 0
+        (shopifyCustomer.data?.data?.customers?.edges &&
+          shopifyCustomer.data?.data?.customers?.edges?.length === 0)
       ) {
         const shopifyMultipass = await request(
           `${process.env.PROXY_APP_URL}/shopify/multipass-url?shop=${shopDomain}`,
@@ -258,14 +263,23 @@ const Location = () => {
           window.location.href = shopifyMultipass.data.url
           return
         }
+        dispatch(displayFooter(true))
+
+        setIsRedirecting(false)
+        setIsLoading(false)
+      } else {
+        setError({
+          open: true,
+          status: 'Danger',
+          message: DEFAULT_ERROR_MESSAGE
+        })
       }
-
-      dispatch(selectFaqType(FAQ_TYPE))
-      dispatch(displayFooter(true))
-
-      setIsRedirecting(false)
-      setIsLoading(false)
     } catch (error) {
+      setError({
+        open: true,
+        status: 'Danger',
+        message: DEFAULT_ERROR_MESSAGE
+      })
       handleError(error)
     }
   }
@@ -282,7 +296,7 @@ const Location = () => {
   const handleZipCodeChange = (value) => {
     if (Number.isInteger(Number(value))) {
       if (Object.keys(currentZone).length > 0) {
-        setDisplayDates(false)
+        setDisplayDates([])
         setCurrentZone({})
         dispatch(setLocation(initialState.location))
       }
@@ -292,19 +306,26 @@ const Location = () => {
 
   const handleEmailChange = (value) => {
     if (Object.keys(currentZone).length > 0) {
-      setDisplayDates(false)
+      setDisplayDates([])
       setCurrentZone({})
       dispatch(setLocation(initialState.location))
     }
     setEmail(value)
   }
 
+  if (process.env.NODE_ENV !== 'production') {
+    if (!zipCode) {
+      setZipCode('90028')
+      setEmail('eduardo@sunriseintegration.com')
+    }
+  }
+
   if (state.bundle.id === 0) {
-    return <Redirect push to="/" />
+    return <Redirect push to='/' />
   }
 
   return (
-    <div className="defaultWrapper">
+    <div className='defaultWrapper'>
       <div className={styles.wrapper}>
         <TopTitle
           title="Enter Your Zip Code & Email"
@@ -348,18 +369,19 @@ const Location = () => {
               <div className="mb-3">&nbsp;</div>
               <button
                 className={`button primaryButton ${styles.buttonWrapper}`}
-                onClick={handleSubmit}
+                type="submit"
               >
                 {isLoading ? <SpinnerIcon /> : 'Submit'}
               </button>
             </div>
           </form>
         </div>
-        {displayDates && (
+        {Object.keys(currentZone).length > 0 && !isLoading && displayDates && (
           <DeliveryDates
             onClick={handleDeliveryDate}
-            dates={currentZone.deliveryDates}
-            todayDate={todayDate}
+            dates={displayDates}
+            selectedDate={state.location.deliveryDate}
+            autoScrollDown
           />
         )}
       </div>

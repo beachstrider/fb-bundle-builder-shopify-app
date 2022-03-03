@@ -226,6 +226,9 @@ const rootSlice = createSlice({
     },
     setReturnToStep: (state, action) => {
       state.returnToStep = action.payload
+    },
+    setDeliveryDates: (state, action) => {
+      state.deliveryDates = action.payload
     }
   }
 })
@@ -252,5 +255,7 @@ export const {
   setTokens,
   setIsNextButtonActive,
   triggerLastStep,
-  setReturnToStep
+  setReturnToStep,
+  setDeliveryDates,
+  deliveryDates
 } = rootSlice.actions
