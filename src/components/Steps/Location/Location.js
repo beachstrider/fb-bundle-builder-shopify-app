@@ -85,32 +85,38 @@ const Location = () => {
   }
 
   useEffect(() => {
-    generateToken().then(currentToken => {
+    generateToken().then((currentToken) => {
       getDeliveryDates(currentToken)
-      .then(res => {
-        const deliveryDates = res.data.data
+        .then((res) => {
+          const deliveryDates = res.data.data
 
-        const today = new Date()
-        today.setHours(0)
-        today.setMinutes(0)
-        today.setSeconds(0)
+          const today = new Date()
+          today.setHours(0)
+          today.setMinutes(0)
+          today.setSeconds(0)
 
-        const filteredDates = deliveryDates.filter(deliveryDate => {
-          const date = new Date(deliveryDate.date)
-          return date > today.getTime() && deliveryDate.quantity > deliveryDate.used
-        }).map((deliveryDate, index) => {
-          deliveryDate.isSelected = false
-          deliveryDate.isDisabled = false
-          deliveryDate.day = new Date(deliveryDate.date).getDay() + 1 // Add day since midnight is counting as previous day
-          return deliveryDate
-        }).sort((a, b) => new Date(a.date) < new Date(b.date) ? -1 : 1)
+          const filteredDates = deliveryDates
+            .filter((deliveryDate) => {
+              const date = new Date(deliveryDate.date)
+              return (
+                date > today.getTime() &&
+                deliveryDate.quantity > deliveryDate.used
+              )
+            })
+            .map((deliveryDate, index) => {
+              deliveryDate.isSelected = false
+              deliveryDate.isDisabled = false
+              deliveryDate.day = new Date(deliveryDate.date).getDay() + 1 // Add day since midnight is counting as previous day
+              return deliveryDate
+            })
+            .sort((a, b) => (new Date(a.date) < new Date(b.date) ? -1 : 1))
 
-        dispatch(setDeliveryDates(filteredDates))
-      })
-      .catch(e => {
-        // TODO: Alert user of error
-        console.error(e)
-      })
+          dispatch(setDeliveryDates(filteredDates))
+        })
+        .catch((e) => {
+          // TODO: Alert user of error
+          console.error(e)
+        })
     })
   }, [])
 
@@ -156,21 +162,33 @@ const Location = () => {
   }, [state.location.deliveryDate])
 
   useEffect(() => {
-    if(currentZone.deliveryDates) {
-      const allowedDays = currentZone.deliveryDates.map(date => {
+    if (currentZone.deliveryDates) {
+      const allowedDays = currentZone.deliveryDates.map((date) => {
         return date.day
       })
 
-      const today =  dayjs();
-      const earliestAvilableDate = today.add(currentZone.leadTime,'day');
+      const today = dayjs()
+      const earliestAvilableDate = today.add(currentZone.leadTime, 'day')
 
-      console.log('currentZone.deliveryDates', currentZone.deliveryDates, earliestAvilableDate)
-      const filteredDates = state.deliveryDates.filter(deliveryDate => {
-        console.log('earliestAvilableDate', earliestAvilableDate, dayjs(deliveryDate.date), earliestAvilableDate.isSameOrBefore(dayjs(deliveryDate)));
-        return allowedDays.includes(deliveryDate.day) && earliestAvilableDate.isSameOrBefore(dayjs(deliveryDate.date))
+      console.log(
+        'currentZone.deliveryDates',
+        currentZone.deliveryDates,
+        earliestAvilableDate
+      )
+      const filteredDates = state.deliveryDates.filter((deliveryDate) => {
+        console.log(
+          'earliestAvilableDate',
+          earliestAvilableDate,
+          dayjs(deliveryDate.date),
+          earliestAvilableDate.isSameOrBefore(dayjs(deliveryDate))
+        )
+        return (
+          allowedDays.includes(deliveryDate.day) &&
+          earliestAvilableDate.isSameOrBefore(dayjs(deliveryDate.date))
+        )
       })
-      console.log('filteredDates',filteredDates)
-      setDisplayDates(filteredDates);
+      console.log('filteredDates', filteredDates)
+      setDisplayDates(filteredDates)
       setLocation()
     }
   }, [currentZone, isRedirecting])
@@ -310,7 +328,7 @@ const Location = () => {
       setCurrentZone({})
       dispatch(setLocation(initialState.location))
     }
-    setEmail(value)
+    setEmail(value.toLowerCase())
   }
 
   if (process.env.NODE_ENV !== 'production') {
@@ -321,11 +339,11 @@ const Location = () => {
   }
 
   if (state.bundle.id === 0) {
-    return <Redirect push to='/' />
+    return <Redirect push to="/" />
   }
 
   return (
-    <div className='defaultWrapper'>
+    <div className="defaultWrapper">
       <div className={styles.wrapper}>
         <TopTitle
           title="Enter Your Zip Code & Email"
