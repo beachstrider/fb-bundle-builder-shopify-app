@@ -1,0 +1,9 @@
+@import '../../variables';
+@import './CardQuantities.module.scss';
+
+.card {
+  cursor: unset;
+  & .descriptionWrapper {
+    justify-content: space-around;
+  }
+}

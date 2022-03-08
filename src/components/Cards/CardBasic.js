@@ -1,32 +1,20 @@
 import React, { useState } from 'react'
 import { NUTRITIONAL_VALUES } from '../../constants/bundles'
-import { ButtonCheckMark, ButtonQuantities } from '../Buttons'
 import ItemDescriptionModal from '../Steps/Components/ItemDescriptionModal/ItemDescriptionModal'
-import styles from './CardQuantities.module.scss'
+import styles from './CardBasic.module.scss'
 
-const CardQuantities = ({
+const CardBasic = ({
   title,
   description,
   image,
   metafields,
   productMetafields,
-  quantity,
-  isChecked,
-  onClick,
-  onAdd,
-  onRemove,
-  disableAdd = false,
-  disableRemove = false
+  quantity
 }) => {
   const [openModal, setOpenModal] = useState(false)
 
   return (
-    <div
-      style={{
-        border: isChecked ? '4px solid #3DAE2B' : '4px solid transparent',
-        borderRadius: isChecked ? '0.9rem' : '0'
-      }}
-    >
+    <div>
       <div className={styles.card}>
         <div
           className={styles.image}
@@ -50,26 +38,6 @@ const CardQuantities = ({
                 )
             )}
           </div>
-          <div className={`${styles.actions}`}>
-            <div>
-              <ButtonCheckMark
-                isChecked={isChecked}
-                onClick={onClick}
-                disableAdd={disableAdd}
-              />
-            </div>
-            {isChecked && (
-              <div>
-                <ButtonQuantities
-                  quantity={quantity}
-                  onAdd={onAdd}
-                  onRemove={onRemove}
-                  disableAdd={disableAdd}
-                  disableRemove={disableRemove}
-                />
-              </div>
-            )}
-          </div>
         </div>
       </div>
       <ItemDescriptionModal
@@ -79,17 +47,19 @@ const CardQuantities = ({
         metafields={metafields}
         productMetafields={productMetafields}
         quantity={quantity}
-        isChecked={isChecked}
-        onClick={onClick}
-        onAdd={onAdd}
-        onRemove={onRemove}
-        disableAdd={disableAdd}
-        disableRemove={disableRemove}
+        isChecked={false}
+        onClick={() => {}}
+        onAdd={() => {}}
+        onRemove={() => {}}
+        disableAdd={true}
+        disableRemove={true}
+        disableActions={true}
         open={openModal}
+        displayActions={false}
         close={() => setOpenModal(false)}
       />
     </div>
   )
 }
 
-export default CardQuantities
+export default CardBasic

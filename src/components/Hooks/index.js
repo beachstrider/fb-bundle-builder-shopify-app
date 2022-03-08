@@ -26,7 +26,7 @@ import {
 } from './isUserAuthenticated'
 import useShopifyCart from './useShopifyCart'
 import { getShopifyCustomerByEmail } from './withShopifyApi'
-import { mapItems, mapItemsByOption } from './useBundle'
+import { mapItems, mapItemsByOption, getProductVariants } from './useBundle'
 
 export {
   useGuestToken,
@@ -53,5 +53,6 @@ export {
   mapItemsByOption,
   getBundleConfigurations,
   getEnabledBundles,
-  getSelectedBundleByPlatformId
+  getSelectedBundleByPlatformId,
+  getProductVariants
 }

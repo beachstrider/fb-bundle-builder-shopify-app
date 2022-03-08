@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Dates, MenuTypes } from '..'
+import { Dates, MenuTypes, Meals } from '..'
 import { DEFAULT_ERROR_MESSAGE } from '../../../constants/errors'
 import { TOAST_INITIAL_STATE } from '../../../constants/toasts'
 import {
@@ -10,7 +10,11 @@ import {
 } from '../../../store/slices/rootSlice'
 import { Spinner } from '../../Global'
 import Toast from '../../Global/Toast'
-import { getEnabledBundles, useGuestToken } from '../../Hooks'
+import {
+  getBundleConfigurations,
+  getEnabledBundles,
+  useGuestToken
+} from '../../Hooks'
 import TopTitle from '../../Steps/Components/TopTitle'
 
 const WeeksMenu = () => {
@@ -19,6 +23,9 @@ const WeeksMenu = () => {
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState(TOAST_INITIAL_STATE)
   const [firstBundle, setFirstBundle] = useState({})
+  const [selectedType, setSelectedType] = useState({})
+  const [selectedWeek, setSelectedWeek] = useState({})
+  const [configurations, setConfigurations] = useState([])
 
   useEffect(() => {
     dispatch(displayHeader(false))
@@ -26,6 +33,10 @@ const WeeksMenu = () => {
 
     fetchData()
   }, [])
+
+  useEffect(() => {
+    fetchData()
+  }, [state.tokens.guestToken])
 
   const displayErrorMessage = () =>
     setError({
@@ -50,27 +61,42 @@ const WeeksMenu = () => {
   }
 
   const fetchData = async () => {
-    !state.tokens.guestToken && (await generateToken())
-
     try {
+      !state.tokens.guestToken && (await generateToken())
+
+      /*
+       * Note: In order to display all available weeks, the app
+       * is pulling the first available bundle
+       * */
       const bundles = await getEnabledBundles(
         state.tokens.guestToken,
         'is_enabled=1&pageSize=1'
       )
 
+      if (bundles.status === 401) {
+        return await generateToken()
+      }
+
       setFirstBundle(bundles.data.data[0])
+
+      const configurations = await getBundleConfigurations(
+        state.tokens.guestToken,
+        bundles.data.data[0].id
+      )
+
+      setConfigurations(configurations.data.data)
       setIsLoading(false)
     } catch (error) {
       return displayErrorMessage()
     }
   }
 
-  const handleSelectedWeek = (date) => {
-    console.log('selected date:', date)
+  const handleSelectedWeek = (week) => {
+    setSelectedWeek(week)
   }
 
   const handleSelectedType = (type) => {
-    console.log('selected type:', type)
+    setSelectedType(type)
   }
 
   if (isLoading && !firstBundle) {
@@ -83,8 +109,19 @@ const WeeksMenu = () => {
         title="Explore Our Rotating Weekly Menu"
         subTitle="Choose From 20+ Healthy, Chef-Curated Meals Each Week"
       />
-      <Dates bundle={firstBundle} onClick={handleSelectedWeek} />
+      {configurations.length > 0 && (
+        <Dates
+          bundle={firstBundle}
+          configurations={configurations}
+          onClick={handleSelectedWeek}
+        />
+      )}
       <MenuTypes bundle={firstBundle} onClick={handleSelectedType} />
+      <Meals
+        week={selectedWeek}
+        bundleSubType={selectedType}
+        configurations={configurations}
+      />
       {error.open && (
         <Toast
           open={error.open}

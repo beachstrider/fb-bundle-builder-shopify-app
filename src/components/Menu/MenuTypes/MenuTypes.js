@@ -13,8 +13,11 @@ const MenuTypes = ({ bundle, onClick }) => {
         bundle.platform_product_id
       )
 
-      const mappedBundle = mapBundleTypeSubtype(shopifyBundleProduct)
-      setTypes(mappedBundle)
+      const mappedBundleTypes = mapBundleTypeSubtype(shopifyBundleProduct)
+      setTypes(mappedBundleTypes)
+      if (mappedBundleTypes.length > 0) {
+        handleSelectType(mappedBundleTypes[0])
+      }
     }
   }, [bundle])
 

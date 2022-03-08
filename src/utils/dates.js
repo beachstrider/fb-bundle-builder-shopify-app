@@ -99,6 +99,10 @@ const formatUTCDate = (date, format = 'YYYY-MM-DDTHH:mm:ssZ[Z]') => {
   return dayjs.utc(date).format(format)
 }
 
+const formatUTDateToISO = (date) => dayjs.utc(date).toISOString()
+
+const addDays = (date, days = 1) => dayjs(date).add(days, 'day')
+
 export {
   findWeekDayBetween,
   getCutOffDate,
@@ -107,5 +111,7 @@ export {
   sortDatesArray,
   getShortDate,
   sortByDateProperty,
-  formatUTCDate
+  formatUTCDate,
+  formatUTDateToISO,
+  addDays
 }
