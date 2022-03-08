@@ -11,7 +11,9 @@ import {
   updateBundle,
   getDefaultProducts,
   getActiveSubscriptions,
-  generateRequestToken
+  generateRequestToken,
+  getBundleConfigurations,
+  getEnabledBundles
 } from './withBundleApi'
 import useGuestToken from './useGuestToken'
 import getSelectedBundle from './getSelectedBundle'
@@ -46,5 +48,7 @@ export {
   getShopifyCustomerByEmail,
   generateRequestToken,
   mapItems,
-  mapItemsByOption
+  mapItemsByOption,
+  getBundleConfigurations,
+  getEnabledBundles
 }

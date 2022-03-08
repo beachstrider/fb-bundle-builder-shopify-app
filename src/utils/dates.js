@@ -95,6 +95,10 @@ const getShortDate = (date, config = { withYear: false }) => {
   }
 }
 
+const formatUTCDate = (date, format = 'YYYY-MM-DDTHH:mm:ssZ[Z]') => {
+  return dayjs(date).utc().format(format)
+}
+
 export {
   findWeekDayBetween,
   getCutOffDate,
@@ -102,5 +106,6 @@ export {
   getTodayDate,
   sortDatesArray,
   getShortDate,
-  sortByDateProperty
+  sortByDateProperty,
+  formatUTCDate
 }
