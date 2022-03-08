@@ -28,7 +28,8 @@ import {
   mapBundleTypeSubtype,
   getBundleMetafield,
   mapBundleItems,
-  mapBundleItemsByOption
+  mapBundleItemsByOption,
+  getBundleVariant
 } from './bundles'
 
 export {
@@ -55,5 +56,6 @@ export {
   getBundleMetafield,
   mapBundleItems,
   mapBundleItemsByOption,
-  getShortDate
+  getShortDate,
+  getBundleVariant
 }

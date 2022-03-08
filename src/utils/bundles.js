@@ -63,6 +63,18 @@ const mapBundleTypeSubtype = (bundle) => {
 const getBundleMetafield = (metafields, key) =>
   metafields.find((m) => m.key === key)
 
+const getBundleVariant = (shopifyBundle, variantOption1, variantOption2) => {
+  if (shopifyBundle.variants.length === 0) {
+    throw new Error('No variant option')
+  }
+
+  return shopifyBundle.variants.find(
+    (variant) =>
+      variant.option1.toLowerCase() === variantOption1.toLowerCase() &&
+      variant.option2.toLowerCase() === variantOption2.toLowerCase()
+  )
+}
+
 const createVariantObject = (variant, product, configuration) => {
   const variantMetafieldKeys = variant.metafields.map(
     (metafield) => metafield.key
@@ -148,5 +160,6 @@ export {
   mapBundleTypeSubtype,
   getBundleMetafield,
   mapBundleItems,
-  mapBundleItemsByOption
+  mapBundleItemsByOption,
+  getBundleVariant
 }
