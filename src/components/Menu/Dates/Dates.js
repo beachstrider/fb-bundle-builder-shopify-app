@@ -37,10 +37,6 @@ const Dates = ({ onClick }) => {
         'is_enabled=1&pageSize=1'
       )
 
-      /*
-       * Note: The app is using the first available bundle in
-       * order to display all dates, since all bundle dates should be the same
-       * */
       configurations = await getBundleConfigurations(
         state.tokens.guestToken,
         bundles.data.data[0].id
