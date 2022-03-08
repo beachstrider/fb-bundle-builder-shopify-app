@@ -27,6 +27,7 @@ import {
 import { getSelectedBundle } from './components/Hooks'
 import { OrderSummary } from './components/Account/OrderSummary'
 import ErrorHandler from './components/ErrorHandler'
+import { WeeksMenu } from './components/Menu'
 
 function App() {
   const state = useSelector((state) => state)
@@ -66,6 +67,7 @@ function App() {
             {state.displayHeader && <Header />}
             <div className="content mb-9">
               <Switch>
+                <Route exact path="/menu" component={WeeksMenu} />
                 <Route exact path="/account" component={Dashboard} />
                 <Route exact path="/order-history" component={OrderHistory} />
                 <Route
