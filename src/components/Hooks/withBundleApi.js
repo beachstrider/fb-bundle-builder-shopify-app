@@ -90,6 +90,8 @@ const saveCart = async (
   token,
   platformCustomerId,
   platformCartToken,
+  platformVariantId,
+  platformProductId,
   bundleId,
   deliveryDay,
   subscriptionType,
@@ -106,6 +108,8 @@ const saveCart = async (
       data: {
         platform_customer_id: platformCustomerId,
         platform_cart_token: platformCartToken,
+        platform_product_id: platformProductId,
+        platform_variant_id: platformVariantId,
         subscription_type: subscriptionType,
         subscription_sub_type: subscriptionSubType,
         bundle_id: bundleId,
@@ -311,7 +315,6 @@ const generateRequestToken = async (value) => {
     return error
   }
 }
-
 
 const getDeliveryDates = async (token) => {
   return await request(

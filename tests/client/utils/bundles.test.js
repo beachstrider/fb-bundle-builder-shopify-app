@@ -3,7 +3,8 @@ import {
   mapBundleTypeSubtype,
   getBundleMetafield,
   mapBundleItems,
-  mapBundleItemsByOption
+  mapBundleItemsByOption,
+  getBundleVariant
 } from '../../../src/utils/bundles'
 
 describe('Test bundles utility functions', () => {
@@ -3112,5 +3113,410 @@ describe('Test bundles utility functions', () => {
     expect(filteredValues[0].id).toBe(40520244756533)
     expect(filteredValues[1].option2).toBe('Regular')
     expect(filteredValues[2].productPlatformId).toBe(6715009105973)
+  })
+
+  it('Gets bundle variant', () => {
+    const shopifyBundle = {
+      id: 6788061888565,
+      title: '14 Meal Plan + 7 Breakfasts',
+      handle: '14-meal-plan-7-breakfasts',
+      description: '<p></p>',
+      published_at: '2022-02-09T17:26:44-08:00',
+      created_at: '2022-02-09T17:26:46-08:00',
+      vendor: 'QuickFresh',
+      type: 'Custom Bundle',
+      tags: ['7 Day with breakfast'],
+      price: 17395,
+      price_min: 17395,
+      price_max: 17395,
+      available: true,
+      price_varies: false,
+      compare_at_price: null,
+      compare_at_price_min: 0,
+      compare_at_price_max: 0,
+      compare_at_price_varies: false,
+      variants: [
+        {
+          id: 40558468169781,
+          title: 'Keto / Medium',
+          option1: 'Keto',
+          option2: 'Medium',
+          option3: null,
+          sku: 'CB-14M-7B-KH',
+          requires_shipping: true,
+          taxable: true,
+          featured_image: {
+            id: 31019648778293,
+            product_id: 6788061888565,
+            position: 2,
+            created_at: '2022-02-10T10:17:48-08:00',
+            updated_at: '2022-02-10T10:17:48-08:00',
+            alt: null,
+            width: 900,
+            height: 720,
+            src: 'https://cdn.shopify.com/s/files/1/0267/5825/0549/products/keto-meal-plan.jpg?v=1644517068',
+            variant_ids: [40558468169781]
+          },
+          available: true,
+          name: '14 Meal Plan + 7 Breakfasts - Keto / Medium',
+          public_title: 'Keto / Medium',
+          options: ['Keto', 'Medium'],
+          price: 17395,
+          weight: 0,
+          compare_at_price: null,
+          inventory_management: null,
+          barcode: '',
+          featured_media: {
+            alt: null,
+            id: 23322903806005,
+            position: 2,
+            preview_image: {
+              aspect_ratio: 1.25,
+              height: 720,
+              width: 900,
+              src: 'https://cdn.shopify.com/s/files/1/0267/5825/0549/products/keto-meal-plan.jpg?v=1644517068'
+            }
+          },
+          requires_selling_plan: false,
+          selling_plan_allocations: [],
+          metafields: [
+            {
+              key: 'contains',
+              name: 'Contains',
+              value: 'Contains Keto Regular'
+            },
+            {
+              key: 'ingredients',
+              name: 'Ingredients',
+              value: 'Ingredients for Keto Regular'
+            },
+            {
+              key: 'subtitle',
+              name: 'Subtitle',
+              value: 'Keto regular subtitle...'
+            },
+            {
+              key: 'calorie_range',
+              name: 'Calorie Range',
+              value: '350-490'
+            }
+          ]
+        },
+        {
+          id: 40558468202549,
+          title: 'Keto / Large',
+          option1: 'Keto',
+          option2: 'Large',
+          option3: null,
+          sku: 'CB-14M-7B-KH',
+          requires_shipping: true,
+          taxable: true,
+          featured_image: null,
+          available: true,
+          name: '14 Meal Plan + 7 Breakfasts - Keto / Large',
+          public_title: 'Keto / Large',
+          options: ['Keto', 'Large'],
+          price: 17395,
+          weight: 0,
+          compare_at_price: null,
+          inventory_management: null,
+          barcode: '',
+          requires_selling_plan: false,
+          selling_plan_allocations: [],
+          metafields: [
+            {
+              key: 'contains',
+              name: 'Contains',
+              value: ''
+            },
+            {
+              key: 'ingredients',
+              name: 'Ingredients',
+              value: ''
+            },
+            {
+              key: 'subtitle',
+              name: 'Subtitle',
+              value: ''
+            },
+            {
+              key: 'calorie_range',
+              name: 'Calorie Range',
+              value: '222-333'
+            }
+          ]
+        },
+        {
+          id: 40558468235317,
+          title: 'Balanced / Small',
+          option1: 'Balanced',
+          option2: 'Small',
+          option3: null,
+          sku: 'CB-14M-7B-LR',
+          requires_shipping: true,
+          taxable: true,
+          featured_image: {
+            id: 31019664375861,
+            product_id: 6788061888565,
+            position: 3,
+            created_at: '2022-02-10T10:19:15-08:00',
+            updated_at: '2022-02-10T10:19:15-08:00',
+            alt: null,
+            width: 900,
+            height: 720,
+            src: 'https://cdn.shopify.com/s/files/1/0267/5825/0549/products/lowcal-meal-plan.jpg?v=1644517155',
+            variant_ids: [40558468235317]
+          },
+          available: true,
+          name: '14 Meal Plan + 7 Breakfasts - Balanced / Small',
+          public_title: 'Balanced / Small',
+          options: ['Balanced', 'Small'],
+          price: 17395,
+          weight: 0,
+          compare_at_price: null,
+          inventory_management: null,
+          barcode: '',
+          featured_media: {
+            alt: null,
+            id: 23322919436341,
+            position: 3,
+            preview_image: {
+              aspect_ratio: 1.25,
+              height: 720,
+              width: 900,
+              src: 'https://cdn.shopify.com/s/files/1/0267/5825/0549/products/lowcal-meal-plan.jpg?v=1644517155'
+            }
+          },
+          requires_selling_plan: false,
+          selling_plan_allocations: [],
+          metafields: [
+            {
+              key: 'contains',
+              name: 'Contains',
+              value: ''
+            },
+            {
+              key: 'ingredients',
+              name: 'Ingredients',
+              value: ''
+            },
+            {
+              key: 'subtitle',
+              name: 'Subtitle',
+              value: ''
+            },
+            {
+              key: 'calorie_range',
+              name: 'Calorie Range',
+              value: '100-200'
+            }
+          ]
+        },
+        {
+          id: 40558468268085,
+          title: 'Balanced / Medium',
+          option1: 'Balanced',
+          option2: 'Medium',
+          option3: null,
+          sku: 'CB-14M-7B-LL',
+          requires_shipping: true,
+          taxable: true,
+          featured_image: null,
+          available: true,
+          name: '14 Meal Plan + 7 Breakfasts - Balanced / Medium',
+          public_title: 'Balanced / Medium',
+          options: ['Balanced', 'Medium'],
+          price: 17395,
+          weight: 0,
+          compare_at_price: null,
+          inventory_management: null,
+          barcode: '',
+          requires_selling_plan: false,
+          selling_plan_allocations: [],
+          metafields: [
+            {
+              key: 'contains',
+              name: 'Contains',
+              value: ''
+            },
+            {
+              key: 'ingredients',
+              name: 'Ingredients',
+              value: ''
+            },
+            {
+              key: 'subtitle',
+              name: 'Subtitle',
+              value: ''
+            },
+            {
+              key: 'calorie_range',
+              name: 'Calorie Range',
+              value: '333-444'
+            }
+          ]
+        },
+        {
+          id: 40558468300853,
+          title: 'Balanced / Large',
+          option1: 'Balanced',
+          option2: 'Large',
+          option3: null,
+          sku: 'CB-14M-7B-LS',
+          requires_shipping: true,
+          taxable: true,
+          featured_image: null,
+          available: true,
+          name: '14 Meal Plan + 7 Breakfasts - Balanced / Large',
+          public_title: 'Balanced / Large',
+          options: ['Balanced', 'Large'],
+          price: 17395,
+          weight: 0,
+          compare_at_price: null,
+          inventory_management: null,
+          barcode: '',
+          requires_selling_plan: false,
+          selling_plan_allocations: [],
+          metafields: [
+            {
+              key: 'contains',
+              name: 'Contains',
+              value: ''
+            },
+            {
+              key: 'ingredients',
+              name: 'Ingredients',
+              value: ''
+            },
+            {
+              key: 'subtitle',
+              name: 'Subtitle',
+              value: ''
+            },
+            {
+              key: 'calorie_range',
+              name: 'Calorie Range',
+              value: '555-666'
+            }
+          ]
+        }
+      ],
+      images: [
+        '//cdn.shopify.com/s/files/1/0267/5825/0549/products/14_7.jpg?v=1644456406',
+        '//cdn.shopify.com/s/files/1/0267/5825/0549/products/keto-meal-plan.jpg?v=1644517068',
+        '//cdn.shopify.com/s/files/1/0267/5825/0549/products/lowcal-meal-plan.jpg?v=1644517155'
+      ],
+      featured_image:
+        '//cdn.shopify.com/s/files/1/0267/5825/0549/products/14_7.jpg?v=1644456406',
+      options: ['Type', 'Sub Type'],
+      media: [
+        {
+          alt: null,
+          id: 23315193954357,
+          position: 1,
+          preview_image: {
+            aspect_ratio: 1,
+            height: 2049,
+            width: 2048,
+            src: 'https://cdn.shopify.com/s/files/1/0267/5825/0549/products/14_7.jpg?v=1644456406'
+          },
+          aspect_ratio: 1,
+          height: 2049,
+          media_type: 'image',
+          src: 'https://cdn.shopify.com/s/files/1/0267/5825/0549/products/14_7.jpg?v=1644456406',
+          width: 2048
+        },
+        {
+          alt: null,
+          id: 23322903806005,
+          position: 2,
+          preview_image: {
+            aspect_ratio: 1.25,
+            height: 720,
+            width: 900,
+            src: 'https://cdn.shopify.com/s/files/1/0267/5825/0549/products/keto-meal-plan.jpg?v=1644517068'
+          },
+          aspect_ratio: 1.25,
+          height: 720,
+          media_type: 'image',
+          src: 'https://cdn.shopify.com/s/files/1/0267/5825/0549/products/keto-meal-plan.jpg?v=1644517068',
+          width: 900
+        },
+        {
+          alt: null,
+          id: 23322919436341,
+          position: 3,
+          preview_image: {
+            aspect_ratio: 1.25,
+            height: 720,
+            width: 900,
+            src: 'https://cdn.shopify.com/s/files/1/0267/5825/0549/products/lowcal-meal-plan.jpg?v=1644517155'
+          },
+          aspect_ratio: 1.25,
+          height: 720,
+          media_type: 'image',
+          src: 'https://cdn.shopify.com/s/files/1/0267/5825/0549/products/lowcal-meal-plan.jpg?v=1644517155',
+          width: 900
+        }
+      ],
+      requires_selling_plan: false,
+      selling_plan_groups: [],
+      content: '<p></p>',
+      metafields: [
+        {
+          key: 'keto_bundle_key_points',
+          name: 'Bundle Key Points',
+          value: 'Key points 001'
+        },
+        {
+          key: 'keto_net_carbs',
+          name: 'Net Carbs',
+          value: '19-20%'
+        },
+        {
+          key: 'keto_protein',
+          name: 'Protein',
+          value: '21-22%'
+        },
+        {
+          key: 'keto_fat',
+          name: 'Fat',
+          value: '27-28%'
+        },
+        {
+          key: 'balanced_bundle_key_points',
+          name: 'Bundle Key Points',
+          value: 'Key points 002'
+        },
+        {
+          key: 'balanced_net_carbs',
+          name: 'Net Carbs',
+          value: '24-25%'
+        },
+        {
+          key: 'balanced_protein',
+          name: 'Protein',
+          value: '26-27%'
+        },
+        {
+          key: 'balanced_fat',
+          name: 'Fat',
+          value: '23-24%'
+        }
+      ]
+    }
+
+    const variant = getBundleVariant(shopifyBundle, 'Keto', 'Medium')
+    expect(variant.id).toBe(40558468169781)
+    expect(variant.option1).toBe('Keto')
+    expect(variant.option2).toBe('Medium')
+  })
+
+  it('Fails to get bundle variant', () => {
+    const shopifyBundle = {}
+
+    expect(() => {
+      getBundleVariant(shopifyBundle, 'Keto', 'Medium')
+    }).toThrow()
   })
 })

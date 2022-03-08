@@ -16,7 +16,12 @@ import TopTitle from '../Components/TopTitle'
 import DeliveryDateModal from '../Components/DeliveryDatesModal/DeliveryDateModal'
 import { getBundleByPlatformId } from '../../Hooks/withBundleApi'
 import { clearLocalStorage } from '../../../store/store'
-import { cart, getNextWeekDay, smoothScrollingToId } from '../../../utils'
+import {
+  cart,
+  getBundleVariant,
+  getNextWeekDay,
+  smoothScrollingToId
+} from '../../../utils'
 import Toast from '../../Global/Toast'
 import { ReviewDeliveryDay, ReviewStartingDay } from '.'
 import ReviewItems from './ReviewItems'
@@ -144,6 +149,12 @@ const Review = () => {
         shopifyProduct.id
       )
 
+      const productVariant = getBundleVariant(
+        shopifyProduct,
+        state.entreeType.option1,
+        state.entreeSubType.name
+      )
+
       if (currentBundle.data.data.length === 0) {
         return setErrorMessage(DEFAULT_ERROR_MESSAGE)
       }
@@ -158,6 +169,8 @@ const Review = () => {
         state.tokens.guestToken,
         shopCustomer.id,
         platformCartToken,
+        productVariant.id,
+        currentBundle.data.data[0].platform_product_id,
         currentBundle.data.data[0].id,
         state.location.deliveryDate.day,
         state.entreeType.name.toLowerCase(),
