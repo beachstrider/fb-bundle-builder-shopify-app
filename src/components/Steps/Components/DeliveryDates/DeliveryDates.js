@@ -15,7 +15,9 @@ const DeliveryDates = ({
 
   useEffect(() => {
     if (autoScrollDown) {
-      smoothScrollingToId('deliveryDateSection')
+      setTimeout(() => {
+        smoothScrollingToId('deliveryDateSection')
+      }, 500)
     }
   }, [])
 
@@ -53,4 +55,3 @@ const DeliveryDates = ({
 }
 
 export default DeliveryDates
-
