@@ -2,44 +2,38 @@ import dayjs from 'dayjs'
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { DEFAULT_ERROR_MESSAGE } from '../../../constants/errors'
+import { TOAST_INITIAL_STATE } from '../../../constants/toasts'
 import { formatUTCDate, getTodayDate } from '../../../utils'
 import Toast from '../../Global/Toast'
-import { getBundleConfigurations, getEnabledBundles } from '../../Hooks'
+import { getBundleConfigurations } from '../../Hooks'
 
 import styles from './Dates.module.scss'
 
 const TOTAL_WEEKS_LIMIT = 6
 const DATE_FORMAT = 'YYYY-MM-DD'
-const ALERT_INITIAL_STATE = {
-  open: false,
-  status: '',
-  message: ''
-}
 
-const Dates = ({ onClick }) => {
+const Dates = ({ bundle, onClick }) => {
   const todayDate = getTodayDate()
   const state = useSelector((state) => state)
-  const [error, setError] = useState(ALERT_INITIAL_STATE)
+  const [error, setError] = useState(TOAST_INITIAL_STATE)
   const [weeks, setWeeks] = useState([])
   const [activeWeekId, setActiveWeekId] = useState(0)
 
   useEffect(() => {
-    getDates()
-  }, [])
+    if (bundle.id) {
+      // TODO: remove console.log
+      console.log('debug: bundle >>', bundle)
+      getDates()
+    }
+  }, [bundle])
 
   const getDates = async () => {
-    let bundles = []
     let configurations = []
 
     try {
-      bundles = await getEnabledBundles(
-        state.tokens.guestToken,
-        'is_enabled=1&pageSize=1'
-      )
-
       configurations = await getBundleConfigurations(
         state.tokens.guestToken,
-        bundles.data.data[0].id
+        bundle.id
       )
     } catch (error) {
       return setError({
@@ -110,7 +104,7 @@ const Dates = ({ onClick }) => {
           status={error.status}
           message={error.message}
           autoDelete
-          handleClose={() => setError(ALERT_INITIAL_STATE)}
+          handleClose={() => setError(TOAST_INITIAL_STATE)}
         />
       ) : (
         ''

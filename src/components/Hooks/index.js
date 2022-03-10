@@ -16,7 +16,9 @@ import {
   getEnabledBundles
 } from './withBundleApi'
 import useGuestToken from './useGuestToken'
-import getSelectedBundle from './getSelectedBundle'
+import getSelectedBundle, {
+  getSelectedBundleByPlatformId
+} from './getSelectedBundle'
 import {
   useUserToken,
   hasUserToken,
@@ -50,5 +52,6 @@ export {
   mapItems,
   mapItemsByOption,
   getBundleConfigurations,
-  getEnabledBundles
+  getEnabledBundles,
+  getSelectedBundleByPlatformId
 }

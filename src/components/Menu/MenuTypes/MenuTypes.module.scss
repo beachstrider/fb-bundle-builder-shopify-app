@@ -1,0 +1,45 @@
+@import '../../../variables';
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 3rem 0 5rem;
+
+  & .title {
+    font-size: 24px;
+    line-height: 36px;
+    margin-bottom: 10px;
+    font-family: $fontFamilyBold !important;
+  }
+
+  & .buttons {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    padding: 20px;
+    & .button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 45px;
+      text-decoration: none;
+      text-transform: capitalize;
+      border: 3px solid $primaryColorLight;
+      border-radius: 30px;
+      margin: 0 10px;
+      padding: 0 50px;
+      font-size: 16px;
+      color: $primaryColorLight;
+      cursor: pointer;
+
+      &.isActive {
+        background-color: $primaryColorLight;
+        color: $white;
+      }
+      &:hover {
+        @extend .isActive;
+      }
+    }
+  }
+}
