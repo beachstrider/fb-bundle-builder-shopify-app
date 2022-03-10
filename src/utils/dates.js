@@ -69,6 +69,14 @@ const sortDatesArray = (dates, sort = 'asc') =>
     return sort === 'asc' ? dateA - dateB : dateA + dateB
   })
 
+const sortByDateProperty = (items, property, sort = 'asc') =>
+  items.sort((a, b) => {
+    const dateA = dayjs(a[property]).unix()
+    const dateB = dayjs(b[property]).unix()
+
+    return sort === 'asc' ? dateA - dateB : dateA + dateB
+  })
+
 const getShortDate = (date, config = { withYear: false }) => {
   const errorMessage = "date param isn't a correct date format"
   try {
@@ -93,5 +101,6 @@ export {
   getNextWeekDay,
   getTodayDate,
   sortDatesArray,
-  getShortDate
+  getShortDate,
+  sortByDateProperty
 }

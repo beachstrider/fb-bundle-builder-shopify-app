@@ -30,7 +30,9 @@ import {
   getCutOffDate,
   getTodayDate,
   sortDatesArray,
-  uniqueArray
+  uniqueArray,
+  sortByDateProperty,
+  sortObjectKeys
 } from '../../../utils'
 import { Spinner } from '../../Global'
 import { clearLocalStorage } from '../../../store/store'
@@ -47,6 +49,7 @@ dayjs.extend(isSameOrAfter)
 dayjs.extend(utc)
 
 const TOTAL_WEEKS_DISPLAY = 4
+const TOTAL_WEEKS_PER_PAGE = 2
 
 function useQuery() {
   const { search } = useLocation()
@@ -112,6 +115,34 @@ const Dashboard = () => {
     }
   }
 
+  const createWeekList = (weeksMenu, deliverAfterDate) => {
+    if (!weeksMenu.includes(dayjs(deliverAfterDate).format('YYYY-MM-DD'))) {
+      weeksMenu.push(dayjs.utc(deliverAfterDate).format('YYYY-MM-DD'))
+    }
+
+    return weeksMenu
+  }
+
+  const mapWeeksToDisplay = (subscriptions, date) => {
+    let count = 0
+    const items = []
+
+    for (const [key, value] of Object.entries(subscriptions)) {
+      if (date !== null) {
+        if (key === date) {
+          items.push(value)
+        }
+      } else {
+        if (count < TOTAL_WEEKS_PER_PAGE) {
+          items.push(value)
+          count++
+        }
+      }
+    }
+
+    return items
+  }
+
   const getOrdersToShow = async (token) => {
     const activeWeeksArr = []
     const activeWeeksLimit = []
@@ -119,7 +150,6 @@ const Dashboard = () => {
     const subscriptionArray = {}
 
     const subApi = await getActiveSubscriptions(token)
-
     if (subApi.data.data) {
       for (const sub of subApi.data.data) {
         const subscriptionOrders = await getSubscriptionOrders(token, sub.id)
@@ -129,9 +159,9 @@ const Dashboard = () => {
             method: 'get',
             data: '',
             headers: { authorization: `Bearer ${token}` }
-          },
-          3
+          }
         )
+
         if (configData.data.data.length > 0) {
           for (const config of configData.data.data) {
             let subCount = 0
@@ -143,10 +173,6 @@ const Dashboard = () => {
                 content.deliver_before
               )
               const cutoffDate = getCutOffDate(deliveryDate)
-              console.log('deliveryDate:', deliveryDate)
-              console.log('Cut off date:', cutoffDate)
-              console.log('content:', content)
-
               const firstOrder = shopCustomer.orders[0] || null
               const firstOrderDate =
                 (firstOrder && dayjs(firstOrder.orderDate).utc()) ||
@@ -163,16 +189,17 @@ const Dashboard = () => {
                     ord.bundle_configuration_content.deliver_after ===
                     content.deliver_after
                 )
-                const subscriptionObjKey = content.deliver_after.split('T')[0]
+
+                const subscriptionObjKey = `${
+                  content.deliver_after.split('T')[0]
+                }_${sub.bundle_id}`
+
+                // push date to weeksMenu
+                createWeekList(weeksMenu, content.deliver_after)
 
                 if (
-                  !weeksMenu.includes(
-                    dayjs(content.deliver_after).format('YYYY-MM-DD')
-                  )
+                  !Object.keys(subscriptionArray).includes(subscriptionObjKey)
                 ) {
-                  weeksMenu.push(
-                    dayjs.utc(content.deliver_after).format('YYYY-MM-DD')
-                  )
                   subscriptionArray[subscriptionObjKey] = {}
                   subscriptionArray[subscriptionObjKey].items = []
 
@@ -188,10 +215,6 @@ const Dashboard = () => {
                         )
                         thisItemsArray = thisItemsArray.concat(prodArr)
                       }
-                      // TODO: remove logs
-                      console.log('orderFound (if block)', orderFound)
-                      console.log('subscriptionObjKey: ', subscriptionObjKey)
-                      console.log('thisItemsArray: ', thisItemsArray)
                       subscriptionArray[subscriptionObjKey].subId = sub.id
                       subscriptionArray[subscriptionObjKey].deliveryDay =
                         sub.delivery_day
@@ -204,7 +227,9 @@ const Dashboard = () => {
                           ? STATUS_LOCKED
                           : STATUS_PENDING
                       subscriptionArray[subscriptionObjKey].subscriptionDate =
-                        dayjs(subscriptionObjKey).format('YYYY-MM-DD')
+                        dayjs(subscriptionObjKey.split('_')[0]).format(
+                          'YYYY-MM-DD'
+                        )
                       subscriptionArray[subscriptionObjKey].queryDate =
                         content.deliver_after
                       if (orderFound.platform_order_id !== null) {
@@ -227,11 +252,6 @@ const Dashboard = () => {
                       sub.subscription_sub_type,
                       shopProducts
                     )
-                    // TODO: remove logs
-                    console.log('(else block)')
-                    console.log('subscriptionObjKey: ', subscriptionObjKey)
-                    console.log('thisProductsArray: ', thisProductsArray)
-
                     subscriptionArray[subscriptionObjKey].subId = sub.id
                     subscriptionArray[subscriptionObjKey].items =
                       subscriptionArray[subscriptionObjKey].items.concat(
@@ -242,7 +262,9 @@ const Dashboard = () => {
                         ? STATUS_LOCKED
                         : STATUS_PENDING
                     subscriptionArray[subscriptionObjKey].subscriptionDate =
-                      dayjs(subscriptionObjKey).format('YYYY-MM-DD')
+                      dayjs(subscriptionObjKey.split('_')[0]).format(
+                        'YYYY-MM-DD'
+                      )
                     subscriptionArray[subscriptionObjKey].queryDate =
                       content.deliver_after
                   }
@@ -255,31 +277,25 @@ const Dashboard = () => {
       }
     }
 
-    let count = 0
-    for (const [key, value] of Object.entries(subscriptionArray)) {
+    const itemsToDisplay = mapWeeksToDisplay(
+      sortObjectKeys(subscriptionArray),
+      query.get('date')
+    )
+    itemsToDisplay.forEach((item) => {
       activeWeeksLimit.push(5)
-      if (query.get('date') !== null) {
-        if (key === query.get('date')) {
-          activeWeeksArr.push(value)
-        }
-      } else {
-        if (count < 2) {
-          count++
-          activeWeeksArr.push(value)
-        }
-      }
-    }
+      activeWeeksArr.push(item)
+    })
 
-    // TODO: debugging dates
-    console.log('subscriptionArray: ', subscriptionArray)
-    console.log('activeWeeksArr:', activeWeeksArr)
-    console.log('weeksMenu:', weeksMenu)
-
+    const sortedActiveWeeks = sortByDateProperty(
+      activeWeeksArr,
+      'subscriptionDate'
+    )
     const uniqueValues = uniqueArray([...weeksMenu])
     const sortedDates = sortDatesArray(uniqueValues)
+
     setSubscriptions(subscriptionArray)
     setWeeksMenu(sortedDates)
-    setActive(activeWeeksArr)
+    setActive(sortedActiveWeeks)
     setLimit(activeWeeksLimit)
     setLoading(false)
   }
@@ -287,7 +303,14 @@ const Dashboard = () => {
   const handleChange = (week) => {
     const subDate = dayjs(week).format('YYYY-MM-DD')
     const newActive = []
-    newActive.push(subscriptions[subDate])
+
+    const filteredIndexes = Object.keys(subscriptions).filter((value) =>
+      value.includes(subDate)
+    )
+
+    filteredIndexes.forEach((index) => {
+      newActive.push(subscriptions[index])
+    })
     if (newActive.length > 0) {
       setActive(newActive)
       const newLimitArr = []

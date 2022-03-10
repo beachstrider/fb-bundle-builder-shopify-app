@@ -21,15 +21,18 @@ import {
   getTodayDate,
   sortDatesArray,
   getNextWeekDay,
-  getShortDate
+  getShortDate,
+  sortByDateProperty
 } from './dates'
 import uniqueArray from './uniqueArray'
 import {
   mapBundleTypeSubtype,
   getBundleMetafield,
   mapBundleItems,
-  mapBundleItemsByOption
+  mapBundleItemsByOption,
+  getBundleVariant
 } from './bundles'
+import { sortObjectKeys } from './objects'
 
 export {
   availableDeliveryDays,
@@ -49,11 +52,14 @@ export {
   getCutOffDate,
   getTodayDate,
   sortDatesArray,
+  sortByDateProperty,
   getNextWeekDay,
   uniqueArray,
   mapBundleTypeSubtype,
   getBundleMetafield,
   mapBundleItems,
   mapBundleItemsByOption,
-  getShortDate
+  getShortDate,
+  getBundleVariant,
+  sortObjectKeys
 }
