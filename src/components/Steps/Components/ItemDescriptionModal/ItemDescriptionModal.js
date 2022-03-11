@@ -87,7 +87,7 @@ const ItemDescriptionModal = ({
               />
             </div>
             {isChecked && (
-              <div>
+              <div className={`${styles.quantities}`}>
                 <ButtonQuantities
                   quantity={quantity}
                   onAdd={onAdd}
