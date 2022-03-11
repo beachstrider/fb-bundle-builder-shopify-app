@@ -96,7 +96,7 @@ const getShortDate = (date, config = { withYear: false }) => {
 }
 
 const formatUTCDate = (date, format = 'YYYY-MM-DDTHH:mm:ssZ[Z]') => {
-  return dayjs(date).utc().format(format)
+  return dayjs.utc(date).format(format)
 }
 
 export {

@@ -52,7 +52,7 @@ const Dates = ({ bundle, onClick }) => {
     for (const configuration of configurations.data.data) {
       for (const content of configuration.contents) {
         if (
-          dayjs(content.deliver_after).utc().isSameOrAfter(todayDate) &&
+          dayjs.utc(content.deliver_after).isSameOrAfter(todayDate) &&
           currentWeeks.length < TOTAL_WEEKS_LIMIT
         ) {
           if (!wasDateIncluded(content.deliver_before)) {
