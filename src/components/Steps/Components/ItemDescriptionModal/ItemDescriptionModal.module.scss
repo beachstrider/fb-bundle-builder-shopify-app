@@ -60,10 +60,6 @@
     @media only screen and (max-width: $breakpointTablet) {
       justify-content: center;
     }
-
-    & div {
-      margin: 0 0.5rem 0 0;
-    }
   }
 
   & .image {
@@ -128,4 +124,9 @@
       }
     }
   }
+}
+
+
+.quantities {
+  margin: 0 0 0 1rem;
 }
