@@ -28,6 +28,7 @@ export const initialState = {
       id: MEAL_PLANS_ITEM,
       name: 'Step 3',
       description: 'Meal plans',
+      labelFooter: 'Select Meals',
       path: '/steps/3',
       isActive: false
     },
