@@ -22,7 +22,7 @@
 
   & .title {
     font-size: 2.8rem;
-    font-family: $fontFamilyBold;
+    font-family: $fontFamilyBlack;
     text-transform: capitalize;
   }
 
@@ -31,11 +31,12 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    font-family: $fontFamilyMedium;
 
     & .keyPoints {
       width: 80%;
       text-align: center;
-      font-size: $fontSmall;
+      font-size: $font2XSmall;
       @media only screen and (max-width: $breakpointTablet) {
         font-size: calc($fontSmall - 0.4rem);
       }
@@ -52,13 +53,13 @@
       }
 
       & .value {
-        font-size: $fontSmall;
+        font-size: $font2XSmall;
         @media only screen and (max-width: $breakpointTablet) {
           font-size: 1.2rem;
         }
       }
       & .label {
-        font-size: $fontXSmall;
+        font-size: 1rem;
         @media only screen and (max-width: $breakpointTablet) {
           font-size: 0.8rem;
         }
