@@ -82,7 +82,7 @@ const Footer = () => {
           </span>
         </div>
         <div
-          className={`button ${
+          className={`button ${styles.buttonFooter} ${
             state.isNextButtonActive ? 'primaryButton' : 'disabledButton'
           }`}
           onClick={() => {
