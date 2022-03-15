@@ -21,12 +21,11 @@ console.log('shopifyMultipass', process.env.SHOPIFY_MULTIPASS_SECRET)
 // Sentry
 const Sentry = require('@sentry/node')
 const Tracing = require('@sentry/tracing')
-const dayjs = require('dayjs')
 
 Sentry.init({
   environment: process.env.SENTRY_ENVIRONMENT,
-  dsn: process.env.SENTRY_DSN,
-  tracesSampleRate: process.env.SENTRY_SAMPLE_RATE,
+  dsn: process.env.SENTRY_DSN_EXPRESS,
+  tracesSampleRate: process.env.SENTRY_SAMPLE_RATE_EXPRESS,
   integrations: [
     // enable HTTP calls tracing
     new Sentry.Integrations.Http({ tracing: true }),
@@ -34,6 +33,7 @@ Sentry.init({
     new Tracing.Integrations.Express({ app })
   ]
 })
+
 // RequestHandler creates a separate execution context using domains, so that every
 // transaction/span/breadcrumb is attached to its own Hub instance
 app.use(Sentry.Handlers.requestHandler())
@@ -128,9 +128,14 @@ app.get('/', verifyHmac, (req, res) => {
   )
 })
 
+app.get("/debug-sentry", function mainHandler(req, res) {
+  throw new Error("Sentry debug error");
+});
+
 // Sentry
 // The error handler must be before any other error middleware and after all controllers
-app.use(Sentry.Handlers.errorHandler())
+app.use(Sentry.Handlers.errorHandler());
+
 // Optional fallthrough error handler
 app.use((err, req, res, next) => {
   // The error id is attached to `res.sentry` to be returned

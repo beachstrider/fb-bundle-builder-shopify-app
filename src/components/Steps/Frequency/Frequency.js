@@ -235,7 +235,7 @@ const Frequency = () => {
                 )}
               </div>
             </div>
-            <div className="displayMobile mt-5">
+            <div className="displayMobile mt-5 mb-5">
               <div className="mt-10 px-4" style={{ width: '100%' }}>
                 <SubTotal
                   entreesQuantity={state.bundle?.entreesQuantity}

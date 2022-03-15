@@ -1,6 +1,7 @@
 const path = require('path')
 require('dotenv').config()
 const webpack = require('webpack')
+const SentryWebpackPlugin = require("@sentry/webpack-plugin");
 
 module.exports = {
   entry: [
@@ -58,7 +59,18 @@ module.exports = {
       'process.env.SENTRY_ENVIRONMENT': JSON.stringify(
         process.env.SENTRY_ENVIRONMENT
       )
-    })
+    }),
+    new SentryWebpackPlugin({
+      // sentry-cli configuration - can also be done directly through sentry-cli
+      // see https://docs.sentry.io/product/cli/configuration/ for details
+      authToken: process.env.SENTRY_AUTH_TOKEN,
+      org: "sunrise-integration",
+      project: "bundle-builder-proxy",
+
+      // other SentryWebpackPlugin configuration
+      include: ".",
+      ignore: ["node_modules", "webpack.config.js", "tests"],
+    }),
   ],
   output: {
     path: path.resolve(__dirname, './public/'),
@@ -68,5 +80,6 @@ module.exports = {
     static: path.resolve(__dirname, './public'),
     historyApiFallback: true,
     hot: true
-  }
+  },
+  devtool: 'source-map'
 }
