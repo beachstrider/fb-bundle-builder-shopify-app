@@ -3,6 +3,7 @@ import { NUTRITIONAL_VALUES } from '../../constants/bundles'
 import { ButtonCheckMark, ButtonQuantities } from '../Buttons'
 import ItemDescriptionModal from '../Steps/Components/ItemDescriptionModal/ItemDescriptionModal'
 import styles from './CardQuantities.module.scss'
+import { settings } from '../../utils'
 
 const CardQuantities = ({
   title,
@@ -33,7 +34,26 @@ const CardQuantities = ({
           style={{ backgroundImage: `url('${image}')` }}
           onClick={() => setOpenModal(true)}
         >
-          &nbsp;
+          <div className={styles.iconsContainer}>
+            {settings()
+              .icons()
+              .map((icon) => {
+                const currentMetaField = metafields.find(
+                  (m) => m.key === icon.key
+                )
+                return (
+                  !!currentMetaField &&
+                  currentMetaField.value === 'true' && (
+                    <img
+                      className={styles.icon}
+                      src={`${process.env.PROXY_APP_URL}${icon.src}`}
+                      alt={icon.alt}
+                      key={icon.alt}
+                    />
+                  )
+                )
+              })}
+          </div>
         </div>
         <div className={`${styles.descriptionWrapper}`}>
           <div className={`${styles.title}`}>{title}</div>

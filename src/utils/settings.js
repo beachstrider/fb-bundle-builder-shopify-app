@@ -7,8 +7,9 @@ const settings = () => {
   const bundles = () => values().bundles
   const bundleOptions = () => bundles().options
   const bundleImages = () => bundles().images
+  const icons = () => bundles().icons
 
-  return { bundleOptions, bundleImages, bundles, values }
+  return { bundleOptions, bundleImages, bundles, values, icons }
 }
 
 export default settings

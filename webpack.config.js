@@ -56,6 +56,17 @@ module.exports = {
             }
           }
         ]
+      },
+      {
+        test: /\.(png|jp(e*)g|svg|gif)$/,
+        use: [
+          {
+            loader: 'file-loader',
+            options: {
+              name: 'images/[name].[ext]'
+            }
+          }
+        ]
       }
     ]
   },
@@ -88,7 +99,7 @@ module.exports = {
       'process.env.STORE_SETTINGS_KEY': JSON.stringify(
         process.env.STORE_SETTINGS_KEY
       )
-    }),
+    })
     // new SentryWebpackPlugin({
     //   // sentry-cli configuration - can also be done directly through sentry-cli
     //   // see https://docs.sentry.io/product/cli/configuration/ for details

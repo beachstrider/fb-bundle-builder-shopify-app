@@ -31,6 +31,7 @@
       font-size: $fontSmall;
       font-family: $fontFamilyBold;
     }
+
     & .metafieldName {
       font-family: $fontFamilyLight;
       font-size: 1rem;
@@ -75,4 +76,18 @@
     background-color: $white;
     padding-bottom: 1rem;
   }
+
+  & .iconsContainer {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    align-items: end;
+    padding: 1rem;
+    
+    & .icon {
+      width: 30px;
+      margin-top: 0.5rem;
+    }
+  }
+  
 }
