@@ -20,7 +20,7 @@ export const initialState = {
       id: 2,
       name: 'Step 2',
       description: 'Location & Delivery',
-      labelFooter: 'Select a Delivery Date',
+      labelFooter: 'Choose Meal Plan',
       path: '/steps/2',
       isActive: false
     },
