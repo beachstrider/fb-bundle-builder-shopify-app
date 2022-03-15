@@ -36,6 +36,7 @@ import {
   getBundleVariant
 } from './bundles'
 import { sortObjectKeys } from './objects'
+import settings from './settings'
 
 export {
   availableDeliveryDays,
@@ -67,5 +68,6 @@ export {
   sortObjectKeys,
   formatUTCDate,
   formatUTDateToISO,
-  dateAddDays
+  dateAddDays,
+  settings
 }

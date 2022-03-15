@@ -20,6 +20,7 @@ import {
   cart,
   getBundleVariant,
   getNextWeekDay,
+  settings,
   smoothScrollingToId
 } from '../../../utils'
 import Toast from '../../Global/Toast'
@@ -242,7 +243,9 @@ const Review = () => {
                   }
                   breakfastPrice={state.bundle?.breakfast?.price}
                   shippingPrice={state.bundle?.shippingPrice}
-                  backgroundImage={`${process.env.PROXY_APP_URL}/images/order-package.jpg`}
+                  backgroundImage={`${process.env.PROXY_APP_URL}${
+                    settings().bundleImages().checkout
+                  }`}
                 />
               </div>
             </div>
