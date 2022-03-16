@@ -33,7 +33,7 @@ const bundles = [
     breakfasts: [
       {
         name: '7 Meals',
-        price: 4.95,
+        price: 6.95,
         tag: '7 Day with breakfast'
       },
       {
@@ -54,7 +54,7 @@ const bundles = [
     breakfasts: [
       {
         name: '5 Meals',
-        price: 5.95,
+        price: 8.95,
         tag: '5 Day with breakfast'
       },
       {
@@ -76,7 +76,7 @@ const bundles = [
     breakfasts: [
       {
         name: '3 Meals',
-        price: 5.95,
+        price: 9.95,
         tag: '3 Day with breakfast'
       },
       {

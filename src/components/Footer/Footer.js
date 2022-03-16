@@ -3,6 +3,7 @@ import { useHistory } from 'react-router'
 import { useDispatch, useSelector } from 'react-redux'
 import {
   setActiveStep,
+  setBundleExtraPricePerMeal,
   setVisitedStep,
   triggerLastStep
 } from '../../store/slices/rootSlice'
@@ -56,19 +57,29 @@ const Footer = () => {
     setIsLoading(true)
   }
 
-  useEffect(() => {
-    const subTotal = cartUtility.calculateSubTotal(
+  const getSubTotal = () => {
+    return cartUtility.calculateSubTotal(
       state.bundle?.price,
       state.bundle?.breakfast?.price,
       state.bundle?.entreesQuantity,
-      state.bundle?.breakfastsQuantity
+      state.bundle?.breakfastsQuantity,
+      state.bundle?.shippingPrice
     )
+  }
 
-    setTotal(subTotal)
+  useEffect(() => {
+    const subTotal = getSubTotal()
+
+    const { extraSubTypePrice, extraPricePerMeal } =
+      cartUtility.getExtraSubTypePrice(state.entreeType, state.entreeSubType)
+
+    setTotal(subTotal + extraSubTypePrice)
+    dispatch(setBundleExtraPricePerMeal(extraPricePerMeal))
+
     setFrequency(
       state.bundle?.entreesQuantity + state.bundle?.breakfastsQuantity
     )
-  }, [state.bundle])
+  }, [state.bundle, state.entreeType, state.entreeSubType])
 
   return (
     <div className={`${styles.wrapper} defaultWrapper`}>
@@ -82,7 +93,7 @@ const Footer = () => {
           </span>
         </div>
         <div
-          className={`button ${
+          className={`button ${styles.buttonFooter} ${
             state.isNextButtonActive ? 'primaryButton' : 'disabledButton'
           }`}
           onClick={() => {
