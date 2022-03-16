@@ -20,15 +20,15 @@ ENV BUNDLE_API_URL=$apiurl
 RUN node -v
 RUN npm install
 
-#ENV SENTRY_ORG="sunrise-integration"
-#ENV SENTRY_PROJECT="bundle-builder-proxy"
-#RUN export SENTRY_RELEASE=$(sentry-cli releases propose-version)
-#RUN echo SENTRY_PROJECT=$SENTRY_PROJECT
-#RUN echo SENTRY_RELEASE=$SENTRY_RELEASE
-#
-#RUN sentry-cli releases new -p $SENTRY_PROJECT $SENTRY_RELEASE
-#RUN sentry-cli releases set-commits --auto $SENTRY_RELEASE
-#RUN sentry-cli releases finalize $SENTRY_RELEASE
+ENV SENTRY_ORG="sunrise-integration"
+ENV SENTRY_PROJECT="bundle-builder-proxy"
+RUN export SENTRY_RELEASE=$(sentry-cli releases propose-version)
+RUN echo SENTRY_PROJECT=$SENTRY_PROJECT
+RUN echo SENTRY_RELEASE=$SENTRY_RELEASE
+
+RUN sentry-cli releases new -p $SENTRY_PROJECT $SENTRY_RELEASE
+RUN sentry-cli releases set-commits --auto $SENTRY_RELEASE
+RUN sentry-cli releases finalize $SENTRY_RELEASE
 
 RUN npm run build
 
