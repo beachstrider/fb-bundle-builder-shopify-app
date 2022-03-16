@@ -6,6 +6,8 @@ env:
     PAGE_TITLE: $PAGE_TITLE
     LOCAL_STORAGE_KEY: $LOCAL_STORAGE_KEY
     BUNDLE_API_URL: $BUNDLE_API_URL
+    REPOSITORY_NAME: $REPOSITORY_NAME #i.e. quickfresh-bundle-builder-proxy-development
+    CONTAINER_NAME: $CONTAINER_NAME #i.e. quickfresh-bundle-builder-proxy-development-container
 phases:
   install:
     runtime-versions:
@@ -13,12 +15,11 @@ phases:
   pre_build:
     commands:
      #install dependencies
-      - echo Checking Node version...
-      - node -v
+      - if [ -z ${REPOSITORY_NAME+x} ]; then echo "REPOSITORY_NAME env variable must be set" && exit 1; fi
       - echo Logging in to Amazon ECR...
       - aws --version
       - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin 994474752556.dkr.ecr.us-west-2.amazonaws.com
-      - REPOSITORY_URI=994474752556.dkr.ecr.us-west-2.amazonaws.com/quickfresh-bundle-builder-proxy-development
+      - REPOSITORY_URI=994474752556.dkr.ecr.us-west-2.amazonaws.com/$REPOSITORY_NAME
       - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
       - IMAGE_TAG=${COMMIT_HASH:=latest}
   build:
@@ -34,6 +35,6 @@ phases:
       - docker push $REPOSITORY_URI:latest
       - docker push $REPOSITORY_URI:$IMAGE_TAG
       - echo Writing image definitions file...
-      - printf '[{"name":"quickfresh-bundle-builder-proxy-development-container","imageUri":"%s"}]' $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json
+      - printf "[{\"name\":\"$CONTAINER_NAME\",\"imageUri\":\"%s\"}]" $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json
 artifacts:
     files: imagedefinitions.json
