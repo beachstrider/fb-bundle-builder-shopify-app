@@ -1,0 +1,47 @@
+@import '../../../variables';
+
+.wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  margin: auto;
+  align-items: center;
+  justify-content: center;
+
+  & .item {
+    width: 120px;
+    height: 75px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid $primaryColorLight;
+    cursor: pointer;
+    &.activeWeek {
+      background-color: $butter100;
+      & .month,
+      .date {
+        font-family: $fontFamilyBold;
+      }
+    }
+    &:hover {
+      background-color: $butter100;
+    }
+
+    & .month {
+      margin: 0;
+      font-family: $fontFamilyBook;
+      font-size: 14px;
+      line-height: 21px;
+      color: $primaryColorLight;
+    }
+
+    & .date {
+      margin: 0;
+      font-family: $fontFamilyBook;
+      font-size: 14px;
+      line-height: 21px;
+      color: #068d47;
+    }
+  }
+}

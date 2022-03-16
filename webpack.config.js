@@ -1,7 +1,9 @@
 const path = require('path')
 require('dotenv').config()
 const webpack = require('webpack')
-const SentryWebpackPlugin = require("@sentry/webpack-plugin");
+const SentryWebpackPlugin = require('@sentry/webpack-plugin')
+const settings = require('./src/store/settings/settings')
+const { DEFAULT_SETTINGS_KEY } = require('./src/constants/defaults')
 
 module.exports = {
   entry: [
@@ -27,7 +29,33 @@ module.exports = {
       },
       {
         test: /\.s[ac]ss$/i,
-        use: ['style-loader', 'css-loader', 'sass-loader']
+        use: [
+          'style-loader',
+          'css-loader',
+          {
+            loader: 'sass-loader',
+            options: {
+              // Inject scss variables
+              additionalData: (content, loaderContext) => {
+                const storeSettingsKey =
+                  process.env.STORE_SETTINGS_KEY || DEFAULT_SETTINGS_KEY
+
+                let scss = ''
+                const SCSS_PROPERTIES = ['colors', 'fontFamilies', 'fontSizes']
+
+                SCSS_PROPERTIES.forEach((property) => {
+                  Object.keys(
+                    settings[storeSettingsKey].theme[property]
+                  ).forEach((key) => {
+                    return (scss += `$${key}: ${settings[storeSettingsKey].theme[property][key]};`)
+                  })
+                })
+
+                return `${scss} ${content}`
+              }
+            }
+          }
+        ]
       }
     ]
   },
@@ -50,14 +78,15 @@ module.exports = {
       'process.env.SHOPIFY_API_VERSION': JSON.stringify(
         process.env.SHOPIFY_API_VERSION
       ),
-      'process.env.SENTRY_DSN': JSON.stringify(
-        process.env.SENTRY_DSN
-      ),
+      'process.env.SENTRY_DSN': JSON.stringify(process.env.SENTRY_DSN),
       'process.env.SENTRY_SAMPLE_RATE': JSON.stringify(
         process.env.SENTRY_SAMPLE_RATE
       ),
       'process.env.SENTRY_ENVIRONMENT': JSON.stringify(
         process.env.SENTRY_ENVIRONMENT
+      ),
+      'process.env.STORE_SETTINGS_KEY': JSON.stringify(
+        process.env.STORE_SETTINGS_KEY
       )
     }),
     // new SentryWebpackPlugin({

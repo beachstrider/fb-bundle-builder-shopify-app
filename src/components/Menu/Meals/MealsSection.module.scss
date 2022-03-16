@@ -1,0 +1,77 @@
+@import '../../../variables';
+
+$subTitleFontSize: 2.7rem;
+
+.wrapper {
+  width: $rowWidth;
+  max-width: 1200px;
+  display: grid;
+  grid-template-columns: 100%;
+  column-gap: 10rem;
+  margin-top: 1rem;
+  padding-bottom: 5rem;
+
+  & .title {
+    text-transform: capitalize;
+    font-size: $fontLarge;
+    font-family: $fontFamilyBlack !important;
+    margin-top: 1.5rem;
+    padding: 1.5rem;
+    margin-bottom: 3.5rem;
+
+    @media only screen and (max-width: $breakpointTablet) {
+      font-size: $semiMediumFont;
+    }
+  }
+
+  & .listHeader {
+    display: flex;
+    flex-direction: row;
+    @media only screen and (max-width: $breakpointTablet) {
+      flex-direction: column;
+      padding: 0 3%;
+    }
+  }
+
+  & .cards {
+    display: grid;
+    grid-template-columns: repeat(4, $cardWidth);
+    column-gap: 1.6rem;
+    margin-bottom: 1.5rem;
+    row-gap: 6rem;
+
+    @media only screen and (max-width: $breakpointDesktop) {
+      flex-wrap: nowrap;
+      grid-template-columns: repeat(auto-fill, minmax($cardWidth, $cardWidth));
+    }
+
+    @media only screen and (max-width: $breakpointTablet) {
+      padding: 0 3%;
+      overflow-x: auto;
+      display: flex;
+      padding-bottom: 1.5rem;
+    }
+  }
+
+  & .subTypesWrapper {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    column-gap: 10rem;
+    @media only screen and (max-width: $breakpointDesktop) {
+      grid-template-columns: 1fr;
+      padding: 2rem;
+      row-gap: 2rem;
+    }
+  }
+
+  @media only screen and (max-width: $breakpointDesktop) {
+    width: $rowWidthTable;
+    grid-template-columns: 100%;
+    column-gap: 5rem;
+  }
+  @media only screen and (max-width: $breakpointTablet) {
+    width: $rowWidthMobile;
+    grid-template-columns: 100%;
+    column-gap: 0;
+  }
+}

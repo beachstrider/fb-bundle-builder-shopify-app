@@ -1,3 +1,5 @@
+import { ENTREE_TYPES_CONDITIONS } from '../constants/bundles'
+
 const cart = (state) => {
   const isItemSelected = (cart, item) => {
     return !!cart.find((c) => c.id === item.id)
@@ -83,7 +85,8 @@ const cart = (state) => {
     entreePrice,
     breakfastPrice,
     entreesQuantity,
-    breakfastsQuantity
+    breakfastsQuantity,
+    shippingPrice
   ) => {
     const entreesTotal = Number.parseFloat(entreePrice * entreesQuantity)
     const breakfastsTotal = isNaN(breakfastPrice)
@@ -91,8 +94,8 @@ const cart = (state) => {
       : Number.parseFloat(breakfastPrice) * breakfastsQuantity
 
     return isNaN(breakfastsTotal)
-      ? entreesTotal
-      : entreesTotal + breakfastsTotal
+      ? entreesTotal + shippingPrice
+      : entreesTotal + breakfastsTotal + shippingPrice
   }
 
   const mapByTypes = () => {
@@ -121,6 +124,28 @@ const cart = (state) => {
     return result
   }
 
+  const getExtraSubTypePrice = (entreeType, entreeSubType) => {
+    let extraSubTypePrice = 0
+    let extraPricePerMeal = 0
+
+    const entreeTypeName = entreeType?.name
+    const entreeSubTypeName = entreeSubType?.name
+
+    if (entreeTypeName && entreeSubTypeName) {
+      ENTREE_TYPES_CONDITIONS.forEach(({ type, subType, price }) => {
+        if (
+          entreeTypeName.toLowerCase() === type.toLowerCase() &&
+          entreeSubTypeName.toLowerCase() === subType.toLowerCase()
+        ) {
+          extraSubTypePrice = price * state.bundle?.entreesQuantity
+          extraPricePerMeal = price
+        }
+      })
+    }
+
+    return { extraPricePerMeal, extraSubTypePrice }
+  }
+
   return {
     addItem,
     calculateSubTotal,
@@ -129,7 +154,8 @@ const cart = (state) => {
     isItemSelected,
     removeItem,
     sumQuantity,
-    mapByTypes
+    mapByTypes,
+    getExtraSubTypePrice
   }
 }
 

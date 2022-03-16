@@ -55,13 +55,15 @@
       & .value {
         font-size: $font2XSmall;
         @media only screen and (max-width: $breakpointTablet) {
-          font-size: 1.2rem;
+          font-size: 1rem;
+          white-space: nowrap;
         }
       }
       & .label {
         font-size: 1rem;
         @media only screen and (max-width: $breakpointTablet) {
           font-size: 0.8rem;
+          white-space: nowrap;
         }
       }
     }

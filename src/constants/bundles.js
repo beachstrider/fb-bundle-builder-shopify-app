@@ -6,6 +6,18 @@ const METAFIELD_TOTAL_FAT = 'total_fat'
 const METAFIELD_CALORIE_RANGE = 'calorie_range'
 const METAFIELD_CALORIES = 'calories'
 const BUNDLE_MEAL_SECTION_TITLE = 'Lunch + Dinner'
+const ENTREE_TYPES_CONDITIONS = [
+  { type: 'keto', subType: 'large', price: 1 },
+  { type: 'balanced', subType: 'medium', price: 1 },
+  { type: 'balanced', subType: 'large', price: 2 }
+]
+
+const NUTRITIONAL_VALUES = [
+  METAFIELD_CARBS,
+  METAFIELD_PROTEIN,
+  METAFIELD_TOTAL_FAT,
+  METAFIELD_CALORIES
+]
 
 export {
   METAFIELD_KEY_POINTS,
@@ -15,5 +27,7 @@ export {
   METAFIELD_TOTAL_FAT,
   METAFIELD_CALORIES,
   METAFIELD_CALORIE_RANGE,
-  BUNDLE_MEAL_SECTION_TITLE
+  BUNDLE_MEAL_SECTION_TITLE,
+  NUTRITIONAL_VALUES,
+  ENTREE_TYPES_CONDITIONS
 }
