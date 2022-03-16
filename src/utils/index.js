@@ -22,7 +22,10 @@ import {
   sortDatesArray,
   getNextWeekDay,
   getShortDate,
-  sortByDateProperty
+  sortByDateProperty,
+  formatUTCDate,
+  formatUTDateToISO,
+  addDays as dateAddDays
 } from './dates'
 import uniqueArray from './uniqueArray'
 import {
@@ -61,5 +64,8 @@ export {
   mapBundleItemsByOption,
   getShortDate,
   getBundleVariant,
-  sortObjectKeys
+  sortObjectKeys,
+  formatUTCDate,
+  formatUTDateToISO,
+  dateAddDays
 }

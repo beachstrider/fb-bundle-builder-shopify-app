@@ -35,6 +35,9 @@
       font-family: $fontFamilyLight;
       font-size: 1rem;
       line-height: 0.4rem;
+      @media only screen and (max-width: $breakpointTablet) {
+        line-height: 0.8rem;
+      }
     }
   }
 
@@ -49,6 +52,7 @@
   }
 
   & .image {
+    cursor: pointer;
     width: 100%;
     background-size: cover;
     background-position: center;

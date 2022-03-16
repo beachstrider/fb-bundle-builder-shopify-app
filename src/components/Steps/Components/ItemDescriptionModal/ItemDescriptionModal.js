@@ -1,10 +1,5 @@
 import React from 'react'
-import {
-  METAFIELD_CALORIES,
-  METAFIELD_CARBS,
-  METAFIELD_PROTEIN,
-  METAFIELD_TOTAL_FAT
-} from '../../../../constants/bundles'
+import { NUTRITIONAL_VALUES } from '../../../../constants/bundles'
 import { ButtonCheckMark, ButtonQuantities } from '../../../Buttons'
 import Modal from '../../../Global/Modal'
 import styles from './ItemDescriptionModal.module.scss'
@@ -22,18 +17,12 @@ const ItemDescriptionModal = ({
   onAdd,
   onRemove,
   disableAdd = false,
-  disableRemove = false
+  disableRemove = false,
+  displayActions = true
 }) => {
   const replaceMeasurement = (value) => value.replace(/oz|g/g, '')
   const getMetafield = (metafields, key) =>
     metafields.find((m) => m.key === key)
-
-  const nutritionValues = [
-    METAFIELD_CARBS,
-    METAFIELD_PROTEIN,
-    METAFIELD_TOTAL_FAT,
-    METAFIELD_CALORIES
-  ]
 
   return (
     <Modal open={open} close={close}>
@@ -54,7 +43,7 @@ const ItemDescriptionModal = ({
           <div className={styles.description}>
             {metafields.map(
               (metafield) =>
-                nutritionValues.includes(metafield.key) && (
+                NUTRITIONAL_VALUES.includes(metafield.key) && (
                   <div key={metafield.key}>
                     <div className={styles.metafieldValue}>
                       {replaceMeasurement(metafield.value)}
@@ -78,27 +67,29 @@ const ItemDescriptionModal = ({
               {getMetafield(metafields, 'contains')?.value}
             </div>
           )}
-          <div className={`${styles.actions}`}>
-            <div>
-              <ButtonCheckMark
-                isChecked={isChecked}
-                onClick={onClick}
-                isFromModal
-              />
-            </div>
-            {isChecked && (
-              <div className={`${styles.quantities}`}>
-                <ButtonQuantities
-                  quantity={quantity}
-                  onAdd={onAdd}
-                  onRemove={onRemove}
-                  disableAdd={disableAdd}
-                  disableRemove={disableRemove}
+          {displayActions && (
+            <div className={`${styles.actions}`}>
+              <div>
+                <ButtonCheckMark
+                  isChecked={isChecked}
+                  onClick={onClick}
                   isFromModal
                 />
               </div>
-            )}
-          </div>
+              {isChecked && (
+                <div className={`${styles.quantities}`}>
+                  <ButtonQuantities
+                    quantity={quantity}
+                    onAdd={onAdd}
+                    onRemove={onRemove}
+                    disableAdd={disableAdd}
+                    disableRemove={disableRemove}
+                    isFromModal
+                  />
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </div>
     </Modal>

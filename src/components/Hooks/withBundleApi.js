@@ -330,6 +330,40 @@ const getDeliveryDates = async (token) => {
   )
 }
 
+const getBundleConfigurations = async (token, bundleId) => {
+  try {
+    return await request(
+      `${process.env.PROXY_APP_URL}/bundle-api/bundles/${bundleId}/configurations`,
+      {
+        method: 'get',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        }
+      }
+    )
+  } catch (error) {
+    return error
+  }
+}
+
+const getEnabledBundles = async (token, queryString = 'is_enabled=1') => {
+  try {
+    return await request(
+      `${process.env.PROXY_APP_URL}/bundle-api/bundles-query?${queryString}`,
+      {
+        method: 'get',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        }
+      }
+    )
+  } catch (error) {
+    return error
+  }
+}
+
 export {
   getContents,
   getBundle,
@@ -346,5 +380,7 @@ export {
   createSubscriptionOrder,
   getDefaultProducts,
   generateRequestToken,
-  getDeliveryDates
+  getDeliveryDates,
+  getBundleConfigurations,
+  getEnabledBundles
 }
