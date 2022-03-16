@@ -10,15 +10,27 @@ ARG logo=""
 ENV LOGO_URL=$logo
 ARG appurl
 ENV PROXY_APP_URL=$appurl
-ARG title="QuickFresh Bundle Builder"
+ARG title="Bundle Builder"
 ENV PAGE_TITLE=$title
 ARG storagekey
 ENV LOCAL_STORAGE_KEY=$storagekey
 ARG apiurl
 ENV BUNDLE_API_URL=$apiurl
 
+ENV SENTRY_ORG="sunrise-integration"
+ENV SENTRY_PROJECT="bundle-builder-proxy"
+
 RUN node -v
 RUN npm install
+
+RUN export SENTRY_RELEASE=$(sentry-cli releases propose-version)
+RUN echo SENTRY_PROJECT=$SENTRY_PROJECT
+RUN echo SENTRY_RELEASE=$SENTRY_RELEASE
+
+RUN sentry-cli releases new -p $SENTRY_PROJECT $SENTRY_RELEASE
+RUN sentry-cli releases set-commits --auto $SENTRY_RELEASE
+RUN sentry-cli releases finalize $SENTRY_RELEASE
+
 RUN npm run build
 
 EXPOSE 3000
