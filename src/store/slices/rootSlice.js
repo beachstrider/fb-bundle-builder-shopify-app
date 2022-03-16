@@ -99,6 +99,7 @@ export const initialState = {
   bundle: {
     id: 0,
     price: 0,
+    extraPricePerMeal: 0,
     weeklyPrice: '',
     shippingPrice: 0,
     breakfast: {
@@ -155,6 +156,9 @@ const rootSlice = createSlice({
     },
     setBundle: (state, action) => {
       state.bundle = action.payload
+    },
+    setBundleExtraPricePerMeal: (state, action) => {
+      state.bundle.extraPricePerMeal = action.payload
     },
     selectFaqType: (state, action) => {
       state.faqType = action.payload
@@ -250,6 +254,7 @@ export const {
   setVisitedStep,
   setEmail,
   setBundle,
+  setBundleExtraPricePerMeal,
   setEntreeType,
   setEntreeSubType,
   setLocation,
