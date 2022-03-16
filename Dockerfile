@@ -20,6 +20,8 @@ ENV BUNDLE_API_URL=$apiurl
 RUN node -v
 RUN npm install
 
+RUN curl -sL https://sentry.io/get-cli/ | bash
+
 ENV SENTRY_ORG="sunrise-integration"
 ENV SENTRY_PROJECT="bundle-builder-proxy"
 RUN export SENTRY_RELEASE=$(sentry-cli releases propose-version)
