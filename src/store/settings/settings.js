@@ -117,6 +117,7 @@ module.exports = {
         red: '#c8432d',
         orange: '#ec6120',
         butter: '#fedc5c',
+        butter100: '#fedc5cb3',
         headerBackgroundColor: '#f6f6f7',
         borderColor: '#ebebec',
         faqBackgroundColor: '#e8e8e8'
@@ -131,7 +132,7 @@ module.exports = {
     settings: {
       page: {
         title: 'Chow',
-        //TODO: Change description
+        // TODO: Change description
         description:
           'We offer healthy, chef-prepared meals delivered fresh to your door. Choose from a wide variety of 120+ options for both Balanced and Keto meal types.'
       }
@@ -246,6 +247,7 @@ module.exports = {
         red: '#c8432d',
         orange: '#ec6120',
         butter: '#fedc5c',
+        butter100: '#fedc5cb3',
         headerBackgroundColor: '#f6f6f7',
         borderColor: '#ebebec',
         faqBackgroundColor: '#e8e8e8'
