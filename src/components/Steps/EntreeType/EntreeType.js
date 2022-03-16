@@ -21,7 +21,7 @@ import TopTitle from '../Components/TopTitle'
 import { ENTREE_TYPES_CONDITIONS } from '../../../constants/bundles'
 
 const FAQ_TYPE = 'entreeType'
-const STEP_ID = 3
+const STEP_ID = 2
 
 const EntreeType = () => {
   const dispatch = useDispatch()
@@ -110,8 +110,8 @@ const EntreeType = () => {
         type === entreeTypeName && subType === entreeSubTypeName
     )
 
-  if (!state.location.zipCode) {
-    return <Redirect push to="/steps/2" />
+  if (state.bundle.id === 0) {
+    return <Redirect push to="/" />
   }
 
   if (isLoading) {

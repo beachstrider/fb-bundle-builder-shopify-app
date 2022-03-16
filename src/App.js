@@ -84,8 +84,8 @@ function App() {
                   component={EditOrder}
                 />
 
-                <Route path="/steps/2" component={Location} />
-                <Route path="/steps/3" component={EntreeType} />
+                <Route path="/steps/2" component={EntreeType} />
+                <Route path="/steps/3" component={Location} />
                 <Route path="/steps/4" component={Entrees} />
                 <Route path="/steps/5" component={Review} />
                 <Route path="*" component={Frequency} />
