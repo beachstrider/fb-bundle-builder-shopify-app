@@ -23,6 +23,21 @@
     }
   }
 
+  & .Toplabel {
+    font-family: $fontFamilyBold;
+    margin: 0 auto;
+    font-size: 1.3rem;
+    background: $grayMedium;
+    color: $white;
+    border-radius: 25rem;
+    padding: 0.1rem 1.5rem;
+    margin-bottom: 1rem;
+
+    @media only screen and (max-width: $breakpointTablet) {
+      font-size: 1rem;
+    }
+  }
+
   & .label {
     font-family: $fontFamilyBook;
     font-weight: 700;

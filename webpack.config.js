@@ -89,17 +89,17 @@ module.exports = {
         process.env.STORE_SETTINGS_KEY
       )
     }),
-    new SentryWebpackPlugin({
-      // sentry-cli configuration - can also be done directly through sentry-cli
-      // see https://docs.sentry.io/product/cli/configuration/ for details
-      authToken: process.env.SENTRY_AUTH_TOKEN,
-      org: 'sunrise-integration',
-      project: 'bundle-builder-proxy',
-
-      // other SentryWebpackPlugin configuration
-      include: '.',
-      ignore: ['node_modules', 'webpack.config.js', 'tests']
-    })
+    // new SentryWebpackPlugin({
+    //   // sentry-cli configuration - can also be done directly through sentry-cli
+    //   // see https://docs.sentry.io/product/cli/configuration/ for details
+    //   authToken: process.env.SENTRY_AUTH_TOKEN,
+    //   org: "sunrise-integration",
+    //   project: "bundle-builder-proxy",
+    //
+    //   // other SentryWebpackPlugin configuration
+    //   include: ".",
+    //   ignore: ["node_modules", "webpack.config.js", "tests"],
+    // }),
   ],
   output: {
     path: path.resolve(__dirname, './public/'),
