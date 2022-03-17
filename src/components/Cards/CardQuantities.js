@@ -21,12 +21,7 @@ const CardQuantities = ({
   const [openModal, setOpenModal] = useState(false)
 
   return (
-    <div
-      style={{
-        border: isChecked ? '4px solid #3DAE2B' : '4px solid transparent',
-        borderRadius: isChecked ? '0.9rem' : '0'
-      }}
-    >
+    <div className={isChecked ? styles.isChecked : styles.isUnchecked}>
       <div className={styles.card}>
         <div
           className={styles.image}

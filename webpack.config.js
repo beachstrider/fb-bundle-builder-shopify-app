@@ -41,7 +41,12 @@ module.exports = {
                   process.env.STORE_SETTINGS_KEY || DEFAULT_SETTINGS_KEY
 
                 let scss = ''
-                const SCSS_PROPERTIES = ['colors', 'fontFamilies', 'fontSizes']
+                const SCSS_PROPERTIES = [
+                  'colors',
+                  'fontFamilies',
+                  'fontSizes',
+                  'borders'
+                ]
 
                 SCSS_PROPERTIES.forEach((property) => {
                   Object.keys(
@@ -88,7 +93,7 @@ module.exports = {
       'process.env.STORE_SETTINGS_KEY': JSON.stringify(
         process.env.STORE_SETTINGS_KEY
       )
-    }),
+    })
     // new SentryWebpackPlugin({
     //   // sentry-cli configuration - can also be done directly through sentry-cli
     //   // see https://docs.sentry.io/product/cli/configuration/ for details

@@ -386,7 +386,7 @@ const Location = () => {
             <div>
               <div className="mb-3">&nbsp;</div>
               <button
-                className={`button primaryButton ${styles.buttonWrapper}`}
+                className={`primaryButton ${styles.buttonWrapper}`}
                 type="submit"
               >
                 {isLoading ? <SpinnerIcon /> : 'Submit'}

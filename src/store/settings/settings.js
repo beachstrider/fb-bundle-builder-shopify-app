@@ -89,6 +89,9 @@ module.exports = {
         fontFamilyThin: 'Gotham-Thin',
         fontFamilyMedium: 'Gotham-Medium'
       },
+      borders: {
+        borderButtonRadius: '2.5rem'
+      },
       fontSizes: {
         fontLarge: '4.7rem',
         fontMediumLarge: '3rem',
@@ -120,7 +123,10 @@ module.exports = {
         butter100: '#fedc5cb3',
         headerBackgroundColor: '#f6f6f7',
         borderColor: '#ebebec',
-        faqBackgroundColor: '#e8e8e8'
+        faqBackgroundColor: '#e8e8e8',
+        pillBackground: '#737678',
+        buttonColor: '#0a8d47',
+        bannerBackground: '#fedc5c'
       }
     }
   },
@@ -219,6 +225,9 @@ module.exports = {
         fontFamilyThin: 'Gotham-Thin',
         fontFamilyMedium: 'Gotham-Medium'
       },
+      borders: {
+        borderButtonRadius: '0.5rem'
+      },
       fontSizes: {
         fontLarge: '4.7rem',
         fontMediumLarge: '3rem',
@@ -231,9 +240,9 @@ module.exports = {
         font2XSmall: '1.4rem'
       },
       colors: {
-        primaryColor: '#0a8d47',
-        primaryColorLight: '#068d47',
-        secondaryColor: '#fec12d',
+        primaryColor: '#000000',
+        primaryColorLight: '#656549',
+        secondaryColor: '#BB8D3D',
         gray: '#4c4c4c',
         grayLight: '#e7eaec',
         gray100: '#e2e2e2',
@@ -250,7 +259,10 @@ module.exports = {
         butter100: '#fedc5cb3',
         headerBackgroundColor: '#f6f6f7',
         borderColor: '#ebebec',
-        faqBackgroundColor: '#e8e8e8'
+        faqBackgroundColor: '#e8e8e8',
+        pillBackground: '#BB8D3D',
+        buttonColor: '#656549',
+        bannerBackground: '#DDCFC4'
       }
     }
   }
