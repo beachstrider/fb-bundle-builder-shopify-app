@@ -34,20 +34,26 @@
     & .metafieldValue {
       text-align: center;
       font-weight: 700;
-      margin-bottom: -1rem;
-      font-size: $fontLarge;
+      margin-bottom: -0.5rem;
+      font-size: $fontMediumLarge;
       @media only screen and (max-width: $breakpointDesktop) {
         font-size: $semiMediumFont;
+      }
+      @media only screen and (max-width: $breakpointMobile) {
+        font-size: $font2XSmall;
       }
     }
     & .metafieldName {
       text-align: center;
       font-family: $fontFamilyThin;
       @media only screen and (min-width: $breakpointDesktop) {
-        font-size: $fontMedium;
+        font-size: $fontMediumSmall;
       }
       @media only screen and (max-width: $breakpointTablet) {
         font-size: $fontXSmall;
+      }
+      @media only screen and (max-width: $breakpointMobile) {
+        font-size: $font3XSmall;
       }
     }
   }
@@ -84,6 +90,7 @@
   }
 
   & .subtitle {
+    font-size: $fontXSmall;
     @media only screen and (min-width: $breakpointDesktop) {
       margin-top: -2rem;
     }
@@ -108,15 +115,16 @@
     }
 
     & .contains {
-      font-family: $fontFamilyBold;
+      font-family: $fontFamilyMedium;
+      font-size: calc($fontXSmall - 0.3rem);
+      margin-bottom: 1.5rem;
     }
 
     & .ingredients {
       h3 {
         margin: 0;
-        @media only screen and (max-width: $breakpointTablet) {
-          font-size: $fontMediumSmall;
-        }
+        font-family: $fontFamilyBook !important;
+        font-size: $fontMedium;
       }
       & .ingredientsText {
         font-size: calc($fontXSmall - 0.3rem);
