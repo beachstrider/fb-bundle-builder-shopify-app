@@ -1,5 +1,16 @@
 @import '../../variables';
 
+$defaultBorder: 4px;
+
+.isChecked {
+  border: $defaultBorder solid $primaryColor;
+  border-radius: 0.9rem;
+}
+.isUnchecked {
+  border: $defaultBorder solid transparent;
+  border-radius: 0;
+}
+
 .card {
   border-radius: 3px;
   box-shadow: 0px 0px 30px #0000001c;

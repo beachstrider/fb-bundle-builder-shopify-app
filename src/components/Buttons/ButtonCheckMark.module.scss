@@ -23,10 +23,10 @@
   }
 
   & .primaryButton {
-    background: $primaryColor;
+    background: $buttonColor;
     box-shadow: unset !important;
     &:hover {
-      background: darken($primaryColor, 10%);
+      background: darken($buttonColor, 10%);
     }
   }
 
@@ -34,10 +34,10 @@
     width: 13rem !important;
     border-radius: 2.5rem;
     padding: 1.5rem 0;
-    background: $primaryColor;
+    background: $buttonColor;
     box-shadow: unset !important;
     &:hover {
-      background: darken($primaryColor, 10%);
+      background: darken($buttonColor, 10%);
     }
   }
 
