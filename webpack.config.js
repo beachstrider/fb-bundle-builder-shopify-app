@@ -5,6 +5,10 @@ const SentryWebpackPlugin = require('@sentry/webpack-plugin')
 const settings = require('./src/store/settings/settings')
 const { DEFAULT_SETTINGS_KEY } = require('./src/constants/defaults')
 
+const storeSettingsKey = process.env.STORE_SETTINGS_KEY || DEFAULT_SETTINGS_KEY
+
+console.log('Using STORE_SETTINGS_KEY :', storeSettingsKey)
+
 module.exports = {
   entry: [
     'regenerator-runtime/runtime.js',
@@ -37,9 +41,6 @@ module.exports = {
             options: {
               // Inject scss variables
               additionalData: (content, loaderContext) => {
-                const storeSettingsKey =
-                  process.env.STORE_SETTINGS_KEY || DEFAULT_SETTINGS_KEY
-
                 let scss = ''
                 const SCSS_PROPERTIES = [
                   'colors',
