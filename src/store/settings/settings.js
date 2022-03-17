@@ -171,6 +171,28 @@ module.exports = {
         checkout: '/images/quickfresh-order-package.jpg',
         breakfastSample: '/images/quickfresh-breakfast-sample.jpg'
       },
+      icons: [
+        {
+          key: 'is_dairy_free',
+          src: '/images/quickfresh-dairy-free-icon.svg',
+          alt: 'dairy-free-icon'
+        },
+        {
+          key: 'is_gluten_free',
+          src: '/images/quickfresh-gluten-free-icon.svg',
+          alt: 'gluten-free-icon'
+        },
+        {
+          key: 'is_peanut_free',
+          src: '/images/quickfresh-peanut-free-icon.svg',
+          alt: 'peanut-free-icon'
+        },
+        {
+          key: 'is_spicy',
+          src: '/images/quickfresh-spicy-icon.svg',
+          alt: 'spicy-icon'
+        }
+      ],
       options: [
         {
           id: 1,
