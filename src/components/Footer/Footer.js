@@ -64,10 +64,15 @@ const Footer = () => {
       state.bundle?.breakfastsQuantity
     )
 
+    const currentBreakfastQuantities =
+      state.bundle &&
+      state.bundle.breakfast?.name &&
+      state.bundle.breakfast?.name.toLowerCase() === 'none'
+        ? 0
+        : state.bundle?.breakfastsQuantity
+
     setTotal(subTotal)
-    setFrequency(
-      state.bundle?.entreesQuantity + state.bundle?.breakfastsQuantity
-    )
+    setFrequency(state.bundle?.entreesQuantity + currentBreakfastQuantities)
   }, [state.bundle])
 
   return (
