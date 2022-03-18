@@ -103,13 +103,41 @@ module.exports = {
       ]
     },
     theme: {
+      fontFiles: [
+        {
+          name: 'Gotham-Black',
+          url: 'https://cdn.shopify.com/s/files/1/0552/6549/3185/files/Gotham-Black.otf?v=1627982628'
+        },
+        {
+          name: 'Gotham-Bold',
+          url: 'https://cdn.shopify.com/s/files/1/0552/6549/3185/files/Gotham-Bold.otf?v=1627982628'
+        },
+        {
+          name: 'Gotham-Book',
+          url: 'https://cdn.shopify.com/s/files/1/0552/6549/3185/files/Gotham-Book.otf?v=1627982628'
+        },
+        {
+          name: 'Gotham-Light',
+          url: 'https://cdn.shopify.com/s/files/1/0552/6549/3185/files/Gotham-Light.otf?v=1627982628'
+        },
+        {
+          name: 'Gotham-Medium',
+          url: 'https://cdn.shopify.com/s/files/1/0552/6549/3185/files/Gotham-Medium.otf?v=1627982628'
+        },
+        {
+          name: 'Gotham-Thin',
+          url: 'https://cdn.shopify.com/s/files/1/0552/6549/3185/files/Gotham-Thin.otf?v=1627982628'
+        }
+      ],
       fontFamilies: {
         fontFamilyBook: 'Gotham-Book',
         fontFamilyBold: 'Gotham-Bold',
         fontFamilyBlack: 'Gotham-Black',
         fontFamilyLight: 'Gotham-Light',
         fontFamilyThin: 'Gotham-Thin',
-        fontFamilyMedium: 'Gotham-Medium'
+        fontFamilyMedium: 'Gotham-Medium',
+        fontFamilyMediumBold: 'Gotham-Medium',
+        fontFamilyMediumItalic: 'Gotham-Medium'
       },
       borders: {
         borderButtonRadius: '2.5rem'
@@ -262,13 +290,49 @@ module.exports = {
       ]
     },
     theme: {
+      fontFiles: [
+        {
+          name: 'Eveleth-Bold',
+          url: 'https://cdn.shopify.com/s/files/1/0630/9399/7799/files/EvelethRegular-Bold.woff?v=1646429742'
+        },
+        {
+          name: 'Eveleth-Regular',
+          url: 'https://cdn.shopify.com/s/files/1/0630/9399/7799/files/Eveleth_Regular.otf?v=1647641476'
+        },
+        {
+          name: 'Gotham-Bold',
+          url: 'https://cdn.shopify.com/s/files/1/0552/6549/3185/files/Gotham-Bold.otf?v=1627982628'
+        },
+        {
+          name: 'Lato-Regular',
+          url: 'https://cdn.shopify.com/s/files/1/0630/9399/7799/files/Lato-Regular.woff?v=1646429737'
+        },
+        {
+          name: 'Gotham-Light',
+          url: 'https://cdn.shopify.com/s/files/1/0552/6549/3185/files/Gotham-Light.otf?v=1627982628'
+        },
+        {
+          name: 'Lato-Bold',
+          url: 'https://cdn.shopify.com/s/files/1/0630/9399/7799/files/Lato-Bold.woff?v=1646429737'
+        },
+        {
+          name: 'Lato-Bold-Italic',
+          url: 'https://cdn.shopify.com/s/files/1/0630/9399/7799/files/Lato-BoldItalic.ttf?v=1647640661'
+        },
+        {
+          name: 'Gotham-Thin',
+          url: 'https://cdn.shopify.com/s/files/1/0552/6549/3185/files/Gotham-Thin.otf?v=1627982628'
+        }
+      ],
       fontFamilies: {
-        fontFamilyBook: 'Gotham-Book',
-        fontFamilyBold: 'Gotham-Bold',
-        fontFamilyBlack: 'Gotham-Black',
-        fontFamilyLight: 'Gotham-Light',
+        fontFamilyBook: 'Lato-Regular',
+        fontFamilyBold: 'Eveleth-Regular',
+        fontFamilyBlack: 'Eveleth-Regular',
+        fontFamilyLight: 'Lato-Bold',
         fontFamilyThin: 'Gotham-Thin',
-        fontFamilyMedium: 'Gotham-Medium'
+        fontFamilyMedium: 'Lato-Bold',
+        fontFamilyMediumBold: 'Lato-Bold',
+        fontFamilyMediumItalic: 'Lato-Bold-Italic'
       },
       borders: {
         borderButtonRadius: '0.5rem'

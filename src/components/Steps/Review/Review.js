@@ -215,6 +215,7 @@ const Review = () => {
               <ReviewDeliveryDay date={state.location.deliveryDate.day} />
             }
             showSeparator={false}
+            className={styles.deliveryDate}
           >
             <ReviewStartingDay day={state.location.deliveryDate.day} />
           </TopTitle>

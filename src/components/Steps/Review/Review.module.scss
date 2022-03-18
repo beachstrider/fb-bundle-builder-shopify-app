@@ -8,6 +8,15 @@ $subTitleFontSize: 2.7rem;
   column-gap: 10rem;
   @include responsive-wrapper;
 
+  & .deliveryDate {
+    $defaultFontSize: 2.2rem;
+    font-family: $fontFamilyBold;
+    & p {
+      font-size: $defaultFontSize !important;
+    }
+    font-size: $defaultFontSize !important;
+  }
+
   & .subTotalWrapper {
     @media only screen and (min-width: $breakpointDesktop) {
       margin: 3.5rem 0;
