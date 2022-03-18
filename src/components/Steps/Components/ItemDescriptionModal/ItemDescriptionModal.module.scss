@@ -117,7 +117,7 @@
     }
 
     & .contains {
-      font-family: $fontFamilyMedium;
+      font-family: $fontFamilyMediumBold;
       font-size: $fontXSmall;
       margin-bottom: 1.5rem;
     }
@@ -125,8 +125,10 @@
     & .ingredients {
       h3 {
         margin: 0;
-        font-family: $fontFamilyBook !important;
-        font-size: $fontSmall;
+        font-family: $fontFamilyBold;
+        @media only screen and (max-width: $breakpointTablet) {
+          font-size: $fontMediumSmall;
+        }
       }
       & .ingredientsText {
         font-size: calc($fontSmall - 0.3rem);
@@ -135,7 +137,6 @@
     }
   }
 }
-
 
 .quantities {
   margin: 0 0 0 1rem;

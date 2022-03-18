@@ -35,7 +35,10 @@ const FrequencyBreakfast = ({ data, isSelected, onClick }) => {
     >
       <div className={`${styles.title} ${styles.fontBold}`}>{data.name}</div>
       <div className={styles.subTitle}>Breakfast</div>
-      <div className={styles.price}>${data.price}/Meal</div>
+      <div className={styles.breakfastStartingAt}>
+        <div className={styles.startingAt}>Starting at:</div>
+        <div className={styles.breakFastPricing}>${data.price}/Meal</div>
+      </div>
     </div>
   )
 

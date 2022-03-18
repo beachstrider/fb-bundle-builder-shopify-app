@@ -8,6 +8,12 @@
     gap: 4.5rem;
   }
 
+  & .startingAt {
+    font-size: 1.2rem;
+    margin-bottom: -1rem;
+    margin-top: 1rem;
+  }
+
   .subTotalWrapper {
     min-width: 20vw;
   }
@@ -58,6 +64,10 @@
       & .subTitle {
         font-family: $fontFamilyBook;
         color: $grayMedium;
+      }
+      & .breakfastStartingAt {
+        display: flex;
+        flex-direction: row;
       }
       & .image {
         max-height: 7.2rem;
@@ -127,6 +137,10 @@
                 padding: 2rem 0;
                 font-size: calc($fontXSmall - 0.3rem);
               }
+            }
+            & .breakFastPricing {
+              @extend .price;
+              padding: 0;
             }
             & .noneIcon {
               svg {

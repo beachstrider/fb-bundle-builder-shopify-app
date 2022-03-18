@@ -6,9 +6,10 @@ const settings = require('./src/store/settings/settings')
 const { DEFAULT_SETTINGS_KEY } = require('./src/constants/defaults')
 
 const storeSettingsKey = process.env.STORE_SETTINGS_KEY || DEFAULT_SETTINGS_KEY
+const SCSS_PROPERTIES = ['colors', 'fontFamilies', 'fontSizes', 'borders']
+const SCSS_FONTS = ['fontFiles']
 
 console.log('Using STORE_SETTINGS_KEY :', storeSettingsKey)
-
 module.exports = {
   entry: [
     'regenerator-runtime/runtime.js',
@@ -42,18 +43,22 @@ module.exports = {
               // Inject scss variables
               additionalData: (content, loaderContext) => {
                 let scss = ''
-                const SCSS_PROPERTIES = [
-                  'colors',
-                  'fontFamilies',
-                  'fontSizes',
-                  'borders'
-                ]
-
                 SCSS_PROPERTIES.forEach((property) => {
                   Object.keys(
                     settings[storeSettingsKey].theme[property]
                   ).forEach((key) => {
                     return (scss += `$${key}: ${settings[storeSettingsKey].theme[property][key]};`)
+                  })
+                })
+
+                SCSS_FONTS.forEach((property) => {
+                  settings[storeSettingsKey].theme[property].forEach((font) => {
+                    return (scss += `
+                      @font-face {
+                        font-family: ${font.name};
+                        src: url('${font.url}');
+                      }
+                    `)
                   })
                 })
 
