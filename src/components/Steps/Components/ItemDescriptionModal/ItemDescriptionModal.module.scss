@@ -40,7 +40,7 @@
         font-size: $semiMediumFont;
       }
       @media only screen and (max-width: $breakpointMobile) {
-        font-size: $font2XSmall;
+        font-size: $fontMedium;
       }
     }
     & .metafieldName {
@@ -86,6 +86,8 @@
     font-family: $fontFamilyBold;
     @media only screen and (max-width: $breakpointTablet) {
       text-align: center;
+      font-size: $semiMediumFont;
+      margin-top: -1.5rem;
     }
   }
 
@@ -116,7 +118,7 @@
 
     & .contains {
       font-family: $fontFamilyMedium;
-      font-size: calc($fontXSmall - 0.3rem);
+      font-size: $fontXSmall;
       margin-bottom: 1.5rem;
     }
 
@@ -124,10 +126,10 @@
       h3 {
         margin: 0;
         font-family: $fontFamilyBook !important;
-        font-size: $fontMedium;
+        font-size: $fontSmall;
       }
       & .ingredientsText {
-        font-size: calc($fontXSmall - 0.3rem);
+        font-size: calc($fontSmall - 0.3rem);
         font-family: $fontFamilyLight;
       }
     }

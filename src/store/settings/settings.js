@@ -238,7 +238,8 @@ module.exports = {
         fontMediumSmall: '1.6rem',
         fontSmall: '1.6rem',
         fontXSmall: '1.5rem',
-        font2XSmall: '1.4rem'
+        font2XSmall: '1.4rem',
+        font3XSmall: '1.2rem'
       },
       colors: {
         primaryColor: '#000000',
