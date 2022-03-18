@@ -1,4 +1,4 @@
-import { ENTREE_TYPES_CONDITIONS } from '../constants/bundles'
+import settings from './settings'
 
 const cart = (state) => {
   const isItemSelected = (cart, item) => {
@@ -125,25 +125,28 @@ const cart = (state) => {
   }
 
   const getExtraSubTypePrice = (entreeType, entreeSubType) => {
-    let extraSubTypePrice = 0
     let extraPricePerMeal = 0
+    let extraEntreePrice = 0
+    let extraBreakfastPrice = 0
 
     const entreeTypeName = entreeType?.name
     const entreeSubTypeName = entreeSubType?.name
 
     if (entreeTypeName && entreeSubTypeName) {
-      ENTREE_TYPES_CONDITIONS.forEach(({ type, subType, price }) => {
-        if (
-          entreeTypeName.toLowerCase() === type.toLowerCase() &&
-          entreeSubTypeName.toLowerCase() === subType.toLowerCase()
-        ) {
-          extraSubTypePrice = price * state.bundle?.entreesQuantity
-          extraPricePerMeal = price
-        }
-      })
+      const portionType = settings().bundlePricesPerPortion(
+        entreeTypeName,
+        entreeSubTypeName
+      )
+
+      if (portionType) {
+        extraPricePerMeal = portionType.price
+        extraEntreePrice = portionType.price * state.bundle?.entreesQuantity
+        extraBreakfastPrice =
+          portionType.price * state.bundle?.breakfastsQuantity
+      }
     }
 
-    return { extraPricePerMeal, extraSubTypePrice }
+    return { extraPricePerMeal, extraEntreePrice, extraBreakfastPrice }
   }
 
   return {

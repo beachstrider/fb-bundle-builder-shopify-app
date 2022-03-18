@@ -70,10 +70,10 @@ const Footer = () => {
   useEffect(() => {
     const subTotal = getSubTotal()
 
-    const { extraSubTypePrice, extraPricePerMeal } =
+    const { extraPricePerMeal, extraEntreePrice, extraBreakfastPrice } =
       cartUtility.getExtraSubTypePrice(state.entreeType, state.entreeSubType)
 
-    setTotal(subTotal + extraSubTypePrice)
+    setTotal(subTotal + extraEntreePrice + extraBreakfastPrice)
     dispatch(setBundleExtraPricePerMeal(extraPricePerMeal))
 
     const currentBreakfastQuantities =
