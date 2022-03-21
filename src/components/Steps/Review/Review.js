@@ -222,8 +222,14 @@ const Review = () => {
           <div className={`displayMobile mb-10 ${styles.subTotalWrapper}`}>
             <div className={styles.subTotal}>
               <SubTotal
-                entreesQuantity={state.bundle?.entreesQuantity}
-                breakfastsQuantity={state.bundle?.breakfastsQuantity}
+                entreesQuantity={
+                  state.bundle?.entreesQuantity +
+                  state.bundle?.extraPricePerMeal
+                }
+                breakfastsQuantity={
+                  state.bundle?.breakfastsQuantity +
+                  state.bundle?.extraPricePerMeal
+                }
                 entreePrice={state.bundle?.price}
                 breakfastPrice={state.bundle?.breakfast?.price}
                 shippingPrice={state.bundle?.shippingPrice}
@@ -242,7 +248,10 @@ const Review = () => {
                   entreePrice={
                     state.bundle?.price + state.bundle?.extraPricePerMeal
                   }
-                  breakfastPrice={state.bundle?.breakfast?.price}
+                  breakfastPrice={
+                    state.bundle?.breakfast?.price +
+                    state.bundle?.extraPricePerMeal
+                  }
                   shippingPrice={state.bundle?.shippingPrice}
                   backgroundImage={`${process.env.PROXY_APP_URL}${
                     settings().bundleImages().checkout

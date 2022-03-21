@@ -100,6 +100,11 @@ module.exports = {
             }
           ]
         }
+      ],
+      pricesPerPortion: [
+        { type: 'keto', subType: 'large', price: 1 },
+        { type: 'balanced', subType: 'medium', price: 1 },
+        { type: 'balanced', subType: 'large', price: 2 }
       ]
     },
     theme: {
@@ -287,6 +292,11 @@ module.exports = {
             }
           ]
         }
+      ],
+      pricesPerPortion: [
+        { type: 'keto', subType: 'large', price: 1 },
+        { type: 'balanced', subType: 'medium', price: 1 },
+        { type: 'balanced', subType: 'large', price: 2 }
       ]
     },
     theme: {

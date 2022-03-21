@@ -8,8 +8,23 @@ const settings = () => {
   const bundleOptions = () => bundles().options
   const bundleImages = () => bundles().images
   const icons = () => bundles().icons
+  const bundlePricesPerPortion = (entreeType, entreeSubType) =>
+    entreeType
+      ? bundles().pricesPerPortion.find(
+          (t) =>
+            t.type === entreeType.toLowerCase() &&
+            t.subType === entreeSubType.toLowerCase()
+        )
+      : bundles().pricesPerPortion
 
-  return { bundleOptions, bundleImages, bundles, values, icons }
+  return {
+    bundleOptions,
+    bundleImages,
+    bundles,
+    values,
+    icons,
+    bundlePricesPerPortion
+  }
 }
 
 export default settings
