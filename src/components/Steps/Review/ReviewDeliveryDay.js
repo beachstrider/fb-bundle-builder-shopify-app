@@ -6,7 +6,7 @@ const ReviewDeliveryDay = ({ date }) => (
   <>
     Delivery Day:{' '}
     <span className={styles.deliveryDate}>
-      {getNextWeekDay(date).format('dddd')}
+      <span className={styles.date}>{getNextWeekDay(date).format('dddd')}</span>
     </span>
   </>
 )

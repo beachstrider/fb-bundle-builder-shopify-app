@@ -11,10 +11,19 @@ $subTitleFontSize: 2.7rem;
   & .deliveryDate {
     $defaultFontSize: 2.2rem;
     font-family: $fontFamilyBold;
+    text-transform: uppercase;
+    font-size: $defaultFontSize !important;
+    & .startingDate {
+      text-transform: capitalize;
+    }
+    & .date {
+      text-transform: uppercase;
+      color: $deliveryDay;
+    }
     & p {
       font-size: $defaultFontSize !important;
+      font-size: $defaultFontSize !important;
     }
-    font-size: $defaultFontSize !important;
   }
 
   & .subTotalWrapper {
