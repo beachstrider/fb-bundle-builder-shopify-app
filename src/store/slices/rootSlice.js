@@ -12,7 +12,6 @@ export const initialState = {
       id: 1,
       name: 'Step 1',
       description: 'Meals Per Week',
-      labelFooter: 'Select Meals',
       path: '/',
       isActive: true
     },
@@ -20,7 +19,6 @@ export const initialState = {
       id: MEAL_PLANS_ITEM,
       name: 'Step 2',
       description: 'Meal plans',
-      labelFooter: 'Enter Zip Code',
       path: '/steps/2',
       isActive: false
     },
@@ -28,7 +26,6 @@ export const initialState = {
       id: 3,
       name: 'Step 3',
       description: 'Location & Delivery',
-      labelFooter: 'Choose Meal Plan',
       path: '/steps/3',
       isActive: false
     },
@@ -36,7 +33,6 @@ export const initialState = {
       id: 4,
       name: 'Step 4',
       description: 'Select Your Meals',
-      labelFooter: 'Review My Order',
       path: '/steps/4',
       isActive: false
     },
@@ -44,7 +40,6 @@ export const initialState = {
       id: 5,
       name: 'Step 5',
       description: 'Review Order',
-      labelFooter: 'Finalize Order',
       path: '/steps/5',
       isActive: false
     }
