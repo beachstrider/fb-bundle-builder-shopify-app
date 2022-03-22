@@ -19,8 +19,8 @@ const LocationDate = ({ date, onClick, selectedDate }) => {
         <div className={styles.weekDay}>{dayjs(date.date).format('dddd')}</div>
         <div className={styles.month}>{dayjs(date.date).format('MMMM')}</div>
         <div className={styles.dateNumber}>
-          {dayjs(date.date).format('DD')}
-          {dayjs(date.day)
+          {dayjs(date.date).format('D')}
+          {dayjs(date.date)
             .format('Do')
             .match(/[a-zA-Z]+/g)}
         </div>
