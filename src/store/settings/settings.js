@@ -397,7 +397,7 @@ module.exports = {
     bundles: {
       images: {
         featured: '/images/quickfresh-frequency.jpg',
-        checkout: '/images/chow-thank-you-for-your-order.png',
+        checkout: '/images/cse-review-order.png',
         breakfastSample: '/images/quickfresh-breakfast-sample.jpg'
       },
       icons: [
