@@ -182,7 +182,8 @@ module.exports = {
         faqBackgroundColor: '#e8e8e8',
         pillBackground: '#737678',
         buttonColor: '#0a8d47',
-        bannerBackground: '#fedc5c'
+        bannerBackground: '#fedc5c',
+        deliveryDay: '#000000'
       }
     }
   },
@@ -382,7 +383,8 @@ module.exports = {
         faqBackgroundColor: '#e8e8e8',
         pillBackground: '#BB8D3D',
         buttonColor: '#656549',
-        bannerBackground: '#DDCFC4'
+        bannerBackground: '#DDCFC4',
+        deliveryDay: '#000000'
       }
     }
   },
@@ -577,7 +579,8 @@ module.exports = {
         faqBackgroundColor: '#e8e8e8',
         pillBackground: '#689859',
         buttonColor: '#689859',
-        bannerBackground: '#ffffff'
+        bannerBackground: '#DDCFC4',
+        deliveryDay: '#689859'
       }
     }
   }

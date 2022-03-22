@@ -217,7 +217,9 @@ const Review = () => {
             showSeparator={false}
             className={styles.deliveryDate}
           >
-            <ReviewStartingDay day={state.location.deliveryDate.day} />
+            <div className={styles.startingDate}>
+              <ReviewStartingDay day={state.location.deliveryDate.day} />
+            </div>
           </TopTitle>
           <div className={`displayMobile mb-10 ${styles.subTotalWrapper}`}>
             <div className={styles.subTotal}>
