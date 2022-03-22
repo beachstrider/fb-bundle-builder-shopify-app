@@ -556,7 +556,7 @@ module.exports = {
       },
       colors: {
         primaryColor: '#000000',
-        primaryColorLight: '#656549',
+        primaryColorLight: '#689859',
         secondaryColor: '#689859',
         gray: '#4c4c4c',
         grayLight: '#e7eaec',
@@ -577,7 +577,7 @@ module.exports = {
         faqBackgroundColor: '#e8e8e8',
         pillBackground: '#689859',
         buttonColor: '#689859',
-        bannerBackground: '#DDCFC4'
+        bannerBackground: '#ffffff'
       }
     }
   }
