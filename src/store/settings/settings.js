@@ -195,7 +195,6 @@ module.exports = {
     settings: {
       page: {
         title: 'Chow',
-        // TODO: Change description
         description:
           'We offer healthy, chef-prepared meals delivered fresh to your door. Choose from a wide variety of 120+ options for both Balanced and Keto meal types.'
       }
@@ -240,7 +239,7 @@ module.exports = {
           breakfasts: [
             {
               name: '7 Meals',
-              price: 7.95,
+              price: 8.95,
               tag: '7 Day with breakfast'
             },
             {
@@ -261,7 +260,7 @@ module.exports = {
           breakfasts: [
             {
               name: '5 Meals',
-              price: 8.95,
+              price: 9.95,
               tag: '5 Day with breakfast'
             },
             {
@@ -283,7 +282,7 @@ module.exports = {
           breakfasts: [
             {
               name: '3 Meals',
-              price: 9.95,
+              price: 10.95,
               tag: '3 Day with breakfast'
             },
             {
