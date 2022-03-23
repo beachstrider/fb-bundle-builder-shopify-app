@@ -428,14 +428,14 @@ module.exports = {
           id: 1,
           name: '14 Meals',
           description: '7-Days All inclusive - (14 Meals + 7 Breakfasts)',
-          price: 10.95,
+          price: 9.95,
           shippingPrice: 8.95,
           entreesQuantity: 14,
           breakfastsQuantity: 7,
           breakfasts: [
             {
               name: '7 Meals',
-              price: 7.95,
+              price: 6.95,
               tag: '7 Day with breakfast'
             },
             {
