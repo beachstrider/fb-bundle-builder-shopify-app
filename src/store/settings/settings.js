@@ -16,23 +16,23 @@ module.exports = {
       icons: [
         {
           key: 'is_dairy_free',
-          src: '/images/quickfresh-dairy-free-icon.svg',
-          alt: 'dairy-free-icon'
+          name: 'DairyFreeIcon',
+          color: '#fedc5c'
         },
         {
           key: 'is_gluten_free',
-          src: '/images/quickfresh-gluten-free-icon.svg',
-          alt: 'gluten-free-icon'
+          name: 'GlutenFreeIcon',
+          color: '#fedc5c'
         },
         {
           key: 'is_peanut_free',
-          src: '/images/quickfresh-peanut-free-icon.svg',
-          alt: 'peanut-free-icon'
+          name: 'PeanutFreeIcon',
+          color: '#fedc5c'
         },
         {
           key: 'is_spicy',
-          src: '/images/quickfresh-spicy-icon.svg',
-          alt: 'spicy-icon'
+          name: 'SpicyIcon',
+          color: '#fedc5c'
         }
       ],
       options: [
@@ -208,23 +208,23 @@ module.exports = {
       icons: [
         {
           key: 'is_dairy_free',
-          src: '/images/quickfresh-dairy-free-icon.svg',
-          alt: 'dairy-free-icon'
+          name: 'DairyFreeIcon',
+          color: '#ffffff'
         },
         {
           key: 'is_gluten_free',
-          src: '/images/quickfresh-gluten-free-icon.svg',
-          alt: 'gluten-free-icon'
+          name: 'GlutenFreeIcon',
+          color: '#ffffff'
         },
         {
           key: 'is_peanut_free',
-          src: '/images/quickfresh-peanut-free-icon.svg',
-          alt: 'peanut-free-icon'
+          name: 'PeanutFreeIcon',
+          color: '#ffffff'
         },
         {
           key: 'is_spicy',
-          src: '/images/quickfresh-spicy-icon.svg',
-          alt: 'spicy-icon'
+          name: 'SpicyIcon',
+          color: '#ffffff'
         }
       ],
       options: [
@@ -403,23 +403,23 @@ module.exports = {
       icons: [
         {
           key: 'is_dairy_free',
-          src: '/images/quickfresh-dairy-free-icon.svg',
-          alt: 'dairy-free-icon'
+          name: 'DairyFreeIcon',
+          color: '#ffffff'
         },
         {
           key: 'is_gluten_free',
-          src: '/images/quickfresh-gluten-free-icon.svg',
-          alt: 'gluten-free-icon'
+          name: 'GlutenFreeIcon',
+          color: '#ffffff'
         },
         {
           key: 'is_peanut_free',
-          src: '/images/quickfresh-peanut-free-icon.svg',
-          alt: 'peanut-free-icon'
+          name: 'PeanutFreeIcon',
+          color: '#ffffff'
         },
         {
           key: 'is_spicy',
-          src: '/images/quickfresh-spicy-icon.svg',
-          alt: 'spicy-icon'
+          name: 'SpicyIcon',
+          color: '#ffffff'
         }
       ],
       options: [
