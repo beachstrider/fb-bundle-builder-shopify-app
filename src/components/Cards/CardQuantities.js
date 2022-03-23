@@ -4,6 +4,7 @@ import { ButtonCheckMark, ButtonQuantities } from '../Buttons'
 import ItemDescriptionModal from '../Steps/Components/ItemDescriptionModal/ItemDescriptionModal'
 import styles from './CardQuantities.module.scss'
 import { settings } from '../../utils'
+import Icons from '../Icons'
 
 const CardQuantities = ({
   title,
@@ -36,15 +37,11 @@ const CardQuantities = ({
                 const currentMetaField = metafields.find(
                   (m) => m.key === icon.key
                 )
+                const CurrentIcon = Icons[icon.name]
                 return (
                   !!currentMetaField &&
                   currentMetaField.value === 'true' && (
-                    <img
-                      className={styles.icon}
-                      src={`${process.env.PROXY_APP_URL}${icon.src}`}
-                      alt={icon.alt}
-                      key={icon.alt}
-                    />
+                    <CurrentIcon fill={icon.color} />
                   )
                 )
               })}

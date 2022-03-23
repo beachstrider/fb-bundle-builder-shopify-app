@@ -3,6 +3,8 @@ import { NUTRITIONAL_VALUES } from '../../../../constants/bundles'
 import { ButtonCheckMark, ButtonQuantities } from '../../../Buttons'
 import Modal from '../../../Global/Modal'
 import styles from './ItemDescriptionModal.module.scss'
+import { settings } from '../../../../utils'
+import Icons from '../../../Icons'
 
 const ItemDescriptionModal = ({
   open,
@@ -67,6 +69,22 @@ const ItemDescriptionModal = ({
               {getMetafield(metafields, 'contains')?.value}
             </div>
           )}
+          <div className={styles.iconsContainer}>
+            {settings()
+              .icons()
+              .map((icon) => {
+                const currentMetaField = metafields.find(
+                  (m) => m.key === icon.key
+                )
+                const CurrentIcon = Icons[icon.name]
+                return (
+                  !!currentMetaField &&
+                  currentMetaField.value === 'true' && (
+                    <CurrentIcon fill={icon.color} width="45" height="45" />
+                  )
+                )
+              })}
+          </div>
           {displayActions && (
             <div className={`${styles.actions}`}>
               <div>

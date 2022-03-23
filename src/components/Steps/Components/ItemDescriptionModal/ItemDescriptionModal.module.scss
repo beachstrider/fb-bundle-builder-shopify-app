@@ -121,6 +121,11 @@
       font-size: $fontXSmall;
       margin-bottom: 1.5rem;
     }
+    
+    & .iconsContainer {
+      display: flex;
+      justify-content: center;
+    }
 
     & .ingredients {
       h3 {
