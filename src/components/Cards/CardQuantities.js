@@ -4,12 +4,7 @@ import { ButtonCheckMark, ButtonQuantities } from '../Buttons'
 import ItemDescriptionModal from '../Steps/Components/ItemDescriptionModal/ItemDescriptionModal'
 import styles from './CardQuantities.module.scss'
 import { settings } from '../../utils'
-import {
-  DairyFreeIcon,
-  GlutenFreeIcon,
-  PeanutFreeIcon,
-  SpicyIcon
-} from '../Icons'
+import Icons from '../Icons'
 
 const CardQuantities = ({
   title,
