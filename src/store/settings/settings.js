@@ -189,7 +189,7 @@ module.exports = {
   },
   /**
    * CHOW Notes:
-   * Breakfast price is always: mealPrice - $3 = X
+   * Breakfast price is always: mealPrice - $2 = X
    */
   chow: {
     settings: {
@@ -510,20 +510,20 @@ module.exports = {
           url: 'https://cdn.shopify.com/s/files/1/0552/6549/3185/files/Gotham-Bold.otf?v=1627982628'
         },
         {
-          name: 'Lato-Regular',
-          url: 'https://cdn.shopify.com/s/files/1/0630/9399/7799/files/Lato-Regular.woff?v=1646429737'
+          name: 'Avenir-Regular',
+          url: 'https://cdn.shopify.com/s/files/1/0632/5262/7694/files/Avenir-Book.woff?v=1647640173'
         },
         {
           name: 'Gotham-Light',
           url: 'https://cdn.shopify.com/s/files/1/0552/6549/3185/files/Gotham-Light.otf?v=1627982628'
         },
         {
-          name: 'Lato-Bold',
-          url: 'https://cdn.shopify.com/s/files/1/0630/9399/7799/files/Lato-Bold.woff?v=1646429737'
+          name: 'Avenir-Bold',
+          url: 'https://cdn.shopify.com/s/files/1/0632/5262/7694/files/Avenir-Heavy.woff?v=1647640173'
         },
         {
-          name: 'Lato-Bold-Italic',
-          url: 'https://cdn.shopify.com/s/files/1/0630/9399/7799/files/Lato-BoldItalic.ttf?v=1647640661'
+          name: 'Avenir-Bold-Italic',
+          url: 'https://cdn.shopify.com/s/files/1/0632/5262/7694/files/Avenir-Oblique.woff?v=1647640173'
         },
         {
           name: 'Gotham-Thin',
@@ -531,14 +531,14 @@ module.exports = {
         }
       ],
       fontFamilies: {
-        fontFamilyBook: 'Lato-Regular',
+        fontFamilyBook: 'Avenir-Regular',
         fontFamilyBold: 'Eveleth-Regular',
         fontFamilyBlack: 'Eveleth-Regular',
-        fontFamilyLight: 'Lato-Bold',
+        fontFamilyLight: 'Avenir-Bold',
         fontFamilyThin: 'Gotham-Thin',
-        fontFamilyMedium: 'Lato-Bold',
-        fontFamilyMediumBold: 'Lato-Bold',
-        fontFamilyMediumItalic: 'Lato-Bold-Italic'
+        fontFamilyMedium: 'Avenir-Bold',
+        fontFamilyMediumBold: 'Avenir-Bold',
+        fontFamilyMediumItalic: 'Avenir-Bold-Italic'
       },
       borders: {
         borderButtonRadius: '0.5rem'
