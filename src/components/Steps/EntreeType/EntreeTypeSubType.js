@@ -14,11 +14,15 @@ const EntreeTypeSubType = ({
   return (
     <CardSelectionMark isSelected={isSelected} onClick={onClick}>
       <div className={styles.wrapper}>
-        {extraPricePerMeal !== 0 && (
-          <span className={styles.Toplabel}>
-            +${extraPricePerMeal} PER MEAL
-          </span>
-        )}
+        <div className={styles.extraPriceWrapper}>
+          {extraPricePerMeal === 0 ? (
+            <div>&nbsp;</div>
+          ) : (
+            <span className={styles.Toplabel}>
+              +${extraPricePerMeal} PER MEAL
+            </span>
+          )}
+        </div>
         <div className={styles.title}>{title}</div>
         <div className={styles.value}>
           {getBundleMetafield(metafields, METAFIELD_CALORIE_RANGE)?.value}
