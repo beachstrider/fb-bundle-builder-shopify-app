@@ -5,6 +5,10 @@ module.exports = {
         title: 'QuickFresh',
         description:
           'We offer healthy, chef-prepared meals delivered fresh to your door. Choose from a wide variety of 120+ options for both Balanced and Keto meal types.'
+      },
+      display: {
+        averageMacros: false,
+        chooseMealPlan: true
       }
     },
     labels: {
@@ -12,7 +16,8 @@ module.exports = {
       step2: 'Meal plans',
       step3: 'Location & Delivery',
       step4: 'Select Your Meals',
-      step5: 'Review Order'
+      step5: 'Review Order',
+      bundleCalorieRange: 'Average Calories Per Meal'
     },
     bundles: {
       images: {
@@ -205,13 +210,6 @@ module.exports = {
         description:
           'We offer healthy, chef-prepared meals delivered fresh to your door. Choose from a wide variety of 120+ options for both Balanced and Keto meal types.'
       }
-    },
-    labels: {
-      step1: 'Meals Per Week',
-      step2: 'Meal plans',
-      step3: 'Location & Delivery',
-      step4: 'Select Your Meals',
-      step5: 'Review Order'
     },
     bundles: {
       images: {
@@ -409,18 +407,11 @@ module.exports = {
           'We offer healthy, chef-prepared meals delivered fresh to your door. Choose from a wide variety of 120+ options for both Balanced and Keto meal types.'
       }
     },
-    labels: {
-      step1: 'Meals Per Week',
-      step2: 'Portion Size',
-      step3: 'Location & Delivery',
-      step4: 'Select Your Meals',
-      step5: 'Review Order'
-    },
     bundles: {
       images: {
-        featured: '/images/cse-frequency.jpg',
+        featured: '/images/quickfresh-frequency.jpg',
         checkout: '/images/cse-review-order.png',
-        breakfastSample: ''
+        breakfastSample: '/images/quickfresh-breakfast-sample.jpg'
       },
       icons: [
         {
