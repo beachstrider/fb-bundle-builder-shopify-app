@@ -34,9 +34,15 @@
     font-family: $fontFamilyMedium;
 
     & .keyPoints {
+      display: flex;
+      justify-content: center;
+      align-items: center;
       width: 80%;
       text-align: center;
       font-size: $font2XSmall;
+      @media only screen and (min-width: $breakpointDesktop) {
+        min-height: 8rem;
+      }
       @media only screen and (max-width: $breakpointTablet) {
         font-size: calc($fontSmall - 0.4rem);
       }
