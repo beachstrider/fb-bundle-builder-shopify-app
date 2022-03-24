@@ -1,45 +1,20 @@
 @import './variables';
 
 /* custom font start*/
-@font-face {
-  font-family: Gotham-Black;
-  src: url('https://cdn.shopify.com/s/files/1/0552/6549/3185/files/Gotham-Black.otf?v=1627982628');
-}
-@font-face {
-  font-family: Gotham-Bold;
-  src: url('https://cdn.shopify.com/s/files/1/0552/6549/3185/files/Gotham-Bold.otf?v=1627982628');
-}
-@font-face {
-  font-family: Gotham-Book;
-  src: url('https://cdn.shopify.com/s/files/1/0552/6549/3185/files/Gotham-Book.otf?v=1627982628');
-}
-@font-face {
-  font-family: Gotham-Light;
-  src: url('https://cdn.shopify.com/s/files/1/0552/6549/3185/files/Gotham-Light.otf?v=1627982628');
-}
-@font-face {
-  font-family: Gotham-Medium;
-  src: url('https://cdn.shopify.com/s/files/1/0552/6549/3185/files/Gotham-Medium.otf?v=1627982628');
-}
-@font-face {
-  font-family: Gotham-Thin;
-  src: url('https://cdn.shopify.com/s/files/1/0552/6549/3185/files/Gotham-Thin.otf?v=1627982628');
-}
 h1,
 h2,
-h3,
 h4,
 h5 {
-  font-family: Gotham-Black !important;
+  font-family: $fontFamilyBlack !important;
 }
 h2,
 h3,
 h4,
 h5 {
-  font-family: Gotham-Medium !important;
+  font-family: $fontFamilyMedium !important;
 }
 p {
-  font-family: Gotham-Book !important;
+  font-family: $fontFamilyBook !important;
 }
 /* custom font end */
 
@@ -192,15 +167,15 @@ $multiplier: 0.5rem;
   & .button {
     min-width: 6rem;
     padding: 1rem 3.5rem;
-    border-radius: 2.5rem;
+    border-radius: $borderButtonRadius;
     cursor: pointer;
   }
 
   & .primaryButton {
-    background: $primaryColor;
+    background: $buttonColor;
     box-shadow: unset !important;
     &:hover {
-      background: darken($primaryColor, 10%);
+      background: darken($buttonColor, 10%);
       cursor: pointer;
     }
     &:disabled {
@@ -246,7 +221,7 @@ $multiplier: 0.5rem;
     text-decoration: none;
     line-height: 16px;
     background: $gray200;
-    border-radius: 2.5rem;
+    border-radius: $borderButtonRadius;
     padding: 5px 40px;
     box-shadow: unset !important;
     cursor: not-allowed;
@@ -297,13 +272,13 @@ $multiplier: 0.5rem;
   text-decoration: none;
   color: $white;
   line-height: 16px;
-  background: $primaryColor;
-  border: 1px solid $primaryColor;
-  border-radius: 2em;
+  background: $buttonColor;
+  border: 1px solid $buttonColor;
+  border-radius: $borderButtonRadius;
   padding: 5px 40px;
 
   &:hover {
-    background: darken($primaryColor, 10%);
+    background: darken($buttonColor, 10%);
     cursor: pointer;
   }
   &:disabled {

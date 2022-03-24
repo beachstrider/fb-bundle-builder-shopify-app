@@ -8,6 +8,12 @@
     gap: 4.5rem;
   }
 
+  & .startingAt {
+    font-size: 1.2rem;
+    margin-bottom: 0;
+    margin-top: 1rem;
+  }
+
   .subTotalWrapper {
     min-width: 20vw;
   }
@@ -58,6 +64,10 @@
       & .subTitle {
         font-family: $fontFamilyBook;
         color: $grayMedium;
+      }
+      & .breakfastStartingAt {
+        display: flex;
+        flex-direction: row;
       }
       & .image {
         max-height: 7.2rem;
@@ -128,6 +138,11 @@
                 font-size: calc($fontXSmall - 0.3rem);
               }
             }
+            & .breakFastPricing {
+              @extend .price;
+              line-height: 2rem;
+              padding: 0 0 4rem 0;
+            }
             & .noneIcon {
               svg {
                 width: 3.4rem;
@@ -180,7 +195,7 @@
             grid-template-columns: repeat(2, 1fr);
             row-gap: 3rem;
             justify-content: center;
-            margin: 0 7.15rem;
+            margin: 0 4.15rem;
           }
         }
         & .subRowFullWidth {

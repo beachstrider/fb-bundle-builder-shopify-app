@@ -161,7 +161,7 @@ const Entrees = () => {
 
   const getProducts = async (configuration) => {
     const contentByDate = await getConfigurationContent(
-      dayjs.utc().toISOString(),
+      state.location.deliveryDate.date,
       getBundleConfiguration,
       state,
       configuration.bundleId,

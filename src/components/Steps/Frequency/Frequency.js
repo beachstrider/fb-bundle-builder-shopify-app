@@ -12,7 +12,7 @@ import {
 import { FrequencyBreakfast, FrequencyEntree } from '.'
 import { withActiveStep } from '../../Hooks'
 import { clearLocalStorage } from '../../../store/store'
-import { smoothScrollingToId } from '../../../utils'
+import { settings, smoothScrollingToId } from '../../../utils'
 import Loading from '../Components/Loading'
 import TopTitle from '../Components/TopTitle'
 import SubTotal from '../Components/SubTotal'
@@ -21,72 +21,7 @@ import styles from './Frequency.module.scss'
 const FAQ_TYPE = 'frequency'
 const STEP_ID = 1
 
-const bundles = [
-  {
-    id: 1,
-    name: '14 Meals',
-    description: '7-Days All inclusive - (14 Meals + 7 Breakfasts)',
-    price: 9.95,
-    shippingPrice: 8.95,
-    entreesQuantity: 14,
-    breakfastsQuantity: 7,
-    breakfasts: [
-      {
-        name: '7 Meals',
-        price: 4.95,
-        tag: '7 Day with breakfast'
-      },
-      {
-        name: 'none',
-        price: 'None',
-        tag: '7 Day'
-      }
-    ]
-  },
-  {
-    id: 2,
-    name: '10 Meals',
-    description: '',
-    price: 11.95,
-    shippingPrice: 8.95,
-    entreesQuantity: 10,
-    breakfastsQuantity: 5,
-    breakfasts: [
-      {
-        name: '5 Meals',
-        price: 5.95,
-        tag: '5 Day with breakfast'
-      },
-      {
-        name: 'none',
-        price: 'None',
-        tag: '5 Day'
-      }
-    ]
-  },
-  {
-    id: 3,
-    name: '6 Meals',
-    description: '',
-    price: 12.95,
-    shippingPrice: 8.95,
-    entreesQuantity: 6,
-    breakfastsQuantity: 3,
-
-    breakfasts: [
-      {
-        name: '3 Meals',
-        price: 5.95,
-        tag: '3 Day with breakfast'
-      },
-      {
-        name: 'none',
-        price: 'None',
-        tag: '3 Day'
-      }
-    ]
-  }
-]
+const bundles = settings().bundleOptions()
 
 const Frequency = () => {
   const dispatch = useDispatch()
@@ -210,7 +145,9 @@ const Frequency = () => {
                   <div className="displayTablet">
                     <img
                       className={styles.image}
-                      src={`${process.env.PROXY_APP_URL}/images/breakfast-sample.jpg`}
+                      src={`${process.env.PROXY_APP_URL}${
+                        settings().bundleImages().breakfastSample
+                      }`}
                       alt="Breakfast"
                     />
                   </div>
@@ -235,7 +172,7 @@ const Frequency = () => {
                 )}
               </div>
             </div>
-            <div className="displayMobile mt-5">
+            <div className="displayMobile mt-5 mb-5">
               <div className="mt-10 px-4" style={{ width: '100%' }}>
                 <SubTotal
                   entreesQuantity={state.bundle?.entreesQuantity}
@@ -256,7 +193,9 @@ const Frequency = () => {
               entreePrice={state.bundle?.price}
               breakfastPrice={state.bundle?.breakfast?.price}
               shippingPrice={state.bundle?.shippingPrice}
-              backgroundImage={`${process.env.PROXY_APP_URL}/images/frequency.jpg`}
+              backgroundImage={`${process.env.PROXY_APP_URL}${
+                settings().bundleImages().featured
+              }`}
             />
           </div>
         </div>

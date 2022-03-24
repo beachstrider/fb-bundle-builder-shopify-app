@@ -14,7 +14,8 @@
 ## Configuring the .env file
 
 `NODE_ENV` Your environment. It can be 'development' or 'production' <br>
-`PROXY_APP_URL` Example: https://your-app.ngrok.io <br><br>
+`PROXY_APP_URL` Example: https://your-app.ngrok.io <br>
+`STORE_SETTINGS_KEY` Example: `company_abc`, for available options check `src/store/settings/settings.js`<br>
 
 `REQUEST_TOKEN_SECRET` Used to make sure that a request is coming from the app <br>
 `REQUEST_TOKEN_DURATION` How long the token should be valid (in seconds) <br> <br>
@@ -52,10 +53,27 @@ Env variable: SHOPIFY_PRODUCTS_COLLECTION
 2. On the left menu, click on `Metafields`, `Variants`
 3. Add these metafields: <br >
    <br> `Net Carbs` | Namespace and key: `my_fields.net_carbs`) | Measurement: `Weight`
-   <br> `Protein` | Namespace and key: `my_fields.net_carbs`) | Measurement: `Weight`
+   <br> `Protein` | Namespace and key: `my_fields.protein`) | Measurement: `Weight`
    <br> `Calories` | Namespace and key: `my_fields.calories`) | Measurement: `Weight`
    <br> `Total Fat` | Namespace and key: `my_fields.total_fat`) | Measurement: `Weight`
-4. Go to your collection and add values to each metafield, for all your variants
+   <br> `Subtitle` | Namespace and key: `nutrition.subtitle`) | Measurement: `Text (multi-line text)`
+   <br> `Contains` | Namespace and key: `nutrition.contains`) | Measurement: `Text (multi-line text)`
+   <br> `Ingredients` | Namespace and key: `nutrition.ingredients`) | Measurement: `Text (multi-line text)`
+   <br> `Calorie Range` | Namespace and key: `nutrition.calorie_range`) | Measurement: `Text (single line text)`
+   <br> `Gluten Free` | Namespace and key: `nutrition.is_gluten_free`) | Content Type: `True or False`
+   <br> `Dairy Free` | Namespace and key: `nutrition.is_dairy_free`) | Content Type: `True or False`
+   <br> `Peanut` | Namespace and key: `nutrition.is_peanut_free`) | Content Type: `True or False`
+   <br> `Spicy` | Namespace and key: `nutrition.is_spicy`) | Content Type: `True or False`
+4. Go back to On the left menu, click on `Metafields`, `Products` and add these metafields: <br>
+   <br> `Bundle Key Points` | Namespace and key: `bundle-builder.balanced_bundle_key_points`) | Measurement: `Text (multi-line text)`
+   <br> `Bundle Key Points` | Namespace and key: `bundle-builder.keto_bundle_key_points`) | Measurement: `Text (multi-line text)`
+   <br> `Protein` | Namespace and key: `nutrition.balanced_protein`) | Measurement: `Text (single line text)`
+   <br> `Protein` | Namespace and key: `nutrition.keto_protein`) | Measurement: `Text (single line text)`
+   <br> `Net Carbs` | Namespace and key: `nutrition.balanced_net_carbs`) | Measurement: `Text (single line text)`
+   <br> `Net Carbs` | Namespace and key: `nutrition.keto_net_carbs`) | Measurement: `Text (single line text)`
+   <br> `Fat` | Namespace and key: `nutrition.balanced_fat`) | Measurement: `Text (single line text)`
+   <br> `Fat` | Namespace and key: `nutrition.keto_fat`) | Measurement: `Text (single line text)`
+5. Go to your collection and add values to each metafield, for all your variants and products
 
 ## Configuring Shopify Bundles
 

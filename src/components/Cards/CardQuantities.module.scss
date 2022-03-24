@@ -1,5 +1,16 @@
 @import '../../variables';
 
+$defaultBorder: 4px;
+
+.isChecked {
+  border: $defaultBorder solid $primaryColor;
+  border-radius: 0.9rem;
+}
+.isUnchecked {
+  border: $defaultBorder solid transparent;
+  border-radius: 0;
+}
+
 .card {
   border-radius: 3px;
   box-shadow: 0px 0px 30px #0000001c;
@@ -31,10 +42,14 @@
       font-size: $fontSmall;
       font-family: $fontFamilyBold;
     }
+
     & .metafieldName {
       font-family: $fontFamilyLight;
       font-size: 1rem;
       line-height: 0.4rem;
+      @media only screen and (max-width: $breakpointTablet) {
+        line-height: 0.8rem;
+      }
     }
   }
 
@@ -49,6 +64,7 @@
   }
 
   & .image {
+    cursor: pointer;
     width: 100%;
     background-size: cover;
     background-position: center;
@@ -71,4 +87,18 @@
     background-color: $white;
     padding-bottom: 1rem;
   }
+
+  & .iconsContainer {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    align-items: end;
+    padding: 1rem;
+    
+    & .icon {
+      width: 30px;
+      margin-top: 0.5rem;
+    }
+  }
+  
 }

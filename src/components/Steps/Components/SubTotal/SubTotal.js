@@ -20,7 +20,8 @@ const SubTotal = ({
       entreePrice,
       breakfastPrice,
       entreesQuantity,
-      breakfastsQuantity
+      breakfastsQuantity,
+      shippingPrice
     )
 
     setTotal(subTotal)
@@ -50,13 +51,15 @@ const SubTotal = ({
 
   return (
     <div className={styles.wrapper}>
-      {backgroundImage && (
+      {backgroundImage ? (
         <div
           className={styles.image}
           style={{ backgroundImage: `url(${backgroundImage})` }}
         >
           &nbsp;
         </div>
+      ) : (
+        <div>&nbsp;</div>
       )}
       {items.map((item, index) => (
         <div key={index} className={styles.lineItem}>

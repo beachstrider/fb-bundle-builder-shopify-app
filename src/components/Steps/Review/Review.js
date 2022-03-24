@@ -20,6 +20,7 @@ import {
   cart,
   getBundleVariant,
   getNextWeekDay,
+  settings,
   smoothScrollingToId
 } from '../../../utils'
 import Toast from '../../Global/Toast'
@@ -214,14 +215,23 @@ const Review = () => {
               <ReviewDeliveryDay date={state.location.deliveryDate.day} />
             }
             showSeparator={false}
+            className={styles.deliveryDate}
           >
-            <ReviewStartingDay day={state.location.deliveryDate.day} />
+            <div className={styles.startingDate}>
+              <ReviewStartingDay day={state.location.deliveryDate.day} />
+            </div>
           </TopTitle>
           <div className={`displayMobile mb-10 ${styles.subTotalWrapper}`}>
             <div className={styles.subTotal}>
               <SubTotal
-                entreesQuantity={state.bundle?.entreesQuantity}
-                breakfastsQuantity={state.bundle?.breakfastsQuantity}
+                entreesQuantity={
+                  state.bundle?.entreesQuantity +
+                  state.bundle?.extraPricePerMeal
+                }
+                breakfastsQuantity={
+                  state.bundle?.breakfastsQuantity +
+                  state.bundle?.extraPricePerMeal
+                }
                 entreePrice={state.bundle?.price}
                 breakfastPrice={state.bundle?.breakfast?.price}
                 shippingPrice={state.bundle?.shippingPrice}
@@ -237,10 +247,17 @@ const Review = () => {
                 <SubTotal
                   entreesQuantity={state.bundle?.entreesQuantity}
                   breakfastsQuantity={state.bundle?.breakfastsQuantity}
-                  entreePrice={state.bundle?.price}
-                  breakfastPrice={state.bundle?.breakfast?.price}
+                  entreePrice={
+                    state.bundle?.price + state.bundle?.extraPricePerMeal
+                  }
+                  breakfastPrice={
+                    state.bundle?.breakfast?.price +
+                    state.bundle?.extraPricePerMeal
+                  }
                   shippingPrice={state.bundle?.shippingPrice}
-                  backgroundImage={`${process.env.PROXY_APP_URL}/images/order-package.jpg`}
+                  backgroundImage={`${process.env.PROXY_APP_URL}${
+                    settings().bundleImages().checkout
+                  }`}
                 />
               </div>
             </div>

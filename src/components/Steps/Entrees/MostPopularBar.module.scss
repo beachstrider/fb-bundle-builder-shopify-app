@@ -5,7 +5,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-color: $butter;
+  background-color: $bannerBackground;
   margin-top: -3rem;
   padding: 2.5rem;
   text-align: center;
@@ -35,7 +35,7 @@
     width: auto;
     background-color: $primaryColorLight;
     padding: 1rem 4rem;
-    border-radius: 3rem;
+    border-radius: $borderButtonRadius;
 
     @media only screen and (max-width: $breakpointTablet) {
       font-size: $fontMediumSmall;

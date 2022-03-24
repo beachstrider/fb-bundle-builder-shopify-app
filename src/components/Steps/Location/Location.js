@@ -44,7 +44,7 @@ const isSameOrBefore = require('dayjs/plugin/isSameOrBefore')
 dayjs.extend(isSameOrBefore)
 
 const FAQ_TYPE = 'location'
-const STEP_ID = 2
+const STEP_ID = 3
 
 const Location = () => {
   const dispatch = useDispatch()
@@ -338,8 +338,8 @@ const Location = () => {
     }
   }
 
-  if (state.bundle.id === 0) {
-    return <Redirect push to="/" />
+  if (state.entreeType.id === 0 || state.entreeSubType.id === 0) {
+    return <Redirect push to="/steps/2" />
   }
 
   return (
@@ -386,7 +386,7 @@ const Location = () => {
             <div>
               <div className="mb-3">&nbsp;</div>
               <button
-                className={`button primaryButton ${styles.buttonWrapper}`}
+                className={`primaryButton ${styles.buttonWrapper}`}
                 type="submit"
               >
                 {isLoading ? <SpinnerIcon /> : 'Submit'}

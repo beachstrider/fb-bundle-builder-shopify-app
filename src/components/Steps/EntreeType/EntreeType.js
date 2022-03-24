@@ -11,7 +11,11 @@ import {
   cartClear
 } from '../../../store/slices/rootSlice'
 import { CardEntreeType, CardSelectionMark } from '../../Cards'
-import { mapBundleTypeSubtype, smoothScrollingToId } from '../../../utils'
+import {
+  mapBundleTypeSubtype,
+  settings,
+  smoothScrollingToId
+} from '../../../utils'
 import { getSelectedBundle, useGuestToken, withActiveStep } from '../../Hooks'
 import styles from './EntreeType.module.scss'
 import EntreeTypeSubType from './EntreeTypeSubType'
@@ -20,7 +24,7 @@ import Toast from '../../Global/Toast'
 import TopTitle from '../Components/TopTitle'
 
 const FAQ_TYPE = 'entreeType'
-const STEP_ID = 3
+const STEP_ID = 2
 
 const EntreeType = () => {
   const dispatch = useDispatch()
@@ -93,6 +97,7 @@ const EntreeType = () => {
     const saveEntreeType = async (entree) =>
       new Promise((resolve) => {
         dispatch(setEntreeType(entree))
+        dispatch(setEntreeSubType({ id: 0 }))
         dispatch(displayFooter(true))
         dispatch(selectFaqType(FAQ_TYPE))
         resolve()
@@ -102,8 +107,8 @@ const EntreeType = () => {
     smoothScrollingToId('entreeType')
   }
 
-  if (!state.location.zipCode) {
-    return <Redirect push to="/steps/2" />
+  if (state.bundle.id === 0) {
+    return <Redirect push to="/" />
   }
 
   if (isLoading) {
@@ -147,15 +152,23 @@ const EntreeType = () => {
                       : styles.subTypesWrapper_3_Columns
                   } mb-10`}
                 >
-                  {state.entreeType?.options.map((subType, index) => (
-                    <EntreeTypeSubType
-                      key={index}
-                      title={subType.name}
-                      metafields={subType.metafields}
-                      isSelected={subType.id === state.entreeSubType.id}
-                      onClick={() => dispatch(setEntreeSubType(subType))}
-                    />
-                  ))}
+                  {state.entreeType?.options.map((subType, index) => {
+                    const entryTypeCondition =
+                      settings().bundlePricesPerPortion(
+                        state.entreeType.name,
+                        subType.name
+                      )
+                    return (
+                      <EntreeTypeSubType
+                        key={index}
+                        title={subType.name}
+                        metafields={subType.metafields}
+                        isSelected={subType.id === state.entreeSubType.id}
+                        onClick={() => dispatch(setEntreeSubType(subType))}
+                        extraPricePerMeal={entryTypeCondition?.price}
+                      />
+                    )
+                  })}
                 </div>
               </>
             )}

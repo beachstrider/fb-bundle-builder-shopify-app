@@ -8,6 +8,7 @@ env:
     BUNDLE_API_URL: $BUNDLE_API_URL
     REPOSITORY_NAME: $REPOSITORY_NAME #i.e. quickfresh-bundle-builder-proxy-development
     CONTAINER_NAME: $CONTAINER_NAME #i.e. quickfresh-bundle-builder-proxy-development-container
+    STORE_SETTINGS_KEY: $STORE_SETTINGS_KEY
 phases:
   install:
     runtime-versions:
@@ -26,7 +27,7 @@ phases:
     commands:
       - echo Build started on `date`
       - echo Building the Docker image...
-      - docker build -t $REPOSITORY_URI:latest --build-arg appurl=$PROXY_APP_URL --build-arg storagekey=$LOCAL_STORAGE_KEY --build-arg apiurl=$BUNDLE_API_URL --build-arg logo=$LOGO_URL .
+      - docker build -t $REPOSITORY_URI:latest --build-arg appurl=$PROXY_APP_URL --build-arg storagekey=$LOCAL_STORAGE_KEY --build-arg apiurl=$BUNDLE_API_URL --build-arg logo=$LOGO_URL --build-arg storeSettingsKey=$STORE_SETTINGS_KEY .
       - docker tag $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG
   post_build:
     commands:

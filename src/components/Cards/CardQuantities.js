@@ -1,13 +1,10 @@
 import React, { useState } from 'react'
-import {
-  METAFIELD_CALORIES,
-  METAFIELD_CARBS,
-  METAFIELD_PROTEIN,
-  METAFIELD_TOTAL_FAT
-} from '../../constants/bundles'
+import { NUTRITIONAL_VALUES } from '../../constants/bundles'
 import { ButtonCheckMark, ButtonQuantities } from '../Buttons'
 import ItemDescriptionModal from '../Steps/Components/ItemDescriptionModal/ItemDescriptionModal'
 import styles from './CardQuantities.module.scss'
+import { settings } from '../../utils'
+import Icons from '../Icons'
 
 const CardQuantities = ({
   title,
@@ -25,34 +22,37 @@ const CardQuantities = ({
 }) => {
   const [openModal, setOpenModal] = useState(false)
 
-  const nutritionValues = [
-    METAFIELD_CARBS,
-    METAFIELD_PROTEIN,
-    METAFIELD_TOTAL_FAT,
-    METAFIELD_CALORIES
-  ]
-
   return (
-    <div
-      style={{
-        border: isChecked ? '4px solid #3DAE2B' : '4px solid transparent',
-        borderRadius: isChecked ? '0.9rem' : '0'
-      }}
-    >
+    <div className={isChecked ? styles.isChecked : styles.isUnchecked}>
       <div className={styles.card}>
         <div
           className={styles.image}
           style={{ backgroundImage: `url('${image}')` }}
           onClick={() => setOpenModal(true)}
         >
-          &nbsp;
+          <div className={styles.iconsContainer}>
+            {settings()
+              .icons()
+              .map((icon) => {
+                const currentMetaField = metafields.find(
+                  (m) => m.key === icon.key
+                )
+                const CurrentIcon = Icons[icon.name]
+                return (
+                  !!currentMetaField &&
+                  currentMetaField.value === 'true' && (
+                    <CurrentIcon fill={icon.color} />
+                  )
+                )
+              })}
+          </div>
         </div>
         <div className={`${styles.descriptionWrapper}`}>
           <div className={`${styles.title}`}>{title}</div>
           <div className={styles.description}>
             {metafields.map(
               (metafield) =>
-                nutritionValues.includes(metafield.key) && (
+                NUTRITIONAL_VALUES.includes(metafield.key) && (
                   <div key={metafield.key}>
                     <div className={styles.metafieldValue}>
                       {metafield.value}

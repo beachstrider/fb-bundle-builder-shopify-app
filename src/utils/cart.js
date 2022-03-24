@@ -1,3 +1,5 @@
+import settings from './settings'
+
 const cart = (state) => {
   const isItemSelected = (cart, item) => {
     return !!cart.find((c) => c.id === item.id)
@@ -83,7 +85,8 @@ const cart = (state) => {
     entreePrice,
     breakfastPrice,
     entreesQuantity,
-    breakfastsQuantity
+    breakfastsQuantity,
+    shippingPrice
   ) => {
     const entreesTotal = Number.parseFloat(entreePrice * entreesQuantity)
     const breakfastsTotal = isNaN(breakfastPrice)
@@ -91,8 +94,8 @@ const cart = (state) => {
       : Number.parseFloat(breakfastPrice) * breakfastsQuantity
 
     return isNaN(breakfastsTotal)
-      ? entreesTotal
-      : entreesTotal + breakfastsTotal
+      ? entreesTotal + shippingPrice
+      : entreesTotal + breakfastsTotal + shippingPrice
   }
 
   const mapByTypes = () => {
@@ -121,6 +124,31 @@ const cart = (state) => {
     return result
   }
 
+  const getExtraSubTypePrice = (entreeType, entreeSubType) => {
+    let extraPricePerMeal = 0
+    let extraEntreePrice = 0
+    let extraBreakfastPrice = 0
+
+    const entreeTypeName = entreeType?.name
+    const entreeSubTypeName = entreeSubType?.name
+
+    if (entreeTypeName && entreeSubTypeName) {
+      const portionType = settings().bundlePricesPerPortion(
+        entreeTypeName,
+        entreeSubTypeName
+      )
+
+      if (portionType) {
+        extraPricePerMeal = portionType.price
+        extraEntreePrice = portionType.price * state.bundle?.entreesQuantity
+        extraBreakfastPrice =
+          portionType.price * state.bundle?.breakfastsQuantity
+      }
+    }
+
+    return { extraPricePerMeal, extraEntreePrice, extraBreakfastPrice }
+  }
+
   return {
     addItem,
     calculateSubTotal,
@@ -129,7 +157,8 @@ const cart = (state) => {
     isItemSelected,
     removeItem,
     sumQuantity,
-    mapByTypes
+    mapByTypes,
+    getExtraSubTypePrice
   }
 }
 

@@ -11,10 +11,14 @@ import {
   updateBundle,
   getDefaultProducts,
   getActiveSubscriptions,
-  generateRequestToken
+  generateRequestToken,
+  getBundleConfigurations,
+  getEnabledBundles
 } from './withBundleApi'
 import useGuestToken from './useGuestToken'
-import getSelectedBundle from './getSelectedBundle'
+import getSelectedBundle, {
+  getSelectedBundleByPlatformId
+} from './getSelectedBundle'
 import {
   useUserToken,
   hasUserToken,
@@ -22,7 +26,7 @@ import {
 } from './isUserAuthenticated'
 import useShopifyCart from './useShopifyCart'
 import { getShopifyCustomerByEmail } from './withShopifyApi'
-import { mapItems, mapItemsByOption } from './useBundle'
+import { mapItems, mapItemsByOption, getProductVariants } from './useBundle'
 
 export {
   useGuestToken,
@@ -46,5 +50,9 @@ export {
   getShopifyCustomerByEmail,
   generateRequestToken,
   mapItems,
-  mapItemsByOption
+  mapItemsByOption,
+  getBundleConfigurations,
+  getEnabledBundles,
+  getSelectedBundleByPlatformId,
+  getProductVariants
 }

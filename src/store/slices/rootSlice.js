@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { zone1, zone2, zone3 } from '../data/zipcodes'
 
-export const MEAL_PLANS_ITEM = 3
+export const MEAL_PLANS_ITEM = 2
 
 export const initialState = {
   displayHeader: false,
@@ -12,22 +12,20 @@ export const initialState = {
       id: 1,
       name: 'Step 1',
       description: 'Meals Per Week',
-      labelFooter: 'Enter Zip Code',
       path: '/',
       isActive: true
     },
     {
-      id: 2,
+      id: MEAL_PLANS_ITEM,
       name: 'Step 2',
-      description: 'Location & Delivery',
-      labelFooter: 'Select a Delivery Date',
+      description: 'Meal plans',
       path: '/steps/2',
       isActive: false
     },
     {
-      id: MEAL_PLANS_ITEM,
+      id: 3,
       name: 'Step 3',
-      description: 'Meal plans',
+      description: 'Location & Delivery',
       path: '/steps/3',
       isActive: false
     },
@@ -35,7 +33,6 @@ export const initialState = {
       id: 4,
       name: 'Step 4',
       description: 'Select Your Meals',
-      labelFooter: 'Review My Order',
       path: '/steps/4',
       isActive: false
     },
@@ -43,7 +40,6 @@ export const initialState = {
       id: 5,
       name: 'Step 5',
       description: 'Review Order',
-      labelFooter: 'Finalize Order',
       path: '/steps/5',
       isActive: false
     }
@@ -98,6 +94,7 @@ export const initialState = {
   bundle: {
     id: 0,
     price: 0,
+    extraPricePerMeal: 0,
     weeklyPrice: '',
     shippingPrice: 0,
     breakfast: {
@@ -154,6 +151,9 @@ const rootSlice = createSlice({
     },
     setBundle: (state, action) => {
       state.bundle = action.payload
+    },
+    setBundleExtraPricePerMeal: (state, action) => {
+      state.bundle.extraPricePerMeal = action.payload
     },
     selectFaqType: (state, action) => {
       state.faqType = action.payload
@@ -249,6 +249,7 @@ export const {
   setVisitedStep,
   setEmail,
   setBundle,
+  setBundleExtraPricePerMeal,
   setEntreeType,
   setEntreeSubType,
   setLocation,

@@ -69,10 +69,11 @@ const getConfigurationContent = async (
   if (bundleConfiguration) {
     bundleConfiguration.data?.data.contents.forEach((content) => {
       const dateNow = new Date(date)
-      const displayAfter = new Date(content.display_after)
-      const displayBefore = new Date(content.display_before)
-      console.log(dateNow, displayAfter, displayBefore)
-      if (dateNow > displayAfter && dateNow < displayBefore) {
+      const deliverAfter = new Date(content.deliver_after)
+      const deliverBefore = new Date(content.deliver_before)
+      console.log(dateNow, deliverAfter, deliverBefore)
+      if (dateNow > deliverAfter && dateNow < deliverBefore) {
+        console.log('date found', deliverAfter)
         result = { ...content }
       }
     })

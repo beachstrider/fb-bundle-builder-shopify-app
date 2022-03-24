@@ -1,7 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit'
 import { reducer } from './slices/rootSlice'
+import { DEFAULT_SETTINGS_KEY } from '../constants/defaults'
 
-const localStorageKey = process.env.LOCAL_STORAGE_KEY || 'bundleData'
+const storeSettingsKey = process.env.STORE_SETTINGS_KEY || DEFAULT_SETTINGS_KEY
+const localStorageKey =
+  `${storeSettingsKey}_${process.env.LOCAL_STORAGE_KEY}` ||
+  `${storeSettingsKey}_bundleData`
 
 const saveToLocalStorage = (state) => {
   try {
