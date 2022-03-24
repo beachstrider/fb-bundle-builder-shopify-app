@@ -7,6 +7,13 @@ module.exports = {
           'We offer healthy, chef-prepared meals delivered fresh to your door. Choose from a wide variety of 120+ options for both Balanced and Keto meal types.'
       }
     },
+    labels: {
+      step1: 'Meals Per Week',
+      step2: 'Meal plans',
+      step3: 'Location & Delivery',
+      step4: 'Select Your Meals',
+      step5: 'Review Order'
+    },
     bundles: {
       images: {
         featured: '/images/quickfresh-frequency.jpg',
@@ -198,6 +205,13 @@ module.exports = {
         description:
           'We offer healthy, chef-prepared meals delivered fresh to your door. Choose from a wide variety of 120+ options for both Balanced and Keto meal types.'
       }
+    },
+    labels: {
+      step1: 'Meals Per Week',
+      step2: 'Meal plans',
+      step3: 'Location & Delivery',
+      step4: 'Select Your Meals',
+      step5: 'Review Order'
     },
     bundles: {
       images: {
@@ -394,6 +408,13 @@ module.exports = {
         description:
           'We offer healthy, chef-prepared meals delivered fresh to your door. Choose from a wide variety of 120+ options for both Balanced and Keto meal types.'
       }
+    },
+    labels: {
+      step1: 'Meals Per Week',
+      step2: 'Portion Size',
+      step3: 'Location & Delivery',
+      step4: 'Select Your Meals',
+      step5: 'Review Order'
     },
     bundles: {
       images: {
