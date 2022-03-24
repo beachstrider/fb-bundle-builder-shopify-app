@@ -1,5 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit'
+import { settings } from '../../utils'
 import { zone1, zone2, zone3 } from '../data/zipcodes'
+
+const labels = settings().labels()
 
 export const MEAL_PLANS_ITEM = 2
 
@@ -11,35 +14,35 @@ export const initialState = {
     {
       id: 1,
       name: 'Step 1',
-      description: 'Meals Per Week',
+      description: labels.step1,
       path: '/',
       isActive: true
     },
     {
       id: MEAL_PLANS_ITEM,
       name: 'Step 2',
-      description: 'Meal plans',
+      description: labels.step2,
       path: '/steps/2',
       isActive: false
     },
     {
       id: 3,
       name: 'Step 3',
-      description: 'Location & Delivery',
+      description: labels.step3,
       path: '/steps/3',
       isActive: false
     },
     {
       id: 4,
       name: 'Step 4',
-      description: 'Select Your Meals',
+      description: labels.step4,
       path: '/steps/4',
       isActive: false
     },
     {
       id: 5,
       name: 'Step 5',
-      description: 'Review Order',
+      description: labels.step5,
       path: '/steps/5',
       isActive: false
     }
