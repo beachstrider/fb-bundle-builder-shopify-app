@@ -397,9 +397,9 @@ module.exports = {
     },
     bundles: {
       images: {
-        featured: '/images/quickfresh-frequency.jpg',
+        featured: '/images/cse-frequency.jpg',
         checkout: '/images/cse-review-order.png',
-        breakfastSample: '/images/quickfresh-breakfast-sample.jpg'
+        breakfastSample: ''
       },
       icons: [
         {
