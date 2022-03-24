@@ -22,7 +22,7 @@ import EntreeTypeSubType from './EntreeTypeSubType'
 import { Redirect } from 'react-router'
 import Toast from '../../Global/Toast'
 import TopTitle from '../Components/TopTitle'
-import Loading from "../Components/Loading";
+import Loading from '../Components/Loading'
 
 const FAQ_TYPE = 'entreeType'
 const STEP_ID = 2
@@ -99,14 +99,14 @@ const EntreeType = () => {
 
   const handleEntreeTypeSelection = async (entree) => {
     // Added a promise here in order to scroll the page only when the dispatch is done
-    const saveEntreeType = async (entree) => console.log(entree)
-    new Promise((resolve) => {
-      dispatch(setEntreeType(entree))
-      dispatch(setEntreeSubType({ id: 0 }))
-      dispatch(displayFooter(true))
-      dispatch(selectFaqType(FAQ_TYPE))
-      resolve()
-    })
+    const saveEntreeType = async (entree) =>
+      new Promise((resolve) => {
+        dispatch(setEntreeType(entree))
+        dispatch(setEntreeSubType({ id: 0 }))
+        dispatch(displayFooter(true))
+        dispatch(selectFaqType(FAQ_TYPE))
+        resolve()
+      })
 
     await saveEntreeType(entree)
     smoothScrollingToId('entreeType')

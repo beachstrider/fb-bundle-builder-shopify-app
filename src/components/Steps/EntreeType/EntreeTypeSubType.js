@@ -14,6 +14,7 @@ const EntreeTypeSubType = ({
   onClick,
   extraPricePerMeal = 0
 }) => {
+  const displayAverageMacros = settings().display().averageMacros
   return (
     <CardSelectionMark isSelected={isSelected} onClick={onClick}>
       <div className={styles.wrapper}>
@@ -27,18 +28,22 @@ const EntreeTypeSubType = ({
           )}
         </div>
         <div className={styles.title}>{title}</div>
-        <div className={styles.value}>
+        <div
+          className={
+            displayAverageMacros ? styles.valueWithMacros : styles.value
+          }
+        >
           {getBundleMetafield(metafields, METAFIELD_CALORIE_RANGE)?.value}
         </div>
-        <div className={styles.label}>
+        <div className={styles.label__italic}>
           {settings().labels().bundleCalorieRange}
         </div>
-        {settings().display().averageMacros && (
+        {displayAverageMacros && (
           <>
-            <div className={styles.value}>
+            <div className={styles.valueWithMacros}>
               {getBundleMetafield(metafields, METAFIELD_AVERAGE_MACROS)?.value}
             </div>
-            <div className={styles.label}>Average Macros</div>
+            <div className={styles.label__italic}>Average Macros</div>
           </>
         )}
       </div>
