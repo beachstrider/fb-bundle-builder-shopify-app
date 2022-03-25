@@ -60,6 +60,7 @@ Env variable: SHOPIFY_PRODUCTS_COLLECTION
    <br> `Contains` | Namespace and key: `nutrition.contains`) | Measurement: `Text (multi-line text)`
    <br> `Ingredients` | Namespace and key: `nutrition.ingredients`) | Measurement: `Text (multi-line text)`
    <br> `Calorie Range` | Namespace and key: `nutrition.calorie_range`) | Measurement: `Text (single line text)`
+   <br> `Average Macros` | Namespace and key: `nutrition.average_macros`) | Measurement: `Text (single line text)`
    <br> `Gluten Free` | Namespace and key: `nutrition.is_gluten_free`) | Content Type: `True or False`
    <br> `Dairy Free` | Namespace and key: `nutrition.is_dairy_free`) | Content Type: `True or False`
    <br> `Peanut` | Namespace and key: `nutrition.is_peanut_free`) | Content Type: `True or False`
