@@ -27,7 +27,11 @@ const EntreeTypeSubType = ({
             </span>
           )}
         </div>
-        <div className={styles.title}>{title}</div>
+        <div
+          className={displayAverageMacros ? styles.largerTitle : styles.title}
+        >
+          {title}
+        </div>
         <div
           className={
             displayAverageMacros ? styles.valueWithMacros : styles.value

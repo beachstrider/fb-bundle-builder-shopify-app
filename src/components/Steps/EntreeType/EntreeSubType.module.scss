@@ -42,6 +42,12 @@
       font-size: calc($semiMediumFont - 1.2rem);
     }
   }
+  & .largerTitle {
+    @extend .title;
+    font-size: $semiMediumFont;
+    font-family: $fontFamilyBold;
+    font-style: normal;
+  }
 
   & .label {
     font-family: $fontFamilyBook;
