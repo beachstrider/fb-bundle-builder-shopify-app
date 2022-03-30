@@ -408,7 +408,7 @@ module.exports = {
         faqBackgroundColor: '#e8e8e8',
         pillBackground: '#BB8D3D',
         buttonColor: '#656549',
-        bannerBackground: '#DDCFC4',
+        bannerBackground: '#958161',
         deliveryDay: '#000000'
       }
     }
@@ -616,7 +616,7 @@ module.exports = {
         faqBackgroundColor: '#e8e8e8',
         pillBackground: '#689859',
         buttonColor: '#689859',
-        bannerBackground: '#DDCFC4',
+        bannerBackground: '#FFFFFF',
         deliveryDay: '#689859'
       }
     }
