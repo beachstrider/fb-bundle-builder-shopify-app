@@ -1,6 +1,7 @@
 import React from 'react'
 import { CardSelectionMark } from '../../Cards'
 import styles from './Frequency.module.scss'
+import settings from '../../../utils/settings'
 
 const FrequencyEntree = ({ data, isSelected, onClick }) => {
   return (
@@ -12,7 +13,16 @@ const FrequencyEntree = ({ data, isSelected, onClick }) => {
               {data.name}
             </div>
             <div className={styles.subTitle}>Lunch/Dinner</div>
-            <div className={styles.price}>${data.price}/Meal</div>
+            {settings().display().mealsStartingAt ? (
+              <div className={styles.breakfastStartingAt}>
+                <div className={styles.startingAt}>Starting at:</div>
+                <div className={styles.breakFastPricing}>
+                  ${data.price}/Meal
+                </div>
+              </div>
+            ) : (
+              <div className={styles.price}>${data.price}/Meal</div>
+            )}
           </div>
         </div>
       </div>

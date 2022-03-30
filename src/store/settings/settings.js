@@ -8,7 +8,8 @@ module.exports = {
       },
       display: {
         averageMacros: false,
-        chooseMealPlan: true
+        chooseMealPlan: true,
+        mealsStartingAt: false
       }
     },
     labels: {
@@ -212,7 +213,8 @@ module.exports = {
       },
       display: {
         averageMacros: false,
-        chooseMealPlan: true
+        chooseMealPlan: true,
+        mealsStartingAt: false
       }
     },
     labels: {
@@ -420,7 +422,8 @@ module.exports = {
       },
       display: {
         averageMacros: true,
-        chooseMealPlan: false
+        chooseMealPlan: false,
+        mealsStartingAt: true
       }
     },
     labels: {
@@ -464,14 +467,14 @@ module.exports = {
           id: 1,
           name: '14 Meals',
           description: '7-Days All inclusive - (14 Meals + 7 Breakfasts)',
-          price: 9.95,
+          price: 10.95,
           shippingPrice: 8.95,
           entreesQuantity: 14,
           breakfastsQuantity: 7,
           breakfasts: [
             {
               name: '7 Meals',
-              price: 6.95,
+              price: 8.95,
               tag: '7 Day with breakfast'
             },
             {
@@ -492,7 +495,7 @@ module.exports = {
           breakfasts: [
             {
               name: '5 Meals',
-              price: 8.95,
+              price: 9.95,
               tag: '5 Day with breakfast'
             },
             {
@@ -514,7 +517,7 @@ module.exports = {
           breakfasts: [
             {
               name: '3 Meals',
-              price: 9.95,
+              price: 10.95,
               tag: '3 Day with breakfast'
             },
             {
@@ -526,9 +529,8 @@ module.exports = {
         }
       ],
       pricesPerPortion: [
-        { type: 'keto', subType: 'large', price: 1 },
-        { type: 'balanced', subType: 'medium', price: 1 },
-        { type: 'balanced', subType: 'large', price: 2 }
+        { type: 'balanced', subType: 'single', price: 0 },
+        { type: 'balanced', subType: 'double', price: 2 }
       ]
     },
     theme: {
