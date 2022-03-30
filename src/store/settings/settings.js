@@ -530,7 +530,7 @@ module.exports = {
       ],
       pricesPerPortion: [
         { type: 'balanced', subType: 'single', price: 0 },
-        { type: 'balanced', subType: 'double', price: 2 }
+        { type: 'balanced', subType: 'double', price: 3 }
       ]
     },
     theme: {

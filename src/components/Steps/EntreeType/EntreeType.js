@@ -169,7 +169,7 @@ const EntreeType = () => {
                 )}
                 <div
                   className={`${
-                    state.entreeType.id === 1
+                    state.entreeType.options.length === 2
                       ? styles.subTypesWrapper_2_Columns
                       : styles.subTypesWrapper_3_Columns
                   } mb-10`}
