@@ -8,6 +8,8 @@ const settings = () => {
   const bundleOptions = () => bundles().options
   const bundleImages = () => bundles().images
   const icons = () => bundles().icons
+  const labels = () => values().labels
+  const display = () => values().settings.display
   const bundlePricesPerPortion = (entreeType, entreeSubType) =>
     entreeType
       ? bundles().pricesPerPortion.find(
@@ -23,6 +25,8 @@ const settings = () => {
     bundles,
     values,
     icons,
+    labels,
+    display,
     bundlePricesPerPortion
   }
 }

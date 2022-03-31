@@ -143,13 +143,15 @@ const Frequency = () => {
                     </div>
                   </div>
                   <div className="displayTablet">
-                    <img
-                      className={styles.image}
-                      src={`${process.env.PROXY_APP_URL}${
-                        settings().bundleImages().breakfastSample
-                      }`}
-                      alt="Breakfast"
-                    />
+                    {!!settings().bundleImages().breakfastSample && (
+                      <img
+                        className={styles.image}
+                        src={`${process.env.PROXY_APP_URL}${
+                          settings().bundleImages().breakfastSample
+                        }`}
+                        alt="Breakfast"
+                      />
+                    )}
                   </div>
                 </div>
               </div>

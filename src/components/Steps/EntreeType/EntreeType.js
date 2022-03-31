@@ -22,6 +22,7 @@ import EntreeTypeSubType from './EntreeTypeSubType'
 import { Redirect } from 'react-router'
 import Toast from '../../Global/Toast'
 import TopTitle from '../Components/TopTitle'
+import Loading from '../Components/Loading'
 
 const FAQ_TYPE = 'entreeType'
 const STEP_ID = 2
@@ -92,6 +93,10 @@ const EntreeType = () => {
     }
   }
 
+  const selectEntreeType = (entree) => {
+    handleEntreeTypeSelection(entree).then()
+  }
+
   const handleEntreeTypeSelection = async (entree) => {
     // Added a promise here in order to scroll the page only when the dispatch is done
     const saveEntreeType = async (entree) =>
@@ -114,40 +119,57 @@ const EntreeType = () => {
   if (isLoading) {
     return <Loading />
   }
+  const displayMealPlans = settings().display().chooseMealPlan
+  if (!displayMealPlans && !!bundleTypes && bundleTypes.length > 0) {
+    if (state.entreeType.id !== bundleTypes[0].id) {
+      selectEntreeType(bundleTypes[0])
+    }
+  }
 
   return (
     <div>
-      <TopTitle
-        title="Choose Your Meal Plan"
-        subTitle="Chef-curated, nutritious options to fit your lifestyle."
-      />
+      {displayMealPlans ? (
+        <TopTitle
+          title="Choose Your Meal Plan"
+          subTitle="Chef-curated, nutritious options to fit your lifestyle."
+        />
+      ) : (
+        <TopTitle
+          title="CHOOSE YOUR PORTION SIZE"
+          subTitle="Chef-curated, nutritious options to fit your lifestyle."
+        />
+      )}
       <div className="defaultWrapper mb-10">
         <div className={styles.wrapper}>
-          <div className={`${styles.entrees} mb-10`}>
-            {bundleTypes.map((entree, index) => (
-              <CardSelectionMark
-                key={index}
-                isSelected={state.entreeType.id === entree.id}
-                onClick={() => handleEntreeTypeSelection(entree)}
-              >
-                <CardEntreeType
-                  title={entree.name}
-                  image={entree.featuredImage}
-                  metafields={entree.options[0]?.metafields}
-                  option1={entree.option1}
-                />
-              </CardSelectionMark>
-            ))}
-          </div>
+          {displayMealPlans && (
+            <div className={`${styles.entrees} mb-10`}>
+              {bundleTypes.map((entree, index) => (
+                <CardSelectionMark
+                  key={index}
+                  isSelected={state.entreeType.id === entree.id}
+                  onClick={() => handleEntreeTypeSelection(entree)}
+                >
+                  <CardEntreeType
+                    title={entree.name}
+                    image={entree.featuredImage}
+                    metafields={entree.options[0]?.metafields}
+                    option1={entree.option1}
+                  />
+                </CardSelectionMark>
+              ))}
+            </div>
+          )}
           <div id="entreeType">
             {state.entreeType.id !== 0 && (
               <>
-                <div className={`${styles.title} mb-7`}>
-                  Choose Your Portion Size
-                </div>
+                {displayMealPlans && (
+                  <div className={`${styles.title} mb-7`}>
+                    Choose Your Portion Size
+                  </div>
+                )}
                 <div
                   className={`${
-                    state.entreeType.id === 1
+                    state.entreeType.options.length === 2
                       ? styles.subTypesWrapper_2_Columns
                       : styles.subTypesWrapper_3_Columns
                   } mb-10`}

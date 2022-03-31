@@ -1,7 +1,10 @@
 import React from 'react'
 import { CardSelectionMark } from '../../Cards'
-import { METAFIELD_CALORIE_RANGE } from '../../../constants/bundles'
-import { getBundleMetafield } from '../../../utils'
+import {
+  METAFIELD_CALORIE_RANGE,
+  METAFIELD_AVERAGE_MACROS
+} from '../../../constants/bundles'
+import { getBundleMetafield, settings } from '../../../utils'
 import styles from './EntreeSubType.module.scss'
 
 const EntreeTypeSubType = ({
@@ -11,6 +14,7 @@ const EntreeTypeSubType = ({
   onClick,
   extraPricePerMeal = 0
 }) => {
+  const displayAverageMacros = settings().display().averageMacros
   return (
     <CardSelectionMark isSelected={isSelected} onClick={onClick}>
       <div className={styles.wrapper}>
@@ -23,11 +27,29 @@ const EntreeTypeSubType = ({
             </span>
           )}
         </div>
-        <div className={styles.title}>{title}</div>
-        <div className={styles.value}>
+        <div
+          className={displayAverageMacros ? styles.largerTitle : styles.title}
+        >
+          {title}
+        </div>
+        <div
+          className={
+            displayAverageMacros ? styles.valueWithMacros : styles.value
+          }
+        >
           {getBundleMetafield(metafields, METAFIELD_CALORIE_RANGE)?.value}
         </div>
-        <div className={styles.label}>Average Calories Per Meal</div>
+        <div className={styles.label__italic}>
+          {settings().labels().bundleCalorieRange}
+        </div>
+        {displayAverageMacros && (
+          <>
+            <div className={styles.valueWithMacros}>
+              {getBundleMetafield(metafields, METAFIELD_AVERAGE_MACROS)?.value}
+            </div>
+            <div className={styles.label__italic}>Average Macros</div>
+          </>
+        )}
       </div>
     </CardSelectionMark>
   )

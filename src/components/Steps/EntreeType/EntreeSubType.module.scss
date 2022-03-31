@@ -2,30 +2,16 @@
 
 .wrapper {
   display: grid;
-  @media only screen and (min-width: $breakpointDesktop) {
-    padding: 3rem;
+  @media only screen and (min-width: $breakpointTablet) {
+    padding: 0 3rem 3rem 3rem;
   }
   @media only screen and (max-width: $breakpointTablet) {
-    padding: 2.5rem 0;
+    padding: 0 0 2.5rem 0;
   }
 
   & .extraPriceWrapper {
     padding: 0.5rem 0;
     text-align: center;
-  }
-
-  & .title {
-    font-size: 1.4rem;
-    font-weight: 700;
-    text-align: center;
-    text-transform: capitalize;
-    font-style: italic;
-    font-family: $fontFamilyMediumItalic;
-    padding-bottom: 1rem;
-
-    @media only screen and (max-width: $breakpointTablet) {
-      font-size: calc($semiMediumFont - 1.2rem);
-    }
   }
 
   & .Toplabel {
@@ -38,31 +24,8 @@
     padding: 0.1rem 1rem;
     margin-bottom: 1rem;
 
-    @media only screen and (max-width: $breakpointTablet) {
-      font-size: 1rem;
-    }
-  }
-
-  & .label {
-    font-family: $fontFamilyBook;
-    font-weight: 700;
-    text-align: center;
-    font-size: 1.4rem;
-
     @media only screen and (max-width: $breakpointDesktop) {
-      margin-bottom: 3rem;
-    }
-    @media only screen and (max-width: $breakpointTablet) {
       font-size: 1rem;
-    }
-  }
-
-  & .value {
-    font-family: $fontFamilyBold;
-    text-align: center;
-    font-size: 2.8rem;
-    @media only screen and (max-width: $breakpointTablet) {
-      font-size: $fontSmall;
     }
   }
 
@@ -78,6 +41,15 @@
     @media only screen and (max-width: $breakpointTablet) {
       font-size: calc($semiMediumFont - 1.2rem);
     }
+    @media only screen and (max-width: $breakpointMobile) {
+      
+    }
+  }
+  & .largerTitle {
+    @extend .title;
+    font-size: $fontSmall;
+    font-family: $fontFamilyBold;
+    font-style: normal;
   }
 
   & .label {
@@ -85,9 +57,16 @@
     font-weight: 700;
     text-align: center;
     font-size: 1.4rem;
-
+    &__italic {
+      font-size: 1.2rem;
+      font-style: italic;
+      text-align: center;
+    }
+    @media only screen and (max-width: $breakpointDesktop) {
+      margin-bottom: 3rem;
+    }
     @media only screen and (max-width: $breakpointTablet) {
-      font-size: 1rem;
+      font-size: $font3XSmall;
     }
   }
 
@@ -97,6 +76,15 @@
     font-size: 2.8rem;
     @media only screen and (max-width: $breakpointTablet) {
       font-size: $fontSmall;
+    }
+  }
+
+  & .valueWithMacros {
+    font-family: $fontFamilyBook;
+    text-align: center;
+    font-size: 1.6rem;
+    @media only screen and (max-width: $breakpointDesktop) {
+      font-size: calc($fontSmall - 0.2rem);
     }
   }
 

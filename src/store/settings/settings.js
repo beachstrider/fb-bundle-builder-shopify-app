@@ -5,7 +5,20 @@ module.exports = {
         title: 'QuickFresh',
         description:
           'We offer healthy, chef-prepared meals delivered fresh to your door. Choose from a wide variety of 120+ options for both Balanced and Keto meal types.'
+      },
+      display: {
+        averageMacros: false,
+        chooseMealPlan: true,
+        mealsStartingAt: false
       }
+    },
+    labels: {
+      step1: 'Meals Per Week',
+      step2: 'Meal plans',
+      step3: 'Location & Delivery',
+      step4: 'Select Your Meals',
+      step5: 'Review Order',
+      bundleCalorieRange: 'Average Calories Per Meal'
     },
     bundles: {
       images: {
@@ -197,7 +210,20 @@ module.exports = {
         title: 'Chow',
         description:
           'We offer healthy, chef-prepared meals delivered fresh to your door. Choose from a wide variety of 120+ options for both Balanced and Keto meal types.'
+      },
+      display: {
+        averageMacros: false,
+        chooseMealPlan: true,
+        mealsStartingAt: false
       }
+    },
+    labels: {
+      step1: 'Meals Per Week',
+      step2: 'Meal plans',
+      step3: 'Location & Delivery',
+      step4: 'Select Your Meals',
+      step5: 'Review Order',
+      bundleCalorieRange: 'Average Calories Per Meal'
     },
     bundles: {
       images: {
@@ -382,7 +408,7 @@ module.exports = {
         faqBackgroundColor: '#e8e8e8',
         pillBackground: '#BB8D3D',
         buttonColor: '#656549',
-        bannerBackground: '#DDCFC4',
+        bannerBackground: '#958161',
         deliveryDay: '#000000'
       }
     }
@@ -393,13 +419,26 @@ module.exports = {
         title: 'Clean Simple Eats',
         description:
           'We offer healthy, chef-prepared meals delivered fresh to your door. Choose from a wide variety of 120+ options for both Balanced and Keto meal types.'
+      },
+      display: {
+        averageMacros: true,
+        chooseMealPlan: false,
+        mealsStartingAt: true
       }
+    },
+    labels: {
+      step1: 'Meals Per Week',
+      step2: 'Portion Size',
+      step3: 'Location & Delivery',
+      step4: 'Select Your Meals',
+      step5: 'Review Order',
+      bundleCalorieRange: 'Average Calories'
     },
     bundles: {
       images: {
-        featured: '/images/quickfresh-frequency.jpg',
+        featured: '/images/cse-frequency.jpg',
         checkout: '/images/cse-review-order.png',
-        breakfastSample: '/images/quickfresh-breakfast-sample.jpg'
+        breakfastSample: ''
       },
       icons: [
         {
@@ -428,14 +467,14 @@ module.exports = {
           id: 1,
           name: '14 Meals',
           description: '7-Days All inclusive - (14 Meals + 7 Breakfasts)',
-          price: 9.95,
+          price: 10.95,
           shippingPrice: 8.95,
           entreesQuantity: 14,
           breakfastsQuantity: 7,
           breakfasts: [
             {
               name: '7 Meals',
-              price: 6.95,
+              price: 8.95,
               tag: '7 Day with breakfast'
             },
             {
@@ -456,7 +495,7 @@ module.exports = {
           breakfasts: [
             {
               name: '5 Meals',
-              price: 8.95,
+              price: 9.95,
               tag: '5 Day with breakfast'
             },
             {
@@ -478,7 +517,7 @@ module.exports = {
           breakfasts: [
             {
               name: '3 Meals',
-              price: 9.95,
+              price: 10.95,
               tag: '3 Day with breakfast'
             },
             {
@@ -490,9 +529,8 @@ module.exports = {
         }
       ],
       pricesPerPortion: [
-        { type: 'keto', subType: 'large', price: 1 },
-        { type: 'balanced', subType: 'medium', price: 1 },
-        { type: 'balanced', subType: 'large', price: 2 }
+        { type: 'balanced', subType: 'single', price: 0 },
+        { type: 'balanced', subType: 'double', price: 3 }
       ]
     },
     theme: {
@@ -578,7 +616,7 @@ module.exports = {
         faqBackgroundColor: '#e8e8e8',
         pillBackground: '#689859',
         buttonColor: '#689859',
-        bannerBackground: '#DDCFC4',
+        bannerBackground: '#FFFFFF',
         deliveryDay: '#689859'
       }
     }

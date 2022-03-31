@@ -46,7 +46,7 @@ const CardEntreeType = ({
                   ?.value
               }
             </div>
-            <div className={styles.label}>Net Carbs</div>
+            <div className={styles.label}>Total Carbs</div>
           </div>
           <div className={styles.nutrition}>
             <div className={styles.value}>
