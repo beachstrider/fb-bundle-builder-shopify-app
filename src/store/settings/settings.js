@@ -196,7 +196,8 @@ module.exports = {
         pillBackground: '#737678',
         buttonColor: '#0a8d47',
         bannerBackground: '#fedc5c',
-        deliveryDay: '#000000'
+        deliveryDay: '#000000',
+        topMenuBannerColor: '#F8D739'
       }
     }
   },
@@ -408,8 +409,9 @@ module.exports = {
         faqBackgroundColor: '#e8e8e8',
         pillBackground: '#BB8D3D',
         buttonColor: '#656549',
-        bannerBackground: '#958161',
-        deliveryDay: '#000000'
+        bannerBackground: '#DDCFC4',
+        deliveryDay: '#000000',
+        topMenuBannerColor: '#958161'
       }
     }
   },
@@ -530,7 +532,7 @@ module.exports = {
       ],
       pricesPerPortion: [
         { type: 'balanced', subType: 'single', price: 0 },
-        { type: 'balanced', subType: 'double', price: 3 }
+        { type: 'balanced', subType: 'double', price: 2 }
       ]
     },
     theme: {
@@ -617,7 +619,8 @@ module.exports = {
         pillBackground: '#689859',
         buttonColor: '#689859',
         bannerBackground: '#FFFFFF',
-        deliveryDay: '#689859'
+        deliveryDay: '#689859',
+        topMenuBannerColor: '#689859'
       }
     }
   }

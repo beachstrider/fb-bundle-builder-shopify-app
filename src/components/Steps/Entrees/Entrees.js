@@ -353,6 +353,7 @@ const Entrees = () => {
                           key={item.id}
                           title={item.name}
                           description={item.description}
+                          entreeType={state.entreeType.name}
                           image={
                             item.feature_image
                               ? item.feature_image.src
