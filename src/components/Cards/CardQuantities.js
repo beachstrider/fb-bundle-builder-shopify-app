@@ -9,6 +9,7 @@ import Icons from '../Icons'
 const CardQuantities = ({
   title,
   description,
+  entreeType,
   image,
   metafields,
   productMetafields,
@@ -57,7 +58,12 @@ const CardQuantities = ({
                     <div className={styles.metafieldValue}>
                       {metafield.value}
                     </div>
-                    <div className={styles.metafieldName}>{metafield.name}</div>
+                    <div className={styles.metafieldName}>
+                      {entreeType === 'balanced' &&
+                      metafield.name === 'Net Carbs'
+                        ? 'Carbs'
+                        : metafield.name}
+                    </div>
                   </div>
                 )
             )}
@@ -87,6 +93,7 @@ const CardQuantities = ({
       <ItemDescriptionModal
         title={title}
         description={description}
+        entreeType={entreeType}
         image={image}
         metafields={metafields}
         productMetafields={productMetafields}
