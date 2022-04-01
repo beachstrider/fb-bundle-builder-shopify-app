@@ -470,7 +470,7 @@ module.exports = {
           name: '14 Meals',
           description: '7-Days All inclusive - (14 Meals + 7 Breakfasts)',
           price: 10.95,
-          shippingPrice: 8.95,
+          shippingPrice: 9.95,
           entreesQuantity: 14,
           breakfastsQuantity: 7,
           breakfasts: [
@@ -491,7 +491,7 @@ module.exports = {
           name: '10 Meals',
           description: '',
           price: 11.95,
-          shippingPrice: 8.95,
+          shippingPrice: 9.95,
           entreesQuantity: 10,
           breakfastsQuantity: 5,
           breakfasts: [
@@ -512,7 +512,7 @@ module.exports = {
           name: '6 Meals',
           description: '',
           price: 12.95,
-          shippingPrice: 8.95,
+          shippingPrice: 9.95,
           entreesQuantity: 6,
           breakfastsQuantity: 3,
 
