@@ -48,7 +48,7 @@ const SubTotal = ({
       price: shippingPrice
     }
   ]
-
+  const displayRow = state.subTypeEntree
   return (
     <div className={styles.wrapper}>
       {backgroundImage ? (
@@ -61,16 +61,16 @@ const SubTotal = ({
       ) : (
         <div>&nbsp;</div>
       )}
-      {items.map((item, index) => (
-        <div key={index} className={styles.lineItem}>
-          <div className={styles.label}>{item.label}</div>
-          <div className={styles.price}>
-            {isNaN(item.price)
-              ? String(item.price)
-              : `$${Number.parseFloat(item.price).toFixed(2)}`}
+      {items.map((item, index) =>
+        isNaN(item.price) ? null : (
+          <div key={index} className={styles.lineItem}>
+            <div className={styles.label}>{item.label}</div>
+            <div className={styles.price}>
+              {`$${Number.parseFloat(item.price).toFixed(2)}`}
+            </div>
           </div>
-        </div>
-      ))}
+        )
+      )}
       <div className={styles.divider}>&nbsp;</div>
       <div className={`${styles.lineItem} ${styles.lineItemTotal}`}>
         <div className={styles.label}>Weekly Total</div>
