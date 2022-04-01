@@ -10,6 +10,7 @@ const ItemDescriptionModal = ({
   open,
   close,
   title,
+  entreeType,
   image,
   metafields,
   productMetafields,
@@ -50,7 +51,12 @@ const ItemDescriptionModal = ({
                     <div className={styles.metafieldValue}>
                       {replaceMeasurement(metafield.value)}
                     </div>
-                    <div className={styles.metafieldName}>{metafield.name}</div>
+                    <div className={styles.metafieldName}>
+                      {entreeType === 'balanced' &&
+                      metafield.name === 'Net Carbs'
+                        ? 'Carbs'
+                        : metafield.name}
+                    </div>
                   </div>
                 )
             )}
