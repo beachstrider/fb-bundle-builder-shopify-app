@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@babel/plugin-transform-react-jsx": "^7.17.3",
     "@babel/runtime-corejs3": "^7.17.2",
     "@reduxjs/toolkit": "^1.6.2",
     "@sentry/node": "^6.16.1",
@@ -26,13 +27,14 @@
     "react-error-boundary": "^3.1.4",
     "react-redux": "^7.2.5",
     "react-router-dom": "^5.3.0",
-    "regenerator-runtime": "^0.13.9"
+    "regenerator-runtime": "^0.13.9",
+    "webpack-node-externals": "^3.0.0"
   },
   "scripts": {
     "dev": "npx webpack --mode development --watch",
     "start": "webpack-dev-server --mode development",
-    "local": "./node_modules/nodemon/bin/nodemon.js server.js",
-    "server": "NODE_ENV=production node server.js",
+    "local": "./node_modules/nodemon/bin/nodemon.js ./public/server.js",
+    "server": "NODE_ENV=production node ./public/server.js",
     "build": "npx webpack --mode production",
     "build:start": "yarn build; yarn server",
     "test": "npx jest",
