@@ -8,7 +8,9 @@ const verifyHmac = require('./src/server/middleware/verifyHmac')
 const { replaceString, generateRequestToken } = require('./src/server/utils')
 const cors = require('cors')
 const morgan = require('morgan')
-
+import React from 'react'
+import ReactDOMServer from 'react-dom/server'
+import Home from './src/Home'
 const bundleApiRouters = require('./src/server/routers/bundleApiRouters')
 const shopifyRouters = require('./src/server/routers/shopifyRouters')
 const rechargeRouters = require('./src/server/routers/rechargeRouters')
@@ -70,7 +72,11 @@ app.post('/request-token', (req, res) => {
 app.use('/images', express.static('images'))
 
 app.get('/bundle.js', (req, res) => {
-  res.sendFile('./public/bundle.js', { root: __dirname })
+  try {
+    res.sendFile('./bundle.js', { root: __dirname })
+  } catch (e) {
+    console.log('bundle.js', e)
+  }
 })
 
 app.get('/public/index.html', (req, res) => {
@@ -84,57 +90,58 @@ app.use(rechargeRouters)
 app.use('/shopify', shopifyRouters)
 
 app.get('/', verifyHmac, (req, res) => {
-  fs.readFile(
-    path.join(__dirname, 'public/proxy.liquid'),
-    'utf8',
-    (err, data) => {
-      if (err) {
-        return res.status(404).send()
-      }
-
-      const formattedData = replaceString(data, [
-        {
-          search: 'APP_BUNDLE_URL',
-          replacement: `${process.env.PROXY_APP_URL}/bundle.js?version=${cachedVersion}`
-        },
-        {
-          search: 'PAGE_TITLE',
-          replacement: process.env.PAGE_TITLE
-        },
-        {
-          search: 'PAGE_DESCRIPTION',
-          replacement: process.env.PAGE_TITLE
-        },
-        {
-          search: 'SHOPIFY_BUNDLES_COLLECTION',
-          replacement: process.env.SHOPIFY_BUNDLES_COLLECTION
-        },
-        {
-          search: 'SHOPIFY_PRODUCTS_COLLECTION',
-          replacement: process.env.SHOPIFY_PRODUCTS_COLLECTION
-        }
-      ])
-
-      res
-        .header({
-          'Content-Type': 'application/liquid'
-        })
-        .header({
-          'Strict-Transport-Security':
-            'max-age=63072000; includeSubDomains; preload'
-        })
-        .send(formattedData)
+  fs.readFile(path.join(__dirname, 'proxy.liquid'), 'utf8', (err, data) => {
+    if (err) {
+      console.log(err)
+      return res.status(404).send()
     }
-  )
+    var pageData = ReactDOMServer.renderToString(<Home />)
+    const formattedData = replaceString(data, [
+      {
+        search: '<div id="root"></div>',
+        replacement: `<div id="root">${pageData}</div>`
+      },
+      {
+        search: 'APP_BUNDLE_URL',
+        replacement: `${process.env.PROXY_APP_URL}/bundle.js?version=${cachedVersion}`
+      },
+      {
+        search: 'PAGE_TITLE',
+        replacement: process.env.PAGE_TITLE
+      },
+      {
+        search: 'PAGE_DESCRIPTION',
+        replacement: process.env.PAGE_TITLE
+      },
+      {
+        search: 'SHOPIFY_BUNDLES_COLLECTION',
+        replacement: process.env.SHOPIFY_BUNDLES_COLLECTION
+      },
+      {
+        search: 'SHOPIFY_PRODUCTS_COLLECTION',
+        replacement: process.env.SHOPIFY_PRODUCTS_COLLECTION
+      }
+    ])
+
+    res
+      .header({
+        'Content-Type': 'application/liquid'
+      })
+      .header({
+        'Strict-Transport-Security':
+          'max-age=63072000; includeSubDomains; preload'
+      })
+      .send(formattedData)
+  })
 })
 
-app.get("/debug-sentry", function mainHandler(req, res) {
-  throw new Error("Sentry debug error");
-});
+app.get('/debug-sentry', function mainHandler(req, res) {
+  throw new Error('Sentry debug error')
+})
 
 // Sentry
 // The error handler must be before any other error middleware and after all controllers
-app.use(Sentry.Handlers.errorHandler());
+app.use(Sentry.Handlers.errorHandler())
 
 // Optional fallthrough error handler
 app.use((err, req, res, next) => {

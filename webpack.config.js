@@ -1,6 +1,7 @@
 const path = require('path')
 require('dotenv').config()
 const webpack = require('webpack')
+const nodeExternals = require('webpack-node-externals')
 const SentryWebpackPlugin = require('@sentry/webpack-plugin')
 const settings = require('./src/store/settings/settings')
 const { DEFAULT_SETTINGS_KEY } = require('./src/constants/defaults')
@@ -10,7 +11,30 @@ const SCSS_PROPERTIES = ['colors', 'fontFamilies', 'fontSizes', 'borders']
 const SCSS_FONTS = ['fontFiles']
 
 console.log('Using STORE_SETTINGS_KEY :', storeSettingsKey)
-module.exports = {
+
+const serverConfig = {
+  entry: './server.js',
+  output: {
+    filename: './server.js',
+    path: path.join(__dirname, 'public')
+  },
+  module: {
+    rules: [
+      {
+        loader: 'babel-loader',
+        test: /\.js?$/,
+        exclude: /node_modules/
+      }
+    ]
+  },
+  target: 'node',
+  externals: [nodeExternals()],
+  node: {
+    __dirname: false
+  }
+}
+
+const clientConfig = {
   entry: [
     'regenerator-runtime/runtime.js',
     path.resolve(__dirname, './src/index.js')
@@ -134,3 +158,5 @@ module.exports = {
   },
   devtool: 'source-map'
 }
+
+module.exports = [clientConfig, serverConfig]

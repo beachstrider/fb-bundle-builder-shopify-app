@@ -3,7 +3,7 @@
   {% capture page_title %} PAGE_TITLE {% endcapture %}
   {% capture page_description %} PAGE_DESCRIPTION {% endcapture %} 
 {% endcapture %}
-<script>
+<script defer>
 {% if customer %}
   const shopCustomer = {
     id: `{{ customer.id}}`,
@@ -237,4 +237,4 @@ const shopDomain = '{{ shop.permanent_domain }}';
 </script>
 
 <div id="root"></div>
-<script src="APP_BUNDLE_URL"></script>
+<script src="APP_BUNDLE_URL" defer></script>
