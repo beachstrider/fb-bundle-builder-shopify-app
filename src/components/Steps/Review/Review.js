@@ -18,13 +18,14 @@ import { getBundleByPlatformId } from '../../Hooks/withBundleApi'
 import { clearLocalStorage } from '../../../store/store'
 import {
   cart,
+  formatUTCDate,
   getBundleVariant,
   getNextWeekDay,
   settings,
   smoothScrollingToId
 } from '../../../utils'
 import Toast from '../../Global/Toast'
-import { ReviewDeliveryDay, ReviewStartingDay } from '.'
+import { ReviewDeliveryDay, ReviewStartingDate } from '.'
 import ReviewItems from './ReviewItems'
 import SubTotal from '../Components/SubTotal'
 
@@ -97,10 +98,10 @@ const Review = () => {
 
         const response = await shopifyCart.create({
           attributes: {
-            'delivery-date': dayjs()
-              .day(state.location.deliveryDate.day)
-              .add(1, 'week')
-              .format('YYYY-MM-DD'),
+            'delivery-date': formatUTCDate(
+              state.location.deliveryDate.date,
+              'YYYY-MM-DD'
+            ),
             'delivery-day': getNextWeekDay(
               state.location.deliveryDate.day
             ).format('dddd')
@@ -113,10 +114,10 @@ const Review = () => {
               properties: {
                 'Customer Id': shopCustomer?.id,
                 'Cart Token': platformCartToken,
-                Delivery_Date: dayjs()
-                  .day(state.location.deliveryDate.day)
-                  .add(1, 'week')
-                  .format('YYYY-MM-DD')
+                Delivery_Date: formatUTCDate(
+                  state.location.deliveryDate.date,
+                  'YYYY-MM-DD'
+                )
               }
             }
           ]
@@ -204,7 +205,6 @@ const Review = () => {
   if (isLoading) {
     return <Loading />
   }
-
   return (
     <>
       <div className="defaultWrapper" id="reviewTop">
@@ -218,7 +218,7 @@ const Review = () => {
             className={styles.deliveryDate}
           >
             <div className={styles.startingDate}>
-              <ReviewStartingDay day={state.location.deliveryDate.day} />
+              <ReviewStartingDate date={state.location.deliveryDate.date} />
             </div>
           </TopTitle>
           <div className={`displayMobile mb-10 ${styles.subTotalWrapper}`}>
