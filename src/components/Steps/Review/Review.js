@@ -18,6 +18,7 @@ import { getBundleByPlatformId } from '../../Hooks/withBundleApi'
 import { clearLocalStorage } from '../../../store/store'
 import {
   cart,
+  formatUTCDate,
   getBundleVariant,
   getNextWeekDay,
   settings,
@@ -97,10 +98,10 @@ const Review = () => {
 
         const response = await shopifyCart.create({
           attributes: {
-            'delivery-date': dayjs()
-              .day(state.location.deliveryDate.day)
-              .add(1, 'week')
-              .format('YYYY-MM-DD'),
+            'delivery-date': formatUTCDate(
+              state.location.deliveryDate.date,
+              'YYYY-MM-DD'
+            ),
             'delivery-day': getNextWeekDay(
               state.location.deliveryDate.day
             ).format('dddd')
@@ -113,10 +114,10 @@ const Review = () => {
               properties: {
                 'Customer Id': shopCustomer?.id,
                 'Cart Token': platformCartToken,
-                Delivery_Date: dayjs()
-                  .day(state.location.deliveryDate.day)
-                  .add(1, 'week')
-                  .format('YYYY-MM-DD')
+                Delivery_Date: formatUTCDate(
+                  state.location.deliveryDate.date,
+                  'YYYY-MM-DD'
+                )
               }
             }
           ]
