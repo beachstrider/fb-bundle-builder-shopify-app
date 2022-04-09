@@ -1,4 +1,4 @@
 import Review from './Review'
-import ReviewStartingDay from './ReviewStartingDay'
+import ReviewStartingDate from './ReviewStartingDate'
 import ReviewDeliveryDay from './ReviewDeliveryDay'
-export { Review, ReviewDeliveryDay, ReviewStartingDay }
+export { Review, ReviewDeliveryDay, ReviewStartingDate }
