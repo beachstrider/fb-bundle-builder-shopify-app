@@ -24,7 +24,7 @@ import {
   smoothScrollingToId
 } from '../../../utils'
 import Toast from '../../Global/Toast'
-import { ReviewDeliveryDay, ReviewStartingDay } from '.'
+import { ReviewDeliveryDay, ReviewStartingDate } from '.'
 import ReviewItems from './ReviewItems'
 import SubTotal from '../Components/SubTotal'
 
@@ -204,7 +204,6 @@ const Review = () => {
   if (isLoading) {
     return <Loading />
   }
-
   return (
     <>
       <div className="defaultWrapper" id="reviewTop">
@@ -218,7 +217,7 @@ const Review = () => {
             className={styles.deliveryDate}
           >
             <div className={styles.startingDate}>
-              <ReviewStartingDay day={state.location.deliveryDate.day} />
+              <ReviewStartingDate date={state.location.deliveryDate.date} />
             </div>
           </TopTitle>
           <div className={`displayMobile mb-10 ${styles.subTotalWrapper}`}>
