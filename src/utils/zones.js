@@ -25,7 +25,7 @@ const findZipCode = (zones, zipCode) => {
   return result
 }
 
-const isValidZipCode = (zipCode) => zipCode.length === ZIPCODE_CHARACTERS_MIN || zipCode.length === ZIPCODE_CHARACTERS_MAX
+const isValidZipCode = (zipCode) => zipCode.length >= ZIPCODE_CHARACTERS_MIN && zipCode.length <= ZIPCODE_CHARACTERS_MAX
 
 const availableDeliveryDays = (zone, todayDate) => {
   const deliveryDays = zone.deliveryDates.map((d) => d.day)
