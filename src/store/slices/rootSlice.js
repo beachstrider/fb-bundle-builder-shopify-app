@@ -56,8 +56,20 @@ export const initialState = {
       zipCodes: zone1,
       deliveryDates: [
         {
+          id: 2,
+          day: 2, // Tuesday
+          disabled: false,
+          isSelected: false
+        },
+        {
           id: 3,
-          day: 5,
+          day: 3, // Wednesday
+          disabled: false,
+          isSelected: false
+        },
+        {
+          id: 5,
+          day: 5, // Friday
           disabled: false,
           isSelected: false
         }
@@ -71,7 +83,19 @@ export const initialState = {
       zipCodes: zone2,
       deliveryDates: [
         {
+          id: 2,
+          day: 2,
+          disabled: false,
+          isSelected: false
+        },
+        {
           id: 3,
+          day: 3,
+          disabled: false,
+          isSelected: false
+        },
+        {
+          id: 5,
           day: 5,
           disabled: false,
           isSelected: false
@@ -86,7 +110,19 @@ export const initialState = {
       zipCodes: zone3,
       deliveryDates: [
         {
+          id: 2,
+          day: 2,
+          disabled: false,
+          isSelected: false
+        },
+        {
           id: 3,
+          day: 3,
+          disabled: false,
+          isSelected: false
+        },
+        {
+          id: 5,
           day: 5,
           disabled: false,
           isSelected: false
