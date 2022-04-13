@@ -40,7 +40,7 @@ $defaultBorder: 4px;
 
     & .metafieldValue {
       font-size: $fontSmall;
-      font-family: $fontFamilyBold;
+      font-family: $fontFamilyBlack;
     }
 
     & .metafieldName {
@@ -74,10 +74,13 @@ $defaultBorder: 4px;
 
   & .title {
     font-size: 2.2rem;
+    line-height: 2.8rem;
+    min-height: 10rem;
     font-weight: 700;
     text-align: center;
     font-family: $fontFamilyBlack;
-    margin-top: 0.3rem;
+    margin-top: 2rem;
+    padding: 0 2.7rem;
   }
 
   & .descriptionWrapper {
@@ -94,11 +97,10 @@ $defaultBorder: 4px;
     flex-wrap: wrap;
     align-items: end;
     padding: 1rem;
-    
+
     & .icon {
       width: 30px;
       margin-top: 0.5rem;
     }
   }
-  
 }
