@@ -51,8 +51,8 @@ export const initialState = {
     {
       id: 1,
       name: 'Zone 1',
-      earliestAvailableDay: 5,
-      leadTime: 5,
+      earliestAvailableDay: 3,
+      leadTime: 3,
       zipCodes: zone1,
       deliveryDates: [
         {
@@ -78,8 +78,8 @@ export const initialState = {
     {
       id: 2,
       name: 'Zone 2',
-      earliestAvailableDay: 5,
-      leadTime: 6,
+      earliestAvailableDay: 3,
+      leadTime: 3,
       zipCodes: zone2,
       deliveryDates: [
         {
@@ -105,8 +105,8 @@ export const initialState = {
     {
       id: 2,
       name: 'Zone 3',
-      earliestAvailableDay: 5,
-      leadTime: 6,
+      earliestAvailableDay: 3,
+      leadTime: 3,
       zipCodes: zone3,
       deliveryDates: [
         {
