@@ -97,10 +97,13 @@ const Dashboard = () => {
     if (shopCustomer.email !== state.email || !state.tokens.userToken) {
       console.log('Enter If')
       const userToken = await getToken()
+      console.log('userToken', userToken)
+      console.log('----state before clearState----', state)
       await clearState()
+      console.log('----state after clearState----', state)
       await getOrdersToShow(userToken)
     } else {
-      console.log('enter else')
+      console.log('enter else', state.tokens.userToken)
       await getOrdersToShow(state.tokens.userToken)
     }
     dispatch(setEmail(shopCustomer?.email || ''))
@@ -108,7 +111,9 @@ const Dashboard = () => {
 
   const getToken = async () => {
     const tokenResponse = await useUserToken()
+    console.log('----tokenResponse----', tokenResponse)
     if (tokenResponse.token) {
+      console.log('---tokenResponse inside if----')
       dispatch(
         setTokens({
           ...state.tokens,
