@@ -98,9 +98,6 @@ const Dashboard = () => {
       console.log('Enter If')
       const userToken = await getToken()
       console.log('userToken', userToken)
-      console.log('----state before clearState----', state)
-      await clearState()
-      console.log('----state after clearState----', state)
       await getOrdersToShow(userToken)
     } else {
       console.log('enter else', state.tokens.userToken)
