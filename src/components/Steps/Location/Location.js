@@ -175,12 +175,15 @@ const Location = () => {
         currentZone.deliveryDates,
         earliestAvilableDate
       )
+      console.log('state.deliveryDates', state.deliveryDates)
       const filteredDates = state.deliveryDates.filter((deliveryDate) => {
         console.log(
           'earliestAvilableDate',
           earliestAvilableDate,
           dayjs(deliveryDate.date),
-          earliestAvilableDate.isSameOrBefore(dayjs(deliveryDate))
+          earliestAvilableDate.isSameOrBefore(dayjs(deliveryDate)),
+          allowedDays,
+          deliveryDate.day
         )
         return (
           allowedDays.includes(deliveryDate.day) &&
