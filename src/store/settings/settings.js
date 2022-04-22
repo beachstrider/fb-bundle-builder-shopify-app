@@ -353,6 +353,10 @@ module.exports = {
           url: 'https://cdn.shopify.com/s/files/1/0630/9399/7799/files/Lato-Bold.woff?v=1646429737'
         },
         {
+          name: 'Lato-Black',
+          url: 'https://cdn.shopify.com/s/files/1/0630/9399/7799/files/Lato-Black.woff?v=1646429737'
+        },
+        {
           name: 'Lato-Bold-Italic',
           url: 'https://cdn.shopify.com/s/files/1/0630/9399/7799/files/Lato-BoldItalic.ttf?v=1647640661'
         },
@@ -364,7 +368,7 @@ module.exports = {
       fontFamilies: {
         fontFamilyBook: 'Lato-Regular',
         fontFamilyBold: 'Eveleth-Regular',
-        fontFamilyBlack: 'Eveleth-Regular',
+        fontFamilyBlack: 'Lato-Black',
         fontFamilyLight: 'Lato-Bold',
         fontFamilyThin: 'Gotham-Thin',
         fontFamilyMedium: 'Lato-Bold',
@@ -550,6 +554,10 @@ module.exports = {
           url: 'https://cdn.shopify.com/s/files/1/0552/6549/3185/files/Gotham-Bold.otf?v=1627982628'
         },
         {
+          name: 'Gotham-Black',
+          url: 'https://cdn.shopify.com/s/files/1/0552/6549/3185/files/Gotham-Black.otf?v=1627982628'
+        },
+        {
           name: 'Avenir-Regular',
           url: 'https://cdn.shopify.com/s/files/1/0632/5262/7694/files/Avenir-Book.woff?v=1647640173'
         },
@@ -573,7 +581,7 @@ module.exports = {
       fontFamilies: {
         fontFamilyBook: 'Avenir-Regular',
         fontFamilyBold: 'Eveleth-Regular',
-        fontFamilyBlack: 'Eveleth-Regular',
+        fontFamilyBlack: 'Gotham-Black',
         fontFamilyLight: 'Avenir-Bold',
         fontFamilyThin: 'Gotham-Thin',
         fontFamilyMedium: 'Avenir-Bold',
