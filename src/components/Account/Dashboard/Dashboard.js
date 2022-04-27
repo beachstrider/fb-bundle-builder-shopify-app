@@ -92,28 +92,16 @@ const Dashboard = () => {
     })
 
   const getData = async () => {
-    console.log('-----getData-----')
-    console.log('shopCustomer', shopCustomer, 'state', state)
-    if (shopCustomer.email !== state.email || !state.tokens.userToken) {
-      console.log('Enter If')
-      const userToken = await getToken()
-      console.log('userToken', userToken)
-      console.log('----state before clearState----', state)
-      await clearState()
-      console.log('----state after clearState----', state)
-      await getOrdersToShow(userToken)
-    } else {
-      console.log('enter else', state.tokens.userToken)
-      await getOrdersToShow(state.tokens.userToken)
-    }
+    const userToken = await getToken()
+    // TODO: retest. This is part of the issue QUIC-140
+    await clearState()
+    await getOrdersToShow(userToken)
     dispatch(setEmail(shopCustomer?.email || ''))
   }
 
   const getToken = async () => {
     const tokenResponse = await useUserToken()
-    console.log('----tokenResponse----', tokenResponse)
     if (tokenResponse.token) {
-      console.log('---tokenResponse inside if----')
       dispatch(
         setTokens({
           ...state.tokens,
