@@ -92,13 +92,10 @@ const Dashboard = () => {
     })
 
   const getData = async () => {
-    if (shopCustomer.email !== state.email || !state.tokens.userToken) {
-      const userToken = await getToken()
-      await clearState()
-      await getOrdersToShow(userToken)
-    } else {
-      await getOrdersToShow(state.tokens.userToken)
-    }
+    const userToken = await getToken()
+    // TODO: retest. This is part of the issue QUIC-140
+    await clearState()
+    await getOrdersToShow(userToken)
     dispatch(setEmail(shopCustomer?.email || ''))
   }
 
