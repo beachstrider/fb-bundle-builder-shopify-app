@@ -141,15 +141,19 @@ const Dashboard = () => {
   }
 
   const getOrdersToShow = async (token) => {
+    console.log('----getOrdersToShow----')
     const activeWeeksArr = []
     const activeWeeksLimit = []
     const weeksMenu = []
     const subscriptionArray = {}
 
     const subApi = await getActiveSubscriptions(token)
+    console.log('----subApi----', subApi)
     if (subApi.data.data) {
       for (const sub of subApi.data.data) {
         const subscriptionOrders = await getSubscriptionOrders(token, sub.id)
+        console.log('----sub----', sub)
+        console.log('----subscriptionOrders----', subscriptionOrders)
         const configData = await request(
           `${process.env.PROXY_APP_URL}/bundle-api/bundles/${sub.bundle_id}/configurations`,
           {
@@ -158,7 +162,7 @@ const Dashboard = () => {
             headers: { authorization: `Bearer ${token}` }
           }
         )
-
+        console.log('----configData----', configData)
         if (configData.data.data.length > 0) {
           for (const config of configData.data.data) {
             let subCount = 0
@@ -171,10 +175,24 @@ const Dashboard = () => {
               )
               const cutoffDate = getCutOffDate(deliveryDate)
               const firstOrder = shopCustomer.orders[0] || null
+              console.log('----firstOrder----', shopCustomer.orders)
               const firstOrderDate =
                 (firstOrder && dayjs(firstOrder.orderDate).utc()) ||
                 dayjs().utc()
 
+              console.log('----subCount----', subCount)
+              console.log(
+                '----deliverBefore day js----',
+                dayjs(content.deliver_before).utc(),
+                todayDate,
+                dayjs(content.deliver_before).utc().isSameOrAfter(todayDate)
+              )
+              console.log(
+                '----deliverAfter day js----',
+                content.deliver_after,
+                firstOrderDate,
+                firstOrderDate.isSameOrBefore(content.deliver_after)
+              )
               // validates the first order to avoid displaying the week where the order was placed (always show next week)
               if (
                 subCount < TOTAL_WEEKS_DISPLAY &&
@@ -192,6 +210,8 @@ const Dashboard = () => {
                 }_${sub.bundle_id}`
 
                 // push date to weeksMenu
+                console.log('----weeksMenu----', weeksMenu)
+                console.log('----deliver_after----', content.deliver_after)
                 createWeekList(weeksMenu, content.deliver_after)
 
                 if (
@@ -289,10 +309,13 @@ const Dashboard = () => {
     )
     const uniqueValues = uniqueArray([...weeksMenu])
     const sortedDates = sortDatesArray(uniqueValues)
-
+    console.log('----subscriptionArray----', subscriptionArray)
     setSubscriptions(subscriptionArray)
+    console.log('----sortedDates----', sortedDates)
     setWeeksMenu(sortedDates)
+    console.log('----sortedActiveWeeks----', sortedActiveWeeks)
     setActive(sortedActiveWeeks)
+    console.log('----activeWeeksLimit----', activeWeeksLimit)
     setLimit(activeWeeksLimit)
     setLoading(false)
   }

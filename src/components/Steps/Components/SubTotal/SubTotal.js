@@ -44,7 +44,10 @@ const SubTotal = ({
       price: getBreakfastsPrice()
     },
     {
-      label: 'Shipping',
+      label:
+        process.env.STORE_SETTINGS_KEY === 'cse'
+          ? 'Overnight Shipping'
+          : 'Shipping',
       price: shippingPrice
     }
   ]

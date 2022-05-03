@@ -163,31 +163,27 @@ const Location = () => {
 
   useEffect(() => {
     if (currentZone.deliveryDates) {
-      const allowedDays = currentZone.deliveryDates.map((date) => {
-        return date.day
-      })
+      // TODO: QUIC-145 removed condition to filter allowedDays (test it)
+      // const allowedDays = currentZone.deliveryDates.map((date) => {
+      //   return date.day
+      // })
 
       const today = dayjs()
-      const earliestAvilableDate = today.add(currentZone.leadTime, 'day')
+      const earliestAvailableDate = today.add(currentZone.leadTime, 'day')
 
-      console.log(
-        'currentZone.deliveryDates',
-        currentZone.deliveryDates,
-        earliestAvilableDate
-      )
+      console.log('debug: currentZone.deliveryDates', currentZone.deliveryDates)
+      console.log('debug: earliestAvailableDate', earliestAvailableDate)
+      console.log('debug: state.deliveryDates', state.deliveryDates)
+
       const filteredDates = state.deliveryDates.filter((deliveryDate) => {
-        console.log(
-          'earliestAvilableDate',
-          earliestAvilableDate,
-          dayjs(deliveryDate.date),
-          earliestAvilableDate.isSameOrBefore(dayjs(deliveryDate))
-        )
-        return (
-          allowedDays.includes(deliveryDate.day) &&
-          earliestAvilableDate.isSameOrBefore(dayjs(deliveryDate.date))
-        )
+        // TODO: QUIC-145 removed condition to filter allowedDays (test it)
+        // return (
+        //   allowedDays.includes(deliveryDate.day) &&
+        //   earliestAvailableDate.isSameOrBefore(dayjs(deliveryDate.date))
+        // )
+        return earliestAvailableDate.isSameOrBefore(dayjs(deliveryDate.date))
       })
-      console.log('filteredDates', filteredDates)
+      console.log('debug: final filteredDates', filteredDates)
       setDisplayDates(filteredDates)
       setLocation()
     }
