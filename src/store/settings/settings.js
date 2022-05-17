@@ -891,8 +891,8 @@ module.exports = {
       },
       colors: {
         primaryColor: '#000000',
-        primaryColorLight: '#689859',
-        secondaryColor: '#689859',
+        primaryColorLight: '#A5BE3F',
+        secondaryColor: '#A5BE3F',
         gray: '#4c4c4c',
         grayLight: '#e7eaec',
         gray100: '#e2e2e2',
@@ -910,11 +910,11 @@ module.exports = {
         headerBackgroundColor: '#f6f6f7',
         borderColor: '#ebebec',
         faqBackgroundColor: '#e8e8e8',
-        pillBackground: '#689859',
-        buttonColor: '#689859',
+        pillBackground: '#A5BE3F',
+        buttonColor: '#A5BE3F',
         bannerBackground: '#FFFFFF',
-        deliveryDay: '#689859',
-        topMenuBannerColor: '#689859'
+        deliveryDay: '#A5BE3F',
+        topMenuBannerColor: '#EDEDED'
       }
     }
   }

@@ -120,9 +120,16 @@ const EntreeType = () => {
     return <Loading />
   }
   const displayMealPlans = settings().display().chooseMealPlan
-  if (!displayMealPlans && !!bundleTypes && bundleTypes.length > 0) {
-    if (state.entreeType.id !== bundleTypes[0].id) {
-      selectEntreeType(bundleTypes[0])
+  const defaultType = settings().bundles().defaultType
+  if (
+    !displayMealPlans &&
+    !!bundleTypes &&
+    bundleTypes.length > 0 &&
+    defaultType
+  ) {
+    const bundle = bundleTypes.filter((b) => b.name === defaultType)[0]
+    if (state.entreeType.id !== bundle.id) {
+      selectEntreeType(bundle)
     }
   }
 
