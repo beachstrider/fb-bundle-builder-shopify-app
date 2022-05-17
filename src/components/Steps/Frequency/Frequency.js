@@ -110,8 +110,8 @@ const Frequency = () => {
   return (
     <div className="mb-10">
       <TopTitle
-        title="Select Meals Per Week"
-        subTitle="Healthy, fresh and ready to eat in 2 minutes"
+        title={settings().titles().step1}
+        subTitle={settings().subtitles().step1}
       />
       <div className={styles.mainWrapper}>
         <div>
