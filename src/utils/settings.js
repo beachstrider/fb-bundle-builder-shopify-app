@@ -9,6 +9,8 @@ const settings = () => {
   const bundleImages = () => bundles().images
   const icons = () => bundles().icons
   const labels = () => values().labels
+  const titles = () => values().titles
+  const subtitles = () => values().subtitles
   const display = () => values().settings.display
   const bundlePricesPerPortion = (entreeType, entreeSubType) =>
     entreeType
@@ -26,6 +28,8 @@ const settings = () => {
     values,
     icons,
     labels,
+    titles,
+    subtitles,
     display,
     bundlePricesPerPortion
   }

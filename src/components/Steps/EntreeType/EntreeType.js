@@ -120,25 +120,25 @@ const EntreeType = () => {
     return <Loading />
   }
   const displayMealPlans = settings().display().chooseMealPlan
-  if (!displayMealPlans && !!bundleTypes && bundleTypes.length > 0) {
-    if (state.entreeType.id !== bundleTypes[0].id) {
-      selectEntreeType(bundleTypes[0])
+  const defaultType = settings().bundles().defaultType
+  if (
+    !displayMealPlans &&
+    !!bundleTypes &&
+    bundleTypes.length > 0 &&
+    defaultType
+  ) {
+    const bundle = bundleTypes.filter((b) => b.name === defaultType)[0]
+    if (state.entreeType.id !== bundle.id) {
+      selectEntreeType(bundle)
     }
   }
 
   return (
     <div>
-      {displayMealPlans ? (
-        <TopTitle
-          title="Choose Your Meal Plan"
-          subTitle="Chef-curated, nutritious options to fit your lifestyle."
-        />
-      ) : (
-        <TopTitle
-          title="CHOOSE YOUR PORTION SIZE"
-          subTitle="Chef-curated, nutritious options to fit your lifestyle."
-        />
-      )}
+      <TopTitle
+        title={settings().titles().step2}
+        subTitle={settings().subtitles().step2}
+      />
       <div className="defaultWrapper mb-10">
         <div className={styles.wrapper}>
           {displayMealPlans && (
