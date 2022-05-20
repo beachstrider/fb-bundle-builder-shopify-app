@@ -84,7 +84,7 @@ const Footer = () => {
         : state.bundle?.breakfastsQuantity
     setFrequency(state.bundle?.entreesQuantity + currentBreakfastQuantities)
   }, [state.bundle, state.entreeType, state.entreeSubType])
-
+  const isF2Meals = process.env.STORE_SETTINGS_KEY === 'f2meals'
   return (
     <div className={`${styles.wrapper} defaultWrapper`}>
       <div className={`${styles.buttons} buttons`}>
@@ -99,7 +99,7 @@ const Footer = () => {
         <div
           className={`button ${styles.buttonFooter} ${
             state.isNextButtonActive ? 'primaryButton' : 'disabledButton'
-          }`}
+          } ${isF2Meals ? styles.arrowButton : ''}`}
           onClick={() => {
             if (currentStep.id === state.steps[state.steps.length - 1].id) {
               return handleLastStep()

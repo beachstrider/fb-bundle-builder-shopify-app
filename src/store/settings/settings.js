@@ -213,6 +213,7 @@ module.exports = {
         faqBackgroundColor: '#e8e8e8',
         pillBackground: '#737678',
         buttonColor: '#0a8d47',
+        buttonTextColor: '#FFFFFF',
         bannerBackground: '#fedc5c',
         deliveryDay: '#000000',
         topMenuBannerColor: '#F8D739'
@@ -449,6 +450,7 @@ module.exports = {
         faqBackgroundColor: '#e8e8e8',
         pillBackground: '#BB8D3D',
         buttonColor: '#656549',
+        buttonTextColor: '#FFFFFF',
         bannerBackground: '#DDCFC4',
         deliveryDay: '#000000',
         topMenuBannerColor: '#958161'
@@ -680,6 +682,7 @@ module.exports = {
         faqBackgroundColor: '#e8e8e8',
         pillBackground: '#689859',
         buttonColor: '#689859',
+        buttonTextColor: '#FFFFFF',
         bannerBackground: '#FFFFFF',
         deliveryDay: '#689859',
         topMenuBannerColor: '#689859'
@@ -727,7 +730,7 @@ module.exports = {
     bundles: {
       images: {
         featured: '/images/cse-frequency.jpg',
-        checkout: '/images/cse-review-order.png',
+        checkout: '/images/f2meals-review-order.png',
         breakfastSample: ''
       },
       icons: [
@@ -875,7 +878,7 @@ module.exports = {
         fontFamilyMediumItalic: 'Avenir-Bold-Italic'
       },
       borders: {
-        borderButtonRadius: '0.5rem'
+        borderButtonRadius: '2.5rem'
       },
       fontSizes: {
         fontLarge: '4.7rem',
@@ -907,12 +910,13 @@ module.exports = {
         orange: '#ec6120',
         butter: '#fedc5c',
         butter100: '#fedc5cb3',
-        headerBackgroundColor: '#f6f6f7',
+        headerBackgroundColor: '#FFFFFF',
         borderColor: '#ebebec',
         faqBackgroundColor: '#e8e8e8',
         pillBackground: '#A5BE3F',
         buttonColor: '#A5BE3F',
-        bannerBackground: '#FFFFFF',
+        buttonTextColor: '#000000',
+        bannerBackground: '#EDEDED',
         deliveryDay: '#A5BE3F',
         topMenuBannerColor: '#EDEDED'
       }

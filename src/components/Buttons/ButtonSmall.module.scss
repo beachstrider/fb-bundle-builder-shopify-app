@@ -8,6 +8,8 @@
     cursor: pointer;
     font-size: $fontXSmall;
     align-items: center;
+    background-color: $buttonColor;
+    color: $buttonTextColor;
   }
 
   & .lightButton {
@@ -22,10 +24,10 @@
   }
 
   & .primaryButton {
-    background: $primaryColor;
+    background: $buttonColor;
     box-shadow: unset !important;
     &:hover {
-      background: darken($primaryColor, 10%);
+      background: darken($buttonColor, 10%);
     }
   }
 
