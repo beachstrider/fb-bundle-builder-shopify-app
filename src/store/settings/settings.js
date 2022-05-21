@@ -831,51 +831,47 @@ module.exports = {
     theme: {
       fontFiles: [
         {
-          name: 'Eveleth-Bold',
-          url: 'https://cdn.shopify.com/s/files/1/0630/9399/7799/files/EvelethRegular-Bold.woff?v=1646429742'
+          name: 'Sofia-Pro-Bold',
+          url: 'https://cdn.shopify.com/s/files/1/0644/6324/1449/files/Sofia_Pro_Bold_Az.otf?v=1653074145'
         },
         {
-          name: 'Eveleth-Regular',
-          url: 'https://cdn.shopify.com/s/files/1/0630/9399/7799/files/Eveleth_Regular.otf?v=1647641476'
+          name: 'Sofia-Pro-Medium',
+          url: 'https://cdn.shopify.com/s/files/1/0644/6324/1449/files/Sofia_Pro_Medium_Az.otf?v=1653074145'
         },
         {
-          name: 'Gotham-Bold',
-          url: 'https://cdn.shopify.com/s/files/1/0552/6549/3185/files/Gotham-Bold.otf?v=1627982628'
+          name: 'Sofia-Pro-Regular',
+          url: 'https://cdn.shopify.com/s/files/1/0644/6324/1449/files/Sofia_Pro_Regular_Az.otf?v=1653074145'
         },
         {
-          name: 'Gotham-Black',
-          url: 'https://cdn.shopify.com/s/files/1/0552/6549/3185/files/Gotham-Black.otf?v=1627982628'
+          name: 'Sofia-Pro-Black',
+          url: 'https://cdn.shopify.com/s/files/1/0644/6324/1449/files/Sofia_Pro_Black_Az.otf?v=1653074145'
         },
         {
-          name: 'Avenir-Regular',
-          url: 'https://cdn.shopify.com/s/files/1/0632/5262/7694/files/Avenir-Book.woff?v=1647640173'
+          name: 'Sofia-Pro-Light',
+          url: 'https://cdn.shopify.com/s/files/1/0644/6324/1449/files/Sofia_Pro_Light_Az.otf?v=1653074145'
         },
         {
-          name: 'Gotham-Light',
-          url: 'https://cdn.shopify.com/s/files/1/0552/6549/3185/files/Gotham-Light.otf?v=1627982628'
+          name: 'Sofia-Pro-Extra-Light',
+          url: 'https://cdn.shopify.com/s/files/1/0644/6324/1449/files/Sofia_Pro_ExtraLight_Az.otf?v=1653074145'
         },
         {
-          name: 'Avenir-Bold',
-          url: 'https://cdn.shopify.com/s/files/1/0632/5262/7694/files/Avenir-Heavy.woff?v=1647640173'
+          name: 'Sofia-Pro-Semi-Bold',
+          url: 'https://cdn.shopify.com/s/files/1/0644/6324/1449/files/Sofia_Pro_Semi_Bold_Az.otf?v=1653074145'
         },
         {
-          name: 'Avenir-Bold-Italic',
-          url: 'https://cdn.shopify.com/s/files/1/0632/5262/7694/files/Avenir-Oblique.woff?v=1647640173'
-        },
-        {
-          name: 'Gotham-Thin',
-          url: 'https://cdn.shopify.com/s/files/1/0552/6549/3185/files/Gotham-Thin.otf?v=1627982628'
+          name: 'Sofia-Pro-Medium-Italic',
+          url: 'https://cdn.shopify.com/s/files/1/0644/6324/1449/files/Sofia_Pro_Medium_Italic_Az.otf?v=1653074145'
         }
       ],
       fontFamilies: {
-        fontFamilyBook: 'Avenir-Regular',
-        fontFamilyBold: 'Eveleth-Regular',
-        fontFamilyBlack: 'Gotham-Black',
-        fontFamilyLight: 'Avenir-Bold',
-        fontFamilyThin: 'Gotham-Thin',
-        fontFamilyMedium: 'Avenir-Bold',
-        fontFamilyMediumBold: 'Avenir-Bold',
-        fontFamilyMediumItalic: 'Avenir-Bold-Italic'
+        fontFamilyBook: 'Sofia-Pro-Bold',
+        fontFamilyBold: 'Sofia-Pro-Bold',
+        fontFamilyBlack: 'Sofia-Pro-Black',
+        fontFamilyLight: 'Sofia-Pro-Light',
+        fontFamilyThin: 'Sofia-Pro-Extra-Light',
+        fontFamilyMedium: 'Sofia-Pro-Medium',
+        fontFamilyMediumBold: 'Sofia-Pro-Semi-Bold',
+        fontFamilyMediumItalic: 'Sofia-Pro-Medium-Italic'
       },
       borders: {
         borderButtonRadius: '2.5rem'
