@@ -27,20 +27,23 @@
       background: $buttonColor;
       color: $buttonTextColor;
       border-radius:0;
-      border: none;
+      border: none !important;
       padding: 0 6rem;
       font-size: 2rem;
+    
       &:after {
         // triangle hover color
         border-left: 3rem solid $buttonColor;
         content: "";
         position: absolute;
-        border-bottom: 2.5rem solid transparent;
+        border-bottom: 3.9rem solid transparent;
         border-top: 2.5rem solid transparent;
         height: 0px;
         width: 0px;
         margin-right: -3rem;
-        right: 0px;
+        left: 165px;
+        box-shadow: none !important;
+        top: 0;
       }
       &:hover, &:active {
         background: darken($buttonColor, 10%);
