@@ -773,7 +773,7 @@ module.exports = {
             {
               name: 'none',
               price: 'None',
-              tag: '7 Day'
+              tag: '7 Day with breakfast'
             }
           ]
         },
@@ -794,7 +794,7 @@ module.exports = {
             {
               name: 'none',
               price: 'None',
-              tag: '5 Day'
+              tag: '5 Day with breakfast'
             }
           ]
         },
@@ -816,7 +816,7 @@ module.exports = {
             {
               name: 'none',
               price: 'None',
-              tag: '3 Day'
+              tag: '3 Day with breakfast'
             }
           ]
         }
