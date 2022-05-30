@@ -704,7 +704,7 @@ module.exports = {
     },
     labels: {
       step1: 'Meals Per Week',
-      step2: 'Meal Plans',
+      step2: 'Portion Size',
       step3: 'Location & Delivery',
       step4: 'Select Your Meals',
       step5: 'Review Order',
@@ -760,7 +760,7 @@ module.exports = {
           id: 1,
           name: '21 Meals',
           description: '7-Days All inclusive - (14 Meals + 7 Breakfasts)',
-          price: 13.95,
+          price: 11.95,
           shippingPrice: 14.95,
           entreesQuantity: 21,
           breakfastsQuantity: 0,
@@ -802,7 +802,7 @@ module.exports = {
           id: 3,
           name: '9 Meals',
           description: '',
-          price: 11.95,
+          price: 13.95,
           shippingPrice: 14.95,
           entreesQuantity: 9,
           breakfastsQuantity: 0,
@@ -823,9 +823,8 @@ module.exports = {
       ],
       defaultType: 'keto',
       pricesPerPortion: [
-        { type: 'keto', subType: 'small', price: 0 },
-        { type: 'keto', subType: 'medium', price: 1 },
-        { type: 'keto', subType: 'large', price: 2 }
+        { type: 'keto', subType: 'regular', price: 0 },
+        { type: 'keto', subType: 'large', price: 1 },
       ]
     },
     theme: {
