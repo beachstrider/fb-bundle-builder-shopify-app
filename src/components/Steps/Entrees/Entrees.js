@@ -150,7 +150,6 @@ const Entrees = () => {
       setMenuItems(newItems)
       setIsLoading(false)
     } catch (error) {
-      console.log(error)
       setError({
         open: true,
         status: 'Danger',
