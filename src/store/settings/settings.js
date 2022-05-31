@@ -823,8 +823,8 @@ module.exports = {
       ],
       defaultType: 'keto',
       pricesPerPortion: [
-        { type: 'keto', subType: 'regular', price: 0 },
-        { type: 'keto', subType: 'large', price: 1 },
+        { type: 'keto', subType: 'small', price: 0 },
+        { type: 'keto', subType: 'regular', price: 1 },
       ]
     },
     theme: {
