@@ -199,9 +199,13 @@ const Frequency = () => {
               entreePrice={state.bundle?.price}
               breakfastPrice={state.bundle?.breakfast?.price}
               shippingPrice={state.bundle?.shippingPrice}
-              backgroundImage={`${process.env.PROXY_APP_URL}${
+              backgroundImage={
+                isF2Meals ? `${
+                    settings().bundleImages().featured
+                  }` :  `${process.env.PROXY_APP_URL}${
                 settings().bundleImages().featured
-              }`}
+                }`
+              }
             />
           </div>
         </div>
