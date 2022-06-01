@@ -719,7 +719,7 @@ module.exports = {
       step5: 'Review Your Order'
     },
     subtitles: {
-      step1: 'Keto-friendly & ready in under 3 minutes',
+      step1: 'Keto & ready in under 3 minutes',
       step2: 'Get the exact amount you need to fuel your day',
       step3a:
         'Get your keto meals once a week. You can always pause, cancel, or update your meal plan',
@@ -729,7 +729,7 @@ module.exports = {
     },
     bundles: {
       images: {
-        featured: '/images/cse-frequency.jpg',
+        featured: '/images/f2-meals-frequency.jpg',
         checkout: '/images/f2meals-review-order.png',
         breakfastSample: ''
       },
@@ -824,7 +824,7 @@ module.exports = {
       defaultType: 'keto',
       pricesPerPortion: [
         { type: 'keto', subType: 'small', price: 0 },
-        { type: 'keto', subType: 'regular', price: 1 },
+        { type: 'keto', subType: 'regular', price: 1 }
       ]
     },
     theme: {
