@@ -6,6 +6,7 @@ import { MealCard } from '../../Account/Components/MealCard'
 import styles from './Review.module.scss'
 
 const ReviewItems = ({ items }) => {
+  const isF2Meals = process.env.STORE_SETTINGS_KEY === 'f2meals'
   const getTitle = (key) =>
     key.toLowerCase().includes('meal') ? BUNDLE_MEAL_SECTION_TITLE : key
 
@@ -19,7 +20,10 @@ const ReviewItems = ({ items }) => {
           <div>
             <div className={styles.sectionTitle}>
               <div>
-                {getTitle(items.labels[key])} ({items.totals[key]})
+                {
+                  isF2Meals ? 'Meals' :
+                  getTitle(items.labels[key])
+                } ({items.totals[key]})
               </div>
               <div
                 className={styles.edit}
