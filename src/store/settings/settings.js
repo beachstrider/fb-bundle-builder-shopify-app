@@ -719,7 +719,7 @@ module.exports = {
       step5: 'Review Your Order'
     },
     subtitles: {
-      step1: 'Keto-friendly & ready in under 3 minutes',
+      step1: 'Special Offer: FREE BHB’s with 15 or 21 meals!',
       step2: 'Get the exact amount you need to fuel your day',
       step3a:
         'Get your keto meals once a week. You can always pause, cancel, or update your meal plan',
