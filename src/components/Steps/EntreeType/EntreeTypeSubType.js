@@ -15,6 +15,8 @@ const EntreeTypeSubType = ({
   extraPricePerMeal = 0
 }) => {
   const displayAverageMacros = settings().display().averageMacros
+  const isF2Meals = process.env.STORE_SETTINGS_KEY === 'f2meals'
+
   return (
     <CardSelectionMark isSelected={isSelected} onClick={onClick}>
       <div className={styles.wrapper}>
@@ -28,7 +30,9 @@ const EntreeTypeSubType = ({
           )}
         </div>
         <div
-          className={displayAverageMacros ? styles.largerTitle : styles.title}
+          className={
+            isF2Meals ? styles.extraLargerTitle :  displayAverageMacros ? styles.largerTitle : styles.title
+          }
         >
           {title}
         </div>

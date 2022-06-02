@@ -697,7 +697,7 @@ module.exports = {
           'We offer healthy, chef-prepared meals delivered fresh to your door. Choose from a wide variety of 120+ options for both Balanced and Keto meal types.'
       },
       display: {
-        averageMacros: true,
+        averageMacros: false,
         chooseMealPlan: false,
         mealsStartingAt: true
       }
@@ -729,7 +729,7 @@ module.exports = {
     },
     bundles: {
       images: {
-        featured: '/images/cse-frequency.jpg',
+        featured: 'https://res.cloudinary.com/meals/image/upload/v1654118830/f2/Bundle%20Builder/Checkout_Image1.jpg',
         checkout: '/images/f2meals-review-order.png',
         breakfastSample: ''
       },
@@ -824,7 +824,7 @@ module.exports = {
       defaultType: 'keto',
       pricesPerPortion: [
         { type: 'keto', subType: 'small', price: 0 },
-        { type: 'keto', subType: 'regular', price: 1 },
+        { type: 'keto', subType: 'regular', price: 1 }
       ]
     },
     theme: {
