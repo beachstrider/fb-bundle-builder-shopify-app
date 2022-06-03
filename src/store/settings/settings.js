@@ -8,7 +8,7 @@ module.exports = {
       },
       display: {
         averageMacros: false,
-        chooseMealPlan: true,
+        chooseMealPlan: false,
         mealsStartingAt: false
       }
     },
@@ -71,7 +71,7 @@ module.exports = {
           name: '14 Meals',
           description: '7-Days All inclusive - (14 Meals + 7 Breakfasts)',
           price: 9.95,
-          shippingPrice: 8.95,
+          shippingPrice: 14.95,
           entreesQuantity: 14,
           breakfastsQuantity: 7,
           breakfasts: [
@@ -92,7 +92,7 @@ module.exports = {
           name: '10 Meals',
           description: '',
           price: 11.95,
-          shippingPrice: 8.95,
+          shippingPrice: 14.95,
           entreesQuantity: 10,
           breakfastsQuantity: 5,
           breakfasts: [
@@ -113,7 +113,7 @@ module.exports = {
           name: '6 Meals',
           description: '',
           price: 12.95,
-          shippingPrice: 8.95,
+          shippingPrice: 14.95,
           entreesQuantity: 6,
           breakfastsQuantity: 3,
 
@@ -131,9 +131,9 @@ module.exports = {
           ]
         }
       ],
-      defaultType: '',
+      defaultType: 'balanced',
       pricesPerPortion: [
-        { type: 'keto', subType: 'large', price: 1 },
+        // { type: 'keto', subType: 'large', price: 1 },
         { type: 'balanced', subType: 'medium', price: 1 },
         { type: 'balanced', subType: 'large', price: 2 }
       ]
@@ -233,7 +233,7 @@ module.exports = {
       },
       display: {
         averageMacros: false,
-        chooseMealPlan: true,
+        chooseMealPlan: false,
         mealsStartingAt: false
       }
     },
@@ -296,7 +296,7 @@ module.exports = {
           name: '14 Meals',
           description: '7-Days All inclusive - (14 Meals + 7 Breakfasts)',
           price: 10.95,
-          shippingPrice: 8.95,
+          shippingPrice: 14.95,
           entreesQuantity: 14,
           breakfastsQuantity: 7,
           breakfasts: [
@@ -317,7 +317,7 @@ module.exports = {
           name: '10 Meals',
           description: '',
           price: 11.95,
-          shippingPrice: 8.95,
+          shippingPrice: 14.95,
           entreesQuantity: 10,
           breakfastsQuantity: 5,
           breakfasts: [
@@ -338,7 +338,7 @@ module.exports = {
           name: '6 Meals',
           description: '',
           price: 12.95,
-          shippingPrice: 8.95,
+          shippingPrice: 14.95,
           entreesQuantity: 6,
           breakfastsQuantity: 3,
 
@@ -356,9 +356,9 @@ module.exports = {
           ]
         }
       ],
-      defaultType: '',
+      defaultType: 'balanced',
       pricesPerPortion: [
-        { type: 'keto', subType: 'large', price: 1 },
+        // { type: 'keto', subType: 'large', price: 1 },
         { type: 'balanced', subType: 'medium', price: 1 },
         { type: 'balanced', subType: 'large', price: 2 }
       ]
