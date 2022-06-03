@@ -134,7 +134,17 @@ const Frequency = () => {
             </div>
           </div>
           <div id="breakfasts" />
-          { isF2Meals === true ? '' : (
+          { isF2Meals ? ( <div className="displayMobile mt-5 mb-5">
+                <div className=" px-3" style={{ width: '100%' }}>
+                  <SubTotal
+                    entreesQuantity={state.bundle?.entreesQuantity}
+                    breakfastsQuantity={state.bundle?.breakfastsQuantity}
+                    entreePrice={state.bundle?.price}
+                    breakfastPrice={state.bundle?.breakfast?.price}
+                    shippingPrice={state.bundle?.shippingPrice}
+                  />
+                </div>
+              </div>)  : (
             <div className={`${styles.wrapper} mt-8`} >
               <div className={styles.row}>
                 <div className={styles.column}>
