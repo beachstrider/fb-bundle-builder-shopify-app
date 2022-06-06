@@ -43,6 +43,7 @@ const STEP_ID = 4
 const Entrees = () => {
   const state = useSelector((state) => state)
   const dispatch = useDispatch()
+  const isF2Meals = process.env.STORE_SETTINGS_KEY === 'f2meals'
 
   const cartUtility = cart(state)
 
@@ -340,9 +341,12 @@ const Entrees = () => {
                   <div key={content.id}>
                     <div className={styles.listHeader}>
                       <div className={styles.title}>
-                        {content.title === 'Meals'
+                        {
+                          isF2Meals ? 'Meals' :
+                          content.title === 'Meals'
                           ? BUNDLE_MEAL_SECTION_TITLE
-                          : content.title}{' '}
+                          : content.title
+                        }{' '}
                         ({getQuantityCountdown(content.id).quantitySummary} of{' '}
                         {getQuantityCountdown(content.id).quantityTotal})
                       </div>

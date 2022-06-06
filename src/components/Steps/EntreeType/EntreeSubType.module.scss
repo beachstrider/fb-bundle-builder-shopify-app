@@ -52,6 +52,13 @@
     font-style: normal;
   }
 
+  & .extraLargerTitle {
+    @extend .title;
+    font-size: 2.6rem;
+    font-family: $fontFamilyBold;
+    font-style: normal;
+  }
+
   & .label {
     font-family: $fontFamilyBook;
     font-weight: 700;

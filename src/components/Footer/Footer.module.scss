@@ -21,6 +21,47 @@
         line-height: 2.5rem;
       }
     }
+    
+    & .arrowButton {
+      position: relative;
+      background: #A5BE3F;
+      color: #000000;
+      border-radius: 0;
+      border: none !important;
+      padding: 0 6rem;
+      font-size: 2rem;
+      height: 5rem;
+      width: 13rem;
+      top: 1rem;
+      &:after {
+        // triangle hover color
+        border-left: 4.0rem solid #A5BE3F;
+        content: "";
+        position: absolute;
+        border-bottom: 2.5rem solid transparent;
+        border-top: 2.5rem solid transparent;
+        height: 0px;
+        width: 0px;
+        margin-right: -3rem;
+        left: 130px;
+        box-shadow: none !important;
+        top: 0px;
+      }
+      &:hover, &:active {
+        background: darken($buttonColor, 10%);
+        color: $buttonTextColor;
+        &:after {
+          // triangle hover
+          border-left: 4.0rem solid darken($buttonColor, 10%);
+        }
+      }
+     
+      @media only screen and (max-width: $breakpointMobile) {
+        margin-right: 0rem;
+        padding: 0rem;
+        line-height: 2.5rem;
+      }
+    }
   }
 }
 
