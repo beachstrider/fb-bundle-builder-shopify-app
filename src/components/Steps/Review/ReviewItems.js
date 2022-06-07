@@ -4,9 +4,12 @@ import { useHistory } from 'react-router-dom'
 import { BUNDLE_MEAL_SECTION_TITLE } from '../../../constants/bundles'
 import { MealCard } from '../../Account/Components/MealCard'
 import styles from './Review.module.scss'
+import { getBreakfastAndMeals } from '../../../utils';
 
 const ReviewItems = ({ items }) => {
   const isF2Meals = process.env.STORE_SETTINGS_KEY === 'f2meals'
+  const isQuickfresh = process.env.STORE_SETTINGS_KEY === 'quickfresh'
+
   const getTitle = (key) =>
     key.toLowerCase().includes('meal') ? BUNDLE_MEAL_SECTION_TITLE : key
 
@@ -21,7 +24,7 @@ const ReviewItems = ({ items }) => {
             <div className={styles.sectionTitle}>
               <div>
                 {
-                  isF2Meals ? 'Meals' :
+                  isF2Meals || isQuickfresh ? 'Meals' :
                   getTitle(items.labels[key])
                 } ({items.totals[key]})
               </div>
