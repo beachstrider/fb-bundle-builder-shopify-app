@@ -35,6 +35,37 @@ const ReviewItems = ({ items }) => {
                 Edit
               </div>
             </div>
+          {isQuickfresh ? (
+            <>
+            {getBreakfastAndMeals(items.types[key]).map( (itemProduct, index) => (
+              <div key={index}>
+                <div className={styles.sectionTitle}>
+                  {itemProduct.length > 0 ? (
+                    <div>
+                        { index === 0 ? 'Breakfast' : BUNDLE_MEAL_SECTION_TITLE }
+                    </div>
+                  ) : ('')}
+                </div>
+                <div className={styles.sectionRow}>
+                  {itemProduct.map((item, itemIndex) => (
+                    <MealCard
+                      key={itemIndex}
+                      image={
+                        item.images.length > 0 && item.images[0]
+                          ? item.images[0]
+                          : process.env.EMPTY_STATE_IMAGE
+                      }
+                      title={item.name}
+                      quantity={item.quantity}
+                      type={item.title}
+                      quantityLabel=""
+                    />
+                  ))}
+                </div>
+              </div>
+            ))}
+            </>
+            ) : (
             <div className={styles.sectionRow}>
               {items.types[key].map((item, itemIndex) => (
                 <MealCard
@@ -51,6 +82,7 @@ const ReviewItems = ({ items }) => {
                 />
               ))}
             </div>
+          )}
           </div>
         </div>
       ))}
