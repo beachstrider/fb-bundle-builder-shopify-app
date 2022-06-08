@@ -83,7 +83,7 @@ module.exports = {
             {
               name: 'none',
               price: 'None',
-              tag: '7 Day with breakfast'
+              tag: '21 Meal Plan'
             }
           ]
         },
@@ -104,7 +104,7 @@ module.exports = {
             {
               name: 'none',
               price: 'None',
-              tag: '5 Day with breakfast'
+              tag: '15 Meal Plan'
             }
           ]
         },
@@ -126,7 +126,29 @@ module.exports = {
             {
               name: 'none',
               price: 'None',
-              tag: '3 Day with breakfast'
+              tag: '9 Meal Plan'
+            }
+          ]
+        },
+        {
+          id: 4,
+          name: '6 Meals',
+          description: '',
+          price: 13.95,
+          shippingPrice: 14.95,
+          entreesQuantity: 6,
+          breakfastsQuantity: 0,
+
+          breakfasts: [
+            // {
+            //   name: '3 Meals',
+            //   price: 5.95,
+            //   tag: '3 Day with breakfast'
+            // },
+            {
+              name: 'none',
+              price: 'None',
+              tag: '6 Meal Plan'
             }
           ]
         }
