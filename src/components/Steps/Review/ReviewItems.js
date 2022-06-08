@@ -9,6 +9,7 @@ import { getBreakfastAndMeals } from '../../../utils';
 const ReviewItems = ({ items }) => {
   const isF2Meals = process.env.STORE_SETTINGS_KEY === 'f2meals'
   const isQuickfresh = process.env.STORE_SETTINGS_KEY === 'quickfresh'
+  const isChow = process.env.STORE_SETTINGS_KEY === 'chow'
 
   const getTitle = (key) =>
     key.toLowerCase().includes('meal') ? BUNDLE_MEAL_SECTION_TITLE : key
@@ -24,7 +25,7 @@ const ReviewItems = ({ items }) => {
             <div className={styles.sectionTitle}>
               <div>
                 {
-                  isF2Meals || isQuickfresh ? 'Meals' :
+                  isF2Meals || isQuickfresh || isChow ? 'Meals' :
                   getTitle(items.labels[key])
                 } ({items.totals[key]})
               </div>
@@ -35,7 +36,7 @@ const ReviewItems = ({ items }) => {
                 Edit
               </div>
             </div>
-          {isQuickfresh ? (
+          {isQuickfresh || isChow ? (
             <>
             {getBreakfastAndMeals(items.types[key]).map( (itemProduct, index) => (
               <div key={index}>
