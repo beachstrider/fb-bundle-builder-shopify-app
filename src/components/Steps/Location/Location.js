@@ -12,7 +12,8 @@ import {
   initialState,
   setReturnToStep,
   setDeliveryDates,
-  setTokens
+  setTokens,
+  cartClear
 } from '../../../store/slices/rootSlice'
 import { InputEmail, InputText } from '../Components/Inputs'
 import {
@@ -299,6 +300,9 @@ const Location = () => {
   }
 
   const handleDeliveryDate = (date) => {
+    // if delivery date change then clear cart data
+    dispatch(cartClear())
+
     dispatch(
       setLocation({
         ...state.location,
