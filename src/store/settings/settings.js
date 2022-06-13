@@ -156,8 +156,9 @@ module.exports = {
       defaultType: 'balanced',
       pricesPerPortion: [
         // { type: 'keto', subType: 'large', price: 1 },
-        { type: 'balanced', subType: 'medium', price: 1 },
-        { type: 'balanced', subType: 'large', price: 2 }
+        { type: 'balanced', subType: 'regular', price: 0 },
+        // { type: 'balanced', subType: 'medium', price: 1 },
+        // { type: 'balanced', subType: 'large', price: 2 }
       ]
     },
     theme: {
