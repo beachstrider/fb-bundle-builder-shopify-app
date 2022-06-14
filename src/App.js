@@ -28,9 +28,11 @@ import { getSelectedBundle } from './components/Hooks'
 import { OrderSummary } from './components/Account/OrderSummary'
 import ErrorHandler from './components/ErrorHandler'
 import { WeeksMenu } from './components/Menu'
+import { settings } from './utils'
 
 function App() {
   const state = useSelector((state) => state)
+  const skipStepMealPlan = settings().display().skipStepMealPlan
 
   useEffect(() => {
     findMissingTags()
@@ -43,7 +45,10 @@ function App() {
       '5 Day with breakfast',
       '5 Day',
       '3 Day with breakfast',
-      '3 Day'
+      '3 Day',
+      '21 Meal Plan',
+      '15 Meal Plan',
+      '9 Meal Plan',
     ]
 
     console.log('Searching for Shopify tags in products', expectedTags)
@@ -83,12 +88,23 @@ function App() {
                   path="/edit-order/:orderId"
                   component={EditOrder}
                 />
+                { skipStepMealPlan ? (
+                  <Switch>
+                    <Route path="/steps/2" component={Location} />
+                    <Route path="/steps/3" component={Entrees} />
+                    <Route path="/steps/4" component={Review} />
+                    <Route path="*" component={Frequency} />
+                  </Switch>
+                ) : (
+                  <Switch>
+                    <Route path="/steps/2" component={EntreeType} />
+                    <Route path="/steps/3" component={Location} />
+                    <Route path="/steps/4" component={Entrees} />
+                    <Route path="/steps/5" component={Review} />
+                    <Route path="*" component={Frequency} />
+                  </Switch>
+                )}
 
-                <Route path="/steps/2" component={EntreeType} />
-                <Route path="/steps/3" component={Location} />
-                <Route path="/steps/4" component={Entrees} />
-                <Route path="/steps/5" component={Review} />
-                <Route path="*" component={Frequency} />
               </Switch>
             </div>
             {state.displayFooter && <Footer />}
