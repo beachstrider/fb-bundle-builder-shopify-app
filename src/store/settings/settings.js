@@ -129,28 +129,6 @@ module.exports = {
               tag: '9 Meal Plan'
             }
           ]
-        },
-        {
-          id: 4,
-          name: '6 Meals',
-          description: '',
-          price: 14.95,
-          shippingPrice: 14.95,
-          entreesQuantity: 6,
-          breakfastsQuantity: 0,
-
-          breakfasts: [
-            // {
-            //   name: '3 Meals',
-            //   price: 5.95,
-            //   tag: '3 Day with breakfast'
-            // },
-            {
-              name: 'none',
-              price: 'None',
-              tag: '6 Meal Plan'
-            }
-          ]
         }
       ],
       defaultType: 'balanced',
