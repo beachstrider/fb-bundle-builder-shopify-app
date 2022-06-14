@@ -33,7 +33,8 @@ dayjs.extend(advancedFormat)
 dayjs.extend(weekday)
 
 const DEFAULT_ERROR_MESSAGE = 'There was an error. Please try again later'
-const STEP_ID = 5
+const skipStepMealPlan = settings().display().skipStepMealPlan
+const STEP_ID = skipStepMealPlan ? 4 : 5
 
 const Review = () => {
   const [isLoading, setIsLoading] = useState(false)

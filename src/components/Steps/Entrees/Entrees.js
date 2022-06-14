@@ -29,7 +29,8 @@ import {
   getConfigurationContent,
   mapBundleItemsByOption,
   getShortDate,
-  getBreakfastAndMeals
+  getBreakfastAndMeals, 
+  settings
 } from '../../../utils'
 import Toast from '../../Global/Toast'
 import { DEFAULT_ERROR_MESSAGE } from '../../../constants/errors'
@@ -39,7 +40,8 @@ import TopTitle from '../Components/TopTitle'
 dayjs.extend(weekday)
 dayjs.extend(utc)
 
-const STEP_ID = 4
+const skipStepMealPlan = settings().display().skipStepMealPlan
+const STEP_ID = skipStepMealPlan ? 3 : 4
 
 const Entrees = () => {
   const state = useSelector((state) => state)

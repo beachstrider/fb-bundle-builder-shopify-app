@@ -12,6 +12,8 @@ import {
   initialState,
   setReturnToStep,
   setDeliveryDates,
+  setEntreeType,
+  setEntreeSubType,
   setTokens,
   cartClear
 } from '../../../store/slices/rootSlice'
@@ -23,12 +25,15 @@ import {
   isValidEmail,
   isValidZipCode,
   mapDeliveryDays,
-  request
+  mapBundleTypeSubtype,
+  request,
+  settings
 } from '../../../utils'
 import styles from './Location.module.scss'
 import {
   generateRequestToken,
   getShopifyCustomerByEmail,
+  getSelectedBundle,
   useGuestToken,
   withActiveStep
 } from '../../Hooks'
@@ -45,7 +50,8 @@ const isSameOrBefore = require('dayjs/plugin/isSameOrBefore')
 dayjs.extend(isSameOrBefore)
 
 const FAQ_TYPE = 'location'
-const STEP_ID = 3
+const skipStepMealPlan = settings().display().skipStepMealPlan
+const STEP_ID = skipStepMealPlan ? 2 : 3
 
 const Location = () => {
   const dispatch = useDispatch()
@@ -84,6 +90,34 @@ const Location = () => {
       dispatch(displayFooter(false))
     }
   }
+
+  // set step 2 data in step 3
+  useEffect(() => {
+    // if skip meal plan then set data in location
+    if (skipStepMealPlan) {
+      mapBundleTypes()
+    }
+
+  }, [skipStepMealPlan])
+
+  const mapBundleTypes = () => {
+    setIsLoading(true)
+
+    const shopifyBundleProduct = getSelectedBundle(state.bundle.breakfast.tag)
+    const mappedBundle = mapBundleTypeSubtype(shopifyBundleProduct)
+    const defaultType = settings().bundles().defaultType
+    const bundle = mappedBundle.filter((b) => b.name === defaultType)[0]
+    dispatch(setEntreeType(bundle))
+    // set entree sub type
+    // console.log(bundle.options)
+    if (bundle.options[0]){
+      dispatch(setEntreeSubType(bundle.options[0]))
+    }else{
+      window.location.href = '/'
+    }
+    setIsLoading(false)
+  }
+  // end step 2 work
 
   useEffect(() => {
     generateToken().then((currentToken) => {

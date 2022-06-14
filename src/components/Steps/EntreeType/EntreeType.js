@@ -25,7 +25,8 @@ import TopTitle from '../Components/TopTitle'
 import Loading from '../Components/Loading'
 
 const FAQ_TYPE = 'entreeType'
-const STEP_ID = 2
+const skipStepMealPlan = settings().display().skipStepMealPlan
+const STEP_ID = skipStepMealPlan ? 2 : 2
 
 const EntreeType = () => {
   const dispatch = useDispatch()
