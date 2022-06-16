@@ -25,7 +25,7 @@ const ReviewItems = ({ items }) => {
             <div className={styles.sectionTitle}>
               <div>
                 {
-                  isF2Meals || isQuickfresh ? 'Meals' :
+                  isF2Meals || isQuickfresh || isChow ? 'Meals' :
                   getTitle(items.labels[key])
                 } ({items.totals[key]})
               </div>
@@ -36,7 +36,7 @@ const ReviewItems = ({ items }) => {
                 Edit
               </div>
             </div>
-          {isQuickfresh ? (
+          {isQuickfresh || isChow ? (
             <>
             {getBreakfastAndMeals(items.types[key]).map( (itemProduct, index) => (
               <div key={index}>

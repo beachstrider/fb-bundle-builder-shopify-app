@@ -343,7 +343,7 @@ const Entrees = () => {
                 <Loading />
               ) : (
                 menuItems.map((content) => {
-                  return isQuickfresh ? (
+                  return isQuickfresh || isChow ? (
                     <div key={content.id}>
                       <div className={styles.listHeader}>
                         <div className={styles.title}>
