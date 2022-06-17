@@ -793,7 +793,7 @@ module.exports = {
           breakfastsQuantity: 0,
           breakfasts: [
             // {
-            //   name: '5 Meals',
+            //   name: '5 Meal',
             //   price: 9.95,
             //   tag: '5 Day with breakfast'
             // },
