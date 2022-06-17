@@ -6,6 +6,7 @@ import {
   setVisitedStep,
   MEAL_PLANS_ITEM
 } from '../../store/slices/rootSlice'
+import { settings } from '../../utils'
 import styles from './Header.module.scss'
 
 const Header = () => {
@@ -13,6 +14,7 @@ const Header = () => {
   const history = useHistory()
   const steps = useSelector((state) => state.steps)
   const isF2Meals = process.env.STORE_SETTINGS_KEY === 'f2meals'
+  const skipStepMealPlan = settings().display().skipStepMealPlan
 
   const handleGoToStep = ({ id, path }) => {
     dispatch(setActiveStep(id))
@@ -26,7 +28,7 @@ const Header = () => {
   }
 
   const getClassnameDescription = ({ id, isVisited, isActive }) => {
-    const breakLineMealPlans = id === MEAL_PLANS_ITEM && styles.breakWord
+    const breakLineMealPlans = id === MEAL_PLANS_ITEM && !skipStepMealPlan && styles.breakWord
     const setDisabledItemMenu = !isVisited && !isActive && styles.isNotVisited
     const borderBottom = isActive && isF2Meals && styles.borderBottomGreen
     return `${styles.description} ${borderBottom} ${breakLineMealPlans} ${setDisabledItemMenu}`

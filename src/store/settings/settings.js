@@ -9,7 +9,8 @@ module.exports = {
       display: {
         averageMacros: false,
         chooseMealPlan: false,
-        mealsStartingAt: false
+        mealsStartingAt: false,
+        skipStepMealPlan: true
       }
     },
     labels: {
@@ -68,65 +69,65 @@ module.exports = {
       options: [
         {
           id: 1,
-          name: '14 Meals',
+          name: '21 Meals',
           description: '7-Days All inclusive - (14 Meals + 7 Breakfasts)',
-          price: 9.95,
+          price: 11.95,
           shippingPrice: 14.95,
-          entreesQuantity: 14,
-          breakfastsQuantity: 7,
+          entreesQuantity: 21,
+          breakfastsQuantity: 0,
           breakfasts: [
-            {
-              name: '7 Meals',
-              price: 4.95,
-              tag: '7 Day with breakfast'
-            },
+            // {
+            //   name: '7 Meals',
+            //   price: 4.95,
+            //   tag: '7 Day with breakfast'
+            // },
             {
               name: 'none',
               price: 'None',
-              tag: '7 Day'
+              tag: '21 Meal Plan'
             }
           ]
         },
         {
           id: 2,
-          name: '10 Meals',
+          name: '15 Meals',
           description: '',
-          price: 11.95,
+          price: 12.95,
           shippingPrice: 14.95,
-          entreesQuantity: 10,
-          breakfastsQuantity: 5,
+          entreesQuantity: 15,
+          breakfastsQuantity: 0,
           breakfasts: [
-            {
-              name: '5 Meals',
-              price: 5.95,
-              tag: '5 Day with breakfast'
-            },
+            // {
+            //   name: '5 Meals',
+            //   price: 5.95,
+            //   tag: '5 Day with breakfast'
+            // },
             {
               name: 'none',
               price: 'None',
-              tag: '5 Day'
+              tag: '15 Meal Plan'
             }
           ]
         },
         {
           id: 3,
-          name: '6 Meals',
+          name: '9 Meals',
           description: '',
-          price: 12.95,
+          price: 13.95,
           shippingPrice: 14.95,
-          entreesQuantity: 6,
-          breakfastsQuantity: 3,
+          entreesQuantity: 9,
+          breakfastsQuantity: 0,
 
           breakfasts: [
-            {
-              name: '3 Meals',
-              price: 5.95,
-              tag: '3 Day with breakfast'
-            },
+            // {
+            //   name: '3 Meals',
+            //   price: 5.95,
+            //   tag: '3 Day with breakfast'
+            // },
             {
               name: 'none',
               price: 'None',
-              tag: '3 Day'
+              tag: '9 Meal Plan'
             }
           ]
         }
@@ -134,8 +135,9 @@ module.exports = {
       defaultType: 'balanced',
       pricesPerPortion: [
         // { type: 'keto', subType: 'large', price: 1 },
-        { type: 'balanced', subType: 'medium', price: 1 },
-        { type: 'balanced', subType: 'large', price: 2 }
+        { type: 'balanced', subType: 'regular', price: 0 },
+        // { type: 'balanced', subType: 'medium', price: 1 },
+        // { type: 'balanced', subType: 'large', price: 2 }
       ]
     },
     theme: {
@@ -234,7 +236,8 @@ module.exports = {
       display: {
         averageMacros: false,
         chooseMealPlan: false,
-        mealsStartingAt: false
+        mealsStartingAt: false,
+        skipStepMealPlan: true
       }
     },
     labels: {
@@ -293,65 +296,65 @@ module.exports = {
       options: [
         {
           id: 1,
-          name: '14 Meals',
+          name: '21 Meals',
           description: '7-Days All inclusive - (14 Meals + 7 Breakfasts)',
-          price: 10.95,
+          price: 11.95,
           shippingPrice: 14.95,
-          entreesQuantity: 14,
-          breakfastsQuantity: 7,
+          entreesQuantity: 21,
+          breakfastsQuantity: 0,
           breakfasts: [
-            {
-              name: '7 Meals',
-              price: 8.95,
-              tag: '7 Day with breakfast'
-            },
+            // {
+            //   name: '7 Meals',
+            //   price: 8.95,
+            //   tag: '7 Day with breakfast'
+            // },
             {
               name: 'none',
               price: 'None',
-              tag: '7 Day'
+              tag: '21 Meal Plan'
             }
           ]
         },
         {
           id: 2,
-          name: '10 Meals',
+          name: '15 Meals',
           description: '',
-          price: 11.95,
+          price: 12.95,
           shippingPrice: 14.95,
-          entreesQuantity: 10,
-          breakfastsQuantity: 5,
+          entreesQuantity: 15,
+          breakfastsQuantity: 0,
           breakfasts: [
-            {
-              name: '5 Meals',
-              price: 9.95,
-              tag: '5 Day with breakfast'
-            },
+            // {
+            //   name: '5 Meals',
+            //   price: 9.95,
+            //   tag: '5 Day with breakfast'
+            // },
             {
               name: 'none',
               price: 'None',
-              tag: '5 Day'
+              tag: '15 Meal Plan'
             }
           ]
         },
         {
           id: 3,
-          name: '6 Meals',
+          name: '9 Meals',
           description: '',
-          price: 12.95,
+          price: 13.95,
           shippingPrice: 14.95,
-          entreesQuantity: 6,
-          breakfastsQuantity: 3,
+          entreesQuantity: 9,
+          breakfastsQuantity: 0,
 
           breakfasts: [
-            {
-              name: '3 Meals',
-              price: 10.95,
-              tag: '3 Day with breakfast'
-            },
+            // {
+            //   name: '3 Meals',
+            //   price: 10.95,
+            //   tag: '3 Day with breakfast'
+            // },
             {
               name: 'none',
               price: 'None',
-              tag: '3 Day'
+              tag: '9 Meal Plan'
             }
           ]
         }
@@ -359,8 +362,9 @@ module.exports = {
       defaultType: 'balanced',
       pricesPerPortion: [
         // { type: 'keto', subType: 'large', price: 1 },
-        { type: 'balanced', subType: 'medium', price: 1 },
-        { type: 'balanced', subType: 'large', price: 2 }
+        { type: 'balanced', subType: 'regular', price: 0 },
+        // { type: 'balanced', subType: 'medium', price: 1 },
+        // { type: 'balanced', subType: 'large', price: 2 }
       ]
     },
     theme: {
@@ -467,7 +471,8 @@ module.exports = {
       display: {
         averageMacros: true,
         chooseMealPlan: false,
-        mealsStartingAt: true
+        mealsStartingAt: true,
+        skipStepMealPlan: false
       }
     },
     labels: {
@@ -699,7 +704,8 @@ module.exports = {
       display: {
         averageMacros: false,
         chooseMealPlan: false,
-        mealsStartingAt: true
+        mealsStartingAt: true,
+        skipStepMealPlan: false
       }
     },
     labels: {

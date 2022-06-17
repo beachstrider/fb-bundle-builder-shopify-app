@@ -35,7 +35,7 @@ const getCutOffDate = (
   deliveryDate,
   timezone = DEFAULT_TIME_ZONE,
   format = 'YYYY-MM-DDT23:59:00.000Z',
-  cutOffDays = 4
+  cutOffDays = 6
 ) => {
   const newDate = deliveryDate.utc().subtract(cutOffDays, 'day')
   return dayjs.tz(newDate, timezone).format(format)

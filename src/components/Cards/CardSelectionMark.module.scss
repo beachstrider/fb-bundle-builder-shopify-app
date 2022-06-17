@@ -45,9 +45,9 @@
   border-radius: 1rem;
   cursor: pointer;
   border: $cardBorderWidth solid $borderColor;
-  @media only screen and (max-width: $breakpointTablet) {
+  //@media only screen and (max-width: $breakpointTablet) {
     margin-bottom: 2rem;
-  }
+  //}
 
   .checkMarkWrapper {
     display: flex;

@@ -33,7 +33,8 @@ import {
   getBundleMetafield,
   mapBundleItems,
   mapBundleItemsByOption,
-  getBundleVariant
+  getBundleVariant,
+  getBreakfastAndMeals
 } from './bundles'
 import { sortObjectKeys } from './objects'
 import settings from './settings'
@@ -65,6 +66,7 @@ export {
   mapBundleItemsByOption,
   getShortDate,
   getBundleVariant,
+  getBreakfastAndMeals,
   sortObjectKeys,
   formatUTCDate,
   formatUTDateToISO,

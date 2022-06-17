@@ -95,11 +95,38 @@ const createVariantObject = (variant, product, configuration) => {
   variant.quantity = 0
   variant.type = configuration.title
   variant.productPlatformId = product.id
+  variant.tags = product.tags
 
   if (variant.name.includes('-')) {
     variant.name = variant.name.split('-')[0]
   }
   return variant
+}
+
+const getBreakfastAndMeals = (itemProducts) => {
+  let breakfastProduct = [];
+  let mealProduct = [];
+  let i = 0;
+  let j = 0;
+  itemProducts.map((item) => {
+    let isContainBreakfast = false;
+    item.tags.map((tag) => {
+      if (tag.toLowerCase() === 'breakfast'){
+        isContainBreakfast = true
+      }
+      return 0;
+    })
+    if (isContainBreakfast){
+      breakfastProduct[i++] =  item;
+    }else{
+      mealProduct[j++] =  item;
+    }
+    return 0;
+  });
+  let combinedProduct = [];
+  combinedProduct[0] = breakfastProduct;
+  combinedProduct[1] = mealProduct;
+  return combinedProduct;
 }
 
 const mapBundleItems = (
@@ -161,5 +188,6 @@ export {
   getBundleMetafield,
   mapBundleItems,
   mapBundleItemsByOption,
-  getBundleVariant
+  getBundleVariant,
+  getBreakfastAndMeals
 }

@@ -28,7 +28,9 @@ import {
   smoothScrollingToId,
   getConfigurationContent,
   mapBundleItemsByOption,
-  getShortDate
+  getShortDate,
+  getBreakfastAndMeals, 
+  settings
 } from '../../../utils'
 import Toast from '../../Global/Toast'
 import { DEFAULT_ERROR_MESSAGE } from '../../../constants/errors'
@@ -38,12 +40,15 @@ import TopTitle from '../Components/TopTitle'
 dayjs.extend(weekday)
 dayjs.extend(utc)
 
-const STEP_ID = 4
+const skipStepMealPlan = settings().display().skipStepMealPlan
+const STEP_ID = skipStepMealPlan ? 3 : 4
 
 const Entrees = () => {
   const state = useSelector((state) => state)
   const dispatch = useDispatch()
   const isF2Meals = process.env.STORE_SETTINGS_KEY === 'f2meals'
+  const isQuickfresh = process.env.STORE_SETTINGS_KEY === 'quickfresh'
+  const isChow = process.env.STORE_SETTINGS_KEY === 'chow'
 
   const cartUtility = cart(state)
 
@@ -337,7 +342,68 @@ const Entrees = () => {
               {isLoadingDefaults ? (
                 <Loading />
               ) : (
-                menuItems.map((content) => (
+                menuItems.map((content) => {
+                  return isQuickfresh || isChow ? (
+                    <div key={content.id}>
+                      <div className={styles.listHeader}>
+                        <div className={styles.title}>
+                          {
+                           content.title
+                          }{' '}
+                          ({getQuantityCountdown(content.id).quantitySummary} of{' '}
+                          {getQuantityCountdown(content.id).quantityTotal})
+                        </div>
+                      </div>
+                      {getBreakfastAndMeals(content.products).map((combinedProduct, index) => {
+                        return (
+                          <div key={index}>
+                            {combinedProduct.length > 0 ? (
+                              <div className={styles.listHeader}>
+                                <div className={styles.title}>
+                                  { index === 0 ? 'Breakfast' : BUNDLE_MEAL_SECTION_TITLE }
+                                </div>
+                              </div>
+                            ) : ('')}
+
+                            <div className={`${styles.cards}`}>
+                              {combinedProduct.map((item) => (
+                                <CardQuantities
+                                  key={item.id}
+                                  title={item.name}
+                                  description={item.description}
+                                  entreeType={state.entreeType.name}
+                                  image={
+                                    item.feature_image
+                                      ? item.feature_image.src
+                                      : item.images.length > 0
+                                      ? item.images[0]
+                                      : process.env.EMPTY_STATE_IMAGE
+                                  }
+                                  metafields={item.metafields}
+                                  productMetafields={item.productMetafields}
+                                  isChecked={cartUtility.isItemSelected(
+                                    state.cart,
+                                    item
+                                  )}
+                                  quantity={cartUtility.getItemQuantity(
+                                    state.cart,
+                                    item
+                                  )}
+                                  onClick={() => handleAddItem(item, content.id)}
+                                  onAdd={() => handleAddItem(item, content.id)}
+                                  onRemove={() => handleRemoveItem(item, content.id)}
+                                  disableAdd={
+                                    getQuantityCountdown(content.id).quantity === 0
+                                  }
+                                />
+                                )
+                              )}
+                            </div>
+                          </div>
+                        )}
+                      )}
+                  </div>
+                  ) : (
                   <div key={content.id}>
                     <div className={styles.listHeader}>
                       <div className={styles.title}>
@@ -385,7 +451,7 @@ const Entrees = () => {
                       ))}
                     </div>
                   </div>
-                ))
+                  )} )
               )}
             </div>
           </div>
