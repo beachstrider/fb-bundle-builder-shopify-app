@@ -49,6 +49,7 @@ const Entrees = () => {
   const isF2Meals = process.env.STORE_SETTINGS_KEY === 'f2meals'
   const isQuickfresh = process.env.STORE_SETTINGS_KEY === 'quickfresh'
   const isChow = process.env.STORE_SETTINGS_KEY === 'chow'
+  const isCse = process.env.STORE_SETTINGS_KEY === 'cse'
 
   const cartUtility = cart(state)
 
@@ -343,7 +344,7 @@ const Entrees = () => {
                 <Loading />
               ) : (
                 menuItems.map((content) => {
-                  return isQuickfresh || isChow ? (
+                  return isQuickfresh || isChow || isCse ? (
                     <div key={content.id}>
                       <div className={styles.listHeader}>
                         <div className={styles.title}>

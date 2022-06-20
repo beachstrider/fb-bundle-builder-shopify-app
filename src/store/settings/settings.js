@@ -531,18 +531,18 @@ module.exports = {
       options: [
         {
           id: 1,
-          name: '14 Meals',
+          name: '21 Meals',
           description: '7-Days All inclusive - (14 Meals + 7 Breakfasts)',
-          price: 10.95,
-          shippingPrice: 9.95,
-          entreesQuantity: 14,
-          breakfastsQuantity: 7,
+          price: 11.95,
+          shippingPrice: 14.95,
+          entreesQuantity: 21,
+          breakfastsQuantity: 0,
           breakfasts: [
-            {
-              name: '7 Meals',
-              price: 8.95,
-              tag: '7 Day with breakfast'
-            },
+            // {
+            //   name: '7 Meals',
+            //   price: 8.95,
+            //   tag: '7 Day with breakfast'
+            // },
             {
               name: 'none',
               price: 'None',
@@ -552,18 +552,18 @@ module.exports = {
         },
         {
           id: 2,
-          name: '10 Meals',
+          name: '15 Meals',
           description: '',
-          price: 11.95,
-          shippingPrice: 9.95,
-          entreesQuantity: 10,
-          breakfastsQuantity: 5,
+          price: 12.95,
+          shippingPrice: 14.95,
+          entreesQuantity: 15,
+          breakfastsQuantity: 0,
           breakfasts: [
-            {
-              name: '5 Meals',
-              price: 9.95,
-              tag: '5 Day with breakfast'
-            },
+            // {
+            //   name: '5 Meals',
+            //   price: 9.95,
+            //   tag: '5 Day with breakfast'
+            // },
             {
               name: 'none',
               price: 'None',
@@ -573,19 +573,19 @@ module.exports = {
         },
         {
           id: 3,
-          name: '6 Meals',
+          name: '9 Meals',
           description: '',
-          price: 12.95,
-          shippingPrice: 9.95,
-          entreesQuantity: 6,
-          breakfastsQuantity: 3,
+          price: 13.95,
+          shippingPrice: 14.95,
+          entreesQuantity: 9,
+          breakfastsQuantity: 0,
 
           breakfasts: [
-            {
-              name: '3 Meals',
-              price: 10.95,
-              tag: '3 Day with breakfast'
-            },
+            // {
+            //   name: '3 Meals',
+            //   price: 10.95,
+            //   tag: '3 Day with breakfast'
+            // },
             {
               name: 'none',
               price: 'None',

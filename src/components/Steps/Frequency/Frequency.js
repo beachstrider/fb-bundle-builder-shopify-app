@@ -27,7 +27,7 @@ const Frequency = () => {
   const isF2Meals = process.env.STORE_SETTINGS_KEY === 'f2meals'
   const isQuickfresh = process.env.STORE_SETTINGS_KEY === 'quickfresh'
   const isChow = process.env.STORE_SETTINGS_KEY === 'chow'
-
+  const isCse = process.env.STORE_SETTINGS_KEY === 'cse'
   const dispatch = useDispatch()
   const history = useHistory()
   const state = useSelector((state) => state)
@@ -137,7 +137,7 @@ const Frequency = () => {
             </div>
           </div>
           <div id="breakfasts" />
-          { isF2Meals || isQuickfresh || isChow ? ( <div className="displayMobile mt-5 mb-5">
+          { isF2Meals || isQuickfresh || isChow || isCse ? ( <div className="displayMobile mt-5 mb-5">
                 <div className=" px-3" style={{ width: '100%' }}>
                   <SubTotal
                     entreesQuantity={state.bundle?.entreesQuantity}

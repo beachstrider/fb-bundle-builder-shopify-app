@@ -10,6 +10,7 @@ const ReviewItems = ({ items }) => {
   const isF2Meals = process.env.STORE_SETTINGS_KEY === 'f2meals'
   const isQuickfresh = process.env.STORE_SETTINGS_KEY === 'quickfresh'
   const isChow = process.env.STORE_SETTINGS_KEY === 'chow'
+  const isCse = process.env.STORE_SETTINGS_KEY === 'cse'
 
   const getTitle = (key) =>
     key.toLowerCase().includes('meal') ? BUNDLE_MEAL_SECTION_TITLE : key
@@ -25,7 +26,7 @@ const ReviewItems = ({ items }) => {
             <div className={styles.sectionTitle}>
               <div>
                 {
-                  isF2Meals || isQuickfresh || isChow ? 'Meals' :
+                  isF2Meals || isQuickfresh || isChow || isCse ? 'Meals' :
                   getTitle(items.labels[key])
                 } ({items.totals[key]})
               </div>
@@ -36,7 +37,7 @@ const ReviewItems = ({ items }) => {
                 Edit
               </div>
             </div>
-          {isQuickfresh || isChow ? (
+          {isQuickfresh || isChow || isCse ? (
             <>
             {getBreakfastAndMeals(items.types[key]).map( (itemProduct, index) => (
               <div key={index}>
