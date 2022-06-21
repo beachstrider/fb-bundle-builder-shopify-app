@@ -546,7 +546,7 @@ module.exports = {
             {
               name: 'none',
               price: 'None',
-              tag: '7 Day'
+              tag: '21 Meal Plan'
             }
           ]
         },
@@ -567,7 +567,7 @@ module.exports = {
             {
               name: 'none',
               price: 'None',
-              tag: '5 Day'
+              tag: '15 Meal Plan'
             }
           ]
         },
@@ -589,7 +589,7 @@ module.exports = {
             {
               name: 'none',
               price: 'None',
-              tag: '3 Day'
+              tag: '9 Meal Plan'
             }
           ]
         }
