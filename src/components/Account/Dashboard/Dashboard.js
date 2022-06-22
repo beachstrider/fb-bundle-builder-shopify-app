@@ -120,14 +120,14 @@ const Dashboard = () => {
       '9 Meal Plan',
     ]
     const bundleProduct = shopBundles.find( (bundle) => bundle.id === bundleProductId )
-    if (bundleProduct !== 'undefined'){
+    if (typeof bundleProduct !== 'undefined'){
       const bundleProductTags = bundleProduct.tags
       let isOldBundle = true;
       expectedTags.map( (tag) => {
         if (bundleProductTags.includes(tag)){
           isOldBundle = false
-          return 0;
         }
+        return 0;
       })
       return isOldBundle;
     }else{
