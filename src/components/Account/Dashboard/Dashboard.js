@@ -112,6 +112,29 @@ const Dashboard = () => {
     }
   }
 
+  // detect old bundle subscriptions
+  const oldBundleDetected = (bundleProductId) => {
+    const expectedTags = [
+      '21 Meal Plan',
+      '15 Meal Plan',
+      '9 Meal Plan',
+    ]
+    const bundleProduct = shopBundles.find( (bundle) => bundle.id === bundleProductId )
+    if (bundleProduct !== 'undefined'){
+      const bundleProductTags = bundleProduct.tags
+      let isOldBundle = true;
+      expectedTags.map( (tag) => {
+        if (bundleProductTags.includes(tag)){
+          isOldBundle = false
+          return 0;
+        }
+      })
+      return isOldBundle;
+    }else{
+      return false
+    }
+  }
+
   const createWeekList = (weeksMenu, deliverAfterDate) => {
     if (!weeksMenu.includes(dayjs(deliverAfterDate).format('YYYY-MM-DD'))) {
       weeksMenu.push(dayjs.utc(deliverAfterDate).format('YYYY-MM-DD'))
@@ -233,6 +256,7 @@ const Dashboard = () => {
                         thisItemsArray = thisItemsArray.concat(prodArr)
                       }
                       subscriptionArray[subscriptionObjKey].subId = sub.id
+                      subscriptionArray[subscriptionObjKey].bundleProductId	 = sub.platform_product_id
                       subscriptionArray[subscriptionObjKey].deliveryDay =
                         sub.delivery_day
                       subscriptionArray[subscriptionObjKey].items =
@@ -270,6 +294,7 @@ const Dashboard = () => {
                       shopProducts
                     )
                     subscriptionArray[subscriptionObjKey].subId = sub.id
+                    subscriptionArray[subscriptionObjKey].bundleProductId	 = sub.platform_product_id
                     subscriptionArray[subscriptionObjKey].items =
                       subscriptionArray[subscriptionObjKey].items.concat(
                         thisProductsArray
@@ -424,6 +449,7 @@ const Dashboard = () => {
                   orderId={sub.subId}
                   date={sub.queryDate}
                   status={sub.status}
+                  isOldBundle={ oldBundleDetected(sub.bundleProductId) }
                 />
               </div>
               {sub.items.length > 0 ? (
