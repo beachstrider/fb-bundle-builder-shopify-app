@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
-import { cart } from '../../../../utils'
+import { cart, settings } from '../../../../utils'
 import styles from './SubTotal.module.scss'
 
 const SubTotal = ({
@@ -14,6 +14,7 @@ const SubTotal = ({
   const [total, setTotal] = useState(0)
   const state = useSelector((state) => state)
   const cartUtility = cart(state)
+  const hideShippingPrice = settings().display().hideShippingPrice;
 
   useEffect(() => {
     const subTotal = cartUtility.calculateSubTotal(
@@ -25,7 +26,7 @@ const SubTotal = ({
     )
 
     setTotal(subTotal)
-  }, [entreePrice, breakfastPrice])
+  }, [entreePrice, breakfastPrice, entreesQuantity])
 
   const getBreakfastsPrice = () =>
     isNaN(breakfastPrice) ? breakfastPrice : breakfastPrice
@@ -34,7 +35,21 @@ const SubTotal = ({
     isNaN(breakfastPrice) ? '' : `(x${Number(breakfastsQuantity)})`
   const getMealsQuantity = () => `(x${Number(entreesQuantity)})`
 
-  const items = [
+  const items = hideShippingPrice ? [
+    {
+      label: `Price Per Meal ${getMealsQuantity()}`,
+      price: getMealsPrice()
+    },
+    {
+      label: `Price Per Breakfast ${getBreakfastsQuantity()}`,
+      price: getBreakfastsPrice()
+    },
+    {
+      label: 'Shipping calculated at checkout.',
+      price: shippingPrice
+    }
+
+  ] : [
     {
       label: `Price Per Meal ${getMealsQuantity()}`,
       price: getMealsPrice()
@@ -68,9 +83,11 @@ const SubTotal = ({
         isNaN(item.price) ? null : (
           <div key={index} className={styles.lineItem}>
             <div className={styles.label}>{item.label}</div>
-            <div className={styles.price}>
-              {`$${Number.parseFloat(item.price).toFixed(2)}`}
-            </div>
+            { item.price <= 0 ? '' : (
+              <div className={styles.price}>
+                {`$${Number.parseFloat(item.price).toFixed(2)}`}
+              </div>
+            ) }
           </div>
         )
       )}
