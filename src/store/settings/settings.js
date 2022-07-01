@@ -241,7 +241,7 @@ module.exports = {
         mealsStartingAt: false,
         skipStepMealPlan: true,
         hideBreakFast: true,
-        hideShippingPrice: false
+        hideShippingPrice: true
       }
     },
     labels: {
@@ -302,8 +302,8 @@ module.exports = {
           id: 1,
           name: '21 Meals',
           description: '7-Days All inclusive - (14 Meals + 7 Breakfasts)',
-          price: 12.95,
-          shippingPrice: 14.95,
+          price: 8.95,
+          shippingPrice: 0,
           entreesQuantity: 21,
           breakfastsQuantity: 0,
           breakfasts: [
@@ -323,8 +323,8 @@ module.exports = {
           id: 2,
           name: '15 Meals',
           description: '',
-          price: 13.95,
-          shippingPrice: 14.95,
+          price: 8.95,
+          shippingPrice: 0,
           entreesQuantity: 15,
           breakfastsQuantity: 0,
           breakfasts: [
@@ -344,8 +344,8 @@ module.exports = {
           id: 3,
           name: '9 Meals',
           description: '',
-          price: 14.95,
-          shippingPrice: 14.95,
+          price: 8.95,
+          shippingPrice: 0,
           entreesQuantity: 9,
           breakfastsQuantity: 0,
 
