@@ -11,7 +11,7 @@ const WeekActions = ({ status, date, orderId, displaySummary = false, isOldBundl
   const handleChange = () => {
     if (isQuickfresh || isChow){
       if (isOldBundle){
-        window.location.href = `/pages/mealhelp`;
+        window.location.href = `/pages/bundle-swap`;
       }else{
         history.push(`/edit-order/${orderId}?date=${date}`);
       }
