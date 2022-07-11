@@ -27,7 +27,7 @@ const ReviewItems = ({ items }) => {
             <div className={styles.sectionTitle}>
               <div>
                 {
-                  isF2Meals || isQuickfresh || isChow || isCse ? 'Meals' :
+                  isF2Meals || isQuickfresh || isChow  ? 'Meals' :
                   getTitle(items.labels[key])
                 } ({items.totals[key]})
               </div>
