@@ -8,7 +8,12 @@
 
 - In your Shopify admin, go to Apps
 - Manage private apps
-- Create an app with permission to `read` `customers`
+- Create an app with permission to:
+  - `read and write` `Customers`
+  - `read and write` `Order Editing`
+  - `read and write` `Orders`
+  - `read and write` `Products`
+  - `read and write` `Fulfillment Services`
 - Copy the api key and secret to use on your .env file
 
 ## Configuring the .env file
