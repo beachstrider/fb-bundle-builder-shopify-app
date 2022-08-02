@@ -9,6 +9,7 @@ env:
     REPOSITORY_NAME: $REPOSITORY_NAME #i.e. quickfresh-bundle-builder-proxy
     CONTAINER_NAME: $CONTAINER_NAME #i.e. quickfresh-bundle-builder-proxy-container
     STORE_SETTINGS_KEY: $STORE_SETTINGS_KEY
+    AWS_URI: $AWS_URI
 phases:
   install:
     runtime-versions:
@@ -19,8 +20,8 @@ phases:
       - if [ -z ${REPOSITORY_NAME+x} ]; then echo "REPOSITORY_NAME env variable must be set" && exit 1; fi
       - echo Logging in to Amazon ECR...
       - aws --version
-      - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin 994474752556.dkr.ecr.us-west-2.amazonaws.com
-      - REPOSITORY_URI=994474752556.dkr.ecr.us-west-2.amazonaws.com/$REPOSITORY_NAME
+      - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_URI
+      - REPOSITORY_URI=$AWS_URI/$REPOSITORY_NAME
       - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
       - IMAGE_TAG=${COMMIT_HASH:=latest}
   build:
