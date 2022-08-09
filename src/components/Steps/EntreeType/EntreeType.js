@@ -26,6 +26,7 @@ import Loading from '../Components/Loading'
 
 const FAQ_TYPE = 'entreeType'
 const skipStepMealPlan = settings().display().skipStepMealPlan
+const mealPortionSizeAutoSelectAndHide = settings().display().mealPortionSizeAutoSelectAndHide
 const STEP_ID = skipStepMealPlan ? 2 : 2
 
 const EntreeType = () => {
@@ -103,7 +104,12 @@ const EntreeType = () => {
     const saveEntreeType = async (entree) =>
       new Promise((resolve) => {
         dispatch(setEntreeType(entree))
-        dispatch(setEntreeSubType({ id: 0 }))
+        // when mealPortionSizeAutoSelectAndHide true then auto select and hide entree sub type
+        if (mealPortionSizeAutoSelectAndHide){
+          dispatch(setEntreeSubType( entree.options[0] ))
+        }else{
+          dispatch(setEntreeSubType({ id: 0 }))
+        }
         dispatch(displayFooter(true))
         dispatch(selectFaqType(FAQ_TYPE))
         resolve()
@@ -161,7 +167,7 @@ const EntreeType = () => {
             </div>
           )}
           <div id="entreeType">
-            {state.entreeType.id !== 0 && (
+            {!mealPortionSizeAutoSelectAndHide && state.entreeType.id !== 0 && (
               <>
                 {displayMealPlans && (
                   <div className={`${styles.title} mb-7`}>

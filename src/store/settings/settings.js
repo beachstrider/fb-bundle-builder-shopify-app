@@ -8,11 +8,12 @@ module.exports = {
       },
       display: {
         averageMacros: false,
-        chooseMealPlan: false,
+        chooseMealPlan: true,
         mealsStartingAt: false,
-        skipStepMealPlan: true,
+        skipStepMealPlan: false,
         hideBreakFast: true,
-        hideShippingPrice: true
+        hideShippingPrice: true,
+        mealPortionSizeAutoSelectAndHide: true
       }
     },
     labels: {
@@ -241,7 +242,8 @@ module.exports = {
         mealsStartingAt: false,
         skipStepMealPlan: true,
         hideBreakFast: true,
-        hideShippingPrice: true
+        hideShippingPrice: true,
+        mealPortionSizeAutoSelectAndHide: false
       }
     },
     labels: {
@@ -478,7 +480,8 @@ module.exports = {
         mealsStartingAt: true,
         skipStepMealPlan: false,
         hideBreakFast: false,
-        hideShippingPrice: false
+        hideShippingPrice: false,
+        mealPortionSizeAutoSelectAndHide: false
       }
     },
     labels: {
@@ -713,7 +716,8 @@ module.exports = {
         mealsStartingAt: true,
         skipStepMealPlan: false,
         hideBreakFast: true,
-        hideShippingPrice: false
+        hideShippingPrice: false,
+        mealPortionSizeAutoSelectAndHide: false
       }
     },
     labels: {
