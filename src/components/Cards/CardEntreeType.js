@@ -16,11 +16,13 @@ const CardEntreeType = ({
   primaryColor,
   onClick
 }) => {
+  const isQF = process.env.STORE_SETTINGS_KEY === 'quickfresh'
+
   return (
     <div className={styles.card} onClick={onClick}>
       {image? <div
         className={styles.image}
-        style={{ background: `url('${image}')`, backgroundSize: 'cover' }}
+        style={{ background: `url('${image}')`, backgroundSize: 'cover' , backgroundPosition: 'center' }}
       >
         &nbsp;
       </div>:''}
@@ -42,7 +44,11 @@ const CardEntreeType = ({
           <div className={styles.nutrition}>
             <div className={styles.value}>
               {
-                getBundleMetafield(metafields, `${option1}_${METAFIELD_CARBS}`)
+                isQF ?
+                  getBundleMetafield(metafields, `${option1}_carbs`)
+                    ?.value
+                    :
+                  getBundleMetafield(metafields, `${option1}_${METAFIELD_CARBS}`)
                   ?.value
               }
             </div>
