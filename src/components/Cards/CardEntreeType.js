@@ -18,12 +18,12 @@ const CardEntreeType = ({
 }) => {
   return (
     <div className={styles.card} onClick={onClick}>
-      <div
+      {image? <div
         className={styles.image}
         style={{ background: `url('${image}')`, backgroundSize: 'cover' }}
       >
         &nbsp;
-      </div>
+      </div>:''}
       <div className={`${styles.descriptionWrapper} py-5`}>
         <div className={styles.title} style={{ color: primaryColor }}>
           {title}
