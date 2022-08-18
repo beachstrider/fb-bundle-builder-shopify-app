@@ -148,7 +148,7 @@ function getMetafieldKey(string) {
   return string.split('.')[1]
 }
 {% assign variantNutritionMetaKeys = 'contains,ingredients,subtitle,calorie_range,is_spicy,is_peanut_free,is_gluten_free,is_dairy_free,average_macros' | split: ',' %}
-{% assign productVariantMetaKeys = 'net_carbs,protein,fat' | split: ',' %}
+{% assign productVariantMetaKeys = 'carbs,net_carbs,protein,fat' | split: ',' %}
 
 
 currentProduct = {}
