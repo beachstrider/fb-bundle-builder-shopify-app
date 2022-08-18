@@ -17,7 +17,13 @@ const CardEntreeType = ({
   onClick
 }) => {
   const isQF = process.env.STORE_SETTINGS_KEY === 'quickfresh'
-
+  if (isQF){
+    if (option1 === 'balanced'){
+      image = "https://res.cloudinary.com/meals/image/upload/w_782,h_626/v1651776315/qf/products/Miso_Sirloin_LC.jpg";
+    }else{
+      image = "https://res.cloudinary.com/meals/image/upload/w_782,h_626/v1651775582/qf/products/Vesuvio_Turkey_K.jpg";
+    }
+  }
   return (
     <div className={styles.card} onClick={onClick}>
       {image? <div
