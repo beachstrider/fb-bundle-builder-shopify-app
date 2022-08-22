@@ -934,5 +934,231 @@ module.exports = {
         topMenuBannerColor: '#EDEDED'
       }
     }
-  }
+  },
+  etp: {
+    settings: {
+      page: {
+        title: 'Eat To Perform`',
+        description:
+          'We offer healthy, chef-prepared meals delivered fresh to your door. Choose from a wide variety of 120+ options for both Balanced and Keto meal types.'
+      },
+      display: {
+        averageMacros: false,
+        chooseMealPlan: true,
+        mealsStartingAt: false,
+        skipStepMealPlan: false,
+        hideBreakFast: true,
+        hideShippingPrice: true,
+        mealPortionSizeAutoSelectAndHide: true
+      }
+    },
+    labels: {
+      step1: 'Meals Per Week',
+      step2: 'Meal plans',
+      step3: 'Location & Delivery',
+      step4: 'Select Your Meals',
+      step5: 'Review Order',
+      bundleCalorieRange: 'Average Calories Per Meal'
+    },
+    titles: {
+      step1: 'Select Meals Per Week',
+      step2: 'Choose Your Meal Plan',
+      step3a: 'Enter Your Zip Code & Email',
+      step3b: 'Select a Delivery Date',
+      step4: 'Select Your Meals',
+      step5: 'Review Your Order'
+    },
+    subtitles: {
+      step1: 'Healthy, fresh and ready to eat in 2 minutes',
+      step2: 'Chef-curated, nutritious options to fit your lifestyle.',
+      step3a:
+        'Meals are delivered fresh every week. You can pause, cancel, or update your meal plan at anytime!',
+      step3b: 'We can deliver fresh to you within one week!',
+      step4: '',
+      step5: ''
+    },
+    bundles: {
+      images: {
+        featured: '/images/quickfresh-frequency.jpg',
+        checkout: '/images/quickfresh-order-package.jpg',
+        breakfastSample: '/images/quickfresh-breakfast-sample.jpg'
+      },
+      icons: [
+        {
+          key: 'is_dairy_free',
+          name: 'DairyFreeIcon',
+          color: '#fedc5c'
+        },
+        {
+          key: 'is_gluten_free',
+          name: 'GlutenFreeIcon',
+          color: '#fedc5c'
+        },
+        {
+          key: 'is_peanut_free',
+          name: 'PeanutFreeIcon',
+          color: '#fedc5c'
+        },
+        {
+          key: 'is_spicy',
+          name: 'SpicyIcon',
+          color: '#fedc5c'
+        }
+      ],
+      options: [
+        {
+          id: 1,
+          name: '21 Meals',
+          description: '7-Days All inclusive - (14 Meals + 7 Breakfasts)',
+          price: 10.95,
+          shippingPrice: 0,
+          entreesQuantity: 21,
+          breakfastsQuantity: 0,
+          breakfasts: [
+            // {
+            //   name: '7 Meals',
+            //   price: 4.95,
+            //   tag: '7 Day with breakfast'
+            // },
+            {
+              name: 'none',
+              price: 'None',
+              tag: '21 Meal Plan'
+            }
+          ]
+        },
+        {
+          id: 2,
+          name: '15 Meals',
+          description: '',
+          price: 11.95,
+          shippingPrice: 0,
+          entreesQuantity: 15,
+          breakfastsQuantity: 0,
+          breakfasts: [
+            // {
+            //   name: '5 Meals',
+            //   price: 5.95,
+            //   tag: '5 Day with breakfast'
+            // },
+            {
+              name: 'none',
+              price: 'None',
+              tag: '15 Meal Plan'
+            }
+          ]
+        },
+        {
+          id: 3,
+          name: '9 Meals',
+          description: '',
+          price: 12.95,
+          shippingPrice: 0,
+          entreesQuantity: 9,
+          breakfastsQuantity: 0,
+
+          breakfasts: [
+            // {
+            //   name: '3 Meals',
+            //   price: 5.95,
+            //   tag: '3 Day with breakfast'
+            // },
+            {
+              name: 'none',
+              price: 'None',
+              tag: '9 Meal Plan'
+            }
+          ]
+        }
+      ],
+      defaultType: 'balanced',
+      pricesPerPortion: [
+        // { type: 'keto', subType: 'large', price: 1 },
+        { type: 'balanced', subType: 'regular', price: 0 },
+        // { type: 'balanced', subType: 'medium', price: 1 },
+        // { type: 'balanced', subType: 'large', price: 2 }
+      ]
+    },
+    theme: {
+      fontFiles: [
+        {
+          name: 'Gotham-Black',
+          url: 'https://cdn.shopify.com/s/files/1/0552/6549/3185/files/Gotham-Black.otf?v=1627982628'
+        },
+        {
+          name: 'Gotham-Bold',
+          url: 'https://cdn.shopify.com/s/files/1/0552/6549/3185/files/Gotham-Bold.otf?v=1627982628'
+        },
+        {
+          name: 'Gotham-Book',
+          url: 'https://cdn.shopify.com/s/files/1/0552/6549/3185/files/Gotham-Book.otf?v=1627982628'
+        },
+        {
+          name: 'Gotham-Light',
+          url: 'https://cdn.shopify.com/s/files/1/0552/6549/3185/files/Gotham-Light.otf?v=1627982628'
+        },
+        {
+          name: 'Gotham-Medium',
+          url: 'https://cdn.shopify.com/s/files/1/0552/6549/3185/files/Gotham-Medium.otf?v=1627982628'
+        },
+        {
+          name: 'Gotham-Thin',
+          url: 'https://cdn.shopify.com/s/files/1/0552/6549/3185/files/Gotham-Thin.otf?v=1627982628'
+        }
+      ],
+      fontFamilies: {
+        fontFamilyBook: 'Gotham-Book',
+        fontFamilyBold: 'Gotham-Bold',
+        fontFamilyBlack: 'Gotham-Black',
+        fontFamilyLight: 'Gotham-Light',
+        fontFamilyThin: 'Gotham-Thin',
+        fontFamilyMedium: 'Gotham-Medium',
+        fontFamilyMediumBold: 'Gotham-Medium',
+        fontFamilyMediumItalic: 'Gotham-Medium'
+      },
+      borders: {
+        borderButtonRadius: '2.5rem'
+      },
+      fontSizes: {
+        fontLarge: '4.7rem',
+        fontMediumLarge: '3rem',
+        semiMediumFont: '2.4rem',
+        fontMedium: '2rem',
+        fontMediumRegular: '1.8rem',
+        fontMediumSmall: '1.6rem',
+        fontSmall: '1.6rem',
+        fontXSmall: '1.5rem',
+        font2XSmall: '1.4rem',
+        font3XSmall: '1.2rem'
+      },
+      colors: {
+        primaryColor: '#0a8d47',
+        primaryColorLight: '#068d47',
+        secondaryColor: '#fec12d',
+        gray: '#4c4c4c',
+        grayLight: '#e7eaec',
+        gray100: '#e2e2e2',
+        gray200: '#dbdbdb',
+        gray300: '#bababa',
+        grayMedium: '#737678',
+        grayMediumSecondary: '#242424',
+        white: '#ffffff',
+        black: '#000000',
+        border: '#707070',
+        red: '#c8432d',
+        orange: '#ec6120',
+        butter: '#fedc5c',
+        butter100: '#fedc5cb3',
+        headerBackgroundColor: '#f6f6f7',
+        borderColor: '#ebebec',
+        faqBackgroundColor: '#e8e8e8',
+        pillBackground: '#737678',
+        buttonColor: '#0a8d47',
+        buttonTextColor: '#FFFFFF',
+        bannerBackground: '#fedc5c',
+        deliveryDay: '#000000',
+        topMenuBannerColor: '#F8D739'
+      }
+    }
+  },
 }
