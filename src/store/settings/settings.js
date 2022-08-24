@@ -1031,7 +1031,7 @@ module.exports = {
           id: 2,
           name: '15 Meals',
           description: '',
-          price: 11.95,
+          price: 10.95,
           shippingPrice: 0,
           entreesQuantity: 15,
           breakfastsQuantity: 0,
