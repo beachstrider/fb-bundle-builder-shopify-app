@@ -938,18 +938,18 @@ module.exports = {
   etp: {
     settings: {
       page: {
-        title: 'Eat To Perform`',
+        title: 'Eat To Perform Kitchen`',
         description:
           'We offer healthy, chef-prepared meals delivered fresh to your door. Choose from a wide variety of 120+ options for both Balanced and Keto meal types.'
       },
       display: {
         averageMacros: false,
-        chooseMealPlan: true,
+        chooseMealPlan: false,
         mealsStartingAt: false,
-        skipStepMealPlan: false,
+        skipStepMealPlan: true,
         hideBreakFast: true,
         hideShippingPrice: true,
-        mealPortionSizeAutoSelectAndHide: true
+        mealPortionSizeAutoSelectAndHide: false
       }
     },
     labels: {
