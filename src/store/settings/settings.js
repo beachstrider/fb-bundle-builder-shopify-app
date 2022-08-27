@@ -13,7 +13,8 @@ module.exports = {
         skipStepMealPlan: false,
         hideBreakFast: true,
         hideShippingPrice: true,
-        mealPortionSizeAutoSelectAndHide: true
+        mealPortionSizeAutoSelectAndHide: true,
+        discountFeatureEnable: false
       }
     },
     labels: {
@@ -243,7 +244,8 @@ module.exports = {
         skipStepMealPlan: true,
         hideBreakFast: true,
         hideShippingPrice: true,
-        mealPortionSizeAutoSelectAndHide: false
+        mealPortionSizeAutoSelectAndHide: false,
+        discountFeatureEnable: false
       }
     },
     labels: {
@@ -481,7 +483,8 @@ module.exports = {
         skipStepMealPlan: false,
         hideBreakFast: false,
         hideShippingPrice: false,
-        mealPortionSizeAutoSelectAndHide: false
+        mealPortionSizeAutoSelectAndHide: false,
+        discountFeatureEnable: false
       }
     },
     labels: {
@@ -717,7 +720,8 @@ module.exports = {
         skipStepMealPlan: false,
         hideBreakFast: true,
         hideShippingPrice: false,
-        mealPortionSizeAutoSelectAndHide: false
+        mealPortionSizeAutoSelectAndHide: false,
+        discountFeatureEnable: false
       }
     },
     labels: {
@@ -949,7 +953,8 @@ module.exports = {
         skipStepMealPlan: true,
         hideBreakFast: true,
         hideShippingPrice: true,
-        mealPortionSizeAutoSelectAndHide: false
+        mealPortionSizeAutoSelectAndHide: false,
+        discountFeatureEnable: true
       }
     },
     labels: {
@@ -1132,9 +1137,9 @@ module.exports = {
         font3XSmall: '1.2rem'
       },
       colors: {
-        primaryColor: '#0a8d47',
-        primaryColorLight: '#068d47',
-        secondaryColor: '#fec12d',
+        primaryColor: '#48c2f9',
+        primaryColorLight: '#48c2f9',
+        secondaryColor: '#0a8d47',
         gray: '#4c4c4c',
         grayLight: '#e7eaec',
         gray100: '#e2e2e2',
@@ -1153,7 +1158,7 @@ module.exports = {
         borderColor: '#ebebec',
         faqBackgroundColor: '#e8e8e8',
         pillBackground: '#737678',
-        buttonColor: '#0a8d47',
+        buttonColor: '#48c2f9',
         buttonTextColor: '#FFFFFF',
         bannerBackground: '#fedc5c',
         deliveryDay: '#000000',

@@ -15,6 +15,7 @@ const SubTotal = ({
   const state = useSelector((state) => state)
   const cartUtility = cart(state)
   const hideShippingPrice = settings().display().hideShippingPrice;
+  const discountFeatureEnable = settings().display().discountFeatureEnable;
 
   useEffect(() => {
     const subTotal = cartUtility.calculateSubTotal(
@@ -35,6 +36,7 @@ const SubTotal = ({
     isNaN(breakfastPrice) ? '' : `(x${Number(breakfastsQuantity)})`
   const getMealsQuantity = () => `(x${Number(entreesQuantity)})`
 
+  const shippingAndDiscountText = discountFeatureEnable ? 'Shipping and discounts calculated at checkout.' : 'Shipping calculated at checkout.';
   const items = hideShippingPrice ? [
     {
       label: `Price Per Meal ${getMealsQuantity()}`,
@@ -45,7 +47,7 @@ const SubTotal = ({
       price: getBreakfastsPrice()
     },
     {
-      label: 'Shipping calculated at checkout.',
+      label: shippingAndDiscountText,
       price: shippingPrice
     }
 
@@ -82,7 +84,7 @@ const SubTotal = ({
       {items.map((item, index) =>
         isNaN(item.price) ? null : (
           <div key={index} className={styles.lineItem}>
-            <div className={styles.label}>{item.label}</div>
+            <div className={ discountFeatureEnable && item.label === shippingAndDiscountText ? styles.label+' '+styles.colorRed : styles.label}>{item.label}</div>
             { item.price <= 0 ? '' : (
               <div className={styles.price}>
                 {`$${Number.parseFloat(item.price).toFixed(2)}`}
