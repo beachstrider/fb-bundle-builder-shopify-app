@@ -1,4 +1,5 @@
 import { isValidEmail } from './stringValidation'
+import { getCookie } from './cookies'
 import request from './request'
 import smoothScrollingToId from './smoothScrollingToId'
 import {
@@ -46,6 +47,7 @@ export {
   findZipCode,
   getConfigurationContent,
   isValidEmail,
+  getCookie,
   isValidZipCode,
   mapDeliveryDays,
   request,

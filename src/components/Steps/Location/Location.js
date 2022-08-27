@@ -27,7 +27,8 @@ import {
   mapDeliveryDays,
   mapBundleTypeSubtype,
   request,
-  settings
+  settings,
+  getCookie
 } from '../../../utils'
 import styles from './Location.module.scss'
 import {
@@ -51,6 +52,7 @@ dayjs.extend(isSameOrBefore)
 
 const FAQ_TYPE = 'location'
 const skipStepMealPlan = settings().display().skipStepMealPlan
+const discountFeatureEnable = settings().display().discountFeatureEnable
 const STEP_ID = skipStepMealPlan ? 2 : 3
 
 const Location = () => {
@@ -110,8 +112,21 @@ const Location = () => {
     dispatch(setEntreeType(bundle))
     // set entree sub type
     // console.log(bundle.options)
-    if (bundle.options[0]){
-      dispatch(setEntreeSubType(bundle.options[0]))
+    let bundleSubType = bundle.options[0];
+
+    // check discount code if discount feature in enabled
+    if (discountFeatureEnable){
+      const discountCodeValue = getCookie('discount_code');
+      // console.log(discountCodeValue)
+      if (typeof discountCodeValue !== 'undefined') {
+        if (discountCodeValue.includes("_10") || discountCodeValue.includes("_25")) {
+          bundleSubType = bundle.options[1]
+        }
+      }
+    }
+
+    if (bundleSubType){
+      dispatch(setEntreeSubType(bundleSubType))
     }else{
       window.location.href = '/'
     }
