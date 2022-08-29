@@ -47,6 +47,8 @@ const Entrees = () => {
   const state = useSelector((state) => state)
   const dispatch = useDispatch()
   const isF2Meals = process.env.STORE_SETTINGS_KEY === 'f2meals'
+  const isETP = process.env.STORE_SETTINGS_KEY === 'etp'
+  const discountFeatureEnable = settings().display().discountFeatureEnable;
 
   const cartUtility = cart(state)
 
@@ -197,10 +199,18 @@ const Entrees = () => {
         shopProducts
       )
 
+      let entreeSubType = state.entreeSubType.name;
+      // if discount feature enabled then bypass discount variant
+      if (isETP && discountFeatureEnable){
+        if (state.entreeSubType.name !== 'regular'){
+          entreeSubType = 'regular'
+        }
+      }
+
       const filteredVariants = await mapItemsByOption(
         filteredProducts,
         state.entreeType.name,
-        state.entreeSubType.name,
+        entreeSubType,
         configuration
       )
 
