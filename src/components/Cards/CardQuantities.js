@@ -59,8 +59,7 @@ const CardQuantities = ({
                       {metafield.value}
                     </div>
                     <div className={styles.metafieldName}>
-                      {entreeType === 'balanced' &&
-                      metafield.name === 'Net Carbs'
+                      {metafield.name === 'Net Carbs'
                         ? 'Carbs'
                         : metafield.name}
                     </div>
