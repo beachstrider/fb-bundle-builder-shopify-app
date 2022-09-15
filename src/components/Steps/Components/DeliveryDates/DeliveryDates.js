@@ -3,6 +3,7 @@ import { LocationDate } from '../../Location'
 import TopTitle from '../../Components/TopTitle'
 import styles from './DeliveryDates.module.scss'
 import { smoothScrollingToId } from '../../../../utils'
+import { useSelector } from 'react-redux'
 
 const DeliveryDates = ({
   dates,
@@ -12,6 +13,8 @@ const DeliveryDates = ({
   autoScrollDown = false
 }) => {
   console.log('DeliveryDates', dates)
+  const isQF =  process.env.STORE_SETTINGS_KEY === 'quickfresh';
+  const state = useSelector((state) => state)
 
   useEffect(() => {
     if (autoScrollDown) {
@@ -34,15 +37,36 @@ const DeliveryDates = ({
             subTitle="We can deliver fresh to you within one week!"
           />
           <div className={styles.rows}>
-            {dates.map((date) => (
-              <div key={date.id}>
-                <LocationDate
-                  date={date}
-                  selectedDate={selectedDate}
-                  onClick={() => onClick(date)}
-                />
-              </div>
-            ))}
+            {dates.map((date) =>
+              {
+                if (isQF && state.entreeType.name === 'low-carb'){
+                  if (new Date(date.date).getDay() === 4){
+                    return (
+                      <div key={date.id}>
+                        <LocationDate
+                          date={date}
+                          selectedDate={selectedDate}
+                          onClick={() => onClick(date)}
+                        />
+                      </div>
+                    )
+                  }else {
+                    return '';
+                  }
+                }else{
+                  return (
+                    <div key={date.id}>
+                      <LocationDate
+                        date={date}
+                        selectedDate={selectedDate}
+                        onClick={() => onClick(date)}
+                      />
+                    </div>
+                  )
+                }
+
+              }
+            )}
           </div>
         </div>
       ) : (
