@@ -26,7 +26,8 @@ import {
   sortByDateProperty,
   formatUTCDate,
   formatUTDateToISO,
-  addDays as dateAddDays
+  addDays as dateAddDays,
+  getDayUsa
 } from './dates'
 import uniqueArray from './uniqueArray'
 import {
@@ -73,5 +74,6 @@ export {
   formatUTCDate,
   formatUTDateToISO,
   dateAddDays,
+  getDayUsa,
   settings
 }

@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { LocationDate } from '../../Location'
 import TopTitle from '../../Components/TopTitle'
 import styles from './DeliveryDates.module.scss'
-import { smoothScrollingToId } from '../../../../utils'
+import { smoothScrollingToId, getDayUsa } from '../../../../utils'
 import { useSelector } from 'react-redux'
 
 const DeliveryDates = ({
@@ -40,7 +40,7 @@ const DeliveryDates = ({
             {dates.map((date) =>
               {
                 if (isQF && state.entreeType.name === 'low-carb'){
-                  if (new Date(date.date).getDay() === 4){
+                  if (getDayUsa(date.date) === 4){
                     return (
                       <div key={date.id}>
                         <LocationDate
