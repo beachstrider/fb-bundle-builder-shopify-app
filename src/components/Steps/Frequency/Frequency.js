@@ -26,6 +26,7 @@ const bundles = settings().bundleOptions()
 const Frequency = () => {
   const isF2Meals = process.env.STORE_SETTINGS_KEY === 'f2meals'
   const hideBreakFast = settings().display().hideBreakFast;
+  const setDefault9MealPlanSelection = settings().display().setDefault9MealPlanSelection;
   const dispatch = useDispatch()
   const history = useHistory()
   const state = useSelector((state) => state)
@@ -69,14 +70,20 @@ const Frequency = () => {
     }
 
     await clearState()
-    setSelectedBundle(bundles[0])
+    if (setDefault9MealPlanSelection){
+      // 9 meal default
+      setSelectedBundle(bundles[2])
+    }else{
+      // normal default
+      setSelectedBundle(bundles[0])
+    }
 
     dispatch(selectFaqType(FAQ_TYPE))
     dispatch(displayHeader(true))
     dispatch(displayFooter(true))
     dispatch(setIsNextButtonActive(true))
 
-    const defaultEntree = mapBundleToStore(bundles[0], bundles[0].breakfasts[0])
+    const defaultEntree = setDefault9MealPlanSelection ? mapBundleToStore(bundles[2], bundles[2].breakfasts[0]) : mapBundleToStore(bundles[0], bundles[0].breakfasts[0])
     dispatch(setBundle(defaultEntree))
     setIsLoading(false)
   }

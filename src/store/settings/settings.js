@@ -14,7 +14,8 @@ module.exports = {
         hideBreakFast: true,
         hideShippingPrice: true,
         mealPortionSizeAutoSelectAndHide: true,
-        discountFeatureEnable: false
+        discountFeatureEnable: false,
+        setDefault9MealPlanSelection: true
       }
     },
     labels: {
@@ -245,7 +246,8 @@ module.exports = {
         hideBreakFast: true,
         hideShippingPrice: true,
         mealPortionSizeAutoSelectAndHide: false,
-        discountFeatureEnable: false
+        discountFeatureEnable: false,
+        setDefault9MealPlanSelection: true
       }
     },
     labels: {
@@ -484,7 +486,8 @@ module.exports = {
         hideBreakFast: false,
         hideShippingPrice: false,
         mealPortionSizeAutoSelectAndHide: false,
-        discountFeatureEnable: false
+        discountFeatureEnable: false,
+        setDefault9MealPlanSelection: false
       }
     },
     labels: {
@@ -721,7 +724,8 @@ module.exports = {
         hideBreakFast: true,
         hideShippingPrice: false,
         mealPortionSizeAutoSelectAndHide: false,
-        discountFeatureEnable: false
+        discountFeatureEnable: false,
+        setDefault9MealPlanSelection: true
       }
     },
     labels: {
@@ -954,7 +958,8 @@ module.exports = {
         hideBreakFast: true,
         hideShippingPrice: true,
         mealPortionSizeAutoSelectAndHide: false,
-        discountFeatureEnable: true
+        discountFeatureEnable: true,
+        setDefault9MealPlanSelection: true
       }
     },
     labels: {
