@@ -32,7 +32,22 @@ const shopifyConnector = async (accessToken, shop) => {
     return await queryGraphQL(graphqlQuery)
   }
 
-  return { queryGraphQL, getCustomerByEmail }
+  const getDiscountCodeInfo = async (discountCode) => {
+    const reqUrl = `https://${shop}/admin/api/${process.env.SHOPIFY_API_VERSION}/discount_codes/lookup.json`
+    return await request(
+      reqUrl,
+      {
+        method: 'GET',
+        headers: {
+          'Content-type': 'application/json',
+          'X-Shopify-Access-Token': accessToken
+        },
+        params: { code: discountCode }
+      }
+    )
+  }
+
+  return { queryGraphQL, getCustomerByEmail, getDiscountCodeInfo }
 }
 
 module.exports = shopifyConnector

@@ -34,6 +34,7 @@ import styles from './Location.module.scss'
 import {
   generateRequestToken,
   getShopifyCustomerByEmail,
+  getShopifyDiscountInfoByCode,
   getSelectedBundle,
   useGuestToken,
   withActiveStep
@@ -102,7 +103,7 @@ const Location = () => {
 
   }, [skipStepMealPlan])
 
-  const mapBundleTypes = () => {
+  const mapBundleTypes = async () => {
     setIsLoading(true)
 
     const shopifyBundleProduct = getSelectedBundle(state.bundle.breakfast.tag)
@@ -119,8 +120,22 @@ const Location = () => {
       const discountCodeValue = getCookie('discount_code');
       // console.log(discountCodeValue)
       if (typeof discountCodeValue !== 'undefined') {
-        if (discountCodeValue.includes("_10") || discountCodeValue.includes("_25")) {
-          bundleSubType = bundle.options[1]
+
+        const discountCodeValueArray = discountCodeValue.split("_");
+        const discountCodeArrLen = discountCodeValueArray.length;
+        const getLastArrIndexValue = discountCodeValueArray[discountCodeArrLen-1];
+
+        if (getLastArrIndexValue == 10 || getLastArrIndexValue == 25) {
+
+          // console.log(isAjaxLoading)
+          const responseDiscountInfo = await getShopifyDiscountInfoByCode( discountCodeValue );
+          if (responseDiscountInfo.status === 200) {
+              const discountUsages = responseDiscountInfo.data?.discount_code.usage_count;
+              console.log(discountUsages)
+              if (discountUsages < 1){
+                  bundleSubType = bundle.options[1]
+              }
+          }
         }
       }
     }

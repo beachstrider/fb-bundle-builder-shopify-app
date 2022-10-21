@@ -38,4 +38,14 @@ app.post('/customers/email', verifyRequest, async (req, res) => {
   return res.status(response.status).send(response.data)
 })
 
+
+app.post('/discount/code', async (req, res) => {
+  const connector = await shopifyConnector(
+    process.env.SHOPIFY_PRIVATE_APP_API_SECRET,
+    req.body.shop
+  )
+  const response = await connector.getDiscountCodeInfo(req.body.discount_code)
+  return res.status(response.status).send(response.data)
+})
+
 module.exports = app
