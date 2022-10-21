@@ -25,7 +25,7 @@ import {
   isUserAuthenticated
 } from './isUserAuthenticated'
 import useShopifyCart from './useShopifyCart'
-import { getShopifyCustomerByEmail } from './withShopifyApi'
+import { getShopifyCustomerByEmail, getShopifyDiscountInfoByCode } from './withShopifyApi'
 import { mapItems, mapItemsByOption, getProductVariants } from './useBundle'
 
 export {
@@ -48,6 +48,7 @@ export {
   updateBundle,
   getDefaultProducts,
   getShopifyCustomerByEmail,
+  getShopifyDiscountInfoByCode,
   generateRequestToken,
   mapItems,
   mapItemsByOption,

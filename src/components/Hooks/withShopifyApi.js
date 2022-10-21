@@ -21,4 +21,24 @@ const getShopifyCustomerByEmail = async (requestToken, email) => {
   }
 }
 
-export { getShopifyCustomerByEmail }
+const getShopifyDiscountInfoByCode = async ( code ) => {
+  try {
+    return await request(
+      `${process.env.PROXY_APP_URL}/shopify/discount/code`,
+      {
+        method: 'post',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        data: {
+          discount_code: code,
+          shop: shopDomain
+        }
+      }
+    )
+  } catch (error) {
+    return error
+  }
+}
+
+export { getShopifyCustomerByEmail, getShopifyDiscountInfoByCode }
