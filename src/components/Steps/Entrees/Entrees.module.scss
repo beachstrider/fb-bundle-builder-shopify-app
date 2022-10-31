@@ -1,7 +1,7 @@
 @import '../../../variables';
 
 $subTitleFontSize: 2.7rem;
-
+$rowTopTitle: 494px;
 .wrapper {
   width: $rowWidth;
   max-width: 1200px;
@@ -10,7 +10,79 @@ $subTitleFontSize: 2.7rem;
   column-gap: 10rem;
   margin-top: 1rem;
   padding-bottom: 3rem;
+//Start New featured scss
+ & .top {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    text-align: center;
+    padding-bottom: 2rem;
+    margin: auto;
+  
+    &Title {
+      font-size: 16px;
+      font-family: $fontFamilyBlack !important;
+      margin-top: -1.5rem;
+    margin-bottom: -12px;
+      margin-right: 25px;
+  
+      @media only screen and (max-width: $breakpointTablet) {
+        font-size: 1.5rem;
+      }
+    }
+  & .checkboxes{
+    margin-top: 0;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
 
+    &.checkbox_label{
+      margin-left: 10px;
+    }
+   & label {  
+    display: inline-block;
+    white-space: nowrap;
+    margin-right: 18px !important;
+    & span {
+      font-weight: bold;
+  }
+  & .span_balance{
+    margin-left: 30px;
+    position: relative;
+  }
+  & .span_balance::after{
+    position:absolute;
+    content: " ";
+    width: 11px;
+    height: 11px;
+    background-color: #008E48;
+    top: 5px;
+    left: -18px;
+  }
+  }
+    &input {
+      vertical-align: middle;
+      
+    }
+    &label span {
+      vertical-align: middle;
+    }
+  }
+    &Subtitle {
+      font-size: $fontMediumRegular;
+      font-family: $fontFamilyBook !important;
+      width: $rowTopTitle;
+      margin-top: 1rem;
+      margin-bottom: 0.5rem;
+  
+      @media only screen and (max-width: $rowTopTitle) {
+        width: $rowWidthMobile;
+        padding: 0 2rem;
+      }
+    }
+  }
+  //End New featured scss
   & .quantities {
     & div {
       margin: 0;
