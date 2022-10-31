@@ -66,12 +66,12 @@ const Entrees = () => {
   // total and remaining items to add
   const [quantities, setQuantities] = useState([])
   const [quantitiesCountdown, setQuantitiesCountdown] = useState([])
-  //new featured useState
+  // filter by tag useState
   const [selectedCategory, setSelectedCategory] = useState({
     categories: {
       breakfast: false,
       balanced: false,
-      lawCarb: false,
+      lowcarb: false,
       lite: false,
     }
   });
@@ -336,26 +336,26 @@ const Entrees = () => {
     return <Redirect push to="/steps/3" />
   }
   // start new tags fatured logic
-const categoryHandleChange =(e)=>{
-  const { name } = e.target;
-  setSelectedCategory(prevState => {
-    return {
-      categories: {
-        ...prevState.categories,
-        [name]: !prevState.categories[name]
-      }
-    };
-  });
-}
-const checkedProducts = Object.entries(selectedCategory.categories)
-.filter(category => category[1])
-.map(category => category[0]);
-console.log('checkedProducts',checkedProducts)
-const filteredProducts =menuItems.filter(({ category }) =>
-  checkedProducts.includes(category)
-);
-console.log('filteredProducts',filteredProducts)
-//end new featured logic
+  const categoryHandleChange =(e)=>{
+    const { name } = e.target;
+    setSelectedCategory(prevState => {
+      return {
+        categories: {
+          ...prevState.categories,
+          [name]: !prevState.categories[name]
+        }
+      };
+    });
+  }
+  const checkedProducts = Object.entries(selectedCategory.categories)
+    .filter(category => category[1])
+    .map(category => category[0]);
+    console.log('checkedProducts',checkedProducts)
+    const filteredProducts =menuItems.filter(({ category }) =>
+      checkedProducts.includes(category)
+    );
+    console.log('filteredProducts',filteredProducts)
+  // end new featured logic
   return (
     <>
       <MostPopularBar
@@ -372,24 +372,23 @@ console.log('filteredProducts',filteredProducts)
               title="Select Your Meals"
               subTitle={`Menu for ${deliverAfter} - ${deliverBefore}`}
             />
-              <div className={`${styles.top}`}>
-                    <h2 className={`${styles.topTitle}`}>Filter : </h2>
-                    <div className={styles.checkboxes}>
-                      <div className={styles.checkbox_label}>
-                      <label><input type="checkbox" name="breakfast"  onChange={categoryHandleChange} checked={selectedCategory.categories.breakfast}/> <span>Beakfast</span></label>
-                      </div>
-                      <div className={styles.checkbox_label}>
-                      <label><input type="checkbox" name="balanced"  onChange={categoryHandleChange} checked={selectedCategory.categories.balanced}/> <span>Balanced</span></label>
-                      </div>
-                      <div className={styles.checkbox_label}>
-                      <label><input type="checkbox" name="lawCarb"  onChange={categoryHandleChange} checked={selectedCategory.categories.lawCarb}/> <span>Law-Carb</span></label>
-                      </div>
+            <div className={`${styles.top}`}>
+              <h2 className={`${styles.topTitle}`}>Filter : </h2>
+              <div className={styles.checkboxes}>
                 <div className={styles.checkbox_label}>
-                <label><input type="checkbox" name="lite"  onChange={categoryHandleChange} checked={selectedCategory.categories.lite}/> <span>Lite</span></label>
+                  <label><input type="checkbox" name="breakfast"  onChange={categoryHandleChange} checked={selectedCategory.categories.breakfast}/> <span>Breakfast</span></label>
                 </div>
-                
-                </div> 
+                <div className={styles.checkbox_label}>
+                  <label><input type="checkbox" name="balanced"  onChange={categoryHandleChange} checked={selectedCategory.categories.balanced}/> <span>Balanced</span></label>
+                </div>
+                <div className={styles.checkbox_label}>
+                  <label><input type="checkbox" name="lawCarb"  onChange={categoryHandleChange} checked={selectedCategory.categories.lowcarb}/> <span>Low-Carb</span></label>
+                </div>
+                <div className={styles.checkbox_label}>
+                  <label><input type="checkbox" name="lite"  onChange={categoryHandleChange} checked={selectedCategory.categories.lite}/> <span>Lite</span></label>
+                </div>
               </div>
+            </div>
             <div className="mt-1">
               <div id="mealsSection"></div>
               {isLoadingDefaults ? (
