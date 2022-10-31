@@ -10,7 +10,7 @@ module.exports = {
         averageMacros: false,
         chooseMealPlan: true,
         mealsStartingAt: false,
-        skipStepMealPlan: false,
+        skipStepMealPlan: true,
         hideBreakFast: true,
         hideShippingPrice: true,
         mealPortionSizeAutoSelectAndHide: true,
