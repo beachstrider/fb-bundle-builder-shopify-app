@@ -69,8 +69,10 @@ const Entrees = () => {
   //new featured useState
   const [selectedCategory, setSelectedCategory] = useState({
     categories: {
+      breakfast: false,
       balanced: false,
-      lite: false
+      lawCarb: false,
+      lite: false,
     }
   });
   useEffect(() => {
@@ -374,10 +376,16 @@ console.log('filteredProducts',filteredProducts)
                     <h2 className={`${styles.topTitle}`}>Filter : </h2>
                     <div className={styles.checkboxes}>
                       <div className={styles.checkbox_label}>
-                      <label><input type="checkbox" name="balanced"  onChange={categoryHandleChange} checked={selectedCategory.categories.balanced}/> <span>Beakfast</span><span className={styles.span_balance}>Balanced</span></label>
+                      <label><input type="checkbox" name="breakfast"  onChange={categoryHandleChange} checked={selectedCategory.categories.breakfast}/> <span>Beakfast</span></label>
+                      </div>
+                      <div className={styles.checkbox_label}>
+                      <label><input type="checkbox" name="balanced"  onChange={categoryHandleChange} checked={selectedCategory.categories.balanced}/> <span>Balanced</span></label>
+                      </div>
+                      <div className={styles.checkbox_label}>
+                      <label><input type="checkbox" name="lawCarb"  onChange={categoryHandleChange} checked={selectedCategory.categories.lawCarb}/> <span>Law-Carb</span></label>
                       </div>
                 <div className={styles.checkbox_label}>
-                <label><input type="checkbox" name="lite"  onChange={categoryHandleChange} checked={selectedCategory.categories.lite}/> <span>Law-Carb</span><span className={styles.span_balance}>Lite</span></label>
+                <label><input type="checkbox" name="lite"  onChange={categoryHandleChange} checked={selectedCategory.categories.lite}/> <span>Lite</span></label>
                 </div>
                 
                 </div> 
