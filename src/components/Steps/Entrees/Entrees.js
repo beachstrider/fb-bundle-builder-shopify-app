@@ -49,6 +49,7 @@ const Entrees = () => {
   const isF2Meals = process.env.STORE_SETTINGS_KEY === 'f2meals'
   const isETP = process.env.STORE_SETTINGS_KEY === 'etp'
   const discountFeatureEnable = settings().display().discountFeatureEnable;
+  const filterMealsEnable = settings().display().filterMealsEnable;
 
   const cartUtility = cart(state)
 
@@ -401,23 +402,25 @@ const Entrees = () => {
               title="Select Your Meals"
               subTitle={`Menu for ${deliverAfter} - ${deliverBefore}`}
             />
-            <div className={`${styles.top}`}>
-              <h2 className={`${styles.topTitle}`}>Filter : </h2>
-              <div className={styles.checkboxes}>
-                <div className={styles.checkbox_label}>
-                  <label><input type="checkbox" name="breakfast"  onChange={categoryHandleChange} checked={selectedCategory.breakfast}/> <span>Breakfast</span></label>
+            { filterMealsEnable ?
+              (<div className={`${styles.top}`}>
+                <h2 className={`${styles.topTitle}`}>Filter : </h2>
+                <div className={styles.checkboxes}>
+                  <div className={styles.checkbox_label}>
+                    <label><input type="checkbox" name="breakfast"  onChange={categoryHandleChange} checked={selectedCategory.breakfast}/> <span>Breakfast</span></label>
+                  </div>
+                  <div className={styles.checkbox_label}>
+                    <label><input type="checkbox" name="balanced"  onChange={categoryHandleChange} checked={selectedCategory.balanced}/> <span>Balanced</span></label>
+                  </div>
+                  <div className={styles.checkbox_label}>
+                    <label><input type="checkbox" name="lowcarb"  onChange={categoryHandleChange} checked={selectedCategory.lowcarb}/> <span>Low Carb</span></label>
+                  </div>
+                  <div className={styles.checkbox_label}>
+                    <label><input type="checkbox" name="lite"  onChange={categoryHandleChange} checked={selectedCategory.lite}/> <span>Lite</span></label>
+                  </div>
                 </div>
-                <div className={styles.checkbox_label}>
-                  <label><input type="checkbox" name="balanced"  onChange={categoryHandleChange} checked={selectedCategory.balanced}/> <span>Balanced</span></label>
-                </div>
-                <div className={styles.checkbox_label}>
-                  <label><input type="checkbox" name="lowcarb"  onChange={categoryHandleChange} checked={selectedCategory.lowcarb}/> <span>Low Carb</span></label>
-                </div>
-                <div className={styles.checkbox_label}>
-                  <label><input type="checkbox" name="lite"  onChange={categoryHandleChange} checked={selectedCategory.lite}/> <span>Lite</span></label>
-                </div>
-              </div>
-            </div>
+              </div>)
+              : ''}
             <div className="mt-1">
               <div id="mealsSection"></div>
               {isLoadingDefaults ? (
