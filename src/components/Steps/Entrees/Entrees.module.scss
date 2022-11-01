@@ -29,6 +29,9 @@ $rowTopTitle: 494px;
       @media only screen and (max-width: $breakpointTablet) {
         font-size: 1.5rem;
       }
+      @media only screen and (max-width: $breakpointMobile) {
+        font-size: 16px;
+      }
     }
   & .checkboxes{
     margin-top: 0;
@@ -36,9 +39,15 @@ $rowTopTitle: 494px;
     flex-direction: row;
     justify-content: center;
     align-items: center;
-
-    &.checkbox_label{
+    @media only screen and (max-width: $breakpointMobile) {
+      font-size: 14px;
+      margin-left: -40px;
+    }
+    & .checkbox_label{
       margin-left: 10px;
+      @media only screen and (max-width: $breakpointMobile) {
+        margin-left: -12px;
+      }
     }
    & label {  
     display: inline-block;
@@ -65,6 +74,9 @@ $rowTopTitle: 494px;
      width: 15px;
      height: 15px;
      margin-right: 10px;
+     @media only screen and (max-width: $breakpointMobile) {
+      margin-right: 3px;
+    }
     }
     & label input[type=checkbox]:checked +span:before {
    background-color: #008E48;

@@ -402,7 +402,7 @@ const Entrees = () => {
               subTitle={`Menu for ${deliverAfter} - ${deliverBefore}`}
             />
             <div className={`${styles.top}`}>
-              <h2 className={`${styles.topTitle}`}>Filter : </h2>
+              <h2 className={`${styles.topTitle}`}>Filter: </h2>
               <div className={styles.checkboxes}>
                 <div className={styles.checkbox_label}>
                   <label><input type="checkbox" name="breakfast"  onChange={categoryHandleChange} checked={selectedCategory.breakfast}/> <span>Breakfast</span></label>
