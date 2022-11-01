@@ -55,6 +55,7 @@ const Entrees = () => {
   const [isLoading, setIsLoading] = useState(false)
   const [isLoadingDefaults, setIsLoadingDefaults] = useState(false)
   const [menuItems, setMenuItems] = useState([])
+  const [intactMenuItems, setIntactMenuItems] = useState([])
   const [defaultMenuItems, setDefaultMenuItems] = useState([])
   const [deliverBefore, setDeliverBefore] = useState('')
   const [deliverAfter, setDeliverAfter] = useState('')
@@ -68,12 +69,10 @@ const Entrees = () => {
   const [quantitiesCountdown, setQuantitiesCountdown] = useState([])
   // filter by tag useState
   const [selectedCategory, setSelectedCategory] = useState({
-    categories: {
       breakfast: false,
       balanced: false,
       lowcarb: false,
       lite: false,
-    }
   });
   useEffect(() => {
     dispatch(setIsNextButtonActive(false))
@@ -162,6 +161,8 @@ const Entrees = () => {
       setQuantitiesCountdown(newQuantitiesCountdown)
       setQuantities(newQuantities)
       setMenuItems(newItems)
+      // need to keep intact menu items only for filtering by tags
+      setIntactMenuItems(newItems)
       setIsLoading(false)
     } catch (error) {
       setError({
@@ -335,27 +336,55 @@ const Entrees = () => {
   if (state.entreeType.id === 0) {
     return <Redirect push to="/steps/3" />
   }
-  // start new tags fatured logic
-  const categoryHandleChange =(e)=>{
+  // START: filter by tags logic
+  const categoryHandleChange = async (e)=>{
     const { name } = e.target;
-    setSelectedCategory(prevState => {
-      return {
-        categories: {
-          ...prevState.categories,
-          [name]: !prevState.categories[name]
-        }
-      };
-    });
+    const checked   = e.target.checked;
+    const updatedCategories = { ...selectedCategory, [name]: checked };
+    setSelectedCategory(updatedCategories)
+    const newItems = []
+    intactMenuItems.forEach((content) => {
+      const filteredProducts = getFilteredProductByTags(content.products, updatedCategories)
+      newItems.push({
+        id: content.id,
+        title: content.title,
+        products: filteredProducts
+      })
+    })
+    setMenuItems(newItems);
   }
-  const checkedProducts = Object.entries(selectedCategory.categories)
-    .filter(category => category[1])
-    .map(category => category[0]);
-    console.log('checkedProducts',checkedProducts)
-    const filteredProducts =menuItems.filter(({ category }) =>
-      checkedProducts.includes(category)
-    );
-    console.log('filteredProducts',filteredProducts)
-  // end new featured logic
+  // get filtered products by tags
+  const getFilterTags  = (updatedCategories) => {
+    let filteringTags = [];
+    const categories = Object.entries(updatedCategories)
+    categories.forEach((category) => {
+      if (category[1]){
+        filteringTags.push(category[0])
+      }
+    });
+    return filteringTags;
+  }
+  const getFilteredProductByTags = (products, updatedCategories) => {
+    let newProducts = [];
+    const filteringTags = getFilterTags(updatedCategories);
+    if (filteringTags.length > 0){
+      products.forEach((product) => {
+        for (let i=0; i<product.tags.length; i++){
+          let singleTag = product.tags[i];
+          singleTag  = singleTag.toLowerCase().replace(' ','');
+          if (filteringTags.includes(singleTag)){
+            newProducts.push(product);
+            break;
+          }
+        }
+      })
+    }else{
+      newProducts = products;
+    }
+    return newProducts;
+  }
+
+  // END: filter by tags logic
   return (
     <>
       <MostPopularBar
@@ -376,16 +405,16 @@ const Entrees = () => {
               <h2 className={`${styles.topTitle}`}>Filter : </h2>
               <div className={styles.checkboxes}>
                 <div className={styles.checkbox_label}>
-                  <label><input type="checkbox" name="breakfast"  onChange={categoryHandleChange} checked={selectedCategory.categories.breakfast}/> <span>Breakfast</span></label>
+                  <label><input type="checkbox" name="breakfast"  onChange={categoryHandleChange} checked={selectedCategory.breakfast}/> <span>Breakfast</span></label>
                 </div>
                 <div className={styles.checkbox_label}>
-                  <label><input type="checkbox" name="balanced"  onChange={categoryHandleChange} checked={selectedCategory.categories.balanced}/> <span>Balanced</span></label>
+                  <label><input type="checkbox" name="balanced"  onChange={categoryHandleChange} checked={selectedCategory.balanced}/> <span>Balanced</span></label>
                 </div>
                 <div className={styles.checkbox_label}>
-                  <label><input type="checkbox" name="lawCarb"  onChange={categoryHandleChange} checked={selectedCategory.categories.lowcarb}/> <span>Low-Carb</span></label>
+                  <label><input type="checkbox" name="lowcarb"  onChange={categoryHandleChange} checked={selectedCategory.lowcarb}/> <span>Low Carb</span></label>
                 </div>
                 <div className={styles.checkbox_label}>
-                  <label><input type="checkbox" name="lite"  onChange={categoryHandleChange} checked={selectedCategory.categories.lite}/> <span>Lite</span></label>
+                  <label><input type="checkbox" name="lite"  onChange={categoryHandleChange} checked={selectedCategory.lite}/> <span>Lite</span></label>
                 </div>
               </div>
             </div>
