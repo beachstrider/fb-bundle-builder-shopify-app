@@ -46,10 +46,10 @@ const STEP_ID = skipStepMealPlan ? 3 : 4
 const Entrees = () => {
   const state = useSelector((state) => state)
   const dispatch = useDispatch()
-  const isF2Meals = process.env.STORE_SETTINGS_KEY === 'f2meals'
   const isETP = process.env.STORE_SETTINGS_KEY === 'etp'
   const discountFeatureEnable = settings().display().discountFeatureEnable;
   const filterMealsEnable = settings().display().filterMealsEnable;
+  const modifyLunchDinner = settings().display().modifyLunchDinner;
 
   const cartUtility = cart(state)
 
@@ -286,7 +286,7 @@ const Entrees = () => {
         (item) => Number(item.platform_product_id) === Number(productPlatformId)
       )
 
-    menuItems.forEach((content) => {
+    intactMenuItems.forEach((content) => {
       content.products.forEach((product) => {
         const defaultItem = findDefaultItem(product.productPlatformId)
         if (
@@ -431,7 +431,7 @@ const Entrees = () => {
                     <div className={styles.listHeader}>
                       <div className={styles.title}>
                         {
-                          isF2Meals ? 'Meals' :
+                          modifyLunchDinner ? 'Meals' :
                             content.title === 'Meals'
                               ? BUNDLE_MEAL_SECTION_TITLE
                               : content.title
