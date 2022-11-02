@@ -4,7 +4,8 @@ import styles from './Frequency.module.scss'
 import settings from '../../../utils/settings'
 
 const FrequencyEntree = ({ data, isSelected, onClick }) => {
-  const isF2Meals = process.env.STORE_SETTINGS_KEY === 'f2meals'
+  const modifyLunchDinner = settings().display().modifyLunchDinner;
+
   return (
     <CardSelectionMark isSelected={isSelected} onClick={onClick}>
       <div className={styles.mealsWrapper}>
@@ -13,7 +14,7 @@ const FrequencyEntree = ({ data, isSelected, onClick }) => {
             <div className={`${styles.title} ${styles.fontBold}`}>
               {data.name}
             </div>
-            { isF2Meals === true ? '' : (
+            { modifyLunchDinner === true ? '' : (
               <div className={styles.subTitle}>Lunch/Dinner</div>
             )}
             {settings().display().mealsStartingAt ? (
