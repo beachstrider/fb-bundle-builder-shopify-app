@@ -7,11 +7,8 @@ import styles from './Review.module.scss'
 import { getBreakfastAndMeals, settings } from '../../../utils';
 
 const ReviewItems = ({ items }) => {
-  const isF2Meals = process.env.STORE_SETTINGS_KEY === 'f2meals'
-  const isQuickfresh = process.env.STORE_SETTINGS_KEY === 'quickfresh'
-  const isChow = process.env.STORE_SETTINGS_KEY === 'chow'
-  const isCse = process.env.STORE_SETTINGS_KEY === 'cse'
   const skipStepMealPlan = settings().display().skipStepMealPlan
+  const modifyLunchDinner = settings().display().modifyLunchDinner
 
   const getTitle = (key) =>
     key.toLowerCase().includes('meal') ? BUNDLE_MEAL_SECTION_TITLE : key
@@ -27,7 +24,7 @@ const ReviewItems = ({ items }) => {
             <div className={styles.sectionTitle}>
               <div>
                 {
-                  isF2Meals || isQuickfresh || isChow  ? 'Meals' :
+                  modifyLunchDinner  ? 'Meals' :
                   getTitle(items.labels[key])
                 } ({items.totals[key]})
               </div>
