@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Redirect, useParams, useLocation, useHistory } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import CardQuantities from '../../Cards/CardQuantities'
+import { ButtonSmall } from '../../Buttons'
 import {
   getContents,
   getBundle,
@@ -655,7 +656,7 @@ const [selectedCategory, setSelectedCategory] = useState({
     <div>
       <div className="contentWrapper">
         <div className={menuItemStyles.wrapper}>
-          <div className={`${menuItemStyles.title} mb-7`}>Edit Order</div>
+          <div className={`${menuItemStyles.title} mb-3`}>Edit Order</div>
           <div className={`${menuItemStyles.top}`}>
                 <h2 className={`${menuItemStyles.topTitle}`}>Filter: </h2>
                 <div className={menuItemStyles.checkboxes}>
@@ -676,11 +677,19 @@ const [selectedCategory, setSelectedCategory] = useState({
           <div className={`${menuItemStyles.quantitiesWrapper} mb-8`}>
             <div className={menuItemStyles.topBarQuantities}>
               {menuItems.map((product) => (
-                <div key={product.id} className="px-3">
+                <div key={product.id} className={`${menuItemStyles.buttonInner} px-3`}>
                   <span className={menuItemStyles.number}>
                     {getQuantityCountdown(product.id).quantity}
                   </span>{' '}
                   {product.title} Left
+               <div> 
+                  <ButtonSmall
+                    className={menuItemStyles.bannerButton}
+                    usePrimaryColor
+                    label="Clear selections"
+                    isLoading={isLoading}
+                  />
+               </div>
                 </div>
               ))}
             </div>
