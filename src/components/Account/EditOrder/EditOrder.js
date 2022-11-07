@@ -73,7 +73,13 @@ const EditOrder = () => {
   // total and remaining items to add
   const [quantities, setQuantities] = useState([])
   const [quantitiesCountdown, setQuantitiesCountdown] = useState([])
-
+// filter by tag useState
+const [selectedCategory, setSelectedCategory] = useState({
+  breakfast: false,
+  balanced: false,
+  lowcarb: false,
+  lite: false,
+});
   const today = getTodayDate()
   console.log('today:', today)
 
@@ -635,6 +641,11 @@ const EditOrder = () => {
   const handleCancelButton = () => {
     return history.push(`/account`)
   }
+    // START: filter by tags logic
+    const categoryHandleChange = async (e)=>{
+      const { name } = e.target;
+      
+    }
 
   if (isLoading) {
     return <Loading />
@@ -645,6 +656,23 @@ const EditOrder = () => {
       <div className="contentWrapper">
         <div className={menuItemStyles.wrapper}>
           <div className={`${menuItemStyles.title} mb-7`}>Edit Order</div>
+          <div className={`${menuItemStyles.top}`}>
+                <h2 className={`${menuItemStyles.topTitle}`}>Filter: </h2>
+                <div className={menuItemStyles.checkboxes}>
+                  <div className={menuItemStyles.checkbox_label}>
+                    <label><input type="checkbox" name="breakfast"  onChange={categoryHandleChange} checked={selectedCategory.breakfast}/> <span>Breakfast</span></label>
+                  </div>
+                  <div className={menuItemStyles.checkbox_label}>
+                    <label><input type="checkbox" name="balanced"  onChange={categoryHandleChange} checked={selectedCategory.balanced}/> <span>Balanced</span></label>
+                  </div>
+                  <div className={menuItemStyles.checkbox_label}>
+                    <label><input type="checkbox" name="lowcarb"  onChange={categoryHandleChange} checked={selectedCategory.lowcarb}/> <span>Low Carb</span></label>
+                  </div>
+                  <div className={menuItemStyles.checkbox_label}>
+                    <label><input type="checkbox" name="lite"  onChange={categoryHandleChange} checked={selectedCategory.lite}/> <span>Lite</span></label>
+                  </div>
+                </div>
+              </div>
           <div className={`${menuItemStyles.quantitiesWrapper} mb-8`}>
             <div className={menuItemStyles.topBarQuantities}>
               {menuItems.map((product) => (
