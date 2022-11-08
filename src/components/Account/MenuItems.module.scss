@@ -187,6 +187,11 @@ $subTitleFontSize: 2.7rem;
   .buttonInner{
     display: flex;
     align-items: center;
+    @media only screen and (max-width: $breakpointMobile) {
+      font-size: 20px;
+      justify-content: center;
+      align-items: center;
+    }
   }
   .bannerButton {
     font-family: $fontFamilyMedium;
@@ -198,6 +203,9 @@ $subTitleFontSize: 2.7rem;
 
     @media only screen and (max-width: $breakpointTablet) {
       font-size: $fontMediumSmall;
+    }
+    @media only screen and (max-width: $breakpointMobile) {
+      font-size: 15px;
     }
   }
 }
