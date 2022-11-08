@@ -30,7 +30,8 @@ import {
   filterShopifyProducts,
   findWeekDayBetween,
   getCutOffDate,
-  getTodayDate
+  getTodayDate,
+  settings
 } from '../../../utils'
 import {
   createSubscriptionOrder,
@@ -54,6 +55,7 @@ const EditOrder = () => {
   const query = useQuery()
   const state = useSelector((state) => state)
   const dispatch = useDispatch()
+  const filterMealsEnable = settings().display().filterMealsEnable;
   const history = useHistory()
   const cartUtility = cart(state)
   const currentDate = query.get('date')
@@ -63,6 +65,7 @@ const EditOrder = () => {
   const [isLoading, setIsLoading] = useState(false)
   const [isSaving, setIsSaving] = useState(false)
   const [menuItems, setMenuItems] = useState([])
+  const [intactMenuItems, setIntactMenuItems] = useState([])
   const [error, setError] = useState({
     open: false,
     status: 'Success',
@@ -74,13 +77,13 @@ const EditOrder = () => {
   // total and remaining items to add
   const [quantities, setQuantities] = useState([])
   const [quantitiesCountdown, setQuantitiesCountdown] = useState([])
-// filter by tag useState
-const [selectedCategory, setSelectedCategory] = useState({
-  breakfast: false,
-  balanced: false,
-  lowcarb: false,
-  lite: false,
-});
+  // filter by tag useState
+  const [selectedCategory, setSelectedCategory] = useState({
+    breakfast: false,
+    balanced: false,
+    lowcarb: false,
+    lite: false,
+  });
   const today = getTodayDate()
   console.log('today:', today)
 
@@ -238,7 +241,7 @@ const [selectedCategory, setSelectedCategory] = useState({
       return existingProduct
     }
 
-    for (const item of menuItems) {
+    for (const item of intactMenuItems) {
       for (const product of item.products) {
         const cartItem = state.cart.find((c) => c.id === product.id)
         const currentContent = bundles.find(
@@ -458,6 +461,9 @@ const [selectedCategory, setSelectedCategory] = useState({
       setQuantitiesCountdown(newQuantitiesCountdown)
       setQuantities(newQuantities)
       setMenuItems(newItems)
+      // need to keep intact menu items only for filtering by tags
+      setIntactMenuItems(newItems)
+
       setIsLoading(false)
     } catch (error) {
       setError({
@@ -642,11 +648,55 @@ const [selectedCategory, setSelectedCategory] = useState({
   const handleCancelButton = () => {
     return history.push(`/account`)
   }
-    // START: filter by tags logic
-    const categoryHandleChange = async (e)=>{
-      const { name } = e.target;
-      
+  // START: filter by tags logic
+  const categoryHandleChange = async (e)=>{
+    const { name } = e.target;
+    const checked   = e.target.checked;
+    const updatedCategories = { ...selectedCategory, [name]: checked };
+    setSelectedCategory(updatedCategories)
+    const newItems = []
+    intactMenuItems.forEach((content) => {
+      const filteredProducts = getFilteredProductByTags(content.products, updatedCategories)
+      newItems.push({
+        id: content.id,
+        title: content.title,
+        products: filteredProducts
+      })
+    })
+    setMenuItems(newItems);
+  }
+  // get filtered products by tags
+  const getFilterTags  = (updatedCategories) => {
+    let filteringTags = [];
+    const categories = Object.entries(updatedCategories)
+    categories.forEach((category) => {
+      if (category[1]){
+        filteringTags.push(category[0])
+      }
+    });
+    return filteringTags;
+  }
+  const getFilteredProductByTags = (products, updatedCategories) => {
+    let newProducts = [];
+    const filteringTags = getFilterTags(updatedCategories);
+    if (filteringTags.length > 0){
+      products.forEach((product) => {
+        for (let i=0; i<product.tags.length; i++){
+          let singleTag = product.tags[i];
+          singleTag  = singleTag.toLowerCase().replace(' ','');
+          if (filteringTags.includes(singleTag)){
+            newProducts.push(product);
+            break;
+          }
+        }
+      })
+    }else{
+      newProducts = products;
     }
+    return newProducts;
+  }
+
+  // END: filter by tags logic
 
   if (isLoading) {
     return <Loading />
@@ -657,23 +707,25 @@ const [selectedCategory, setSelectedCategory] = useState({
       <div className="contentWrapper">
         <div className={menuItemStyles.wrapper}>
           <div className={`${menuItemStyles.title} mb-3`}>Edit Order</div>
-          <div className={`${menuItemStyles.top}`}>
-                <h2 className={`${menuItemStyles.topTitle}`}>Filter: </h2>
-                <div className={menuItemStyles.checkboxes}>
-                  <div className={menuItemStyles.checkbox_label}>
-                    <label><input type="checkbox" name="breakfast"  onChange={categoryHandleChange} checked={selectedCategory.breakfast}/> <span>Breakfast</span></label>
-                  </div>
-                  <div className={menuItemStyles.checkbox_label}>
-                    <label><input type="checkbox" name="balanced"  onChange={categoryHandleChange} checked={selectedCategory.balanced}/> <span>Balanced</span></label>
-                  </div>
-                  <div className={menuItemStyles.checkbox_label}>
-                    <label><input type="checkbox" name="lowcarb"  onChange={categoryHandleChange} checked={selectedCategory.lowcarb}/> <span>Low Carb</span></label>
-                  </div>
-                  <div className={menuItemStyles.checkbox_label}>
-                    <label><input type="checkbox" name="lite"  onChange={categoryHandleChange} checked={selectedCategory.lite}/> <span>Lite</span></label>
-                  </div>
+          { filterMealsEnable ? (
+            <div className={`${menuItemStyles.top}`}>
+              <h2 className={`${menuItemStyles.topTitle}`}>Filter: </h2>
+              <div className={menuItemStyles.checkboxes}>
+                <div className={menuItemStyles.checkbox_label}>
+                  <label><input type="checkbox" name="breakfast"  onChange={categoryHandleChange} checked={selectedCategory.breakfast}/> <span>Breakfast</span></label>
+                </div>
+                <div className={menuItemStyles.checkbox_label}>
+                  <label><input type="checkbox" name="balanced"  onChange={categoryHandleChange} checked={selectedCategory.balanced}/> <span>Balanced</span></label>
+                </div>
+                <div className={menuItemStyles.checkbox_label}>
+                  <label><input type="checkbox" name="lowcarb"  onChange={categoryHandleChange} checked={selectedCategory.lowcarb}/> <span>Low Carb</span></label>
+                </div>
+                <div className={menuItemStyles.checkbox_label}>
+                  <label><input type="checkbox" name="lite"  onChange={categoryHandleChange} checked={selectedCategory.lite}/> <span>Lite</span></label>
                 </div>
               </div>
+            </div> )
+          : ''}
           <div className={`${menuItemStyles.quantitiesWrapper} mb-8`}>
             <div className={menuItemStyles.topBarQuantities}>
               {menuItems.map((product) => (
