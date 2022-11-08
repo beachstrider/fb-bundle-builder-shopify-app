@@ -19,7 +19,81 @@ $subTitleFontSize: 2.7rem;
   grid-template-columns: 100%;
   column-gap: 10rem;
   @include responsive-wrapper;
+//Start New featured scss
+& .top {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  text-align: center;
+  padding-bottom: 0;
+  margin: auto;
 
+  &Title {
+    font-size: 16px;
+    font-family: $fontFamilyBlack !important;
+    margin-top: -1.5rem;
+  margin-bottom: -12px;
+    margin-right: 25px;
+
+    @media only screen and (max-width: $breakpointTablet) {
+      font-size: 1.5rem;
+    }
+    @media only screen and (max-width: $breakpointMobile) {
+      font-size: 16px;
+    }
+  }
+  & .checkboxes{
+    margin-top: 0;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    @media only screen and (max-width: $breakpointMobile) {
+      font-size: 14px;
+      margin-left: -40px;
+    }
+    & .checkbox_label{
+      margin-left: 10px;
+      @media only screen and (max-width: $breakpointMobile) {
+        margin-left: -12px;
+      }
+    }
+   & label {  
+    display: inline-block;
+    white-space: nowrap;
+    margin-right: -10px !important;
+    & span {
+      font-weight: bold;
+      cursor: pointer;
+  }
+  }
+    &input {
+      vertical-align: middle;
+    }
+    &label span {
+      vertical-align: middle;
+    }
+    & input[type=checkbox]{
+    opacity: 0;
+    }
+    & label input[type=checkbox] +span:before {
+     content: "";
+     border: 0.1rem solid #CDCDCE !important;
+     display: inline-block;
+     width: 15px;
+     height: 15px;
+     margin-right: 10px;
+     @media only screen and (max-width: $breakpointMobile) {
+      margin-right: 3px;
+    }
+    }
+    & label input[type=checkbox]:checked +span:before {
+   background-color: $primaryColor;
+     }
+  }
+
+}
+//End New featured scss
   & .quantitiesWrapper {
     top: 0;
     background-color: #f6f6f7;
@@ -108,6 +182,30 @@ $subTitleFontSize: 2.7rem;
       grid-template-columns: 1fr;
       padding: 2rem;
       row-gap: 2rem;
+    }
+  }
+  .buttonInner{
+    display: flex;
+    align-items: center;
+    @media only screen and (max-width: $breakpointMobile) {
+      font-size: 20px;
+      justify-content: center;
+      align-items: center;
+    }
+  }
+  .bannerButton {
+    font-family: $fontFamilyMedium;
+    font-size: $fontMedium;
+    width: auto;
+    background-color: $primaryColorLight;
+    padding: 0 1rem;
+    border-radius: $borderButtonRadius;
+
+    @media only screen and (max-width: $breakpointTablet) {
+      font-size: $fontMediumSmall;
+    }
+    @media only screen and (max-width: $breakpointMobile) {
+      font-size: 15px;
     }
   }
 }

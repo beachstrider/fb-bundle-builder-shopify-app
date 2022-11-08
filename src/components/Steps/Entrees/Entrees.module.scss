@@ -79,7 +79,7 @@ $rowTopTitle: 494px;
     }
     }
     & label input[type=checkbox]:checked +span:before {
-   background-color: #008E48;
+   background-color: $primaryColor;
      }
   }
     &Subtitle {
