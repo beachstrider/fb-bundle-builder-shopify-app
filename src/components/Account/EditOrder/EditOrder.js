@@ -734,14 +734,14 @@ const EditOrder = () => {
                     {getQuantityCountdown(product.id).quantity}
                   </span>{' '}
                   {product.title} Left
-               <div> 
-                  <ButtonSmall
-                    className={menuItemStyles.bannerButton}
-                    usePrimaryColor
-                    label="Clear selections"
-                    isLoading={isLoading}
-                  />
-               </div>
+                 {/*<div>
+                    <ButtonSmall
+                      className={menuItemStyles.bannerButton}
+                      usePrimaryColor
+                      label="Clear selections"
+                      isLoading={isLoading}
+                    />
+                 </div>*/}
                 </div>
               ))}
             </div>
