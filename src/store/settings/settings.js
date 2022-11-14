@@ -994,7 +994,7 @@ module.exports = {
     bundles: {
       images: {
         featured: '/images/quickfresh-frequency.jpg',
-        checkout: 'https://res.cloudinary.com/meals/image/upload/v1661628814/etpk/Site%20Assets/5_meals_hero.jpg',
+        checkout: '/images/quickfresh-order-package.jpg',
         breakfastSample: '/images/quickfresh-breakfast-sample.jpg'
       },
       icons: [
