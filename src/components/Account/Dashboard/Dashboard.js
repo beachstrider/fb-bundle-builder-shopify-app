@@ -500,7 +500,7 @@ const Dashboard = () => {
           <h2>No meal plan subscriptions were found for your account.</h2>
           <p>
             If you believe this is an error, please reach out to our customer service team by using the chat bubble below. </p>
-            <p>To sign up for a new meal plan click here.{' '}
+            <p>To sign up for a new meal plan click {' '}
             <Link to="/">here</Link>.
           </p>
         </div>
