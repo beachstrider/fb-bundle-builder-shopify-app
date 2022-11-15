@@ -40,6 +40,16 @@
   }
 }
 
+.isSelectedCardOnly {
+  color: $white;
+  border: $cardBorderWidth solid $secondaryColor !important;
+  background-color: $thirdColor;
+  & :hover {
+    border-radius: 0.5rem;
+    background-color: darken($thirdColor, 10%);
+  }
+}
+
 .card {
   position: relative;
   border-radius: 1rem;

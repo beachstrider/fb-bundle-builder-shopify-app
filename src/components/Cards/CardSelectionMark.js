@@ -9,12 +9,14 @@ const CardSelectionMark = ({
   onClick,
   isDisabled = false
 }) => {
+  // changing the card selection desing
+  const isIIFYM = process.env.STORE_SETTINGS_KEY === 'iifym'
   return (
     <div
       onClick={() => (!isDisabled ? onClick() : {})}
       className={`${styles.card} ${
         isSelected
-          ? styles.isSelected
+          ? isIIFYM ? styles.isSelectedCardOnly :styles.isSelected
           : isDisabled
           ? styles.disabled
           : styles.unselected
