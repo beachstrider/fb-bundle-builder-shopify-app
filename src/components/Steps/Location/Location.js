@@ -397,8 +397,8 @@ const Location = () => {
 
   if (process.env.NODE_ENV !== 'production') {
     if (!zipCode) {
-      setZipCode('90028')
-      setEmail('eduardo@sunriseintegration.com')
+      setZipCode('90210')
+      setEmail('tipu5040@gmail.com')
     }
   }
 

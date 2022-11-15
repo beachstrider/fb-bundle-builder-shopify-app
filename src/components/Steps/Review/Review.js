@@ -47,6 +47,7 @@ const Review = () => {
   const [mappedCart, setMappedCart] = useState({})
   const cartUtility = cart(state)
   const isETP = process.env.STORE_SETTINGS_KEY === 'etp'
+  const isIIFYM = process.env.STORE_SETTINGS_KEY === 'iifym'
 
   useEffect(() => {
     getShopifyCartToken()
@@ -257,7 +258,7 @@ const Review = () => {
                     state.bundle?.extraPricePerMeal
                   }
                   shippingPrice={state.bundle?.shippingPrice}
-                  backgroundImage={ isETP ? `${settings().bundleImages().checkout }` : `${process.env.PROXY_APP_URL}${settings().bundleImages().checkout }`}
+                  backgroundImage={ isETP || isIIFYM ? `${settings().bundleImages().checkout }` : `${process.env.PROXY_APP_URL}${settings().bundleImages().checkout }`}
                 />
               </div>
             </div>
