@@ -203,6 +203,7 @@ module.exports = {
         primaryColor: '#0a8d47',
         primaryColorLight: '#068d47',
         secondaryColor: '#fec12d',
+        thirdColor: '#0a8d47',
         gray: '#4c4c4c',
         grayLight: '#e7eaec',
         gray100: '#e2e2e2',
@@ -449,6 +450,7 @@ module.exports = {
         primaryColor: '#000000',
         primaryColorLight: '#656549',
         secondaryColor: '#BB8D3D',
+        thirdColor: '#000000',
         gray: '#4c4c4c',
         grayLight: '#e7eaec',
         gray100: '#e2e2e2',
@@ -689,6 +691,7 @@ module.exports = {
         primaryColor: '#000000',
         primaryColorLight: '#689859',
         secondaryColor: '#689859',
+        thirdColor: '#000000',
         gray: '#4c4c4c',
         grayLight: '#e7eaec',
         gray100: '#e2e2e2',
@@ -919,6 +922,7 @@ module.exports = {
         primaryColor: '#48c2f9',
         primaryColorLight: '#48c2f9',
         secondaryColor: '#0a8d47',
+        thirdColor: '#48c2f9',
         gray: '#4c4c4c',
         grayLight: '#e7eaec',
         gray100: '#e2e2e2',
@@ -994,7 +998,7 @@ module.exports = {
     bundles: {
       images: {
         featured: '/images/quickfresh-frequency.jpg',
-        checkout: '/images/quickfresh-order-package.jpg',
+        checkout: 'https://res.cloudinary.com/meals/image/upload/v1661628814/etpk/Site%20Assets/5_meals_hero.jpg',
         breakfastSample: '/images/quickfresh-breakfast-sample.jpg'
       },
       icons: [
@@ -1146,9 +1150,10 @@ module.exports = {
         font3XSmall: '1.2rem'
       },
       colors: {
-        primaryColor: '#48c2f9',
-        primaryColorLight: '#48c2f9',
-        secondaryColor: '#0a8d47',
+        primaryColor: '#d53333',
+        primaryColorLight: '#d53333',
+        secondaryColor: '#d53333',
+        thirdColor: '#969696',
         gray: '#4c4c4c',
         grayLight: '#e7eaec',
         gray100: '#e2e2e2',
@@ -1167,7 +1172,7 @@ module.exports = {
         borderColor: '#ebebec',
         faqBackgroundColor: '#e8e8e8',
         pillBackground: '#737678',
-        buttonColor: '#48c2f9',
+        buttonColor: '#d53333',
         buttonTextColor: '#FFFFFF',
         bannerBackground: '#fedc5c',
         deliveryDay: '#000000',
