@@ -497,9 +497,10 @@ const Dashboard = () => {
         </div>
       ) : (
         <div className="contentWrapper textCenter">
-          <h2>There are no custom bundle subscriptions to show</h2>
+          <h2>No meal plan subscriptions were found for your account.</h2>
           <p>
-            To sign up for a subscription please purchase a subscription{' '}
+            If you believe this is an error, please reach out to our customer service team by using the chat bubble below. </p>
+            <p>To sign up for a new meal plan click here.{' '}
             <Link to="/">here</Link>.
           </p>
         </div>
