@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 import { Redirect, useParams, useLocation, useHistory } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import CardQuantities from '../../Cards/CardQuantities'
-import { ButtonSmall } from '../../Buttons'
 import {
   getContents,
   getBundle,
@@ -638,6 +637,26 @@ const EditOrder = () => {
       })
     )
   }
+  
+  const handleResetCart = () => {
+    dispatch(cartClear())
+
+    const newQuantities = [];
+    intactMenuItems.forEach((product) => {
+      newQuantities.push({ 'id': product.id, 'quantity': product.products.reduce((x, item) => x + item.quantity, 0) })
+    })
+
+    setQuantitiesCountdown(newQuantities)
+  }
+
+  const getIntakeQuantity = () => {
+    let intakeQuantity = 0;
+    intactMenuItems.forEach( (item) => {
+      intakeQuantity += item.products.reduce((x, item) => x + item.quantity, 0)
+    })
+
+    return intakeQuantity;
+  }
 
   const getQuantityCountdown = (id) => {
     return (
@@ -734,14 +753,19 @@ const EditOrder = () => {
                     {getQuantityCountdown(product.id).quantity}
                   </span>{' '}
                   {product.title} Left
-                 {/*<div>
-                    <ButtonSmall
-                      className={menuItemStyles.bannerButton}
-                      usePrimaryColor
-                      label="Clear selections"
-                      isLoading={isLoading}
-                    />
-                 </div>*/}
+                 <div>
+                  {!disableEditing && (
+                    <div
+                      className={`button button--tertiary primaryButton ${
+                        getQuantityCountdown(product.id).quantity === getIntakeQuantity() ? 'disabled' : '' 
+                      }`}
+                      
+                      onClick={() => (getQuantityCountdown(product.id).quantity === getIntakeQuantity() ? () => {} : handleResetCart())}
+                      >
+                      {"Clear selections"}
+                    </div>
+                  )}
+                 </div>
                 </div>
               ))}
             </div>
