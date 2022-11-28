@@ -72,7 +72,6 @@ const Entrees = () => {
   const [selectedCategory, setSelectedCategory] = useState({
       breakfast: false,
       balanced: false,
-      lowcarb: false,
       lite: false,
   });
   useEffect(() => {
@@ -411,9 +410,6 @@ const Entrees = () => {
                   </div>
                   <div className={styles.checkbox_label}>
                     <label><input type="checkbox" name="balanced"  onChange={categoryHandleChange} checked={selectedCategory.balanced}/> <span>Balanced</span></label>
-                  </div>
-                  <div className={styles.checkbox_label}>
-                    <label><input type="checkbox" name="lowcarb"  onChange={categoryHandleChange} checked={selectedCategory.lowcarb}/> <span>Low Carb</span></label>
                   </div>
                   <div className={styles.checkbox_label}>
                     <label><input type="checkbox" name="lite"  onChange={categoryHandleChange} checked={selectedCategory.lite}/> <span>Lite</span></label>

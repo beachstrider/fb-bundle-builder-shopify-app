@@ -80,7 +80,6 @@ const EditOrder = () => {
   const [selectedCategory, setSelectedCategory] = useState({
     breakfast: false,
     balanced: false,
-    lowcarb: false,
     lite: false,
   });
   const today = getTodayDate()
@@ -735,9 +734,6 @@ const EditOrder = () => {
                 </div>
                 <div className={menuItemStyles.checkbox_label}>
                   <label><input type="checkbox" name="balanced"  onChange={categoryHandleChange} checked={selectedCategory.balanced}/> <span>Balanced</span></label>
-                </div>
-                <div className={menuItemStyles.checkbox_label}>
-                  <label><input type="checkbox" name="lowcarb"  onChange={categoryHandleChange} checked={selectedCategory.lowcarb}/> <span>Low Carb</span></label>
                 </div>
                 <div className={menuItemStyles.checkbox_label}>
                   <label><input type="checkbox" name="lite"  onChange={categoryHandleChange} checked={selectedCategory.lite}/> <span>Lite</span></label>
