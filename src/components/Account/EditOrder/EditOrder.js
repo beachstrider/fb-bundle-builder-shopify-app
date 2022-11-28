@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 import { Redirect, useParams, useLocation, useHistory } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import CardQuantities from '../../Cards/CardQuantities'
-import { ButtonSmall } from '../../Buttons'
 import {
   getContents,
   getBundle,
@@ -81,7 +80,6 @@ const EditOrder = () => {
   const [selectedCategory, setSelectedCategory] = useState({
     breakfast: false,
     balanced: false,
-    lowcarb: false,
     lite: false,
   });
   const today = getTodayDate()
@@ -638,6 +636,26 @@ const EditOrder = () => {
       })
     )
   }
+  
+  const handleResetCart = () => {
+    dispatch(cartClear())
+
+    const newQuantities = [];
+    intactMenuItems.forEach((product) => {
+      newQuantities.push({ 'id': product.id, 'quantity': product.products.reduce((x, item) => x + item.quantity, 0) })
+    })
+
+    setQuantitiesCountdown(newQuantities)
+  }
+
+  const getIntakeQuantity = () => {
+    let intakeQuantity = 0;
+    intactMenuItems.forEach( (item) => {
+      intakeQuantity += item.products.reduce((x, item) => x + item.quantity, 0)
+    })
+
+    return intakeQuantity;
+  }
 
   const getQuantityCountdown = (id) => {
     return (
@@ -718,9 +736,6 @@ const EditOrder = () => {
                   <label><input type="checkbox" name="balanced"  onChange={categoryHandleChange} checked={selectedCategory.balanced}/> <span>Balanced</span></label>
                 </div>
                 <div className={menuItemStyles.checkbox_label}>
-                  <label><input type="checkbox" name="lowcarb"  onChange={categoryHandleChange} checked={selectedCategory.lowcarb}/> <span>Low Carb</span></label>
-                </div>
-                <div className={menuItemStyles.checkbox_label}>
                   <label><input type="checkbox" name="lite"  onChange={categoryHandleChange} checked={selectedCategory.lite}/> <span>Lite</span></label>
                 </div>
               </div>
@@ -728,20 +743,25 @@ const EditOrder = () => {
           : ''}
           <div className={`${menuItemStyles.quantitiesWrapper} mb-8`}>
             <div className={menuItemStyles.topBarQuantities}>
-              {menuItems.map((product) => (
+              {menuItems.map((product, index) => (
                 <div key={product.id} className={`${menuItemStyles.buttonInner} px-3`}>
                   <span className={menuItemStyles.number}>
                     {getQuantityCountdown(product.id).quantity}
                   </span>{' '}
                   {product.title} Left
-                 {/*<div>
-                    <ButtonSmall
-                      className={menuItemStyles.bannerButton}
-                      usePrimaryColor
-                      label="Clear selections"
-                      isLoading={isLoading}
-                    />
-                 </div>*/}
+                 <div>
+                  {!disableEditing && (
+                    <div
+                      className={`button button--tertiary primaryButton  ${ menuItems.length > 1 && index === 0 ? 'displayNone' : ''} ${
+                        getQuantityCountdown(product.id).quantity === getIntakeQuantity() ? 'disabled' : '' 
+                      }`}
+                      
+                      onClick={() => (getQuantityCountdown(product.id).quantity === getIntakeQuantity() ? () => {} : handleResetCart())}
+                      >
+                      {"Clear selections"}
+                    </div>
+                  )}
+                 </div>
                 </div>
               ))}
             </div>
