@@ -743,7 +743,7 @@ const EditOrder = () => {
           : ''}
           <div className={`${menuItemStyles.quantitiesWrapper} mb-8`}>
             <div className={menuItemStyles.topBarQuantities}>
-              {menuItems.map((product) => (
+              {menuItems.map((product, index) => (
                 <div key={product.id} className={`${menuItemStyles.buttonInner} px-3`}>
                   <span className={menuItemStyles.number}>
                     {getQuantityCountdown(product.id).quantity}
@@ -752,7 +752,7 @@ const EditOrder = () => {
                  <div>
                   {!disableEditing && (
                     <div
-                      className={`button button--tertiary primaryButton ${
+                      className={`button button--tertiary primaryButton  ${ menuItems.length > 1 && index === 0 ? 'displayNone' : ''} ${
                         getQuantityCountdown(product.id).quantity === getIntakeQuantity() ? 'disabled' : '' 
                       }`}
                       
