@@ -171,6 +171,8 @@ const Dashboard = () => {
     const subscriptionArray = {}
 
     const subApi = await getActiveSubscriptions(token)
+    
+    var firstOrderDeliveryDate = todayDate;
     // console.log('----subApi----', subApi)
     if (subApi.data.data) {
       for (const sub of subApi.data.data) {
@@ -198,7 +200,16 @@ const Dashboard = () => {
               )
               const cutoffDate = getCutOffDate(deliveryDate)
               const firstOrder = shopCustomer.orders[0] || null
-              // console.log('----firstOrder----', shopCustomer.orders)
+              if(firstOrderDeliveryDate === todayDate){
+                try{
+                  firstOrderDeliveryDate = config.contents.find(x => x.id === sub.orders[0]?.bundle_configuration_content_id)?.deliver_before;
+                  firstOrderDeliveryDate = (typeof firstOrderDeliveryDate !== 'undefined' && firstOrderDeliveryDate != null) ? firstOrderDeliveryDate : todayDate;
+                }
+                catch(e){
+                  firstOrderDeliveryDate = todayDate;
+                }
+              }
+
               const firstOrderDate =
                 (firstOrder && dayjs(firstOrder.orderDate).utc()) ||
                 dayjs().utc()
@@ -219,7 +230,7 @@ const Dashboard = () => {
               // validates the first order to avoid displaying the week where the order was placed (always show next week)
               if (
                 subCount < TOTAL_WEEKS_DISPLAY &&
-                dayjs(content.deliver_before).utc().isSameOrAfter(todayDate) &&
+                dayjs(content.deliver_before).utc().isSameOrAfter(firstOrderDeliveryDate) &&
                 firstOrderDate.isSameOrBefore(content.deliver_after)
               ) {
                 const orderedItems = subscriptionOrders.data.data.filter(
