@@ -203,6 +203,7 @@ const Dashboard = () => {
               if(firstOrderDeliveryDate === todayDate){
                 try{
                   firstOrderDeliveryDate = config.contents.find(x => x.id === sub.orders[0]?.bundle_configuration_content_id)?.deliver_before;
+                  firstOrderDeliveryDate = (typeof firstOrderDeliveryDate !== 'undefined' && firstOrderDeliveryDate != null) ? firstOrderDeliveryDate : todayDate;
                 }
                 catch(e){
                   firstOrderDeliveryDate = todayDate;
