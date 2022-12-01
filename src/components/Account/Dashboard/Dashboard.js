@@ -228,9 +228,10 @@ const Dashboard = () => {
               //   firstOrderDate.isSameOrBefore(content.deliver_after)
               // )
               // validates the first order to avoid displaying the week where the order was placed (always show next week)
+              console.log('firstOrderDeliveryDate', firstOrderDeliveryDate);
               if (
                 subCount < TOTAL_WEEKS_DISPLAY &&
-                dayjs(content.deliver_before).utc().isSameOrAfter(firstOrderDeliveryDate) &&
+                dayjs(content.deliver_before).utc().isSameOrAfter(firstOrderDeliveryDate) && dayjs(content.deliver_before).utc().isSameOrAfter(todayDate) &&
                 firstOrderDate.isSameOrBefore(content.deliver_after)
               ) {
                 const orderedItems = subscriptionOrders.data.data.filter(
