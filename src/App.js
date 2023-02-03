@@ -51,7 +51,7 @@ function App() {
       '9 Meal Plan',
     ]
 
-    console.log('Searching for Shopify tags in products', expectedTags)
+    console.log('Searching for Shopify tags in products.', expectedTags)
     const missingTags = []
     for (const findTag of expectedTags) {
       const currentTag = await getSelectedBundle(findTag)
@@ -60,7 +60,7 @@ function App() {
       }
     }
     if (missingTags.length) {
-      console.error('ERROR: Shopify tags missing from products', missingTags)
+      console.error('ERROR: Shopify tags missing from products.', missingTags)
     }
   }
 
